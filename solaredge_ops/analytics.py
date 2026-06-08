@@ -1,12 +1,12 @@
-"""
+﻿"""
 Analytics engine: loads CSV data (or falls back to live API) and computes
 the KPIs that O&M fleet managers actually care about.
 
 Metric definitions used throughout:
-  specific_yield   – kWh produced per day (proxy; true SY needs kWp capacity)
-  performance_idx  – actual_kwh / expected_kwh  (0–1+, >1 = above expectation)
-  availability     – estimated from zero/near-zero production days as % of active days
-  yoy_delta_pct    – year-over-year change in monthly energy, in percent
+  specific_yield   -- kWh produced per day (proxy; true SY needs kWp capacity)
+  performance_idx  -- actual_kwh / expected_kwh  (0-1+, >1 = above expectation)
+  availability     -- estimated from zero/near-zero production days as % of active days
+  yoy_delta_pct    -- year-over-year change in monthly energy, in percent
 """
 from __future__ import annotations
 
@@ -19,10 +19,11 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-# ── CSV loaders ──────────────────────────────────────────────────────────────
+# ג”€ג”€ CSV loaders ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
-def _data_dir(config_state_db_path: str) -> Path:
-    return Path(config_state_db_path).parent / "data"
+def _data_dir(data_dir: str) -> Path:
+    """Return the data directory Path. `data_dir` is config.data_dir (already resolved)."""
+    return Path(data_dir)
 
 
 def _load_csv(path: Path) -> list[dict]:
@@ -36,8 +37,8 @@ def _load_csv(path: Path) -> list[dict]:
         return []
 
 
-def load_daily(db_path: str, site_id: int | None = None) -> list[dict]:
-    rows = _load_csv(_data_dir(db_path) / "energy_daily.csv")
+def load_daily(data_dir: str, site_id: int | None = None) -> list[dict]:
+    rows = _load_csv(_data_dir(data_dir) / "energy_daily.csv")
     if site_id is not None:
         rows = [r for r in rows if int(r["site_id"]) == site_id]
     # deduplicate: keep latest row per (date, site_id)
@@ -53,8 +54,8 @@ def load_daily(db_path: str, site_id: int | None = None) -> list[dict]:
     return result
 
 
-def load_monthly(db_path: str, site_id: int | None = None) -> list[dict]:
-    rows = _load_csv(_data_dir(db_path) / "energy_monthly.csv")
+def load_monthly(data_dir: str, site_id: int | None = None) -> list[dict]:
+    rows = _load_csv(_data_dir(data_dir) / "energy_monthly.csv")
     if site_id is not None:
         rows = [r for r in rows if int(r["site_id"]) == site_id]
     seen: dict[tuple, dict] = {}
@@ -67,8 +68,8 @@ def load_monthly(db_path: str, site_id: int | None = None) -> list[dict]:
     return result
 
 
-def load_snapshots(db_path: str, site_id: int | None = None) -> list[dict]:
-    rows = _load_csv(_data_dir(db_path) / "snapshots.csv")
+def load_snapshots(data_dir: str, site_id: int | None = None) -> list[dict]:
+    rows = _load_csv(_data_dir(data_dir) / "snapshots.csv")
     if site_id is not None:
         rows = [r for r in rows if int(r["site_id"]) == site_id]
     for r in rows:
@@ -78,13 +79,13 @@ def load_snapshots(db_path: str, site_id: int | None = None) -> list[dict]:
     return rows
 
 
-def load_alerts_log(db_path: str) -> list[dict]:
-    return _load_csv(_data_dir(db_path) / "alerts_log.csv")
+def load_alerts_log(data_dir: str) -> list[dict]:
+    return _load_csv(_data_dir(data_dir) / "alerts_log.csv")
 
 
-def load_weather(db_path: str, site_id: int | None = None) -> list[dict]:
+def load_weather(data_dir: str, site_id: int | None = None) -> list[dict]:
     """Load weather_daily.csv rows, optionally filtered by site."""
-    rows = _load_csv(_data_dir(db_path) / "weather_daily.csv")
+    rows = _load_csv(_data_dir(data_dir) / "weather_daily.csv")
     if site_id is not None:
         rows = [r for r in rows if int(r.get("site_id", 0)) == site_id]
     # deduplicate by date (keep last)
@@ -101,8 +102,8 @@ def load_weather(db_path: str, site_id: int | None = None) -> list[dict]:
     return result
 
 
-def data_files_info(db_path: str) -> list[dict]:
-    d = _data_dir(db_path)
+def data_files_info(data_dir: str) -> list[dict]:
+    d = _data_dir(data_dir)
     files = []
     for name in ("snapshots.csv","energy_daily.csv","energy_monthly.csv","alerts_log.csv","weather_daily.csv"):
         p = d / name
@@ -133,12 +134,12 @@ def _f(v) -> float | None:
         return None
 
 
-# ── fleet-level analytics ────────────────────────────────────────────────────
+# ג”€ג”€ fleet-level analytics ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
-def fleet_summary(db_path: str, sites: list) -> dict:
+def fleet_summary(data_dir: str, sites: list) -> dict:
     """Top-level KPIs for the entire fleet."""
-    daily   = load_daily(db_path)
-    snaps   = load_snapshots(db_path)
+    daily   = load_daily(data_dir)
+    snaps   = load_snapshots(data_dir)
     site_ids = [s.id for s in sites]
 
     # Latest snapshot per site
@@ -191,19 +192,19 @@ def fleet_summary(db_path: str, sites: list) -> dict:
     }
 
 
-# ── site-level analytics ─────────────────────────────────────────────────────
+# ג”€ג”€ site-level analytics ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
-def site_analysis(db_path: str, site_id: int, site_name: str,
+def site_analysis(data_dir: str, site_id: int, site_name: str,
                   expected_daily_kwh: float | None = None) -> dict:
-    """Full analytics for one site — all chart data + KPIs."""
-    daily   = load_daily(db_path, site_id)
-    monthly = load_monthly(db_path, site_id)
-    snaps   = load_snapshots(db_path, site_id)
+    “””Full analytics for one site -- all chart data + KPIs.”””
+    daily   = load_daily(data_dir, site_id)
+    monthly = load_monthly(data_dir, site_id)
+    snaps   = load_snapshots(data_dir, site_id)
 
     if not daily:
         return {"has_data": False, "site_id": site_id, "site_name": site_name}
 
-    # ── KPIs ──
+    # ג”€ג”€ KPIs ג”€ג”€
     last_snap = snaps[-1] if snaps else {}
     recent_30d = [r for r in daily
                   if r["date"] >= (datetime.now(timezone.utc) - timedelta(days=30)).strftime("%Y-%m-%d")]
@@ -227,11 +228,11 @@ def site_analysis(db_path: str, site_id: int, site_name: str,
     available = sum(1 for r in avail_days if (r["energy_kwh"] or 0) > threshold)
     availability_pct = round(available / len(avail_days) * 100, 1) if avail_days else None
 
-    # ── Daily chart ──
+    # ג”€ג”€ Daily chart ג”€ג”€
     daily_chart = [{"date": r["date"], "energy_kwh": r["energy_kwh"],
                     "expected_kwh": r["expected_kwh"]} for r in daily[-365:]]
 
-    # ── Monthly chart: this year vs last year ──
+    # ג”€ג”€ Monthly chart: this year vs last year ג”€ג”€
     this_year = str(datetime.now(timezone.utc).year)
     last_year = str(datetime.now(timezone.utc).year - 1)
     monthly_by_ym: dict[str, float] = {}
@@ -248,7 +249,7 @@ def site_analysis(db_path: str, site_id: int, site_name: str,
         "last_year_label": last_year,
     }
 
-    # ── YoY delta ──
+    # ג”€ג”€ YoY delta ג”€ג”€
     cur_month = datetime.now(timezone.utc).strftime("%Y-%m")
     prev_year_month = f"{last_year}-{datetime.now(timezone.utc).strftime('%m')}"
     yoy_delta = None
@@ -257,7 +258,7 @@ def site_analysis(db_path: str, site_id: int, site_name: str,
         curr = monthly_by_ym[cur_month]
         yoy_delta = round((curr - prev) / prev * 100, 1) if prev else None
 
-    # ── Performance Index trend (monthly, last 12 months) ──
+    # ג”€ג”€ Performance Index trend (monthly, last 12 months) ג”€ג”€
     pi_trend = []
     for r in monthly[-12:]:
         if r["energy_kwh"] is not None and expected_daily_kwh:
@@ -268,11 +269,11 @@ def site_analysis(db_path: str, site_id: int, site_name: str,
                 "pi": round(r["energy_kwh"] / exp * 100, 1) if exp else None
             })
 
-    # ── Raw records (last 30 days for drill-down table) ──
+    # ג”€ג”€ Raw records (last 30 days for drill-down table) ג”€ג”€
     records = sorted(daily[-30:], key=lambda r: r["date"], reverse=True)
 
-    # ── Weather correlation (last 365 days) ──
-    weather = load_weather(db_path, site_id)
+    # ג”€ג”€ Weather correlation (last 365 days) ג”€ג”€
+    weather = load_weather(data_dir, site_id)
     weather_by_date: dict[str, dict] = {r["date"]: r for r in weather}
     # Annotate daily_chart rows with weather data
     for row in daily_chart:
@@ -326,11 +327,11 @@ def site_analysis(db_path: str, site_id: int, site_name: str,
     }
 
 
-# ── comparison analytics ─────────────────────────────────────────────────────
+# ג”€ג”€ comparison analytics ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
-def compare_sites(db_path: str, site_ids: list[int], period_days: int = 30) -> dict:
+def compare_sites(data_dir: str, site_ids: list[int], period_days: int = 30) -> dict:
     """Side-by-side comparison of selected sites."""
-    daily = load_daily(db_path)
+    daily = load_daily(data_dir)
     cutoff = (datetime.now(timezone.utc) - timedelta(days=period_days)).strftime("%Y-%m-%d")
 
     # Aggregate per site for the period
@@ -378,3 +379,4 @@ def compare_sites(db_path: str, site_ids: list[int], period_days: int = 30) -> d
         "period_days": period_days,
         "has_data":    bool(by_site),
     }
+

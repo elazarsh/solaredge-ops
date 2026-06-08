@@ -70,7 +70,7 @@
           </tbody>
         </table>
         {% else %}
-        <div class="text-center py-4 text-muted">
+        <div class="text-center py-4">
           <i class="bi bi-check-circle-fill text-success fs-3 d-block mb-2"></i>
           אין התראות פעילות כרגע
         </div>
@@ -124,7 +124,7 @@
           <span class="ts ms-auto">{% if in_active_hours %}עכשיו פעיל{% else %}מחוץ לשעות{% endif %}</span>
         </div>
         {% else %}
-        <span class="text-muted ts">לא הוגדרו שעות פעילות — רץ תמיד</span>
+        <span class="ts">לא הוגדרו שעות פעילות — רץ תמיד</span>
         {% endif %}
         <div class="ts mt-2">סריקה כל {{ polling_interval }} דקות</div>
       </div>

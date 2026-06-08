@@ -99,6 +99,13 @@ reporting:
 
 storage:
   state_db_path: "state.db"
+  # Optional: directory where CSV data files are written.
+  # Leave blank to use the default ./data/ folder next to state.db.
+  # To sync data to Google Drive Desktop, point to your local Drive folder:
+  #   Windows: "G:/My Drive/SolarEdge"    (or whatever letter Drive mounts at)
+  #   Mac:     "/Users/you/Library/CloudStorage/GoogleDrive-you@gmail.com/My Drive/SolarEdge"
+  # The folder is created automatically on first run.
+  data_path: ""
 
 # Weather-based alert suppression (uses Open-Meteo — free, no API key required).
 # When a site has `location` set, low/zero-production alerts are checked against

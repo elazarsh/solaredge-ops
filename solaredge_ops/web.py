@@ -314,11 +314,11 @@ def analytics_fleet():
         return render_template("no_config.html", active="analytics", open_count=0, config_path=_config_path)
 
     source = request.args.get("source", "csv")
-    summary = fleet_summary(config.state_db_path, config.sites)
+    summary = fleet_summary(config.data_dir, config.sites)
 
     # full timeline (for client-side period filtering)
     from .analytics import load_daily
-    all_daily = load_daily(config.state_db_path)
+    all_daily = load_daily(config.data_dir)
     from collections import defaultdict
     by_date: dict[str, float] = defaultdict(float)
     for r in all_daily:
@@ -351,10 +351,10 @@ def analytics_site(site_id: int):
     source    = request.args.get("source", "csv")
     period    = int(request.args.get("period", 365))
 
-    analysis  = site_analysis(config.state_db_path, site_id, site_name, expected)
+    analysis  = site_analysis(config.data_dir, site_id, site_name, expected)
 
     # Drill-down table: all daily records for the selected period
-    all_recs = load_daily(config.state_db_path, site_id)
+    all_recs = load_daily(config.data_dir, site_id)
     records  = sorted(all_recs[-period:], key=lambda r: r["date"], reverse=True)
 
     # Daily chart data for selected period
@@ -393,7 +393,7 @@ def analytics_compare():
     else:
         selected_ids = [s.id for s in config.sites]
 
-    comparison = compare_sites(config.state_db_path, selected_ids, period)
+    comparison = compare_sites(config.data_dir, selected_ids, period)
 
     COLORS = ["#3fb950", "#58a6ff", "#e3b341", "#f85149", "#a371f7", "#39d353"]
     traces = []
@@ -427,7 +427,7 @@ def analytics_export():
     if not config:
         return render_template("no_config.html", active="analytics", open_count=0, config_path=_config_path)
 
-    files = data_files_info(config.state_db_path)
+    files = data_files_info(config.data_dir)
     return render_template(
         "analytics/export.html",
         active="analytics",
@@ -444,7 +444,7 @@ def analytics_download(filename: str):
     config = _get_config()
     if not config:
         abort(404)
-    p = Path(config.state_db_path).parent / "data" / filename
+    p = Path(config.data_dir) / filename
     if not p.exists():
         abort(404)
     return send_file(str(p.resolve()), as_attachment=True, download_name=filename)

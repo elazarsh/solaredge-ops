@@ -15,11 +15,11 @@
       <div class="card-header"><i class="bi bi-sun-fill text-warning"></i> <strong>SolarEdge API</strong></div>
       <div class="card-body">
         <div class="mb-2">
-          <div class="ts text-muted">API Key</div>
+          <div class="label-text">API Key</div>
           <div class="secret-mask">{{ api_key_masked }}</div>
         </div>
         <div>
-          <div class="ts text-muted">מגבלת בקשות יומית</div>
+          <div class="label-text">מגבלת בקשות יומית</div>
           <div>{{ max_requests_per_day }} בקשות/יום לכל מתקן</div>
         </div>
       </div>
@@ -31,11 +31,11 @@
       <div class="card-header"><i class="bi bi-clock text-warning"></i> <strong>סריקה</strong></div>
       <div class="card-body">
         <div class="mb-2">
-          <div class="ts text-muted">תדירות</div>
+          <div class="label-text">תדירות</div>
           <div>כל {{ polling_interval }} דקות</div>
         </div>
         <div>
-          <div class="ts text-muted">שעות פעילות</div>
+          <div class="label-text">שעות פעילות</div>
           <div>{% if active_hours %}{{ active_hours }}{% else %}תמיד{% endif %}</div>
         </div>
       </div>
@@ -71,7 +71,7 @@
           {% if telegram_enabled %}מופעל{% else %}מושבת{% endif %}
         </div>
         {% if telegram_enabled %}
-        <div class="ts text-muted">Bot Token</div>
+        <div class="label-text">Bot Token</div>
         <div class="secret-mask">{{ telegram_token_masked }}</div>
         {% endif %}
       </div>
@@ -87,9 +87,9 @@
           {% if email_enabled %}מופעל{% else %}מושבת{% endif %}
         </div>
         {% if email_enabled %}
-        <div class="ts text-muted">שרת</div>
+        <div class="label-text">שרת</div>
         <div>{{ smtp_host }}:{{ smtp_port }}</div>
-        <div class="ts text-muted mt-1">משתמש</div>
+        <div class="label-text mt-2">משתמש</div>
         <div>{{ smtp_user }}</div>
         {% endif %}
       </div>
@@ -125,7 +125,7 @@
     <div class="card">
       <div class="card-header"><i class="bi bi-database text-warning"></i> <strong>אחסון</strong></div>
       <div class="card-body">
-        <div class="ts text-muted">קובץ מצב (SQLite)</div>
+        <div class="label-text">קובץ מצב (SQLite)</div>
         <div class="font-monospace ts">{{ state_db_path }}</div>
       </div>
     </div>

@@ -17,7 +17,7 @@
     </div>
     <div class="card-body">
       {% if r.phone %}
-      <div class="ts mb-2"><i class="bi bi-telephone text-muted"></i> {{ r.phone }}</div>
+      <div class="ts mb-2"><i class="bi bi-telephone"></i> {{ r.phone }}</div>
       {% endif %}
 
       <div class="mb-2 d-flex flex-wrap gap-1">
@@ -32,7 +32,7 @@
         {% endif %}
       </div>
 
-      <div class="ts text-muted mb-1">מינימום חומרה:
+      <div class="ts mb-1">מינימום חומרה:
         {% if r.min_severity == 'critical' %}<span class="sev-critical">קריטי</span>
         {% elif r.min_severity == 'warning' %}<span class="sev-warning">אזהרה</span>
         {% else %}<span class="sev-info">מידע</span>{% endif %}
@@ -50,7 +50,7 @@
 </div>
 {% else %}
 <div class="no-config-banner">
-  <i class="bi bi-people fs-1 d-block mb-3 text-muted"></i>
+  <i class="bi bi-people fs-1 d-block mb-3"></i>
   <h5 class="text-muted">לא הוגדרו נמענים</h5>
   <p class="text-muted mb-0">הוסף נמענים תחת <code>recipients</code> בקובץ config.yaml.</p>
 </div>

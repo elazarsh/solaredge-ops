@@ -118,6 +118,7 @@ class Config:
     monthly_report: MonthlyReportConfig
     recipients: list[Recipient]
     state_db_path: str
+    data_dir: str = ""           # directory for CSV data files (Google Drive or local)
     weather: WeatherConfig = field(default_factory=WeatherConfig)
 
     def site_by_id(self, site_id: int) -> SiteConfig | None:
@@ -237,6 +238,12 @@ def load_config(path: str | Path) -> Config:
     recipients = _build_recipients(raw.get("recipients"))
 
     storage_raw = raw.get("storage") or {}
+    state_db = storage_raw.get("state_db_path", "state.db")
+
+    # data_dir: explicit path (e.g. Google Drive folder) or auto-derived next to state.db
+    explicit_data = (storage_raw.get("data_path") or "").strip()
+    data_dir = explicit_data if explicit_data else str(Path(state_db).parent / "data")
+
     weather_raw = raw.get("weather") or {}
     weather = WeatherConfig(
         enabled=bool(weather_raw.get("enabled", True)),
@@ -255,6 +262,7 @@ def load_config(path: str | Path) -> Config:
         email=email,
         monthly_report=monthly_report,
         recipients=recipients,
-        state_db_path=storage_raw.get("state_db_path", "state.db"),
+        state_db_path=state_db,
+        data_dir=data_dir,
         weather=weather,
     )

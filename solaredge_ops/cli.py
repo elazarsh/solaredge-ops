@@ -95,6 +95,7 @@ def cmd_report(args: argparse.Namespace) -> int:
 
 
 def cmd_collect(args: argparse.Namespace) -> int:
+    from datetime import date as _date
     from .data_collector import collect_all, generate_demo_data
     config = load_config(args.config)
     if args.demo:
@@ -106,9 +107,31 @@ def cmd_collect(args: argparse.Namespace) -> int:
         generate_demo_data(config)
         print("Done. Demo data written. Do NOT use this for real analysis.")
         return 0
+
+    # Resolve --backfill / --since overrides
+    backfill_days: int | None = None
+    since_date: _date | None = None
+    if getattr(args, "since", None):
+        try:
+            since_date = _date.fromisoformat(args.since)
+        except ValueError:
+            print(f"Error: --since value '{args.since}' is not a valid YYYY-MM-DD date.", file=sys.stderr)
+            return 1
+    elif getattr(args, "backfill", None) is not None:
+        if args.backfill <= 0:
+            print("Error: --backfill must be a positive number of days.", file=sys.stderr)
+            return 1
+        backfill_days = args.backfill
+
+    if since_date:
+        print(f"Collecting data for {len(config.sites)} site(s) — backfill from {since_date}...")
+    elif backfill_days:
+        print(f"Collecting data for {len(config.sites)} site(s) — backfill {backfill_days} days...")
+    else:
+        print(f"Collecting data for {len(config.sites)} site(s)...")
+
     client = SolarEdgeClient(config.api_key, config.max_requests_per_day)
-    print(f"Collecting data for {len(config.sites)} site(s)...")
-    counts = collect_all(config, client)
+    counts = collect_all(config, client, backfill_days=backfill_days, since_date=since_date)
     print(f"  snapshots:      {counts['snapshots']} row(s)")
     print(f"  daily energy:   {counts['daily']} row(s)")
     print(f"  monthly energy: {counts['monthly']} row(s)")
@@ -161,6 +184,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     collect = sub.add_parser("collect", help="Fetch data from API and save to CSV for analytics")
     collect.add_argument("--demo", action="store_true", help="Generate synthetic demo data (no API needed)")
+    collect_bf = collect.add_mutually_exclusive_group()
+    collect_bf.add_argument(
+        "--backfill", type=int, metavar="DAYS",
+        help="Fetch this many days back regardless of tracker (e.g. --backfill 730 for 2 years)"
+    )
+    collect_bf.add_argument(
+        "--since", metavar="DATE",
+        help="Fetch from a specific date to today, format YYYY-MM-DD (e.g. --since 2024-01-01)"
+    )
     collect.set_defaults(func=cmd_collect)
 
     web = sub.add_parser("web", help="Start the web UI dashboard")
