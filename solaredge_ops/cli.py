@@ -94,6 +94,25 @@ def cmd_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_collect(args: argparse.Namespace) -> int:
+    from .data_collector import collect_all, generate_demo_data
+    config = load_config(args.config)
+    if args.demo:
+        print("Generating demo data...")
+        generate_demo_data(config)
+        print("Done. Open the Analytics dashboard to explore the data.")
+        return 0
+    client = SolarEdgeClient(config.api_key, config.max_requests_per_day)
+    print(f"Collecting data for {len(config.sites)} site(s)...")
+    counts = collect_all(config, client)
+    print(f"  snapshots:      {counts['snapshots']} row(s)")
+    print(f"  daily energy:   {counts['daily']} row(s)")
+    print(f"  monthly energy: {counts['monthly']} row(s)")
+    print(f"  alert events:   {counts['alerts']} row(s)")
+    print("Saved to data/ folder. Open the Analytics dashboard to explore.")
+    return 0
+
+
 def cmd_web(args: argparse.Namespace) -> int:
     from .web import run as web_run
     print(f"Starting web UI at http://{args.host}:{args.port}")
@@ -128,6 +147,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     contacts = sub.add_parser("contacts", help="List configured recipients and what they're subscribed to")
     contacts.set_defaults(func=cmd_contacts)
+
+    collect = sub.add_parser("collect", help="Fetch data from API and save to CSV for analytics")
+    collect.add_argument("--demo", action="store_true", help="Generate synthetic demo data (no API needed)")
+    collect.set_defaults(func=cmd_collect)
 
     web = sub.add_parser("web", help="Start the web UI dashboard")
     web.add_argument("--port", type=int, default=5000, help="Port to listen on (default: 5000)")

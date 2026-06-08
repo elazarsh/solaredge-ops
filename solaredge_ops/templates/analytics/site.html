@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% block title %}{{ site_name }} — ניתוח אתר{% endblock %}
+{% block content %}
+<style>
+  .kpi-card  { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:1rem 1.25rem; }
+  .kpi-val   { font-size:1.7rem; font-weight:700; color:#f0f6fc; line-height:1.1; }
+  .kpi-lbl   { font-size:0.68rem; font-weight:700; color:#8b949e; text-transform:uppercase; letter-spacing:.07em; margin-top:4px; }
+  .kpi-sub   { font-size:0.78rem; margin-top:3px; }
+  .chart-card{ background:#161b22; border:1px solid #30363d; border-radius:10px; padding:1.25rem; }
+  .chart-title{ font-size:0.82rem; font-weight:700; color:#f0f6fc; text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem; }
+  .period-btn{ background:#21262d; border:1px solid #30363d; color:#8b949e; border-radius:6px; padding:3px 10px; font-size:0.78rem; cursor:pointer; }
+  .period-btn.active,.period-btn:hover{ background:#1c2128; border-color:#e3b341; color:#e3b341; }
+  .crumb     { font-size:0.82rem; color:#8b949e; margin-bottom:1.25rem; }
+  .crumb a   { color:#58a6ff; text-decoration:none; }
+  .crumb a:hover{ text-decoration:underline; }
+  .pi-up     { color:#3fb950; }
+  .pi-down   { color:#f85149; }
+  .pi-ok     { color:#e3b341; }
+  .rec-table { font-size:0.83rem; }
+  .rec-table th{ font-size:0.67rem; }
+  .bar-pill  { height:6px; border-radius:3px; background:#21262d; }
+  .bar-fill  { height:6px; border-radius:3px; }
+</style>
+
+{# ── Breadcrumb ── #}
+<div class="crumb">
+  <a href="/analytics/">ניתוח צי</a>
+  <span class="mx-1">›</span>
+  <span style="color:#c9d1d9">{{ site_name }}</span>
+</div>
+
+<div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+  <div class="page-title mb-0"><i class="bi bi-building"></i> {{ site_name }}</div>
+  <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
+    <div style="display:inline-flex;background:#161b22;border:1px solid #30363d;border-radius:8px;overflow:hidden">
+      <button class="period-btn {% if period==30  %}active{% endif %}" onclick="setPeriod(30)">30י</button>
+      <button class="period-btn {% if period==90  %}active{% endif %}" onclick="setPeriod(90)">90י</button>
+      <button class="period-btn {% if period==365 %}active{% endif %}" onclick="setPeriod(365)">שנה</button>
+    </div>
+    <a href="/analytics/" class="btn btn-sm" style="background:#21262d;border:1px solid #30363d;color:#c9d1d9;">
+      ← צי
+    </a>
+  </div>
+</div>
+
+{% if not has_data %}
+<div style="background:#161b22;border:1px dashed #30363d;border-radius:10px;padding:3rem;text-align:center">
+  <i class="bi bi-bar-chart-line fs-1 d-block mb-3" style="color:#484f58"></i>
+  <h5 style="color:#8b949e">אין נתונים לאתר זה</h5>
+  <p class="ts">הרץ <code>solaredge-ops collect --demo</code> לנתוני הדגמה.</p>
+</div>
+{% else %}
+
+{# ── KPI cards ── #}
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-2 col-lg-4">
+    <div class="kpi-card">
+      <div class="kpi-val">{{ "%.2f"|format(analysis.current_power_kw or 0) }}<span style="font-size:.9rem;color:#8b949e"> kW</span></div>
+      <div class="kpi-lbl">הספק עכשיו</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2 col-lg-4">
+    <div class="kpi-card">
+      <div class="kpi-val">{{ "%.1f"|format(analysis.total_30d_kwh or 0) }}<span style="font-size:.9rem;color:#8b949e"> kWh</span></div>
+      <div class="kpi-lbl">ייצור 30י</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2 col-lg-4">
+    <div class="kpi-card">
+      {% if analysis.performance_index %}
+        {% if analysis.performance_index >= 95 %}
+          <div class="kpi-val pi-up">{{ analysis.performance_index }}%</div>
+        {% elif analysis.performance_index >= 80 %}
+          <div class="kpi-val pi-ok">{{ analysis.performance_index }}%</div>
+        {% else %}
+          <div class="kpi-val pi-down">{{ analysis.performance_index }}%</div>
+        {% endif %}
+      {% else %}
+        <div class="kpi-val" style="color:#484f58">—</div>
+      {% endif %}
+      <div class="kpi-lbl">מדד ביצוע</div>
+      <div class="kpi-sub ts">PI = בפועל/צפוי</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2 col-lg-4">
+    <div class="kpi-card">
+      {% if analysis.availability_pct %}
+        {% set av = analysis.availability_pct %}
+        <div class="kpi-val {% if av >= 95 %}pi-up{% elif av >= 85 %}pi-ok{% else %}pi-down{% endif %}">{{ av }}%</div>
+      {% else %}
+        <div class="kpi-val" style="color:#484f58">—</div>
+      {% endif %}
+      <div class="kpi-lbl">זמינות</div>
+      <div class="kpi-sub ts">ימי ייצור תקין 30י</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2 col-lg-4">
+    <div class="kpi-card">
+      {% if analysis.yoy_delta_pct is not none %}
+        {% set yoy = analysis.yoy_delta_pct %}
+        <div class="kpi-val {% if yoy >= 0 %}pi-up{% else %}pi-down{% endif %}">
+          {% if yoy >= 0 %}+{% endif %}{{ yoy }}%
+        </div>
+      {% else %}
+        <div class="kpi-val" style="color:#484f58">—</div>
+      {% endif %}
+      <div class="kpi-lbl">YoY השינוי</div>
+      <div class="kpi-sub ts">חודש זה vs. אשתקד</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2 col-lg-4">
+    <div class="kpi-card">
+      <div class="kpi-val">{{ "{:,.0f}".format(analysis.total_365d_kwh or 0) }}<span style="font-size:.9rem;color:#8b949e"> kWh</span></div>
+      <div class="kpi-lbl">ייצור שנתי</div>
+    </div>
+  </div>
+</div>
+
+{# ── Daily chart ── #}
+<div class="row g-3 mb-3">
+  <div class="col-12">
+    <div class="chart-card">
+      <div class="d-flex align-items-center mb-3">
+        <div class="chart-title mb-0">ייצור יומי</div>
+        {% if analysis.expected_daily %}
+        <span class="ms-3 ts">ציפייה: {{ analysis.expected_daily }} kWh/יום</span>
+        {% endif %}
+      </div>
+      <div id="daily-chart" style="height:300px"></div>
+    </div>
+  </div>
+</div>
+
+{# ── Monthly YoY + PI trend ── #}
+<div class="row g-3 mb-3">
+  <div class="col-lg-7">
+    <div class="chart-card">
+      <div class="chart-title">השוואה שנתית (YoY)</div>
+      <div id="monthly-chart" style="height:260px"></div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="chart-card">
+      <div class="chart-title">מגמת מדד ביצוע (PI) — 12 חודשים</div>
+      <div id="pi-chart" style="height:260px"></div>
+    </div>
+  </div>
+</div>
+
+{# ── Drill-down table ── #}
+<div class="chart-card">
+  <div class="d-flex align-items-center mb-3">
+    <div class="chart-title mb-0">רשומות יומיות — {{ records|length }} ימים</div>
+    <div class="ms-auto">
+      <input type="text" id="rec-search" placeholder="סנן לפי תאריך..." onkeyup="filterRecords()"
+             style="background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:4px 10px;color:#c9d1d9;font-size:0.82rem;width:180px">
+    </div>
+  </div>
+  <div style="overflow-x:auto">
+  <table class="table rec-table mb-0" id="rec-table">
+    <thead><tr>
+      <th>תאריך</th>
+      <th>ייצור (kWh)</th>
+      <th>צפוי (kWh)</th>
+      <th>PI%</th>
+      <th>גרף</th>
+    </tr></thead>
+    <tbody>
+    {% set max_e = namespace(v=0.01) %}
+    {% for r in records %}{% if (r.energy_kwh or 0) > max_e.v %}{% set max_e.v = r.energy_kwh %}{% endif %}{% endfor %}
+    {% for r in records %}
+    {% set kwh = r.energy_kwh or 0 %}
+    {% set exp = r.expected_kwh or 0 %}
+    {% set pi_val = (kwh / exp * 100) if exp else none %}
+    <tr data-date="{{ r.date }}">
+      <td style="font-family:monospace;color:#c9d1d9">{{ r.date }}</td>
+      <td><strong>{{ "%.2f"|format(kwh) }}</strong></td>
+      <td>{% if exp %}{{ "%.1f"|format(exp) }}{% else %}<span style="color:#484f58">—</span>{% endif %}</td>
+      <td>
+        {% if pi_val is not none %}
+          <span class="{% if pi_val >= 95 %}pi-up{% elif pi_val >= 75 %}pi-ok{% else %}pi-down{% endif %}">
+            {{ "%.0f"|format(pi_val) }}%
+          </span>
+        {% else %}<span style="color:#484f58">—</span>{% endif %}
+      </td>
+      <td style="width:140px;min-width:100px">
+        <div class="bar-pill">
+          <div class="bar-fill" style="width:{{ [(kwh/max_e.v*100)|int, 100]|min }}%;background:{% if kwh < 5 %}#f85149{% elif pi_val and pi_val < 75 %}#e3b341{% else %}#3fb950{% endif %}"></div>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.34.0/plotly.min.js"></script>
+<script>
+const DAILY   = {{ daily_json }};
+const MONTHLY = {{ monthly_json }};
+const PI_DATA = {{ pi_json }};
+const DARK = { paper_bgcolor:'transparent', plot_bgcolor:'transparent',
+               font:{color:'#8b949e',size:11}, margin:{t:10,b:40,l:55,r:10} };
+
+// Daily chart — bars + expected line
+(function() {
+  const traces = [{
+    x: DAILY.map(r=>r.date), y: DAILY.map(r=>r.energy_kwh),
+    type:'bar', name:'ייצור בפועל',
+    marker:{color:DAILY.map(r => (r.energy_kwh||0) < 5 ? '#f85149' : '#3fb950'), opacity:0.85},
+    hovertemplate:'<b>%{x}</b><br>%{y:.2f} kWh<extra></extra>'
+  }];
+  const hasExp = DAILY.some(r=>r.expected_kwh);
+  if (hasExp) {
+    traces.push({
+      x: DAILY.map(r=>r.date), y: DAILY.map(r=>r.expected_kwh),
+      type:'scatter', mode:'lines', name:'צפוי',
+      line:{color:'#e3b341', width:1.5, dash:'dot'},
+      hovertemplate:'<b>%{x}</b><br>צפוי: %{y:.1f} kWh<extra></extra>'
+    });
+  }
+  Plotly.newPlot('daily-chart', traces, Object.assign({}, DARK, {
+    xaxis:{gridcolor:'#21262d',tickfont:{size:10}},
+    yaxis:{gridcolor:'#21262d',title:{text:'kWh',font:{size:10}}},
+    bargap:0.1, legend:{font:{size:10}}
+  }), {responsive:true, displayModeBar:false});
+})();
+
+// Monthly YoY
+(function() {
+  const months = MONTHLY.months || [];
+  const labels = {
+    '01':'ינ','02':'פב','03':'מר','04':'אפ','05':'מי','06':'יו',
+    '07':'יל','08':'אג','09':'ספ','10':'אק','11':'נו','12':'דצ'
+  };
+  const xlabels = months.map(m=>labels[m]||m);
+  Plotly.newPlot('monthly-chart', [
+    {
+      x:xlabels, y:MONTHLY.this_year||[], type:'bar', name:MONTHLY.this_year_label||'שנה זו',
+      marker:{color:'#58a6ff', opacity:0.85},
+      hovertemplate:'<b>%{x}</b><br>%{y:,.1f} kWh<extra></extra>'
+    },
+    {
+      x:xlabels, y:MONTHLY.last_year||[], type:'bar', name:MONTHLY.last_year_label||'אשתקד',
+      marker:{color:'#484f58', opacity:0.7},
+      hovertemplate:'<b>%{x}</b><br>%{y:,.1f} kWh<extra></extra>'
+    }
+  ], Object.assign({}, DARK, {
+    barmode:'group', bargap:0.2,
+    xaxis:{gridcolor:'#21262d'},
+    yaxis:{gridcolor:'#21262d', title:{text:'kWh',font:{size:10}}},
+    legend:{font:{size:10}}
+  }), {responsive:true, displayModeBar:false});
+})();
+
+// PI trend
+(function() {
+  if (!PI_DATA.length) {
+    document.getElementById('pi-chart').innerHTML =
+      '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#484f58;font-size:0.8rem">אין נתוני PI (נדרש expected_daily_kwh בקונפיגורציה)</div>';
+    return;
+  }
+  const colors = PI_DATA.map(r => r.pi>=95?'#3fb950':r.pi>=80?'#e3b341':'#f85149');
+  Plotly.newPlot('pi-chart', [
+    {
+      x:PI_DATA.map(r=>r.year_month), y:PI_DATA.map(r=>r.pi),
+      type:'bar', marker:{color:colors, opacity:0.9},
+      hovertemplate:'<b>%{x}</b><br>PI: %{y:.1f}%<extra></extra>'
+    },
+    {
+      x:PI_DATA.map(r=>r.year_month), y:PI_DATA.map(_=>100),
+      type:'scatter', mode:'lines', line:{color:'#e3b341',width:1,dash:'dot'},
+      hoverinfo:'skip', showlegend:false
+    }
+  ], Object.assign({}, DARK, {
+    xaxis:{gridcolor:'#21262d',tickfont:{size:9}},
+    yaxis:{gridcolor:'#21262d',title:{text:'%',font:{size:10}},range:[0,130]}
+  }), {responsive:true, displayModeBar:false});
+})();
+
+// Table filter
+function filterRecords() {
+  const q = document.getElementById('rec-search').value.toLowerCase();
+  document.querySelectorAll('#rec-table tbody tr').forEach(tr => {
+    tr.style.display = tr.dataset.date.includes(q) ? '' : 'none';
+  });
+}
+
+// Period selector
+function setPeriod(days) {
+  const u = new URL(window.location);
+  u.searchParams.set('period', days);
+  window.location = u;
+}
+</script>
+{% endif %}
+{% endblock %}

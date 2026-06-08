@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}ייצוא נתונים — Analytics{% endblock %}
+{% block content %}
+<style>
+  .file-card { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:1.25rem 1.5rem; }
+  .file-icon { font-size:1.8rem; }
+  .file-name { font-size:0.95rem; font-weight:700; color:#f0f6fc; font-family:monospace; }
+  .file-meta { font-size:0.8rem; color:#8b949e; }
+  .dl-btn    { background:#21262d; border:1px solid #30363d; color:#58a6ff; border-radius:7px;
+               padding:6px 18px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+  .dl-btn:hover { background:#1c2128; border-color:#58a6ff; color:#58a6ff; }
+  .dl-btn.disabled { color:#484f58; border-color:#21262d; cursor:not-allowed; pointer-events:none; }
+  .info-box  { background:#0c2d6b22; border:1px solid #1a4080; border-radius:8px; padding:1rem 1.25rem; }
+  .schema-table th { font-size:0.68rem; color:#8b949e; font-weight:700; text-transform:uppercase; }
+  .schema-table td { font-size:0.82rem; }
+  code { background:#0d1117; border:1px solid #30363d; border-radius:4px; padding:1px 6px; color:#e3b341; font-size:0.82rem; }
+</style>
+
+<div class="d-flex align-items-center gap-3 mb-4">
+  <div class="page-title mb-0"><i class="bi bi-download"></i> ייצוא ורשות גישה לנתונים</div>
+  <div class="ms-auto">
+    <a href="/analytics/" class="btn btn-sm" style="background:#21262d;border:1px solid #30363d;color:#c9d1d9;">← צי</a>
+  </div>
+</div>
+
+{# ── Info box ── #}
+<div class="info-box mb-4">
+  <i class="bi bi-info-circle" style="color:#58a6ff"></i>
+  <strong style="color:#f0f6fc"> קבצי ה-CSV</strong>
+  <span class="ts"> נשמרים תחת תיקיית <code>data/</code> ליד קובץ ה-state.db.
+  ניתן לפתוח אותם ב-Excel, ב-Python/pandas, ב-Power BI או בכל כלי BI אחר.</span>
+</div>
+
+{# ── Files grid ── #}
+<div class="row g-3 mb-5">
+  {% set icons = {
+    'snapshots.csv':     'bi-camera-fill',
+    'energy_daily.csv':  'bi-bar-chart-fill',
+    'energy_monthly.csv':'bi-calendar3',
+    'alerts_log.csv':    'bi-bell-fill'
+  } %}
+  {% set colors = {
+    'snapshots.csv':     '#3fb950',
+    'energy_daily.csv':  '#58a6ff',
+    'energy_monthly.csv':'#e3b341',
+    'alerts_log.csv':    '#f85149'
+  } %}
+
+  {% for f in files %}
+  <div class="col-md-6">
+    <div class="file-card h-100 d-flex flex-column">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <i class="file-icon {{ icons.get(f.name, 'bi-file-earmark-spreadsheet') }}"
+           style="color:{{ colors.get(f.name, '#8b949e') }}"></i>
+        <div>
+          <div class="file-name">{{ f.name }}</div>
+          {% if f.exists %}
+          <div class="file-meta">
+            {{ f.rows | default(0) }} שורות &nbsp;·&nbsp;
+            {{ f.size_kb }} KB
+          </div>
+          {% else %}
+          <div class="file-meta" style="color:#484f58">קובץ לא קיים — הרץ collect</div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="mt-auto">
+        {% if f.exists %}
+        <a href="/analytics/download/{{ f.name }}" class="dl-btn">
+          <i class="bi bi-download"></i> הורד CSV
+        </a>
+        {% else %}
+        <a href="#" class="dl-btn disabled">
+          <i class="bi bi-download"></i> לא זמין
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{# ── Schema reference ── #}
+<h6 style="color:#f0f6fc;font-weight:700;margin-bottom:1rem">סכמת עמודות</h6>
+<div class="row g-3">
+
+  <div class="col-lg-6">
+    <div class="file-card">
+      <div class="file-name mb-3" style="color:#3fb950">snapshots.csv</div>
+      <table class="table schema-table mb-0">
+        <thead><tr><th>עמודה</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td><code>collected_at</code></td><td>תאריך ושעה של האיסוף</td></tr>
+          <tr><td><code>site_id</code></td><td>מזהה אתר ב-SolarEdge</td></tr>
+          <tr><td><code>site_name</code></td><td>שם האתר</td></tr>
+          <tr><td><code>current_power_kw</code></td><td>הספק נוכחי בקילוואט</td></tr>
+          <tr><td><code>day_energy_kwh</code></td><td>ייצור היום בקוט"ש</td></tr>
+          <tr><td><code>month_energy_kwh</code></td><td>ייצור החודש</td></tr>
+          <tr><td><code>year_energy_kwh</code></td><td>ייצור השנה</td></tr>
+          <tr><td><code>lifetime_energy_kwh</code></td><td>ייצור מצטבר</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="file-card">
+      <div class="file-name mb-3" style="color:#58a6ff">energy_daily.csv</div>
+      <table class="table schema-table mb-0">
+        <thead><tr><th>עמודה</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td><code>date</code></td><td>תאריך (YYYY-MM-DD)</td></tr>
+          <tr><td><code>site_id</code></td><td>מזהה אתר</td></tr>
+          <tr><td><code>site_name</code></td><td>שם האתר</td></tr>
+          <tr><td><code>energy_kwh</code></td><td>ייצור יומי בקוט"ש</td></tr>
+          <tr><td><code>expected_kwh</code></td><td>ייצור צפוי (מהגדרות)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="file-card">
+      <div class="file-name mb-3" style="color:#e3b341">energy_monthly.csv</div>
+      <table class="table schema-table mb-0">
+        <thead><tr><th>עמודה</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td><code>year_month</code></td><td>חודש (YYYY-MM)</td></tr>
+          <tr><td><code>site_id</code></td><td>מזהה אתר</td></tr>
+          <tr><td><code>site_name</code></td><td>שם האתר</td></tr>
+          <tr><td><code>energy_kwh</code></td><td>ייצור חודשי בקוט"ש</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="file-card">
+      <div class="file-name mb-3" style="color:#f85149">alerts_log.csv</div>
+      <table class="table schema-table mb-0">
+        <thead><tr><th>עמודה</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td><code>logged_at</code></td><td>מועד רישום האירוע</td></tr>
+          <tr><td><code>event_type</code></td><td>open / resolved</td></tr>
+          <tr><td><code>site_id</code></td><td>מזהה אתר</td></tr>
+          <tr><td><code>rule</code></td><td>שם הכלל שהופעל</td></tr>
+          <tr><td><code>severity</code></td><td>critical / warning / info</td></tr>
+          <tr><td><code>title</code></td><td>כותרת ההתראה</td></tr>
+          <tr><td><code>message</code></td><td>פרטי ההתראה</td></tr>
+          <tr><td><code>dedup_key</code></td><td>מפתח ייחודי (לדידוף)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+{# ── Quick Python snippet ── #}
+<div class="chart-card mt-4" style="background:#0d1117">
+  <div style="font-size:0.78rem;font-weight:700;color:#8b949e;text-transform:uppercase;margin-bottom:8px">דוגמת Python — pandas</div>
+  <pre style="color:#c9d1d9;font-size:0.82rem;margin:0;overflow-x:auto">import pandas as pd
+
+df = pd.read_csv("energy_daily.csv", parse_dates=["date"])
+monthly = df.groupby(["site_name", df.date.dt.to_period("M")])["energy_kwh"].sum()
+print(monthly)</pre>
+</div>
+
+{% endblock %}

@@ -1,13 +1,14 @@
 """Minimal Flask web UI for browsing system state."""
 from __future__ import annotations
 
+import json
 import sqlite3
 from contextlib import closing
 from datetime import datetime, time, timezone
 from pathlib import Path
 
 import yaml
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, abort, render_template, request, redirect, send_file, url_for
 
 from .config import Config, load_config
 
@@ -300,6 +301,153 @@ def config_edit():
         return render_template("no_config.html", active="config", open_count=0, config_path=str(config_path))
 
     return render_template("config_edit.html", **_config_edit_ctx(config, config_path, error, saved))
+
+
+# ── Analytics routes ──────────────────────────────────────────────────────────
+
+@app.route("/analytics/")
+@app.route("/analytics")
+def analytics_fleet():
+    from .analytics import fleet_summary
+    config = _get_config()
+    if not config:
+        return render_template("no_config.html", active="analytics", open_count=0, config_path=_config_path)
+
+    source = request.args.get("source", "csv")
+    summary = fleet_summary(config.state_db_path, config.sites)
+
+    # full timeline (for client-side period filtering)
+    from .analytics import load_daily
+    all_daily = load_daily(config.state_db_path)
+    from collections import defaultdict
+    by_date: dict[str, float] = defaultdict(float)
+    for r in all_daily:
+        if r["energy_kwh"] is not None:
+            by_date[r["date"]] += r["energy_kwh"]
+    full_timeline = [{"date": k, "energy_kwh": round(v, 2)} for k, v in sorted(by_date.items())]
+
+    return render_template(
+        "analytics/fleet.html",
+        active="analytics",
+        open_count=len(_open_alerts(config)),
+        summary=summary,
+        has_data=summary.get("has_data", False),
+        source=source,
+        timeline_json=json.dumps(full_timeline),
+        ranking_json=json.dumps(summary.get("site_ranking", [])),
+    )
+
+
+@app.route("/analytics/site/<int:site_id>")
+def analytics_site(site_id: int):
+    from .analytics import site_analysis, load_daily
+    config = _get_config()
+    if not config:
+        return render_template("no_config.html", active="analytics", open_count=0, config_path=_config_path)
+
+    site_cfg  = next((s for s in config.sites if s.id == site_id), None)
+    site_name = site_cfg.name if site_cfg else f"Site {site_id}"
+    expected  = getattr(site_cfg, "expected_daily_kwh", None) if site_cfg else None
+    source    = request.args.get("source", "csv")
+    period    = int(request.args.get("period", 365))
+
+    analysis  = site_analysis(config.state_db_path, site_id, site_name, expected)
+
+    # Drill-down table: all daily records for the selected period
+    all_recs = load_daily(config.state_db_path, site_id)
+    records  = sorted(all_recs[-period:], key=lambda r: r["date"], reverse=True)
+
+    # Daily chart data for selected period
+    daily_chart = analysis.get("daily_chart", [])[-period:]
+
+    return render_template(
+        "analytics/site.html",
+        active="analytics",
+        open_count=len(_open_alerts(config)),
+        analysis=analysis,
+        has_data=analysis.get("has_data", False),
+        site_id=site_id,
+        site_name=site_name,
+        source=source,
+        period=period,
+        sites=config.sites,
+        records=records,
+        daily_json=json.dumps(daily_chart),
+        monthly_json=json.dumps(analysis.get("monthly_chart", {})),
+        pi_json=json.dumps(analysis.get("pi_trend", [])),
+    )
+
+
+@app.route("/analytics/compare")
+def analytics_compare():
+    from .analytics import compare_sites
+    config = _get_config()
+    if not config:
+        return render_template("no_config.html", active="analytics", open_count=0, config_path=_config_path)
+
+    selected_raw = request.args.get("sites", "")
+    period       = int(request.args.get("period", 30))
+
+    if selected_raw:
+        selected_ids = [int(x) for x in selected_raw.split(",") if x.strip().isdigit()]
+    else:
+        selected_ids = [s.id for s in config.sites]
+
+    comparison = compare_sites(config.state_db_path, selected_ids, period)
+
+    COLORS = ["#3fb950", "#58a6ff", "#e3b341", "#f85149", "#a371f7", "#39d353"]
+    traces = []
+    for i, sid in enumerate(selected_ids):
+        site_data = comparison["sites"].get(sid, {})
+        traces.append({
+            "site_id":   sid,
+            "site_name": site_data.get("site_name", f"Site {sid}"),
+            "values":    comparison["timeline"].get(sid, []),
+            "color":     COLORS[i % len(COLORS)],
+        })
+
+    return render_template(
+        "analytics/compare.html",
+        active="analytics",
+        open_count=len(_open_alerts(config)),
+        comparison=comparison,
+        sites=config.sites,
+        selected_ids=selected_ids,
+        period=period,
+        has_data=comparison.get("has_data", False),
+        dates_json=json.dumps(comparison.get("all_dates", [])),
+        traces_json=json.dumps(traces),
+    )
+
+
+@app.route("/analytics/export")
+def analytics_export():
+    from .analytics import data_files_info
+    config = _get_config()
+    if not config:
+        return render_template("no_config.html", active="analytics", open_count=0, config_path=_config_path)
+
+    files = data_files_info(config.state_db_path)
+    return render_template(
+        "analytics/export.html",
+        active="analytics",
+        open_count=len(_open_alerts(config)),
+        files=files,
+    )
+
+
+@app.route("/analytics/download/<filename>")
+def analytics_download(filename: str):
+    _allowed = {"snapshots.csv", "energy_daily.csv", "energy_monthly.csv", "alerts_log.csv"}
+    if filename not in _allowed:
+        abort(404)
+    config = _get_config()
+    if not config:
+        abort(404)
+    p = Path(config.state_db_path).parent / "data" / filename
+    if not p.exists():
+        abort(404)
+    return send_file(str(p.resolve()), as_attachment=True, download_name=filename)
 
 
 def run(config_path: str = "config.yaml", host: str = "127.0.0.1", port: int = 5000, debug: bool = False):

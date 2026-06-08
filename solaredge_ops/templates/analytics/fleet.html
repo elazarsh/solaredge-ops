@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block title %}ניתוח צי — SolarEdge Ops{% endblock %}
+{% block content %}
+<style>
+  .kpi-card { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:1.25rem 1.5rem; }
+  .kpi-val  { font-size:2rem; font-weight:700; color:#f0f6fc; line-height:1.1; }
+  .kpi-lbl  { font-size:0.7rem; font-weight:700; color:#8b949e; text-transform:uppercase; letter-spacing:.07em; margin-top:4px; }
+  .kpi-sub  { font-size:0.8rem; color:#8b949e; margin-top:2px; }
+  .chart-card { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:1.25rem; }
+  .chart-title { font-size:0.85rem; font-weight:700; color:#f0f6fc; text-transform:uppercase; letter-spacing:.05em; margin-bottom:1rem; }
+  .period-btn { background:#21262d; border:1px solid #30363d; color:#8b949e; border-radius:6px; padding:3px 10px; font-size:0.78rem; cursor:pointer; }
+  .period-btn.active, .period-btn:hover { background:#1c2128; border-color:#e3b341; color:#e3b341; }
+  .source-toggle { display:inline-flex; background:#161b22; border:1px solid #30363d; border-radius:8px; overflow:hidden; }
+  .source-btn { padding:5px 14px; font-size:0.8rem; cursor:pointer; color:#8b949e; border:none; background:none; }
+  .source-btn.active { background:#21262d; color:#f0f6fc; font-weight:600; }
+  .rank-table th { font-size:0.7rem; font-weight:700; color:#8b949e; text-transform:uppercase; }
+  .rank-num { font-size:1.1rem; font-weight:700; color:#e3b341; }
+  .pi-badge { padding:2px 8px; border-radius:999px; font-size:0.75rem; font-weight:700; }
+  .no-data-box { background:#161b22; border:1px dashed #30363d; border-radius:10px; padding:3rem; text-align:center; }
+</style>
+
+<div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+  <div class="page-title mb-0"><i class="bi bi-graph-up-arrow"></i> ניתוח ביצועי צי</div>
+  <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
+    {% if has_data %}
+    <div class="source-toggle">
+      <button class="source-btn {% if source=='csv' %}active{% endif %}" onclick="setSource('csv')">CSV</button>
+      <button class="source-btn {% if source=='api' %}active{% endif %}" onclick="setSource('api')">API Live</button>
+    </div>
+    {% endif %}
+    <a href="/analytics/export" class="btn btn-sm" style="background:#21262d;border:1px solid #30363d;color:#c9d1d9;">
+      <i class="bi bi-download"></i> ייצוא CSV
+    </a>
+    <a href="/analytics/compare" class="btn btn-sm" style="background:#21262d;border:1px solid #30363d;color:#c9d1d9;">
+      <i class="bi bi-arrows-angle-contract"></i> השוואת אתרים
+    </a>
+  </div>
+</div>
+
+{% if not has_data %}
+<div class="no-data-box">
+  <i class="bi bi-database-x fs-1 d-block mb-3" style="color:#484f58"></i>
+  <h5 style="color:#8b949e">אין עדיין נתוני ניתוח</h5>
+  <p class="ts mb-3">יש להריץ <code>solaredge-ops collect</code> כדי לאסוף נתונים מה-API,<br>
+  או <code>solaredge-ops collect --demo</code> לנתוני הדגמה.</p>
+  <code style="background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:6px 16px;color:#e3b341;font-size:0.85rem;">
+    solaredge-ops --config config.yaml collect --demo
+  </code>
+</div>
+{% else %}
+
+{# ── KPI cards ── #}
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="kpi-card">
+      <div class="kpi-val">{{ "%.1f"|format(summary.total_power_kw) }} <span style="font-size:1rem;color:#8b949e">kW</span></div>
+      <div class="kpi-lbl">הספק נוכחי</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="kpi-card">
+      <div class="kpi-val">{{ "%.1f"|format(summary.total_day_kwh) }} <span style="font-size:1rem;color:#8b949e">kWh</span></div>
+      <div class="kpi-lbl">ייצור היום</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="kpi-card">
+      <div class="kpi-val">{{ "{:,.0f}".format(summary.total_month_kwh) }} <span style="font-size:1rem;color:#8b949e">kWh</span></div>
+      <div class="kpi-lbl">ייצור החודש</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="kpi-card">
+      <div class="kpi-val">{{ "{:,.0f}".format(summary.total_year_kwh) }} <span style="font-size:1rem;color:#8b949e">kWh</span></div>
+      <div class="kpi-lbl">ייצור השנה</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  {# ── Fleet timeline ── #}
+  <div class="col-lg-8">
+    <div class="chart-card">
+      <div class="d-flex align-items-center mb-3">
+        <div class="chart-title mb-0">ייצור יומי של הצי</div>
+        <div class="ms-auto d-flex gap-1">
+          <button class="period-btn active" onclick="filterTimeline(30,this)">30י</button>
+          <button class="period-btn" onclick="filterTimeline(90,this)">90י</button>
+          <button class="period-btn" onclick="filterTimeline(365,this)">שנה</button>
+        </div>
+      </div>
+      <div id="fleet-timeline" style="height:280px"></div>
+    </div>
+  </div>
+  {# ── Site breakdown donut ── #}
+  <div class="col-lg-4">
+    <div class="chart-card h-100">
+      <div class="chart-title">חלוקת ייצור בין אתרים (30י)</div>
+      <div id="site-donut" style="height:245px"></div>
+    </div>
+  </div>
+</div>
+
+{# ── Site ranking + production bar ── #}
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <div class="chart-title">ייצור לפי אתר — 30 ימים אחרונים</div>
+      <div id="site-bar" style="height:{{ [200, summary.site_ranking|length * 50]|max }}px"></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <div class="chart-title">דירוג אתרים</div>
+      <table class="table rank-table mb-0" style="font-size:0.88rem">
+        <thead><tr>
+          <th>#</th><th>אתר</th><th>ייצור 30י (kWh)</th><th>ביצוע</th>
+        </tr></thead>
+        <tbody>
+        {% for r in summary.site_ranking %}
+        <tr onclick="window.location='/analytics/site/{{ r.site_id }}'" style="cursor:pointer">
+          <td><span class="rank-num">{{ r.rank }}</span></td>
+          <td><a href="/analytics/site/{{ r.site_id }}" style="color:#c9d1d9;text-decoration:none">{{ r.site_name }}</a></td>
+          <td>{{ "{:,.1f}".format(r.energy_kwh) }}</td>
+          <td>
+            {% set max_e = summary.site_ranking[0].energy_kwh %}
+            {% if max_e > 0 %}
+            <div style="background:#21262d;border-radius:4px;height:6px;width:100%">
+              <div style="background:#3fb950;height:6px;border-radius:4px;width:{{ (r.energy_kwh/max_e*100)|int }}%"></div>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.34.0/plotly.min.js"></script>
+<script>
+const TIMELINE = {{ timeline_json }};
+const RANKING  = {{ ranking_json }};
+const DARK = { paper_bgcolor:'transparent', plot_bgcolor:'transparent',
+               font:{color:'#8b949e',size:11}, margin:{t:10,b:40,l:50,r:10} };
+
+// Fleet timeline
+function filterTimeline(days, btn) {
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - days);
+  const filtered = TIMELINE.filter(r => new Date(r.date) >= cutoff);
+  renderTimeline(filtered);
+}
+function renderTimeline(data) {
+  Plotly.react('fleet-timeline', [{
+    x: data.map(r=>r.date), y: data.map(r=>r.energy_kwh),
+    type:'bar', marker:{color:'#3fb950', opacity:0.85},
+    hovertemplate:'<b>%{x}</b><br>%{y:.1f} kWh<extra></extra>'
+  }], Object.assign({}, DARK, {
+    xaxis:{gridcolor:'#21262d',tickfont:{size:10}},
+    yaxis:{gridcolor:'#21262d',title:{text:'kWh',font:{size:10}}},
+    bargap:0.15
+  }), {responsive:true, displayModeBar:false});
+}
+renderTimeline(TIMELINE.slice(-30));
+
+// Site bar
+Plotly.newPlot('site-bar', [{
+  x: RANKING.map(r=>r.energy_kwh), y: RANKING.map(r=>r.site_name),
+  type:'bar', orientation:'h',
+  marker:{color:'#58a6ff', opacity:0.85},
+  hovertemplate:'<b>%{y}</b><br>%{x:,.1f} kWh<extra></extra>'
+}], Object.assign({}, DARK, {
+  margin:{t:10,b:40,l:150,r:20},
+  xaxis:{gridcolor:'#21262d', title:{text:'kWh',font:{size:10}}},
+  yaxis:{tickfont:{size:11}, automargin:true},
+}), {responsive:true, displayModeBar:false});
+
+// Donut
+Plotly.newPlot('site-donut', [{
+  values: RANKING.map(r=>r.energy_kwh),
+  labels: RANKING.map(r=>r.site_name),
+  type:'pie', hole:0.55,
+  marker:{colors:['#3fb950','#58a6ff','#e3b341','#f85149','#a371f7','#39d353']},
+  hovertemplate:'<b>%{label}</b><br>%{value:,.1f} kWh (%{percent})<extra></extra>',
+  textinfo:'none'
+}], Object.assign({}, DARK, {
+  margin:{t:10,b:10,l:10,r:10},
+  showlegend:true,
+  legend:{font:{size:10}, orientation:'v'}
+}), {responsive:true, displayModeBar:false});
+
+function setSource(s) {
+  const u = new URL(window.location); u.searchParams.set('source',s); window.location = u;
+}
+</script>
+{% endif %}
+{% endblock %}
