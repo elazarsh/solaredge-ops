@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+config.yaml
+state.db
+*.log
+*.egg-info/
+.pytest_cache/
+.claude/

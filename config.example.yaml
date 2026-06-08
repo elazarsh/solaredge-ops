@@ -1,0 +1,99 @@
+# Copy this file to config.yaml and fill in your real values.
+# config.yaml is gitignored so secrets never get committed.
+
+solaredge:
+  api_key: "YOUR_ACCOUNT_OR_SITE_API_KEY"
+  max_requests_per_day: 300        # SolarEdge's published per-key/per-site daily limit
+
+sites:
+  - id: 123456
+    name: "Site A - Main Roof"
+    expected_daily_kwh: 450        # baseline used by the low_production rule (optional)
+  - id: 234567
+    name: "Site B - Warehouse"
+    expected_daily_kwh: 800
+
+polling:
+  interval_minutes: 30
+  active_hours:                    # only poll/alert in this window (saves quota, avoids night noise)
+    start: "06:00"
+    end: "19:00"
+
+alert_rules:
+  equipment_offline:
+    enabled: true
+    grace_minutes: 60              # require N minutes of silence before alerting (avoids flapping)
+  zero_production_daylight:
+    enabled: true
+    grace_minutes: 45
+  low_production:
+    enabled: true
+    threshold_pct: 70              # alert if today's energy-so-far < 70% of expected_daily_kwh (time-adjusted)
+    min_hour_of_day: 12            # don't judge "low production" before this local hour
+  performance_drop:
+    enabled: true
+    threshold_pct: 20              # alert if a site underperforms the fleet median by more than this %
+  alert_count_jump:
+    enabled: true                  # alert when SolarEdge's own open-alert counter jumps for a site
+
+# Transport-level settings only (how to send). *Who* gets *what* lives below,
+# in `recipients` - that's what makes per-person/per-role routing possible.
+notifications:
+  telegram:
+    enabled: true
+    bot_token: "123456:ABC-YOUR-BOT-TOKEN"
+  email:
+    enabled: false
+    smtp_host: "smtp.gmail.com"
+    smtp_port: 587
+    username: "you@example.com"
+    password: "APP_PASSWORD"
+    from_addr: "you@example.com"
+
+# The contact directory + routing rules: who gets notified, about what, on
+# which channel(s), and how urgent it has to be before they're bothered.
+#
+#   telegram_chat_id / email - at least one is required (a person's group
+#                              chat ID, their personal chat ID, or their inbox).
+#                              `phone` is stored for the team directory only -
+#                              there's no SMS channel (yet), so it isn't used
+#                              for delivery.
+#   categories               - which alert rules this person cares about:
+#                              equipment_offline | zero_production_daylight |
+#                              low_production | performance_drop | alert_count_jump
+#                              ...or "all" for every alert rule. The special
+#                              pseudo-category "monthly_report" is opt-in only
+#                              (added separately from "all") and routes the
+#                              periodic production/financial summary by email.
+#   min_severity             - the floor below which this person isn't bothered
+#                              (info < warning < critical).
+recipients:
+  - name: "Danny - Maintenance lead"
+    role: maintenance
+    phone: "+972-50-000-0000"
+    telegram_chat_id: "-1001234567890"   # the field crew's group chat - gets real-time alerts
+    categories: [equipment_offline, zero_production_daylight, low_production, performance_drop, alert_count_jump]
+    min_severity: warning                # don't wake them up for "info"-level noise
+
+  - name: "Ronit - Finance"
+    role: finance
+    phone: "+972-50-111-1111"
+    email: "ronit@example.com"
+    categories: [monthly_report]         # only the periodic production/financial summary
+    min_severity: info                   # irrelevant for the report, harmless default
+
+  - name: "Yossi - CEO"
+    role: management
+    phone: "+972-50-222-2222"
+    telegram_chat_id: "222222222"        # personal chat - a quiet channel, only for what truly matters
+    email: "yossi@example.com"
+    categories: [all, monthly_report]    # the big picture: critical field issues + the monthly summary
+    min_severity: critical               # but skip the day-to-day noise the maintenance crew already has
+
+reporting:
+  monthly:
+    enabled: true
+    day_of_month: 1                # generate/send on this day of month, covering the previous month
+
+storage:
+  state_db_path: "state.db"
