@@ -8,6 +8,8 @@ from datetime import datetime, time, timezone
 from pathlib import Path
 
 import yaml
+import traceback
+
 from flask import Flask, abort, render_template, request, redirect, send_file, url_for
 
 from .config import Config, load_config
@@ -15,6 +17,42 @@ from .config import Config, load_config
 app = Flask(__name__)
 _config: Config | None = None
 _config_path: str = "config.yaml"
+
+
+@app.errorhandler(404)
+def _err404(e):
+    config = _get_config()
+    open_count = len(_open_alerts(config)) if config else 0
+    return render_template("error.html", code=404,
+                           title="דף לא נמצא",
+                           message="הכתובת שביקשת אינה קיימת במערכת.",
+                           detail=None, open_count=open_count), 404
+
+
+@app.errorhandler(500)
+def _err500(e):
+    config = _get_config()
+    open_count = len(_open_alerts(config)) if config else 0
+    tb = traceback.format_exc()
+    app.logger.error("Internal error:\n%s", tb)
+    return render_template("error.html", code=500,
+                           title="שגיאה פנימית",
+                           message="אירעה שגיאה בלתי צפויה בשרת.",
+                           detail=tb if app.debug else None,
+                           open_count=open_count), 500
+
+
+@app.errorhandler(Exception)
+def _err_any(e):
+    config = _get_config()
+    open_count = len(_open_alerts(config)) if config else 0
+    tb = traceback.format_exc()
+    app.logger.error("Unhandled exception:\n%s", tb)
+    return render_template("error.html", code=500,
+                           title="שגיאה פנימית",
+                           message=str(e) or "אירעה שגיאה בלתי צפויה.",
+                           detail=tb if app.debug else None,
+                           open_count=open_count), 500
 
 
 def _get_config() -> Config | None:

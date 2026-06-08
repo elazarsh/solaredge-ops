@@ -19,7 +19,7 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-# ג”€ג”€ CSV loaders ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
+# ── CSV loaders ──────────────────────────────────────────────────────────────
 
 def _data_dir(data_dir: str) -> Path:
     """Return the data directory Path. `data_dir` is config.data_dir (already resolved)."""
@@ -134,7 +134,7 @@ def _f(v) -> float | None:
         return None
 
 
-# ג”€ג”€ fleet-level analytics ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
+# ── fleet-level analytics ────────────────────────────────────────────────────
 
 def fleet_summary(data_dir: str, sites: list) -> dict:
     """Top-level KPIs for the entire fleet."""
@@ -192,11 +192,11 @@ def fleet_summary(data_dir: str, sites: list) -> dict:
     }
 
 
-# ג”€ג”€ site-level analytics ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
+# ── site-level analytics ─────────────────────────────────────────────────────
 
 def site_analysis(data_dir: str, site_id: int, site_name: str,
                   expected_daily_kwh: float | None = None) -> dict:
-    “””Full analytics for one site -- all chart data + KPIs.”””
+    """Full analytics for one site -- all chart data + KPIs."""
     daily   = load_daily(data_dir, site_id)
     monthly = load_monthly(data_dir, site_id)
     snaps   = load_snapshots(data_dir, site_id)
@@ -204,7 +204,7 @@ def site_analysis(data_dir: str, site_id: int, site_name: str,
     if not daily:
         return {"has_data": False, "site_id": site_id, "site_name": site_name}
 
-    # ג”€ג”€ KPIs ג”€ג”€
+    # ── KPIs ──
     last_snap = snaps[-1] if snaps else {}
     recent_30d = [r for r in daily
                   if r["date"] >= (datetime.now(timezone.utc) - timedelta(days=30)).strftime("%Y-%m-%d")]
@@ -228,11 +228,11 @@ def site_analysis(data_dir: str, site_id: int, site_name: str,
     available = sum(1 for r in avail_days if (r["energy_kwh"] or 0) > threshold)
     availability_pct = round(available / len(avail_days) * 100, 1) if avail_days else None
 
-    # ג”€ג”€ Daily chart ג”€ג”€
+    # ── Daily chart ──
     daily_chart = [{"date": r["date"], "energy_kwh": r["energy_kwh"],
                     "expected_kwh": r["expected_kwh"]} for r in daily[-365:]]
 
-    # ג”€ג”€ Monthly chart: this year vs last year ג”€ג”€
+    # ── Monthly chart: this year vs last year ──
     this_year = str(datetime.now(timezone.utc).year)
     last_year = str(datetime.now(timezone.utc).year - 1)
     monthly_by_ym: dict[str, float] = {}
@@ -249,7 +249,7 @@ def site_analysis(data_dir: str, site_id: int, site_name: str,
         "last_year_label": last_year,
     }
 
-    # ג”€ג”€ YoY delta ג”€ג”€
+    # ── YoY delta ──
     cur_month = datetime.now(timezone.utc).strftime("%Y-%m")
     prev_year_month = f"{last_year}-{datetime.now(timezone.utc).strftime('%m')}"
     yoy_delta = None
@@ -258,7 +258,7 @@ def site_analysis(data_dir: str, site_id: int, site_name: str,
         curr = monthly_by_ym[cur_month]
         yoy_delta = round((curr - prev) / prev * 100, 1) if prev else None
 
-    # ג”€ג”€ Performance Index trend (monthly, last 12 months) ג”€ג”€
+    # ── Performance Index trend (monthly, last 12 months) ──
     pi_trend = []
     for r in monthly[-12:]:
         if r["energy_kwh"] is not None and expected_daily_kwh:
@@ -269,10 +269,10 @@ def site_analysis(data_dir: str, site_id: int, site_name: str,
                 "pi": round(r["energy_kwh"] / exp * 100, 1) if exp else None
             })
 
-    # ג”€ג”€ Raw records (last 30 days for drill-down table) ג”€ג”€
+    # ── Raw records (last 30 days for drill-down table) ──
     records = sorted(daily[-30:], key=lambda r: r["date"], reverse=True)
 
-    # ג”€ג”€ Weather correlation (last 365 days) ג”€ג”€
+    # ── Weather correlation (last 365 days) ──
     weather = load_weather(data_dir, site_id)
     weather_by_date: dict[str, dict] = {r["date"]: r for r in weather}
     # Annotate daily_chart rows with weather data
@@ -327,7 +327,7 @@ def site_analysis(data_dir: str, site_id: int, site_name: str,
     }
 
 
-# ג”€ג”€ comparison analytics ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
+# ── comparison analytics ─────────────────────────────────────────────────────
 
 def compare_sites(data_dir: str, site_ids: list[int], period_days: int = 30) -> dict:
     """Side-by-side comparison of selected sites."""
