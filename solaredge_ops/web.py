@@ -75,6 +75,45 @@ def _nav_context(config: Config | None) -> dict:
     return {"open_count": open_count}
 
 
+def _default_config() -> Config:
+    """Return a Config pre-filled with sensible defaults for the first-time setup form."""
+    from datetime import time as _time
+    from .config import (
+        PollingConfig, ActiveHours, RuleConfig,
+        TelegramConfig, EmailConfig, MonthlyReportConfig, WeatherConfig,
+    )
+    return Config(
+        api_key="",
+        max_requests_per_day=300,
+        sites=[],
+        polling=PollingConfig(
+            interval_minutes=30,
+            active_hours=ActiveHours(start=_time(6, 0), end=_time(19, 0)),
+        ),
+        alert_rules={
+            "equipment_offline":       RuleConfig(enabled=True,  options={"grace_minutes": 60}),
+            "zero_production_daylight":RuleConfig(enabled=True,  options={"grace_minutes": 45}),
+            "low_production":          RuleConfig(enabled=True,  options={"threshold_pct": 70}),
+            "performance_drop":        RuleConfig(enabled=True,  options={"threshold_pct": 20}),
+            "alert_count_jump":        RuleConfig(enabled=True,  options={}),
+        },
+        telegram=TelegramConfig(enabled=False, bot_token=""),
+        email=EmailConfig(
+            enabled=False,
+            smtp_host="smtp.gmail.com",
+            smtp_port=587,
+            username="",
+            password="",
+            from_addr="",
+        ),
+        monthly_report=MonthlyReportConfig(enabled=True, day_of_month=1),
+        recipients=[],
+        state_db_path="state.db",
+        data_dir="",
+        weather=WeatherConfig(),
+    )
+
+
 @app.route("/")
 def dashboard():
     config = _get_config()
@@ -165,14 +204,18 @@ def config_view():
 def _form_to_yaml(f) -> str:
     """Build a YAML dict from the structured config form and return it as a string."""
     # sites — parallel lists
-    site_ids   = f.getlist("site_id")
-    site_names = f.getlist("site_name")
-    site_kwhs  = f.getlist("site_kwh")
+    site_ids       = f.getlist("site_id")
+    site_names     = f.getlist("site_name")
+    site_kwhs      = f.getlist("site_kwh")
+    site_locations = f.getlist("site_location")
     sites = []
-    for sid, sname, skwh in zip(site_ids, site_names, site_kwhs):
+    for i, (sid, sname, skwh) in enumerate(zip(site_ids, site_names, site_kwhs)):
         entry: dict = {"id": int(sid), "name": sname}
         if skwh.strip():
             entry["expected_daily_kwh"] = float(skwh)
+        loc = site_locations[i].strip() if i < len(site_locations) else ""
+        if loc:
+            entry["location"] = loc
         sites.append(entry)
 
     # polling active hours
@@ -253,7 +296,10 @@ def _form_to_yaml(f) -> str:
         },
         "recipients": recipients,
         "reporting": {"monthly": {"enabled": True, "day_of_month": 1}},
-        "storage": {"state_db_path": "state.db"},
+        "storage": {
+            "state_db_path": "state.db",
+            "data_path": f.get("data_path", "").strip(),
+        },
     }
     return yaml.dump(doc, allow_unicode=True, sort_keys=False, default_flow_style=False)
 
@@ -288,19 +334,17 @@ def config_edit():
             error = str(exc)
 
     config = _get_config()
-    # If no config yet (first time), load example to pre-fill form
+    # First-time setup: no config.yaml yet — show form with sensible defaults
     if config is None and not saved:
-        try:
-            example = config_path.parent / "config.example.yaml"
-            from .config import load_config as _lc
-            config = _lc(str(example)) if example.exists() else None
-        except Exception:
-            config = None
+        config = _default_config()
 
     if config is None:
         return render_template("no_config.html", active="config", open_count=0, config_path=str(config_path))
 
-    return render_template("config_edit.html", **_config_edit_ctx(config, config_path, error, saved))
+    is_new = not config_path.exists()
+    return render_template("config_edit.html",
+                           is_new=is_new,
+                           **_config_edit_ctx(config, config_path, error, saved))
 
 
 # ── Analytics routes ──────────────────────────────────────────────────────────

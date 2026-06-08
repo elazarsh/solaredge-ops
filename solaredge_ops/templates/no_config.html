@@ -3,16 +3,21 @@
 {% block content %}
 <div class="page-title"><i class="bi bi-exclamation-triangle-fill text-warning"></i> נדרשת הגדרה</div>
 <div class="no-config-banner">
-  <i class="bi bi-file-earmark-code fs-1 d-block mb-3 text-warning"></i>
-  <h5>קובץ config.yaml לא נמצא</h5>
-  <p class="text-muted mb-3">
-    העתק את <code>config.example.yaml</code> ל-<code>{{ config_path }}</code><br>
-    ומלא את ה-API key של SolarEdge ופרטי ערוצי ההתראה.
+  <i class="bi bi-sliders fs-1 d-block mb-3 text-warning"></i>
+  <h5>קובץ הקונפיגורציה לא נמצא</h5>
+  <p class="text-muted mb-4">
+    הגדר את המערכת דרך הממשק הגרפי, או ידנית דרך קובץ YAML.
   </p>
-  <pre class="text-start d-inline-block" style="font-size:0.8rem">cp config.example.yaml config.yaml
-# ערוך config.yaml ומלא:
+
+  <a href="/config/edit" class="btn btn-warning btn-lg px-5 mb-4">
+    <i class="bi bi-sliders"></i> הגדר דרך הממשק
+  </a>
+
+  <div class="text-muted small mt-2 mb-1">— או ידנית —</div>
+  <pre class="text-start d-inline-block" style="font-size:0.8rem">cp config.example.yaml {{ config_path }}
+# ערוך {{ config_path }} ומלא:
 #   solaredge.api_key
-#   notifications.telegram.bot_token  (אם משתמשים ב-Telegram)
-#   notifications.email.*             (אם משתמשים בדוא"ל)</pre>
+#   sites (ID + שם לכל מתקן)
+#   notifications.telegram.bot_token  (אם משתמשים ב-Telegram)</pre>
 </div>
 {% endblock %}
