@@ -98,9 +98,13 @@ def cmd_collect(args: argparse.Namespace) -> int:
     from .data_collector import collect_all, generate_demo_data
     config = load_config(args.config)
     if args.demo:
-        print("Generating demo data...")
+        print("=" * 60)
+        print("WARNING: --demo writes SYNTHETIC FICTITIOUS data.")
+        print("Use only for UI/dev testing, NEVER in production.")
+        print("All demo rows are clearly marked site_name='DEMO-...'")
+        print("=" * 60)
         generate_demo_data(config)
-        print("Done. Open the Analytics dashboard to explore the data.")
+        print("Done. Demo data written. Do NOT use this for real analysis.")
         return 0
     client = SolarEdgeClient(config.api_key, config.max_requests_per_day)
     print(f"Collecting data for {len(config.sites)} site(s)...")

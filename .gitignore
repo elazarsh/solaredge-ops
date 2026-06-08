@@ -2,10 +2,12 @@ __pycache__/
 *.pyc
 .venv/
 config.yaml
+config-demo.yaml
 state.db
+*.db
+data/
 *.log
 *.egg-info/
 .pytest_cache/
 .claude/
 dist/
-config-demo.yaml

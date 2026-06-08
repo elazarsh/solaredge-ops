@@ -40,12 +40,14 @@
 {% if not has_data %}
 <div class="no-data-box">
   <i class="bi bi-database-x fs-1 d-block mb-3" style="color:#484f58"></i>
-  <h5 style="color:#8b949e">אין עדיין נתוני ניתוח</h5>
-  <p class="ts mb-3">יש להריץ <code>solaredge-ops collect</code> כדי לאסוף נתונים מה-API,<br>
-  או <code>solaredge-ops collect --demo</code> לנתוני הדגמה.</p>
+  <h5 style="color:#8b949e">טרם נאספו נתונים</h5>
+  <p class="ts mb-3">
+    הרץ את הפקודה הבאה כדי לאסוף נתוני ייצור אמיתיים מה-API של SolarEdge:
+  </p>
   <code style="background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:6px 16px;color:#e3b341;font-size:0.85rem;">
-    solaredge-ops --config config.yaml collect --demo
+    solaredge-ops --config config.yaml collect
   </code>
+  <p class="ts mt-3">לאחר האיסוף הראשון ייצרף לכאן דשבורד ביצועים מלא.</p>
 </div>
 {% else %}
 
