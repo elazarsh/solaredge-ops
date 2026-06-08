@@ -116,6 +116,27 @@
   </div>
 </div>
 
+{% if analysis.has_weather %}
+{# ── Weather KPI row ── #}
+<div class="d-flex flex-wrap gap-3 mb-4 align-items-center"
+     style="background:#0c2d6b22;border:1px solid #1a4080;border-radius:10px;padding:0.9rem 1.25rem">
+  <i class="bi bi-cloud-sun" style="color:#58a6ff;font-size:1.2rem"></i>
+  <span style="color:#58a6ff;font-weight:700;font-size:0.82rem;text-transform:uppercase">מזג אוויר — 30 ימים אחרונים</span>
+  {% if analysis.avg_ghi_30d is not none %}
+  <span class="ts">קרינה ממוצעת: <strong>{{ analysis.avg_ghi_30d }} kWh/m²/יום</strong></span>
+  {% endif %}
+  {% if analysis.avg_cloud_30d is not none %}
+  <span class="ts">עננות ממוצעת: <strong>{{ "%.0f"|format(analysis.avg_cloud_30d) }}%</strong></span>
+  {% endif %}
+  {% if analysis.weather_suppressed_days %}
+  <span class="ts" style="color:#e3b341">
+    <i class="bi bi-cloud-rain"></i> {{ analysis.weather_suppressed_days }} ימים הושתקו מהתרעה בגלל מזג אוויר
+  </span>
+  {% endif %}
+  <span class="ts ms-auto" style="color:#484f58">נתונים: Open-Meteo (ללא עלות)</span>
+</div>
+{% endif %}
+
 {# ── Daily chart ── #}
 <div class="row g-3 mb-3">
   <div class="col-12">
@@ -125,6 +146,18 @@
         {% if analysis.expected_daily %}
         <span class="ms-3 ts">ציפייה: {{ analysis.expected_daily }} kWh/יום</span>
         {% endif %}
+        {% if analysis.has_weather %}
+        <button onclick="_toggleWeather(this)" data-on="1"
+                style="margin-right:auto;background:none;border:1px solid #58a6ff;border-radius:6px;
+                       padding:2px 10px;font-size:0.75rem;color:#58a6ff;cursor:pointer">
+          <i class="bi bi-cloud-sun"></i> GHI
+        </button>
+        {% endif %}
+        <div style="display:flex;gap:6px;font-size:0.72rem;color:#8b949e;align-items:center">
+          <span style="width:8px;height:8px;border-radius:50%;background:#3fb950;display:inline-block"></span>תקין
+          <span style="width:8px;height:8px;border-radius:50%;background:#484f58;display:inline-block"></span>יום מזג אוויר
+          <span style="width:8px;height:8px;border-radius:50%;background:#f85149;display:inline-block"></span>תקלה
+        </div>
       </div>
       <div id="daily-chart" style="height:300px"></div>
     </div>
@@ -203,28 +236,68 @@ const PI_DATA = {{ pi_json }};
 const DARK = { paper_bgcolor:'transparent', plot_bgcolor:'transparent',
                font:{color:'#8b949e',size:11}, margin:{t:10,b:40,l:55,r:10} };
 
-// Daily chart — bars + expected line
+// Daily chart — bars + expected line + optional GHI weather overlay
 (function() {
+  const hasWeather = DAILY.some(r=>r.ghi_kwh_m2 != null);
+  // Color bars by weather context
+  const barColors = DAILY.map(r => {
+    if ((r.energy_kwh||0) < 5) return '#f85149';
+    if (r.weather_ok === false || r.weather_ok === 'false') return '#484f58';  // gray = weather day
+    return '#3fb950';
+  });
+
   const traces = [{
     x: DAILY.map(r=>r.date), y: DAILY.map(r=>r.energy_kwh),
     type:'bar', name:'ייצור בפועל',
-    marker:{color:DAILY.map(r => (r.energy_kwh||0) < 5 ? '#f85149' : '#3fb950'), opacity:0.85},
-    hovertemplate:'<b>%{x}</b><br>%{y:.2f} kWh<extra></extra>'
+    marker:{color:barColors, opacity:0.9},
+    hovertemplate:'<b>%{x}</b><br>ייצור: %{y:.2f} kWh<extra></extra>'
   }];
+
   const hasExp = DAILY.some(r=>r.expected_kwh);
   if (hasExp) {
     traces.push({
       x: DAILY.map(r=>r.date), y: DAILY.map(r=>r.expected_kwh),
-      type:'scatter', mode:'lines', name:'צפוי',
+      type:'scatter', mode:'lines', name:'צפוי', yaxis:'y',
       line:{color:'#e3b341', width:1.5, dash:'dot'},
       hovertemplate:'<b>%{x}</b><br>צפוי: %{y:.1f} kWh<extra></extra>'
     });
   }
-  Plotly.newPlot('daily-chart', traces, Object.assign({}, DARK, {
-    xaxis:{gridcolor:'#21262d',tickfont:{size:10}},
-    yaxis:{gridcolor:'#21262d',title:{text:'kWh',font:{size:10}}},
+
+  // GHI line on secondary Y axis
+  if (hasWeather) {
+    traces.push({
+      x: DAILY.map(r=>r.date), y: DAILY.map(r=>r.ghi_kwh_m2),
+      type:'scatter', mode:'lines', name:'קרינה (GHI)', yaxis:'y2',
+      line:{color:'#58a6ff', width:1.5, opacity:0.7},
+      hovertemplate:'<b>%{x}</b><br>GHI: %{y:.1f} kWh/m²<extra></extra>'
+    });
+  }
+
+  const layout = Object.assign({}, DARK, {
+    xaxis:{gridcolor:'#21262d', tickfont:{size:10}},
+    yaxis:{gridcolor:'#21262d', title:{text:'kWh', font:{size:10}}},
     bargap:0.1, legend:{font:{size:10}}
-  }), {responsive:true, displayModeBar:false});
+  });
+  if (hasWeather) {
+    layout.yaxis2 = {
+      title:{text:'kWh/m²', font:{size:9}},
+      overlaying:'y', side:'left', showgrid:false,
+      tickfont:{size:9, color:'#58a6ff'},
+      range:[0, 10]
+    };
+  }
+
+  Plotly.newPlot('daily-chart', traces, layout, {responsive:true, displayModeBar:false});
+
+  // Weather toggle
+  window._toggleWeather = function(btn) {
+    if (!hasWeather) return;
+    const vis = btn.dataset.on !== '1';
+    Plotly.restyle('daily-chart', {visible: vis}, [traces.length - 1]);
+    btn.dataset.on = vis ? '1' : '0';
+    btn.style.borderColor = vis ? '#58a6ff' : '#30363d';
+    btn.style.color = vis ? '#58a6ff' : '#8b949e';
+  };
 })();
 
 // Monthly YoY

@@ -109,6 +109,13 @@ def cmd_collect(args: argparse.Namespace) -> int:
     print(f"  daily energy:   {counts['daily']} row(s)")
     print(f"  monthly energy: {counts['monthly']} row(s)")
     print(f"  alert events:   {counts['alerts']} row(s)")
+    weather = counts.get("weather", 0)
+    if weather:
+        print(f"  weather:        {weather} row(s)")
+    else:
+        no_loc = [s.name for s in config.sites if not s.location]
+        if no_loc:
+            print(f"  weather:        skipped (add `location:` to sites: {', '.join(no_loc)})")
     print("Saved to data/ folder. Open the Analytics dashboard to explore.")
     return 0
 

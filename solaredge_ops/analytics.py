@@ -82,10 +82,29 @@ def load_alerts_log(db_path: str) -> list[dict]:
     return _load_csv(_data_dir(db_path) / "alerts_log.csv")
 
 
+def load_weather(db_path: str, site_id: int | None = None) -> list[dict]:
+    """Load weather_daily.csv rows, optionally filtered by site."""
+    rows = _load_csv(_data_dir(db_path) / "weather_daily.csv")
+    if site_id is not None:
+        rows = [r for r in rows if int(r.get("site_id", 0)) == site_id]
+    # deduplicate by date (keep last)
+    seen: dict[str, dict] = {}
+    for r in rows:
+        seen[r["date"]] = r
+    result = sorted(seen.values(), key=lambda r: r["date"])
+    for r in result:
+        r["ghi_kwh_m2"]       = _f(r.get("ghi_kwh_m2"))
+        r["cloud_cover_pct"]  = _f(r.get("cloud_cover_pct"))
+        r["precipitation_mm"] = _f(r.get("precipitation_mm"))
+        r["temp_max_c"]       = _f(r.get("temp_max_c"))
+        r["sunshine_h"]       = _f(r.get("sunshine_h"))
+    return result
+
+
 def data_files_info(db_path: str) -> list[dict]:
     d = _data_dir(db_path)
     files = []
-    for name in ("snapshots.csv","energy_daily.csv","energy_monthly.csv","alerts_log.csv"):
+    for name in ("snapshots.csv","energy_daily.csv","energy_monthly.csv","alerts_log.csv","weather_daily.csv"):
         p = d / name
         files.append({
             "name":    name,
@@ -252,6 +271,32 @@ def site_analysis(db_path: str, site_id: int, site_name: str,
     # ── Raw records (last 30 days for drill-down table) ──
     records = sorted(daily[-30:], key=lambda r: r["date"], reverse=True)
 
+    # ── Weather correlation (last 365 days) ──
+    weather = load_weather(db_path, site_id)
+    weather_by_date: dict[str, dict] = {r["date"]: r for r in weather}
+    # Annotate daily_chart rows with weather data
+    for row in daily_chart:
+        w = weather_by_date.get(row["date"])
+        row["ghi_kwh_m2"]       = w["ghi_kwh_m2"]       if w else None
+        row["cloud_cover_pct"]  = w["cloud_cover_pct"]  if w else None
+        row["precipitation_mm"] = w["precipitation_mm"] if w else None
+        row["weather_ok"]       = (w.get("weather_ok", "True") == "True" or w.get("weather_ok") is True) if w else None
+
+    # Weather KPIs (last 30d)
+    recent_weather = [weather_by_date[r["date"]] for r in recent_30d if r["date"] in weather_by_date]
+    avg_ghi_30d = None
+    avg_cloud_30d = None
+    weather_suppressed_days = 0
+    if recent_weather:
+        ghis   = [r["ghi_kwh_m2"]      for r in recent_weather if r["ghi_kwh_m2"] is not None]
+        clouds = [r["cloud_cover_pct"]  for r in recent_weather if r["cloud_cover_pct"] is not None]
+        if ghis:   avg_ghi_30d   = round(sum(ghis) / len(ghis), 1)
+        if clouds: avg_cloud_30d = round(sum(clouds) / len(clouds), 1)
+        weather_suppressed_days = sum(
+            1 for r in recent_weather
+            if (r.get("ghi_kwh_m2") or 99) < 1.5 or (r.get("cloud_cover_pct") or 0) > 80
+        )
+
     return {
         "has_data":         True,
         "site_id":          site_id,
@@ -267,6 +312,11 @@ def site_analysis(db_path: str, site_id: int, site_name: str,
         "performance_index":perf_index,
         "availability_pct": availability_pct,
         "yoy_delta_pct":    yoy_delta,
+        # Weather
+        "has_weather":      bool(weather),
+        "avg_ghi_30d":      avg_ghi_30d,
+        "avg_cloud_30d":    avg_cloud_30d,
+        "weather_suppressed_days": weather_suppressed_days,
         # Chart data
         "daily_chart":      daily_chart,
         "monthly_chart":    monthly_chart,

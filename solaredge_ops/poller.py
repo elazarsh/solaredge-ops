@@ -8,6 +8,7 @@ than a long-lived Python loop, and that keeps this tool boring and easy to opera
 from __future__ import annotations
 
 import logging
+from dataclasses import replace
 from datetime import datetime
 
 from .api_client import SolarEdgeApiError, SolarEdgeClient
@@ -25,6 +26,54 @@ from .rules import (
 from .state_store import StateStore
 
 logger = logging.getLogger(__name__)
+
+# Rules for which weather-based suppression applies
+_WEATHER_SUPPRESSIBLE = {"zero_production_daylight", "low_production"}
+
+
+def _weather_for_site(site_cfg, config: Config, now: datetime) -> dict | None:
+    """
+    Fetch today's weather for a site (if location configured and weather enabled).
+    Returns None on failure or if not configured — callers must treat None as
+    "weather data unavailable, do NOT suppress".
+    """
+    if not config.weather.enabled or not config.weather.suppress_alerts:
+        return None
+    location = getattr(site_cfg, "location", None)
+    if not location:
+        return None
+    try:
+        from .weather import geocode, fetch_day
+        coords = geocode(location)
+        if coords is None:
+            return None
+        return fetch_day(coords[0], coords[1], now.date())
+    except Exception as exc:
+        logger.warning("Weather fetch failed for %s: %s", getattr(site_cfg, "name", "?"), exc)
+        return None
+
+
+def _apply_weather(alert: Alert, weather: dict | None, config: Config) -> Alert | None:
+    """
+    Given a candidate alert and today's weather:
+    - Returns None  → suppress the alert (weather explains the shortfall)
+    - Returns Alert → fire it (possibly with a weather note appended to the message)
+    - If weather=None or not suppressible rule → return alert unchanged
+    """
+    if weather is None or alert.rule not in _WEATHER_SUPPRESSIBLE:
+        return alert
+
+    from .weather import assess_weather
+    suppress, note = assess_weather(weather)
+
+    if suppress:
+        logger.info("Weather suppressed %s for %s (%s)", alert.rule, alert.site_name, note)
+        return None
+
+    if note:
+        return replace(alert, message=alert.message + f"\n\n🌤 {note}")
+
+    return alert
 
 
 def _fetch_snapshot(client: SolarEdgeClient, site, now: datetime) -> SiteSnapshot | None:
@@ -114,13 +163,26 @@ def run_once(config: Config, client: SolarEdgeClient, store: StateStore, notifie
         if snapshot is not None:
             snapshots.append(snapshot)
 
+    # Pre-fetch weather for each site (one call per site per cycle, cached in weather.py)
+    site_weather: dict[int, dict | None] = {}
+    site_map = {s.id: s for s in config.sites}
+    for sid, site_cfg in site_map.items():
+        site_weather[sid] = _weather_for_site(site_cfg, config, now)
+
     dispatched = 0
+    suppressed = 0
     per_site_open_keys: dict[tuple[str, int], set[str]] = {}
 
     def _handle(alert: Alert) -> None:
-        nonlocal dispatched
-        per_site_open_keys.setdefault((alert.rule, alert.site_id), set()).add(alert.dedup_key)
-        if _dispatch(alert, store, notifiers):
+        nonlocal dispatched, suppressed
+        weather = site_weather.get(alert.site_id)
+        enriched = _apply_weather(alert, weather, config)
+        if enriched is None:
+            suppressed += 1
+            return
+        # Still register the dedup key as "active" so it doesn't get resolved
+        per_site_open_keys.setdefault((enriched.rule, enriched.site_id), set()).add(enriched.dedup_key)
+        if _dispatch(enriched, store, notifiers):
             dispatched += 1
 
     for snapshot in snapshots:
@@ -129,9 +191,11 @@ def run_once(config: Config, client: SolarEdgeClient, store: StateStore, notifie
 
     fleet_rule = config.alert_rules.get("performance_drop")
     if fleet_rule and fleet_rule.enabled:
-        site_cfgs = {s.id: s for s in config.sites}
-        for alert in rule_performance_drop(snapshots, site_cfgs, fleet_rule, config.polling.active_hours, now):
+        for alert in rule_performance_drop(snapshots, site_map, fleet_rule, config.polling.active_hours, now):
             _handle(alert)
+
+    if suppressed:
+        logger.info("%d alert(s) suppressed due to weather conditions", suppressed)
 
     # Close out anything that didn't reappear this cycle (i.e. it has cleared).
     for snapshot in snapshots:

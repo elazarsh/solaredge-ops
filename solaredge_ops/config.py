@@ -21,6 +21,16 @@ class SiteConfig:
     id: int
     name: str
     expected_daily_kwh: float | None = None
+    location: str | None = None   # city name ("Tel Aviv") or "lat,lon" for weather lookups
+
+
+@dataclass
+class WeatherConfig:
+    """Controls weather-based alert suppression."""
+    enabled: bool = True
+    suppress_alerts: bool = True          # suppress low/zero-production alerts when weather explains it
+    suppress_ghi_kwh: float = 1.5         # GHI threshold below which alerts are suppressed
+    suppress_cloud_pct: float = 80.0      # cloud-cover threshold above which alerts are suppressed
 
 
 @dataclass
@@ -108,6 +118,7 @@ class Config:
     monthly_report: MonthlyReportConfig
     recipients: list[Recipient]
     state_db_path: str
+    weather: WeatherConfig = field(default_factory=WeatherConfig)
 
     def site_by_id(self, site_id: int) -> SiteConfig | None:
         return next((s for s in self.sites if s.id == site_id), None)
@@ -189,6 +200,7 @@ def load_config(path: str | Path) -> Config:
             expected_daily_kwh=(
                 float(s["expected_daily_kwh"]) if s.get("expected_daily_kwh") is not None else None
             ),
+            location=s.get("location") or None,
         )
         for s in sites_raw
     ]
@@ -225,6 +237,13 @@ def load_config(path: str | Path) -> Config:
     recipients = _build_recipients(raw.get("recipients"))
 
     storage_raw = raw.get("storage") or {}
+    weather_raw = raw.get("weather") or {}
+    weather = WeatherConfig(
+        enabled=bool(weather_raw.get("enabled", True)),
+        suppress_alerts=bool(weather_raw.get("suppress_alerts", True)),
+        suppress_ghi_kwh=float(weather_raw.get("suppress_ghi_kwh", 1.5)),
+        suppress_cloud_pct=float(weather_raw.get("suppress_cloud_pct", 80.0)),
+    )
 
     return Config(
         api_key=api_key,
@@ -237,4 +256,5 @@ def load_config(path: str | Path) -> Config:
         monthly_report=monthly_report,
         recipients=recipients,
         state_db_path=storage_raw.get("state_db_path", "state.db"),
+        weather=weather,
     )

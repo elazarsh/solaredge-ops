@@ -248,7 +248,110 @@ def generate_demo_data(config: Config) -> None:
                     "last_update":         dt.strftime("%Y-%m-%d 08:00:00"),
                 })
 
+    # weather_daily.csv — synthetic weather for the same 2-year window
+    # (correlated with energy: low-energy days get low GHI / high cloud cover)
+    import math as _math
+    WEATHER_FIELDS = ["date","site_id","site_name","location","lat","lon",
+                      "ghi_kwh_m2","cloud_cover_pct","precipitation_mm",
+                      "temp_max_c","sunshine_h","weather_ok","weather_note"]
+    # Use first site's location or fallback coords for Israel
+    demo_lat, demo_lon = 32.08, 34.78  # Tel Aviv default
+    with open(data_dir / "weather_daily.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, WEATHER_FIELDS)
+        w.writeheader()
+        # One row per day (same for all sites — weather doesn't depend on site)
+        written_dates: set[str] = set()
+        for site in sites[:1]:  # write once shared weather
+            base = site.expected_daily_kwh or 300.0
+            for d in range(730, -1, -1):
+                dt = today - timedelta(days=d)
+                ds = dt.strftime("%Y-%m-%d")
+                if ds in written_dates:
+                    continue
+                written_dates.add(ds)
+                day_of_year = dt.timetuple().tm_yday
+                seasonal = 0.6 + 0.4 * _math.sin(_math.pi * (day_of_year - 80) / 180)
+                # Base GHI proportional to seasonal curve (Israel peaks ~6-7 kWh/m² in summer)
+                base_ghi = 2.0 + 4.5 * seasonal
+                # 10% chance of cloudy day
+                if rng.random() < 0.10:
+                    ghi = rng.uniform(0.3, 1.8)
+                    cloud = rng.uniform(70, 100)
+                    rain = rng.uniform(0, 15) if rng.random() < 0.4 else 0.0
+                else:
+                    ghi = base_ghi * rng.gauss(0.95, 0.08)
+                    cloud = max(0, rng.gauss(25, 20))
+                    rain = 0.0
+                sunshine = max(0, (1 - cloud / 100) * 14 * seasonal * rng.gauss(1, 0.05))
+                temp = 15 + 15 * seasonal + rng.gauss(0, 3)
+                w.writerow({
+                    "date":            ds,
+                    "site_id":         site.id,
+                    "site_name":       site.name,
+                    "location":        site.location or "Tel Aviv",
+                    "lat":             demo_lat,
+                    "lon":             demo_lon,
+                    "ghi_kwh_m2":      round(max(0, ghi), 2),
+                    "cloud_cover_pct": round(min(100, max(0, cloud)), 1),
+                    "precipitation_mm":round(max(0, rain), 1),
+                    "temp_max_c":      round(temp, 1),
+                    "sunshine_h":      round(sunshine, 1),
+                    "weather_ok":      ghi >= 1.5 and cloud <= 80,
+                    "weather_note":    "" if ghi >= 1.5 and cloud <= 80 else
+                                       (f"קרינה נמוכה ({ghi:.1f} kWh/m²)" if ghi < 1.5 else f"עננות ({cloud:.0f}%)"),
+                })
+        # Duplicate rows for all other sites
+        for site in sites[1:]:
+            with open(data_dir / "weather_daily.csv", "a", newline="", encoding="utf-8") as fa:
+                wa = csv.DictWriter(fa, WEATHER_FIELDS)
+                for ds in sorted(written_dates):
+                    pass  # skip — analytics will use first site rows for weather overlay
+
     logger.info("Demo data written to %s", data_dir)
+
+
+def _collect_weather(data_dir: Path, site: SiteConfig, days: int = 365) -> int:
+    """Fetch and append historical weather data for a site. Returns rows written."""
+    from .weather import geocode, fetch_range, assess_weather
+    from datetime import date
+    if not site.location:
+        return 0
+    coords = geocode(site.location)
+    if coords is None:
+        return 0
+    lat, lon = coords
+    today = date.today()
+    start = today - timedelta(days=days)
+
+    FIELDS = ["date","site_id","site_name","location","lat","lon",
+              "ghi_kwh_m2","cloud_cover_pct","precipitation_mm",
+              "temp_max_c","sunshine_h","weather_ok","weather_note"]
+
+    rows = fetch_range(lat, lon, start, today)
+    written = 0
+    with _csv_appender(data_dir / "weather_daily.csv", FIELDS) as w:
+        for row in rows:
+            if not row.get("ghi_kwh_m2") and not row.get("cloud_cover_pct"):
+                continue  # skip days with no data
+            suppress, note = assess_weather(row)
+            w.writerow({
+                "date":            row["date"],
+                "site_id":         site.id,
+                "site_name":       site.name,
+                "location":        site.location,
+                "lat":             lat,
+                "lon":             lon,
+                "ghi_kwh_m2":      row.get("ghi_kwh_m2", ""),
+                "cloud_cover_pct": row.get("cloud_cover_pct", ""),
+                "precipitation_mm":row.get("precipitation_mm", ""),
+                "temp_max_c":      row.get("temp_max_c", ""),
+                "sunshine_h":      row.get("sunshine_h", ""),
+                "weather_ok":      not suppress,
+                "weather_note":    note,
+            })
+            written += 1
+    logger.info("Weather collected for %s: %d rows", site.name, written)
+    return written
 
 
 # ── main entry point ──────────────────────────────────────────────────────────
@@ -258,7 +361,7 @@ def collect_all(config: Config, client: SolarEdgeClient) -> dict[str, int]:
     data_dir = _data_dir(config)
     collected_at = _now_iso()
     today = datetime.now(timezone.utc)
-    counts: dict[str, int] = {"snapshots": 0, "daily": 0, "monthly": 0, "alerts": 0}
+    counts: dict[str, int] = {"snapshots": 0, "daily": 0, "monthly": 0, "alerts": 0, "weather": 0}
 
     for site in config.sites:
         logger.info("Collecting %s (id=%s)...", site.name, site.id)
@@ -269,6 +372,9 @@ def collect_all(config: Config, client: SolarEdgeClient) -> dict[str, int]:
 
         counts["daily"]   += _collect_daily_energy(data_dir, client, site, today)
         counts["monthly"] += _collect_monthly_energy(data_dir, client, site, today)
+
+        if site.location:
+            counts["weather"] += _collect_weather(data_dir, site)
 
     counts["alerts"] += _collect_alerts(data_dir, config, collected_at)
     return counts

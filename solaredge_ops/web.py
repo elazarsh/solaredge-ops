@@ -438,7 +438,7 @@ def analytics_export():
 
 @app.route("/analytics/download/<filename>")
 def analytics_download(filename: str):
-    _allowed = {"snapshots.csv", "energy_daily.csv", "energy_monthly.csv", "alerts_log.csv"}
+    _allowed = {"snapshots.csv", "energy_daily.csv", "energy_monthly.csv", "alerts_log.csv", "weather_daily.csv"}
     if filename not in _allowed:
         abort(404)
     config = _get_config()

@@ -9,9 +9,11 @@ sites:
   - id: 123456
     name: "Site A - Main Roof"
     expected_daily_kwh: 450        # baseline used by the low_production rule (optional)
+    location: "Tel Aviv"           # city name OR "lat,lon" — used for weather lookups
   - id: 234567
     name: "Site B - Warehouse"
     expected_daily_kwh: 800
+    location: "32.0853,34.7818"    # lat,lon format also works
 
 polling:
   interval_minutes: 30
@@ -97,3 +99,13 @@ reporting:
 
 storage:
   state_db_path: "state.db"
+
+# Weather-based alert suppression (uses Open-Meteo — free, no API key required).
+# When a site has `location` set, low/zero-production alerts are checked against
+# real weather data BEFORE being dispatched. If the weather explains the shortfall
+# (heavy clouds, rain, low irradiance) the alert is silenced automatically.
+weather:
+  enabled: true
+  suppress_alerts: true            # set false to disable suppression (alerts fire regardless of weather)
+  suppress_ghi_kwh: 1.5            # GHI below this kWh/m²/day → suppress production alerts
+  suppress_cloud_pct: 80           # cloud cover above this % → suppress production alerts

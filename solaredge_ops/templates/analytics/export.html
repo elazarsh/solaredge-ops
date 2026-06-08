@@ -34,16 +34,18 @@
 {# ── Files grid ── #}
 <div class="row g-3 mb-5">
   {% set icons = {
-    'snapshots.csv':     'bi-camera-fill',
-    'energy_daily.csv':  'bi-bar-chart-fill',
-    'energy_monthly.csv':'bi-calendar3',
-    'alerts_log.csv':    'bi-bell-fill'
+    'snapshots.csv':      'bi-camera-fill',
+    'energy_daily.csv':   'bi-bar-chart-fill',
+    'energy_monthly.csv': 'bi-calendar3',
+    'alerts_log.csv':     'bi-bell-fill',
+    'weather_daily.csv':  'bi-cloud-sun-fill'
   } %}
   {% set colors = {
-    'snapshots.csv':     '#3fb950',
-    'energy_daily.csv':  '#58a6ff',
-    'energy_monthly.csv':'#e3b341',
-    'alerts_log.csv':    '#f85149'
+    'snapshots.csv':      '#3fb950',
+    'energy_daily.csv':   '#58a6ff',
+    'energy_monthly.csv': '#e3b341',
+    'alerts_log.csv':     '#f85149',
+    'weather_daily.csv':  '#a371f7'
   } %}
 
   {% for f in files %}
