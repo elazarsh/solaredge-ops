@@ -94,6 +94,13 @@ def cmd_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_web(args: argparse.Namespace) -> int:
+    from .web import run as web_run
+    print(f"Starting web UI at http://{args.host}:{args.port}")
+    web_run(config_path=args.config, host=args.host, port=args.port)
+    return 0
+
+
 def cmd_check_quota(args: argparse.Namespace) -> int:
     config = load_config(args.config)
     client = SolarEdgeClient(config.api_key, config.max_requests_per_day)
@@ -121,6 +128,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     contacts = sub.add_parser("contacts", help="List configured recipients and what they're subscribed to")
     contacts.set_defaults(func=cmd_contacts)
+
+    web = sub.add_parser("web", help="Start the web UI dashboard")
+    web.add_argument("--port", type=int, default=5000, help="Port to listen on (default: 5000)")
+    web.add_argument("--host", default="127.0.0.1", help="Host to bind (default: 127.0.0.1)")
+    web.set_defaults(func=cmd_web)
 
     return parser
 

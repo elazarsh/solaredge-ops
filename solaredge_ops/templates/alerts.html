@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}התראות — SolarEdge Ops{% endblock %}
+{% block content %}
+<div class="page-title"><i class="bi bi-bell-fill"></i> התראות פעילות</div>
+
+{% if alerts %}
+<div class="card">
+  <div class="card-header d-flex align-items-center gap-2">
+    <strong>{{ alerts|length }} התראה{% if alerts|length != 1 %}ות{% endif %} פתוחה{% if alerts|length != 1 %}ות{% endif %}</strong>
+  </div>
+  <div class="card-body p-0">
+    <table class="table mb-0">
+      <thead><tr>
+        <th>חומרה</th>
+        <th>מתקן</th>
+        <th>כלל</th>
+        <th>כותרת</th>
+        <th>הודעה</th>
+        <th>זוהה לראשונה</th>
+        <th>עדכון אחרון</th>
+      </tr></thead>
+      <tbody>
+      {% for a in alerts %}
+      <tr>
+        <td>
+          {% if a.severity == 'critical' %}
+            <span class="pill badge-critical">🔴 קריטי</span>
+          {% elif a.severity == 'warning' %}
+            <span class="pill badge-warning">🟠 אזהרה</span>
+          {% else %}
+            <span class="pill badge-info">ℹ️ מידע</span>
+          {% endif %}
+        </td>
+        <td>
+          <span>{{ site_names.get(a.site_id, '') or '' }}</span>
+          <span class="ts d-block">id {{ a.site_id }}</span>
+        </td>
+        <td><span class="pill pill-rule">{{ a.rule }}</span></td>
+        <td>{{ a.title }}</td>
+        <td class="ts" style="max-width:260px">{{ a.message }}</td>
+        <td class="ts">{{ a.first_seen[:16].replace('T',' ') }}</td>
+        <td class="ts">{{ a.last_seen[:16].replace('T',' ') }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="no-config-banner">
+  <i class="bi bi-check-circle-fill text-success fs-1 d-block mb-3"></i>
+  <h5 class="text-success">אין התראות פעילות</h5>
+  <p class="text-muted mb-0">כל המתקנים תקינים לפי הסריקה האחרונה.</p>
+</div>
+{% endif %}
+{% endblock %}

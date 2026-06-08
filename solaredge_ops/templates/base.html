@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SolarEdge Ops{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    /* ─── צבעי בסיס ─── */
+    body { background: #0d1117; color: #cdd5e0; font-family: 'Segoe UI', sans-serif; }
+
+    /* ─── Sidebar ─── */
+    .sidebar { width: 230px; min-height: 100vh; background: #131a26; border-left: 1px solid #263045; padding-top: 1.5rem; position: fixed; right: 0; top: 0; }
+    .sidebar .brand { padding: 0 1.25rem 1.5rem; border-bottom: 1px solid #263045; margin-bottom: 0.5rem; }
+    .sidebar .brand h5 { color: #fcd34d; margin: 0; font-weight: 700; letter-spacing: .01em; }
+    .sidebar .brand small { color: #8fa3bf; font-size: 0.75rem; }
+    .nav-link { color: #b8c8dc; padding: 0.65rem 1.25rem; border-radius: 7px; margin: 2px 8px; display: flex; align-items: center; gap: 10px; font-size: 0.92rem; transition: background .12s, color .12s; }
+    .nav-link:hover  { background: #1c2a40; color: #fcd34d; }
+    .nav-link.active { background: #1c2a40; color: #fcd34d; font-weight: 600; }
+    .nav-link i { font-size: 1.05rem; }
+
+    /* ─── Layout ─── */
+    .main-content { margin-right: 230px; padding: 2rem 2.25rem; }
+
+    /* ─── Cards ─── */
+    .card { background: #161e2e; border: 1px solid #263045; border-radius: 12px; }
+    .card-header { background: #1b2540; border-bottom: 1px solid #263045; padding: 0.85rem 1.25rem; color: #e2eaf4; font-size: 0.95rem; }
+
+    /* ─── Stat cards ─── */
+    .stat-card { border-radius: 12px; padding: 1.5rem; position: relative; overflow: hidden; }
+    .stat-card .stat-value { font-size: 2.2rem; font-weight: 700; line-height: 1; color: #e2eaf4; }
+    .stat-card .stat-label { font-size: 0.75rem; color: #8fa3bf; margin-top: 5px; text-transform: uppercase; letter-spacing: .06em; }
+    .stat-card .stat-icon { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); font-size: 2.5rem; opacity: 0.12; }
+
+    /* ─── Badges ─── */
+    .badge-critical { background: #991b1b; color: #fecaca; }
+    .badge-warning  { background: #92400e; color: #fde68a; }
+    .badge-info     { background: #1e3a8a; color: #bfdbfe; }
+
+    /* ─── Table ─── */
+    .table { color: #cdd5e0; }
+    .table thead th {
+      border-bottom: 1px solid #263045;
+      color: #8fa3bf;           /* was #718096 — lifted for legibility */
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      background: #131a26;
+      padding: 0.6rem 0.75rem;
+    }
+    .table tbody tr { border-bottom: 1px solid #1b2540; }
+    .table tbody tr:hover { background: #1b2540; }
+    .table td, .table th { vertical-align: middle; }
+
+    /* ─── Pills ─── */
+    .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+    .pill-telegram { background: #1e3a6e; color: #93c5fd; }
+    .pill-email    { background: #14432a; color: #86efac; }
+    .pill-rule     { background: #1e2d45; color: #94b4d4; }   /* was #a0aec0 on #2d3748 → brighter */
+
+    /* ─── Misc ─── */
+    .no-config-banner { background: #161e2e; border: 1px dashed #3d5068; border-radius: 12px; padding: 3rem; text-align: center; }
+    .secret-mask  { font-family: monospace; color: #3d5068; letter-spacing: 3px; }
+    .sev-critical { color: #f87171; }
+    .sev-warning  { color: #fbbf24; }
+    .sev-info     { color: #60a5fa; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 6px; }
+    .dot-ok   { background: #34d399; box-shadow: 0 0 7px #34d399; }
+    .dot-warn { background: #fbbf24; }
+    .dot-bad  { background: #f87171; box-shadow: 0 0 7px #f87171; }
+
+    /* ─── Typography ─── */
+    .page-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 1.75rem; color: #fcd34d; }
+    /* Secondary/timestamp text — still subdued but clearly readable */
+    .ts  { font-size: 0.78rem; color: #7a95b0; }
+  </style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <h5><i class="bi bi-sun-fill"></i> SolarEdge Ops</h5>
+    <small>ניטור ויידוע מתקנים</small>
+  </div>
+  <a href="/" class="nav-link {% if active=='dashboard' %}active{% endif %}">
+    <i class="bi bi-speedometer2"></i> לוח בקרה
+  </a>
+  <a href="/alerts" class="nav-link {% if active=='alerts' %}active{% endif %}">
+    <i class="bi bi-bell-fill"></i> התראות פעילות
+    {% if open_count %}<span class="badge bg-danger ms-auto">{{ open_count }}</span>{% endif %}
+  </a>
+  <a href="/contacts" class="nav-link {% if active=='contacts' %}active{% endif %}">
+    <i class="bi bi-people-fill"></i> נמענים
+  </a>
+  <a href="/config" class="nav-link {% if active=='config' %}active{% endif %}">
+    <i class="bi bi-gear-fill"></i> קונפיגורציה
+  </a>
+</nav>
+<main class="main-content">
+  {% block content %}{% endblock %}
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

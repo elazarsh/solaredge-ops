@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}קונפיגורציה — SolarEdge Ops{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center gap-3 mb-4">
+  <div class="page-title mb-0"><i class="bi bi-gear-fill"></i> קונפיגורציה</div>
+  <a href="/config/edit" class="btn btn-warning btn-sm fw-bold ms-auto">
+    <i class="bi bi-pencil-fill"></i> ערוך config.yaml
+  </a>
+</div>
+
+<div class="row g-3">
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-sun-fill text-warning"></i> <strong>SolarEdge API</strong></div>
+      <div class="card-body">
+        <div class="mb-2">
+          <div class="ts text-muted">API Key</div>
+          <div class="secret-mask">{{ api_key_masked }}</div>
+        </div>
+        <div>
+          <div class="ts text-muted">מגבלת בקשות יומית</div>
+          <div>{{ max_requests_per_day }} בקשות/יום לכל מתקן</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-clock text-warning"></i> <strong>סריקה</strong></div>
+      <div class="card-body">
+        <div class="mb-2">
+          <div class="ts text-muted">תדירות</div>
+          <div>כל {{ polling_interval }} דקות</div>
+        </div>
+        <div>
+          <div class="ts text-muted">שעות פעילות</div>
+          <div>{% if active_hours %}{{ active_hours }}{% else %}תמיד{% endif %}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-buildings text-warning"></i> <strong>מתקנים</strong></div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>שם</th><th>Site ID</th><th>ייצור יומי צפוי (kWh)</th></tr></thead>
+          <tbody>
+          {% for s in sites %}
+          <tr>
+            <td>{{ s.name }}</td>
+            <td class="ts">{{ s.id }}</td>
+            <td>{{ s.expected_daily_kwh if s.expected_daily_kwh else '—' }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-telegram text-warning"></i> <strong>Telegram</strong></div>
+      <div class="card-body">
+        <div class="mb-2">
+          <span class="dot {% if telegram_enabled %}dot-ok{% else %}dot-bad{% endif %}"></span>
+          {% if telegram_enabled %}מופעל{% else %}מושבת{% endif %}
+        </div>
+        {% if telegram_enabled %}
+        <div class="ts text-muted">Bot Token</div>
+        <div class="secret-mask">{{ telegram_token_masked }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-envelope text-warning"></i> <strong>אימייל (SMTP)</strong></div>
+      <div class="card-body">
+        <div class="mb-2">
+          <span class="dot {% if email_enabled %}dot-ok{% else %}dot-bad{% endif %}"></span>
+          {% if email_enabled %}מופעל{% else %}מושבת{% endif %}
+        </div>
+        {% if email_enabled %}
+        <div class="ts text-muted">שרת</div>
+        <div>{{ smtp_host }}:{{ smtp_port }}</div>
+        <div class="ts text-muted mt-1">משתמש</div>
+        <div>{{ smtp_user }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-shield-check text-warning"></i> <strong>כללי התראה</strong></div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>כלל</th><th>מצב</th><th>הגדרות</th></tr></thead>
+          <tbody>
+          {% for rule_name, rule in rules.items() %}
+          <tr>
+            <td><span class="pill pill-rule">{{ rule_name }}</span></td>
+            <td>
+              <span class="dot {% if rule.enabled %}dot-ok{% else %}dot-bad{% endif %}"></span>
+              {{ 'פעיל' if rule.enabled else 'מושבת' }}
+            </td>
+            <td class="ts">
+              {% for k, v in rule.options.items() %}{{ k }}: {{ v }}{% if not loop.last %}, {% endif %}{% endfor %}
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-database text-warning"></i> <strong>אחסון</strong></div>
+      <div class="card-body">
+        <div class="ts text-muted">קובץ מצב (SQLite)</div>
+        <div class="font-monospace ts">{{ state_db_path }}</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

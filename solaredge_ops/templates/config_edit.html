@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+{% block title %}עריכת קונפיגורציה — SolarEdge Ops{% endblock %}
+{% block content %}
+<style>
+  .section-card { margin-bottom: 1.5rem; }
+  .section-card .card-header { font-size: 1rem; font-weight: 600; }
+  .form-label { color: #94b4d4; font-size: 0.8rem; margin-bottom: 3px; font-weight: 500; }
+  .form-control, .form-select {
+    background: #0d1520; border: 1px solid #263045; color: #cdd5e0;
+    border-radius: 8px; font-size: 0.88rem;
+  }
+  .form-control::placeholder { color: #3d5068; }
+  .form-control:focus, .form-select:focus {
+    background: #0d1520; border-color: #fcd34d; color: #e2eaf4;
+    box-shadow: 0 0 0 2px rgba(252,211,77,.18);
+  }
+  .form-check-input:checked { background-color: #fcd34d; border-color: #fcd34d; }
+  .form-check-input { background-color: #1b2540; border-color: #3d5068; }
+  .form-check-label { color: #cdd5e0; }
+  .repeatable-item { background: #0d1520; border: 1px solid #263045; border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; position: relative; }
+  .btn-remove { position: absolute; top: 0.6rem; left: 0.6rem; background: none; border: none; color: #4a6a8a; cursor: pointer; font-size: 1.1rem; padding: 2px 6px; border-radius: 4px; }
+  .btn-remove:hover { background: #1b2540; color: #f87171; }
+  .btn-add { background: #131a26; border: 1px dashed #3d5068; color: #8fa3bf; border-radius: 8px; width: 100%; padding: 0.5rem; font-size: 0.85rem; cursor: pointer; transition: all .15s; }
+  .btn-add:hover { border-color: #fcd34d; color: #fcd34d; background: #1b2540; }
+  .cat-check { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .cat-check label { background: #1b2540; border-radius: 999px; padding: 3px 12px; font-size: 0.78rem; cursor: pointer; color: #8fa3bf; border: 1px solid #263045; user-select: none; }
+  .cat-check input:checked + label { background: #1c2a40; border-color: #fcd34d; color: #fcd34d; }
+  .cat-check input { display: none; }
+  .sticky-save { position: sticky; bottom: 0; background: #0d1117; padding: 1rem 0; border-top: 1px solid #263045; margin-top: 1rem; z-index: 10; }
+</style>
+
+<div class="d-flex align-items-center gap-3 mb-4">
+  <div class="page-title mb-0"><i class="bi bi-sliders"></i> עריכת קונפיגורציה</div>
+  <a href="/config" class="btn btn-sm btn-outline-secondary ms-auto">ביטול</a>
+</div>
+
+{% if error %}
+<div class="alert alert-danger d-flex align-items-center gap-2 mb-3">
+  <i class="bi bi-exclamation-triangle-fill"></i>
+  <div>{{ error }}</div>
+</div>
+{% endif %}
+{% if saved %}
+<div class="alert alert-success d-flex align-items-center gap-2 mb-3">
+  <i class="bi bi-check-circle-fill"></i>
+  <div>הקונפיגורציה נשמרה בהצלחה.</div>
+</div>
+{% endif %}
+
+<form method="post" action="/config/edit">
+
+  {# ── SolarEdge API ── #}
+  <div class="card section-card">
+    <div class="card-header"><i class="bi bi-sun-fill text-warning"></i> SolarEdge API</div>
+    <div class="card-body row g-3">
+      <div class="col-md-8">
+        <label class="form-label">API Key</label>
+        <input name="api_key" class="form-control font-monospace" value="{{ cfg.api_key }}" placeholder="YOUR_API_KEY" required>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">מגבלת בקשות יומית לכל מתקן</label>
+        <input name="max_requests_per_day" type="number" class="form-control" value="{{ cfg.max_requests_per_day }}" min="1">
+      </div>
+    </div>
+  </div>
+
+  {# ── Sites ── #}
+  <div class="card section-card">
+    <div class="card-header"><i class="bi bi-buildings text-warning"></i> מתקנים</div>
+    <div class="card-body">
+      <div id="sites-list">
+        {% for s in cfg.sites %}
+        <div class="repeatable-item">
+          <button type="button" class="btn-remove" onclick="removeItem(this)" title="הסר מתקן">✕</button>
+          <div class="row g-2">
+            <div class="col-md-3">
+              <label class="form-label">Site ID</label>
+              <input name="site_id" type="number" class="form-control" value="{{ s.id }}" required>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">שם המתקן</label>
+              <input name="site_name" class="form-control" value="{{ s.name }}" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">ייצור יומי צפוי (kWh) — אופציונלי</label>
+              <input name="site_kwh" type="number" step="0.1" class="form-control" value="{{ s.expected_daily_kwh or '' }}" placeholder="—">
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="btn-add mt-1" onclick="addSite()">+ הוסף מתקן</button>
+    </div>
+  </div>
+
+  {# ── Polling ── #}
+  <div class="card section-card">
+    <div class="card-header"><i class="bi bi-clock text-warning"></i> לוח זמנים לסריקה</div>
+    <div class="card-body row g-3">
+      <div class="col-md-4">
+        <label class="form-label">תדירות (דקות)</label>
+        <input name="interval_minutes" type="number" class="form-control" value="{{ cfg.polling.interval_minutes }}" min="1">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">שעת התחלה (פעיל מ-)</label>
+        <input name="active_start" type="time" class="form-control" value="{{ active_start }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">שעת סיום (פעיל עד-)</label>
+        <input name="active_end" type="time" class="form-control" value="{{ active_end }}">
+      </div>
+    </div>
+  </div>
+
+  {# ── Telegram ── #}
+  <div class="card section-card">
+    <div class="card-header"><i class="bi bi-telegram text-warning"></i> Telegram</div>
+    <div class="card-body row g-3">
+      <div class="col-12">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" name="telegram_enabled" id="tg_on" {% if cfg.telegram.enabled %}checked{% endif %}>
+          <label class="form-check-label" for="tg_on">הפעל שליחת הודעות Telegram</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Bot Token</label>
+        <input name="telegram_token" class="form-control font-monospace" value="{{ cfg.telegram.bot_token }}" placeholder="123456:ABC-...">
+        <div class="ts text-muted mt-1">קבל token דרך <strong>@BotFather</strong> ב-Telegram</div>
+      </div>
+    </div>
+  </div>
+
+  {# ── Email ── #}
+  <div class="card section-card">
+    <div class="card-header"><i class="bi bi-envelope text-warning"></i> דוא"ל (SMTP)</div>
+    <div class="card-body row g-3">
+      <div class="col-12">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" name="email_enabled" id="em_on" {% if cfg.email.enabled %}checked{% endif %}>
+          <label class="form-check-label" for="em_on">הפעל שליחת דוא"ל</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">שרת SMTP</label>
+        <input name="smtp_host" class="form-control" value="{{ cfg.email.smtp_host }}" placeholder="smtp.gmail.com">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">פורט</label>
+        <input name="smtp_port" type="number" class="form-control" value="{{ cfg.email.smtp_port }}" placeholder="587">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">כתובת שולח</label>
+        <input name="from_addr" class="form-control" value="{{ cfg.email.from_addr }}" placeholder="you@example.com">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">שם משתמש</label>
+        <input name="smtp_user" class="form-control" value="{{ cfg.email.username }}" placeholder="you@example.com">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">סיסמה / App Password</label>
+        <input name="smtp_pass" type="password" class="form-control" value="{{ cfg.email.password }}" placeholder="••••••••">
+      </div>
+    </div>
+  </div>
+
+  {# ── Alert Rules ── #}
+  <div class="card section-card">
+    <div class="card-header"><i class="bi bi-shield-check text-warning"></i> כללי התראה</div>
+    <div class="card-body">
+      <div class="row g-3">
+
+        {% set rule_labels = {
+          'equipment_offline': ('ציוד לא מקוון', 'grace_minutes', 'זמן המתנה לפני התראה (דקות)'),
+          'zero_production_daylight': ('אפס ייצור בשעות אור', 'grace_minutes', 'זמן המתנה (דקות)'),
+          'low_production': ('ייצור נמוך', 'threshold_pct', 'סף (% מהצפי)'),
+          'performance_drop': ('נפילת ביצועים יחסית לצי', 'threshold_pct', 'סף (%)'),
+          'alert_count_jump': ('קפיצה במונה התראות SolarEdge', '', '')
+        } %}
+
+        {% for rule_key, (rule_label, opt_key, opt_label) in rule_labels.items() %}
+        {% set rule = cfg.alert_rules.get(rule_key) %}
+        <div class="col-md-6">
+          <div class="repeatable-item">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <div class="form-check form-switch mb-0">
+                <input class="form-check-input" type="checkbox" name="rule_{{ rule_key }}" id="rule_{{ rule_key }}"
+                  {% if rule and rule.enabled %}checked{% endif %}>
+              </div>
+              <label class="fw-semibold mb-0" for="rule_{{ rule_key }}" style="color:#e2e8f0">{{ rule_label }}</label>
+              <span class="pill pill-rule ms-auto">{{ rule_key }}</span>
+            </div>
+            {% if opt_key %}
+            <label class="form-label">{{ opt_label }}</label>
+            <input name="rule_opt_{{ rule_key }}" type="number" class="form-control"
+              value="{{ rule.options.get(opt_key, '') if rule else '' }}" placeholder="—">
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+  {# ── Recipients ── #}
+  <div class="card section-card">
+    <div class="card-header"><i class="bi bi-people-fill text-warning"></i> נמענים</div>
+    <div class="card-body">
+      <div id="recipients-list">
+        {% for r in cfg.recipients %}
+        <div class="repeatable-item">
+          <button type="button" class="btn-remove" onclick="removeItem(this)" title="הסר נמען">✕</button>
+          <div class="row g-2">
+            <div class="col-md-4">
+              <label class="form-label">שם</label>
+              <input name="r_name" class="form-control" value="{{ r.name }}" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">תפקיד</label>
+              <input name="r_role" class="form-control" value="{{ r.role }}">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">טלפון</label>
+              <input name="r_phone" class="form-control" value="{{ r.phone or '' }}" placeholder="+972-50-...">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">חומרה מינימלית</label>
+              <select name="r_severity" class="form-select">
+                <option value="info"     {% if r.min_severity.value == 'info'     %}selected{% endif %}>מידע</option>
+                <option value="warning"  {% if r.min_severity.value == 'warning'  %}selected{% endif %}>אזהרה</option>
+                <option value="critical" {% if r.min_severity.value == 'critical' %}selected{% endif %}>קריטי</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Telegram Chat ID</label>
+              <input name="r_telegram" class="form-control font-monospace" value="{{ r.telegram_chat_id or '' }}" placeholder="—">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">דוא"ל</label>
+              <input name="r_email" class="form-control" value="{{ r.email or '' }}" placeholder="—">
+            </div>
+            <div class="col-12">
+              <label class="form-label">קטגוריות התראה</label>
+              <div class="cat-check">
+                {% for cat in ['all','equipment_offline','zero_production_daylight','low_production','performance_drop','alert_count_jump','monthly_report'] %}
+                <span>
+                  <input type="checkbox" name="r_cat_{{ loop.index0 }}_{{ r.name|replace(' ','_') }}" id="cat_{{ r.name|replace(' ','_') }}_{{ cat }}"
+                    value="{{ cat }}" data-rcat
+                    {% if cat in r.categories %}checked{% endif %}>
+                  <label for="cat_{{ r.name|replace(' ','_') }}_{{ cat }}">{{ cat }}</label>
+                </span>
+                {% endfor %}
+              </div>
+              {# hidden joined value updated by JS before submit #}
+              <input type="hidden" name="r_categories" class="r-categories-hidden" value="{{ r.categories|join(',') }}">
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="btn-add mt-1" onclick="addRecipient()">+ הוסף נמען</button>
+    </div>
+  </div>
+
+  <div class="sticky-save d-flex gap-2 align-items-center">
+    <button type="submit" class="btn btn-warning fw-bold px-4">
+      <i class="bi bi-floppy-fill"></i> שמור קונפיגורציה
+    </button>
+    <a href="/config" class="btn btn-outline-secondary">ביטול</a>
+    <span class="ts text-muted me-3"><i class="bi bi-shield-lock"></i> נשמר מקומית בלבד</span>
+  </div>
+
+</form>
+
+<template id="site-tpl">
+  <div class="repeatable-item">
+    <button type="button" class="btn-remove" onclick="removeItem(this)">✕</button>
+    <div class="row g-2">
+      <div class="col-md-3"><label class="form-label">Site ID</label>
+        <input name="site_id" type="number" class="form-control" required></div>
+      <div class="col-md-5"><label class="form-label">שם המתקן</label>
+        <input name="site_name" class="form-control" required></div>
+      <div class="col-md-4"><label class="form-label">ייצור יומי צפוי (kWh)</label>
+        <input name="site_kwh" type="number" step="0.1" class="form-control" placeholder="—"></div>
+    </div>
+  </div>
+</template>
+
+<template id="recipient-tpl">
+  <div class="repeatable-item">
+    <button type="button" class="btn-remove" onclick="removeItem(this)">✕</button>
+    <div class="row g-2">
+      <div class="col-md-4"><label class="form-label">שם</label><input name="r_name" class="form-control" required></div>
+      <div class="col-md-3"><label class="form-label">תפקיד</label><input name="r_role" class="form-control"></div>
+      <div class="col-md-3"><label class="form-label">טלפון</label><input name="r_phone" class="form-control" placeholder="+972-50-..."></div>
+      <div class="col-md-2"><label class="form-label">חומרה מינימלית</label>
+        <select name="r_severity" class="form-select">
+          <option value="info">מידע</option><option value="warning">אזהרה</option><option value="critical">קריטי</option>
+        </select>
+      </div>
+      <div class="col-md-6"><label class="form-label">Telegram Chat ID</label><input name="r_telegram" class="form-control font-monospace" placeholder="—"></div>
+      <div class="col-md-6"><label class="form-label">דוא"ל</label><input name="r_email" class="form-control" placeholder="—"></div>
+      <div class="col-12">
+        <label class="form-label">קטגוריות התראה</label>
+        <div class="cat-check">
+          <span><input type="checkbox" value="all" data-rcat id=""><label>all</label></span>
+          <span><input type="checkbox" value="equipment_offline" data-rcat><label>equipment_offline</label></span>
+          <span><input type="checkbox" value="zero_production_daylight" data-rcat><label>zero_production_daylight</label></span>
+          <span><input type="checkbox" value="low_production" data-rcat><label>low_production</label></span>
+          <span><input type="checkbox" value="performance_drop" data-rcat><label>performance_drop</label></span>
+          <span><input type="checkbox" value="alert_count_jump" data-rcat><label>alert_count_jump</label></span>
+          <span><input type="checkbox" value="monthly_report" data-rcat><label>monthly_report</label></span>
+        </div>
+        <input type="hidden" name="r_categories" class="r-categories-hidden" value="">
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+function removeItem(btn) {
+  btn.closest('.repeatable-item').remove();
+}
+function addSite() {
+  document.getElementById('sites-list').insertAdjacentHTML('beforeend',
+    document.getElementById('site-tpl').innerHTML);
+}
+function addRecipient() {
+  const tpl = document.getElementById('recipient-tpl').innerHTML;
+  const div = document.createElement('div');
+  div.innerHTML = tpl;
+  // fix label `for` references (not critical, just cosmetic)
+  document.getElementById('recipients-list').appendChild(div.firstElementChild);
+}
+
+// Before submit: collect checked categories into hidden inputs
+document.querySelector('form').addEventListener('submit', function() {
+  document.querySelectorAll('.repeatable-item').forEach(item => {
+    const hidden = item.querySelector('.r-categories-hidden');
+    if (!hidden) return;
+    const checked = [...item.querySelectorAll('[data-rcat]:checked')].map(cb => cb.value);
+    hidden.value = checked.join(',');
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}לוח בקרה — SolarEdge Ops{% endblock %}
+{% block content %}
+<div class="page-title"><i class="bi bi-speedometer2"></i> לוח בקרה</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="stat-card card">
+      <div class="stat-value">{{ sites|length }}</div>
+      <div class="stat-label">מתקנים מוגדרים</div>
+      <div class="stat-icon"><i class="bi bi-buildings"></i></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card card {% if open_alerts %}border border-danger{% endif %}">
+      <div class="stat-value {% if open_alerts %}sev-critical{% endif %}">{{ open_alerts|length }}</div>
+      <div class="stat-label">התראות פעילות</div>
+      <div class="stat-icon"><i class="bi bi-bell-fill"></i></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card card">
+      <div class="stat-value">{{ recipients|length }}</div>
+      <div class="stat-label">נמענים</div>
+      <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card card">
+      <div class="stat-value {% if in_active_hours %}" style="color:#48bb78{% else %}sev-warning{% endif %}">
+        {% if in_active_hours %}פעיל{% else %}מחוץ לשעות{% endif %}
+      </div>
+      <div class="stat-label">סטטוס סריקה</div>
+      <div class="stat-icon"><i class="bi bi-clock"></i></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="bi bi-bell-fill text-warning"></i>
+        <strong>התראות פעילות</strong>
+        {% if open_alerts %}<span class="badge bg-danger">{{ open_alerts|length }}</span>{% endif %}
+      </div>
+      <div class="card-body p-0">
+        {% if open_alerts %}
+        <table class="table mb-0">
+          <thead><tr>
+            <th>חומרה</th><th>מתקן</th><th>כותרת</th><th>זוהה</th>
+          </tr></thead>
+          <tbody>
+          {% for a in open_alerts %}
+          <tr>
+            <td>
+              {% if a.severity == 'critical' %}
+                <span class="pill badge-critical">🔴 קריטי</span>
+              {% elif a.severity == 'warning' %}
+                <span class="pill badge-warning">🟠 אזהרה</span>
+              {% else %}
+                <span class="pill badge-info">ℹ️ מידע</span>
+              {% endif %}
+            </td>
+            <td>{{ a.site_name or a.site_id }}</td>
+            <td>{{ a.title }}</td>
+            <td class="ts">{{ a.first_seen[:16].replace('T',' ') }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-4 text-muted">
+          <i class="bi bi-check-circle-fill text-success fs-3 d-block mb-2"></i>
+          אין התראות פעילות כרגע
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="bi bi-buildings text-warning"></i>
+        <strong>מתקנים וקוטה API</strong>
+      </div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>מתקן</th><th>ID</th><th>קוטה נותרת</th></tr></thead>
+          <tbody>
+          {% for site in sites %}
+          <tr>
+            <td>{{ site.name }}</td>
+            <td class="ts">{{ site.id }}</td>
+            <td>
+              {% set q = quota.get(site.id, max_quota) %}
+              {% set pct = (q / max_quota * 100)|int %}
+              <div class="d-flex align-items-center gap-2">
+                <div class="progress flex-grow-1" style="height:6px;background:#2d3748">
+                  <div class="progress-bar {% if pct > 50 %}bg-success{% elif pct > 20 %}bg-warning{% else %}bg-danger{% endif %}"
+                       style="width:{{ pct }}%"></div>
+                </div>
+                <span class="ts">{{ q }}/{{ max_quota }}</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="bi bi-clock text-warning"></i>
+        <strong>שעות פעילות</strong>
+      </div>
+      <div class="card-body">
+        {% if active_hours %}
+        <div class="d-flex align-items-center gap-2">
+          <span class="dot {% if in_active_hours %}dot-ok{% else %}dot-warn{% endif %}"></span>
+          {{ active_hours.start.strftime('%H:%M') }} — {{ active_hours.end.strftime('%H:%M') }}
+          <span class="ts ms-auto">{% if in_active_hours %}עכשיו פעיל{% else %}מחוץ לשעות{% endif %}</span>
+        </div>
+        {% else %}
+        <span class="text-muted ts">לא הוגדרו שעות פעילות — רץ תמיד</span>
+        {% endif %}
+        <div class="ts mt-2">סריקה כל {{ polling_interval }} דקות</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
