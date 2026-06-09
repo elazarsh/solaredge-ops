@@ -18,6 +18,7 @@ from ..models import Alert, Severity
 from .base import Notifier
 from .email import EmailNotifier
 from .telegram import TelegramNotifier
+from .whatsapp import WhatsAppNotifier
 
 logger = logging.getLogger(__name__)
 
@@ -46,10 +47,12 @@ class AlertRouter(Notifier):
         self,
         recipients: list[Recipient],
         telegram: TelegramNotifier | None = None,
+        whatsapp: WhatsAppNotifier | None = None,
         email: EmailNotifier | None = None,
     ):
         self.recipients = recipients
         self.telegram = telegram
+        self.whatsapp = whatsapp
         self.email = email
 
     def send_alert(self, alert: Alert) -> None:
@@ -70,6 +73,11 @@ class AlertRouter(Notifier):
                 self.telegram.send(recipient.telegram_chat_id, chat_text)
             except Exception:
                 logger.exception("Failed to deliver Telegram message to %s", recipient.name)
+        if recipient.whatsapp_chat_id and self.whatsapp:
+            try:
+                self.whatsapp.send(recipient.whatsapp_chat_id, chat_text)
+            except Exception:
+                logger.exception("Failed to deliver WhatsApp message to %s", recipient.name)
         if recipient.email and self.email:
             try:
                 self.email.send([recipient.email], subject, html, text)

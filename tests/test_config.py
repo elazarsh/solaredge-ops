@@ -118,7 +118,7 @@ def test_load_config_rejects_recipient_without_a_channel(tmp_path):
     )
     config_path.write_text(bad_yaml, encoding="utf-8")
 
-    with pytest.raises(ValueError, match="Ronit - Finance.*telegram_chat_id nor email"):
+    with pytest.raises(ValueError, match="Ronit - Finance.*no notification channel"):
         load_config(config_path)
 
 

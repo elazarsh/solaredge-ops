@@ -33,13 +33,15 @@ def _build_notifiers(config) -> list[Notifier]:
         logger.warning("No recipients configured - alerts will only be logged")
         return []
 
+    from .notifiers.whatsapp import WhatsAppNotifier
     telegram = TelegramNotifier(config.telegram) if config.telegram.enabled else None
-    email = EmailNotifier(config.email) if config.email.enabled else None
-    if telegram is None and email is None:
+    whatsapp = WhatsAppNotifier(config.whatsapp) if config.whatsapp.enabled else None
+    email    = EmailNotifier(config.email)    if config.email.enabled    else None
+    if telegram is None and whatsapp is None and email is None:
         logger.warning("No notification channel is enabled in config - alerts will only be logged")
         return []
 
-    return [AlertRouter(config.recipients, telegram=telegram, email=email)]
+    return [AlertRouter(config.recipients, telegram=telegram, whatsapp=whatsapp, email=email)]
 
 
 def cmd_contacts(args: argparse.Namespace) -> int:

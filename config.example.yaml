@@ -42,8 +42,21 @@ alert_rules:
 # in `recipients` - that's what makes per-person/per-role routing possible.
 notifications:
   telegram:
-    enabled: true
+    enabled: false
     bot_token: "123456:ABC-YOUR-BOT-TOKEN"
+
+  # WhatsApp via Green API (free tier — https://green-api.com)
+  # 1. Register, create an instance, scan QR with your WhatsApp phone.
+  # 2. Copy idInstance and apiTokenInstance below.
+  # 3. Per recipient, set whatsapp_chat_id:
+  #      Group : 120363XXXXXXXXXX@g.us  (add the instance number to the group first,
+  #              then call /getChats to find the id)
+  #      Person: 972501234567@c.us      (country code + number, no +, suffix @c.us)
+  whatsapp:
+    enabled: true
+    instance_id: "YOUR_INSTANCE_ID"
+    api_token:   "YOUR_API_TOKEN"
+
   email:
     enabled: false
     smtp_host: "smtp.gmail.com"
@@ -73,24 +86,25 @@ recipients:
   - name: "Danny - Maintenance lead"
     role: maintenance
     phone: "+972-50-000-0000"
-    telegram_chat_id: "-1001234567890"   # the field crew's group chat - gets real-time alerts
+    whatsapp_chat_id: "120363XXXXXXXXXX@g.us"  # the field crew's WhatsApp group
+    # telegram_chat_id: "-1001234567890"       # or use Telegram instead / in addition
     categories: [equipment_offline, zero_production_daylight, low_production, performance_drop, alert_count_jump]
-    min_severity: warning                # don't wake them up for "info"-level noise
+    min_severity: warning
 
   - name: "Ronit - Finance"
     role: finance
     phone: "+972-50-111-1111"
     email: "ronit@example.com"
-    categories: [monthly_report]         # only the periodic production/financial summary
-    min_severity: info                   # irrelevant for the report, harmless default
+    categories: [monthly_report]
+    min_severity: info
 
   - name: "Yossi - CEO"
     role: management
     phone: "+972-50-222-2222"
-    telegram_chat_id: "222222222"        # personal chat - a quiet channel, only for what truly matters
+    whatsapp_chat_id: "972502222222@c.us"  # personal WhatsApp
     email: "yossi@example.com"
-    categories: [all, monthly_report]    # the big picture: critical field issues + the monthly summary
-    min_severity: critical               # but skip the day-to-day noise the maintenance crew already has
+    categories: [all, monthly_report]
+    min_severity: critical
 
 reporting:
   monthly:

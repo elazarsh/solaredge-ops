@@ -64,6 +64,14 @@ class TelegramConfig:
 
 
 @dataclass
+class WhatsAppConfig:
+    """Green API WhatsApp gateway (https://green-api.com — free tier)."""
+    enabled: bool = False
+    instance_id: str = ""    # idInstance from Green API dashboard
+    api_token: str = ""      # apiTokenInstance from Green API dashboard
+
+
+@dataclass
 class EmailConfig:
     enabled: bool = False
     smtp_host: str = ""
@@ -94,9 +102,13 @@ class Recipient:
     role: str = ""
     phone: str | None = None
     telegram_chat_id: str | None = None
+    whatsapp_chat_id: str | None = None   # Green API chatId, e.g. 120363XXX@g.us or 972501234567@c.us
     email: str | None = None
     categories: list[str] = field(default_factory=lambda: ["all"])
     min_severity: Severity = Severity.INFO
+
+    def has_any_channel(self) -> bool:
+        return bool(self.telegram_chat_id or self.whatsapp_chat_id or self.email)
 
     def wants_alert(self, rule: str, severity: Severity) -> bool:
         matches_category = "all" in self.categories or rule in self.categories
@@ -114,6 +126,7 @@ class Config:
     polling: PollingConfig
     alert_rules: dict[str, RuleConfig]
     telegram: TelegramConfig
+    whatsapp: WhatsAppConfig
     email: EmailConfig
     monthly_report: MonthlyReportConfig
     recipients: list[Recipient]
@@ -151,10 +164,12 @@ def _build_recipients(raw: list[dict[str, Any]] | None) -> list[Recipient]:
             raise ValueError("each entry under `recipients` must have a `name`")
 
         telegram_chat_id = entry.get("telegram_chat_id")
+        whatsapp_chat_id = entry.get("whatsapp_chat_id")
         email = entry.get("email")
-        if not telegram_chat_id and not email:
+        if not telegram_chat_id and not whatsapp_chat_id and not email:
             raise ValueError(
-                f"recipient '{name}' has neither telegram_chat_id nor email - "
+                f"recipient '{name}' has no notification channel "
+                "(telegram_chat_id, whatsapp_chat_id, or email) - "
                 "they would never actually receive anything"
             )
 
@@ -171,6 +186,7 @@ def _build_recipients(raw: list[dict[str, Any]] | None) -> list[Recipient]:
                 role=entry.get("role", ""),
                 phone=(str(entry["phone"]) if entry.get("phone") is not None else None),
                 telegram_chat_id=(str(telegram_chat_id) if telegram_chat_id else None),
+                whatsapp_chat_id=(str(whatsapp_chat_id) if whatsapp_chat_id else None),
                 email=email,
                 categories=list(entry.get("categories") or ["all"]),
                 min_severity=Severity(min_severity_raw),
@@ -219,6 +235,13 @@ def load_config(path: str | Path) -> Config:
         bot_token=telegram_raw.get("bot_token", ""),
     )
 
+    whatsapp_raw = notifications.get("whatsapp") or {}
+    whatsapp = WhatsAppConfig(
+        enabled=bool(whatsapp_raw.get("enabled", False)),
+        instance_id=whatsapp_raw.get("instance_id", ""),
+        api_token=whatsapp_raw.get("api_token", ""),
+    )
+
     email_raw = notifications.get("email") or {}
     email = EmailConfig(
         enabled=bool(email_raw.get("enabled", False)),
@@ -259,6 +282,7 @@ def load_config(path: str | Path) -> Config:
         polling=polling,
         alert_rules=_build_rules(raw.get("alert_rules")),
         telegram=telegram,
+        whatsapp=whatsapp,
         email=email,
         monthly_report=monthly_report,
         recipients=recipients,

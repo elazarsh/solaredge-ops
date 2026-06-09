@@ -181,6 +181,41 @@
     </div>
   </div>
 
+  {# ── WhatsApp ── #}
+  <div class="card section-card">
+    <div class="card-header"><i class="bi bi-whatsapp text-warning"></i> WhatsApp (Green API)</div>
+    <div class="card-body row g-3">
+      <div class="col-12">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" name="whatsapp_enabled" id="wa_on"
+                 {% if cfg.whatsapp.enabled %}checked{% endif %}>
+          <label class="form-check-label" for="wa_on">הפעל שליחת הודעות WhatsApp</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Instance ID</label>
+        <input name="whatsapp_instance_id" class="form-control font-monospace"
+               value="{{ cfg.whatsapp.instance_id }}" placeholder="1234567890">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">API Token</label>
+        <input name="whatsapp_api_token" class="form-control font-monospace"
+               value="{{ cfg.whatsapp.api_token }}" placeholder="abc123...">
+      </div>
+      <div class="col-12">
+        <div class="ts" style="line-height:1.7;">
+          <strong style="color:#c9d1d9;">הגדרת Green API (חינם):</strong><br>
+          1. הירשם ב-<a href="https://green-api.com" target="_blank" style="color:#58a6ff;">green-api.com</a>
+             ← צור Instance ← סרוק QR עם הוואצאפ שלך.<br>
+          2. העתק את <code>idInstance</code> ו-<code>apiTokenInstance</code> לשדות למעלה.<br>
+          3. לקבלת Group Chat ID — הוסף את מספר ה-Instance לקבוצה, אחר כך קרא לנקודה הבאה:<br>
+          &nbsp;&nbsp;&nbsp;<code style="font-size:0.72rem;">GET https://api.green-api.com/waInstance{ID}/getChats/{TOKEN}</code><br>
+          4. הדבק את ה-Chat ID של הקבוצה (נגמר ב-<code>@g.us</code>) בשדה "WhatsApp Chat ID" של הנמען.
+        </div>
+      </div>
+    </div>
+  </div>
+
   {# ── Email ── #}
   <div class="card section-card">
     <div class="card-header"><i class="bi bi-envelope text-warning"></i> דוא"ל (SMTP)</div>
@@ -282,14 +317,19 @@
                 <option value="critical" {% if r.min_severity.value == 'critical' %}selected{% endif %}>קריטי</option>
               </select>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Telegram Chat ID <span class="ts">(לפחות אחד מהשניים חובה)</span></label>
-              <input name="r_telegram" class="form-control font-monospace" value="{{ r.telegram_chat_id or '' }}" placeholder="לדוגמה: -1001234567890">
+            <div class="col-md-4">
+              <label class="form-label">Telegram Chat ID</label>
+              <input name="r_telegram" class="form-control font-monospace" value="{{ r.telegram_chat_id or '' }}" placeholder="-1001234567890">
             </div>
-            <div class="col-md-6">
-              <label class="form-label">דוא"ל <span class="ts">(לפחות אחד מהשניים חובה)</span></label>
+            <div class="col-md-4">
+              <label class="form-label">WhatsApp Chat ID <span class="ts">(קבוצה או אישי)</span></label>
+              <input name="r_whatsapp" class="form-control font-monospace" value="{{ r.whatsapp_chat_id or '' }}" placeholder="120363XXX@g.us">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">דוא"ל</label>
               <input name="r_email" class="form-control" value="{{ r.email or '' }}" placeholder="name@example.com">
             </div>
+            <div class="col-12 ts" style="color:#484f58;">לפחות אחד מהשלושה חובה לקבלת התראות</div>
             <div class="col-12">
               <label class="form-label">קטגוריות התראה</label>
               <div class="cat-check">
@@ -369,8 +409,10 @@
           <option value="info">מידע</option><option value="warning">אזהרה</option><option value="critical">קריטי</option>
         </select>
       </div>
-      <div class="col-md-6"><label class="form-label">Telegram Chat ID <span class="ts">(לפחות אחד)</span></label><input name="r_telegram" class="form-control font-monospace" placeholder="-1001234567890"></div>
-      <div class="col-md-6"><label class="form-label">דוא"ל <span class="ts">(לפחות אחד)</span></label><input name="r_email" class="form-control" placeholder="name@example.com"></div>
+      <div class="col-md-4"><label class="form-label">Telegram Chat ID</label><input name="r_telegram" class="form-control font-monospace" placeholder="-1001234567890"></div>
+      <div class="col-md-4"><label class="form-label">WhatsApp Chat ID</label><input name="r_whatsapp" class="form-control font-monospace" placeholder="120363XXX@g.us"></div>
+      <div class="col-md-4"><label class="form-label">דוא"ל</label><input name="r_email" class="form-control" placeholder="name@example.com"></div>
+      <div class="col-12 ts" style="color:#484f58;">לפחות אחד מהשלושה חובה</div>
       <div class="col-12">
         <label class="form-label">קטגוריות התראה</label>
         <div class="cat-check">
@@ -421,12 +463,15 @@ function checkRequiredFields() {
     const empty = !el.value || !el.value.trim();
     el.classList.toggle('req-empty', empty);
   });
-  // For each recipient block: warn if both telegram and email are empty
+  // For each recipient block: warn if all three channels are empty
   document.querySelectorAll('#recipients-list .repeatable-item').forEach(function(item) {
     const tg    = item.querySelector('[name="r_telegram"]');
+    const wa    = item.querySelector('[name="r_whatsapp"]');
     const email = item.querySelector('[name="r_email"]');
-    const noChannel = tg && email && !tg.value.trim() && !email.value.trim();
+    const noChannel = tg && wa && email &&
+                      !tg.value.trim() && !wa.value.trim() && !email.value.trim();
     if (tg)    tg.classList.toggle('req-empty', noChannel);
+    if (wa)    wa.classList.toggle('req-empty', noChannel);
     if (email) email.classList.toggle('req-empty', noChannel);
   });
 }
