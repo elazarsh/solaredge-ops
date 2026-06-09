@@ -119,7 +119,9 @@ def _default_config() -> Config:
     from .config import (
         PollingConfig, ActiveHours, RuleConfig,
         TelegramConfig, EmailConfig, MonthlyReportConfig, WeatherConfig,
+        Recipient,
     )
+    from .models import Severity
     return Config(
         api_key="",
         max_requests_per_day=300,
@@ -145,11 +147,172 @@ def _default_config() -> Config:
             from_addr="",
         ),
         monthly_report=MonthlyReportConfig(enabled=True, day_of_month=1),
-        recipients=[],
+        recipients=[
+            Recipient(name="מנהל תחזוקה", role="maintenance",
+                      phone="+972-50-000-0001",
+                      telegram_chat_id=None, email=None,
+                      categories=["equipment_offline", "zero_production_daylight",
+                                  "low_production", "performance_drop", "alert_count_jump"],
+                      min_severity=Severity.WARNING),
+            Recipient(name="כספים", role="finance",
+                      phone="+972-50-000-0002",
+                      telegram_chat_id=None, email=None,
+                      categories=["monthly_report"],
+                      min_severity=Severity.INFO),
+            Recipient(name="מנהל", role="management",
+                      phone="+972-50-000-0003",
+                      telegram_chat_id=None, email=None,
+                      categories=["all", "monthly_report"],
+                      min_severity=Severity.CRITICAL),
+        ],
         state_db_path="state.db",
         data_dir="",
         weather=WeatherConfig(),
     )
+
+
+def _load_config_loose(path: Path) -> Config:
+    """
+    Read config.yaml for form display WITHOUT strict validation.
+    Returns a Config even if api_key is empty or recipients lack channels.
+    Falls back to _default_config() on YAML parse failure.
+    """
+    from datetime import time as _time
+    from .config import (
+        PollingConfig, ActiveHours, RuleConfig,
+        TelegramConfig, EmailConfig, MonthlyReportConfig, WeatherConfig,
+        SiteConfig, Recipient, _parse_time,
+    )
+    from .models import Severity
+
+    try:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except Exception:
+        return _default_config()
+
+    se = raw.get("solaredge") or {}
+
+    # sites
+    sites = []
+    for s in (raw.get("sites") or []):
+        try:
+            sites.append(SiteConfig(
+                id=int(s.get("id", 0)),
+                name=s.get("name", ""),
+                expected_daily_kwh=float(s["expected_daily_kwh"]) if s.get("expected_daily_kwh") else None,
+                location=s.get("location") or None,
+            ))
+        except Exception:
+            pass
+
+    # polling
+    polling_raw = raw.get("polling") or {}
+    ah_raw = polling_raw.get("active_hours")
+    active_hours = None
+    if ah_raw:
+        try:
+            active_hours = ActiveHours(
+                start=_parse_time(ah_raw["start"]),
+                end=_parse_time(ah_raw["end"]),
+            )
+        except Exception:
+            pass
+
+    # notifications
+    notifications = raw.get("notifications") or {}
+    tg = notifications.get("telegram") or {}
+    em = notifications.get("email") or {}
+
+    # alert rules — merge saved rules with defaults (so new rules always appear)
+    default_rules = {
+        "equipment_offline":       RuleConfig(enabled=True,  options={"grace_minutes": 60}),
+        "zero_production_daylight":RuleConfig(enabled=True,  options={"grace_minutes": 45}),
+        "low_production":          RuleConfig(enabled=True,  options={"threshold_pct": 70}),
+        "performance_drop":        RuleConfig(enabled=True,  options={"threshold_pct": 20}),
+        "alert_count_jump":        RuleConfig(enabled=True,  options={}),
+    }
+    for rk, rv in (raw.get("alert_rules") or {}).items():
+        rv = dict(rv or {})
+        enabled = bool(rv.pop("enabled", True))
+        default_rules[rk] = RuleConfig(enabled=enabled, options=rv)
+
+    # recipients
+    recipients = []
+    for r in (raw.get("recipients") or []):
+        if not r.get("name"):
+            continue
+        try:
+            sev_raw = str(r.get("min_severity", "info")).lower()
+            try:
+                sev = Severity(sev_raw)
+            except ValueError:
+                sev = Severity.INFO
+            recipients.append(Recipient(
+                name=r["name"],
+                role=r.get("role", ""),
+                phone=str(r["phone"]) if r.get("phone") else None,
+                telegram_chat_id=str(r["telegram_chat_id"]) if r.get("telegram_chat_id") else None,
+                email=r.get("email") or None,
+                categories=list(r.get("categories") or ["all"]),
+                min_severity=sev,
+            ))
+        except Exception:
+            pass
+
+    # storage
+    storage = raw.get("storage") or {}
+    state_db = storage.get("state_db_path", "state.db")
+    explicit_data = (storage.get("data_path") or "").strip()
+    data_dir = explicit_data if explicit_data else str(Path(state_db).parent / "data")
+
+    weather_raw = raw.get("weather") or {}
+
+    return Config(
+        api_key=se.get("api_key", ""),
+        max_requests_per_day=int(se.get("max_requests_per_day", 300)),
+        sites=sites,
+        polling=PollingConfig(
+            interval_minutes=int(polling_raw.get("interval_minutes", 30)),
+            active_hours=active_hours,
+        ),
+        alert_rules=default_rules,
+        telegram=TelegramConfig(
+            enabled=bool(tg.get("enabled", False)),
+            bot_token=tg.get("bot_token", ""),
+        ),
+        email=EmailConfig(
+            enabled=bool(em.get("enabled", False)),
+            smtp_host=em.get("smtp_host", ""),
+            smtp_port=int(em.get("smtp_port", 587)),
+            username=em.get("username", ""),
+            password=em.get("password", ""),
+            from_addr=em.get("from_addr", ""),
+        ),
+        monthly_report=MonthlyReportConfig(enabled=True, day_of_month=1),
+        recipients=recipients,
+        state_db_path=state_db,
+        data_dir=data_dir,
+        weather=WeatherConfig(
+            enabled=bool(weather_raw.get("enabled", True)),
+            suppress_alerts=bool(weather_raw.get("suppress_alerts", True)),
+            suppress_ghi_kwh=float(weather_raw.get("suppress_ghi_kwh", 1.5)),
+            suppress_cloud_pct=float(weather_raw.get("suppress_cloud_pct", 80.0)),
+        ),
+    )
+
+
+def _config_warnings(config: Config) -> list[str]:
+    """Return list of warning keys for missing required fields."""
+    warnings = []
+    if not config.api_key or config.api_key.startswith("YOUR_"):
+        warnings.append("api_key")
+    if not config.sites:
+        warnings.append("sites")
+    no_channel = [r.name for r in config.recipients
+                  if not r.telegram_chat_id and not r.email]
+    if no_channel:
+        warnings.append("no_channel:" + ",".join(no_channel))
+    return warnings
 
 
 @app.route("/")
@@ -241,16 +404,27 @@ def config_view():
 
 def _form_to_yaml(f) -> str:
     """Build a YAML dict from the structured config form and return it as a string."""
-    # sites — parallel lists
+    # sites — parallel lists (skip rows with empty ID or name)
     site_ids       = f.getlist("site_id")
     site_names     = f.getlist("site_name")
     site_kwhs      = f.getlist("site_kwh")
     site_locations = f.getlist("site_location")
     sites = []
     for i, (sid, sname, skwh) in enumerate(zip(site_ids, site_names, site_kwhs)):
-        entry: dict = {"id": int(sid), "name": sname}
-        if skwh.strip():
-            entry["expected_daily_kwh"] = float(skwh)
+        sid = sid.strip()
+        sname = sname.strip()
+        if not sid or not sname:
+            continue
+        try:
+            entry: dict = {"id": int(sid), "name": sname}
+        except ValueError:
+            continue
+        skwh = skwh.strip()
+        if skwh:
+            try:
+                entry["expected_daily_kwh"] = float(skwh)
+            except ValueError:
+                pass
         loc = site_locations[i].strip() if i < len(site_locations) else ""
         if loc:
             entry["location"] = loc
@@ -371,17 +545,18 @@ def config_edit():
         except Exception as exc:
             error = str(exc)
 
-    config = _get_config()
-    # First-time setup: no config.yaml yet — show form with sensible defaults
-    if config is None and not saved:
+    # Always use the loose loader so partial saves don't wipe the form
+    if config_path.exists():
+        config = _load_config_loose(config_path)
+    else:
         config = _default_config()
 
-    if config is None:
-        return render_template("no_config.html", active="config", open_count=0, config_path=str(config_path))
-
+    warnings = _config_warnings(config)
     is_new = not config_path.exists()
+
     return render_template("config_edit.html",
                            is_new=is_new,
+                           warnings=warnings,
                            **_config_edit_ctx(config, config_path, error, saved))
 
 

@@ -28,6 +28,15 @@
   .cat-check input:checked + label { background: #271f02; border-color: #e3b341; color: #e3b341; }
   .cat-check input { display: none; }
   .sticky-save { position: sticky; bottom: 0; background: #0d1117; padding: 1rem 0; border-top: 1px solid #30363d; margin-top: 1rem; z-index: 10; }
+  /* required field markers */
+  .req-star { color: #f85149; margin-right: 2px; font-weight: 900; }
+  .form-control.req-empty { border-color: #f85149 !important; box-shadow: 0 0 0 2px rgba(248,81,73,.2) !important; }
+  .req-hint { color: #f85149; font-size: 0.73rem; margin-top: 3px; display: none; }
+  .form-control.req-empty ~ .req-hint { display: block; }
+  /* warnings list */
+  .warn-list { list-style: none; padding: 0; margin: 0; }
+  .warn-list li { display: flex; align-items: flex-start; gap: 0.5rem; padding: 4px 0; font-size: 0.9rem; }
+  .warn-list li i { flex-shrink: 0; margin-top: 2px; }
 </style>
 
 <div class="d-flex align-items-center gap-3 mb-4">
@@ -38,20 +47,48 @@
 {% if is_new %}
 <div class="alert mb-3" style="background:#161b22;border:1px solid #e3b341;color:#e3b341;">
   <i class="bi bi-stars"></i> <strong>הגדרה ראשונה</strong> —
-  מלא את ה-API Key ואת פרטי המתקנים שלך ולחץ <em>שמור</em>.
-  הקובץ נשמר רק אצלך ולא מועלה לשום מקום.
+  מלא לפחות את ה-API Key ואת המתקן שלך ולחץ <em>שמור</em>.
+  שאר השדות ניתן להשלים בהמשך — הנתונים שהוקלדו לא יאבדו.
 </div>
 {% endif %}
+
+{% if saved and warnings %}
+<div class="alert mb-3" style="background:#1c1205;border:1px solid #e3b341;">
+  <div class="d-flex align-items-center gap-2 mb-2">
+    <i class="bi bi-check-circle-fill text-success"></i>
+    <strong style="color:#f0f6fc;">הקונפיגורציה נשמרה — השלם את הפרטים הבאים כדי שהמערכת תעבוד במלואה:</strong>
+  </div>
+  <ul class="warn-list">
+    {% if 'api_key' in warnings %}<li><i class="bi bi-exclamation-circle text-warning"></i> <span style="color:#c9d1d9;">מפתח ה-API של SolarEdge חסר — המערכת לא תוכל לשלוף נתונים</span></li>{% endif %}
+    {% if 'sites' in warnings %}<li><i class="bi bi-exclamation-circle text-warning"></i> <span style="color:#c9d1d9;">לא הוגדר אף מתקן — הוסף לפחות מתקן אחד</span></li>{% endif %}
+    {% for w in warnings %}{% if w.startswith('no_channel:') %}<li><i class="bi bi-exclamation-circle text-warning"></i> <span style="color:#c9d1d9;">הנמענים הבאים אינם מוגדרים עם Telegram Chat ID או דוא"ל ולא יקבלו התראות: <strong>{{ w[11:] }}</strong></span></li>{% endif %}{% endfor %}
+  </ul>
+</div>
+{% elif saved %}
+<div class="alert alert-success d-flex align-items-center gap-2 mb-3">
+  <i class="bi bi-check-circle-fill"></i>
+  <div>הקונפיגורציה נשמרה בהצלחה — המערכת מוכנה לפעולה.</div>
+</div>
+{% endif %}
+
+{% if not saved and warnings and not is_new %}
+<div class="alert mb-3" style="background:#1a0e0e;border:1px solid #f85149;">
+  <div class="d-flex align-items-center gap-2 mb-2">
+    <i class="bi bi-shield-exclamation" style="color:#f85149;"></i>
+    <strong style="color:#f0f6fc;">חסרים פרטי חובה — המערכת לא תפעל כראוי עד שיושלמו:</strong>
+  </div>
+  <ul class="warn-list">
+    {% if 'api_key' in warnings %}<li><i class="bi bi-x-circle" style="color:#f85149;"></i> <span style="color:#c9d1d9;">מפתח API של SolarEdge</span></li>{% endif %}
+    {% if 'sites' in warnings %}<li><i class="bi bi-x-circle" style="color:#f85149;"></i> <span style="color:#c9d1d9;">לפחות מתקן אחד</span></li>{% endif %}
+    {% for w in warnings %}{% if w.startswith('no_channel:') %}<li><i class="bi bi-x-circle" style="color:#f85149;"></i> <span style="color:#c9d1d9;">ערוץ התראה (Telegram / דוא"ל) לנמענים: <strong>{{ w[11:] }}</strong></span></li>{% endif %}{% endfor %}
+  </ul>
+</div>
+{% endif %}
+
 {% if error %}
 <div class="alert alert-danger d-flex align-items-center gap-2 mb-3">
   <i class="bi bi-exclamation-triangle-fill"></i>
   <div>{{ error }}</div>
-</div>
-{% endif %}
-{% if saved %}
-<div class="alert alert-success d-flex align-items-center gap-2 mb-3">
-  <i class="bi bi-check-circle-fill"></i>
-  <div>הקונפיגורציה נשמרה בהצלחה.</div>
 </div>
 {% endif %}
 
@@ -62,8 +99,10 @@
     <div class="card-header"><i class="bi bi-sun-fill text-warning"></i> SolarEdge API</div>
     <div class="card-body row g-3">
       <div class="col-md-8">
-        <label class="form-label">API Key</label>
-        <input name="api_key" class="form-control font-monospace" value="{{ cfg.api_key }}" placeholder="YOUR_API_KEY" required>
+        <label class="form-label"><span class="req-star">*</span> API Key</label>
+        <input name="api_key" class="form-control font-monospace" value="{{ cfg.api_key }}"
+               placeholder="YOUR_API_KEY" data-req>
+        <div class="req-hint">שדה חובה — ללא מפתח API המערכת לא תפעל</div>
       </div>
       <div class="col-md-4">
         <label class="form-label">מגבלת בקשות יומית לכל מתקן</label>
@@ -82,12 +121,12 @@
           <button type="button" class="btn-remove" onclick="removeItem(this)" title="הסר מתקן">✕</button>
           <div class="row g-2">
             <div class="col-md-2">
-              <label class="form-label">Site ID</label>
-              <input name="site_id" type="number" class="form-control" value="{{ s.id }}" required>
+              <label class="form-label"><span class="req-star">*</span> Site ID</label>
+              <input name="site_id" type="number" class="form-control" value="{{ s.id }}" data-req>
             </div>
             <div class="col-md-4">
-              <label class="form-label">שם המתקן</label>
-              <input name="site_name" class="form-control" value="{{ s.name }}" required>
+              <label class="form-label"><span class="req-star">*</span> שם המתקן</label>
+              <input name="site_name" class="form-control" value="{{ s.name }}" data-req>
             </div>
             <div class="col-md-3">
               <label class="form-label">ייצור יומי צפוי (kWh)</label>
@@ -224,8 +263,8 @@
           <button type="button" class="btn-remove" onclick="removeItem(this)" title="הסר נמען">✕</button>
           <div class="row g-2">
             <div class="col-md-4">
-              <label class="form-label">שם</label>
-              <input name="r_name" class="form-control" value="{{ r.name }}" required>
+              <label class="form-label"><span class="req-star">*</span> שם</label>
+              <input name="r_name" class="form-control" value="{{ r.name }}" data-req>
             </div>
             <div class="col-md-3">
               <label class="form-label">תפקיד</label>
@@ -244,12 +283,12 @@
               </select>
             </div>
             <div class="col-md-6">
-              <label class="form-label">Telegram Chat ID</label>
-              <input name="r_telegram" class="form-control font-monospace" value="{{ r.telegram_chat_id or '' }}" placeholder="—">
+              <label class="form-label">Telegram Chat ID <span class="ts">(לפחות אחד מהשניים חובה)</span></label>
+              <input name="r_telegram" class="form-control font-monospace" value="{{ r.telegram_chat_id or '' }}" placeholder="לדוגמה: -1001234567890">
             </div>
             <div class="col-md-6">
-              <label class="form-label">דוא"ל</label>
-              <input name="r_email" class="form-control" value="{{ r.email or '' }}" placeholder="—">
+              <label class="form-label">דוא"ל <span class="ts">(לפחות אחד מהשניים חובה)</span></label>
+              <input name="r_email" class="form-control" value="{{ r.email or '' }}" placeholder="name@example.com">
             </div>
             <div class="col-12">
               <label class="form-label">קטגוריות התראה</label>
@@ -322,7 +361,7 @@
   <div class="repeatable-item">
     <button type="button" class="btn-remove" onclick="removeItem(this)">✕</button>
     <div class="row g-2">
-      <div class="col-md-4"><label class="form-label">שם</label><input name="r_name" class="form-control" required></div>
+      <div class="col-md-4"><label class="form-label"><span class="req-star">*</span> שם</label><input name="r_name" class="form-control" data-req></div>
       <div class="col-md-3"><label class="form-label">תפקיד</label><input name="r_role" class="form-control"></div>
       <div class="col-md-3"><label class="form-label">טלפון</label><input name="r_phone" class="form-control" placeholder="+972-50-..."></div>
       <div class="col-md-2"><label class="form-label">חומרה מינימלית</label>
@@ -330,8 +369,8 @@
           <option value="info">מידע</option><option value="warning">אזהרה</option><option value="critical">קריטי</option>
         </select>
       </div>
-      <div class="col-md-6"><label class="form-label">Telegram Chat ID</label><input name="r_telegram" class="form-control font-monospace" placeholder="—"></div>
-      <div class="col-md-6"><label class="form-label">דוא"ל</label><input name="r_email" class="form-control" placeholder="—"></div>
+      <div class="col-md-6"><label class="form-label">Telegram Chat ID <span class="ts">(לפחות אחד)</span></label><input name="r_telegram" class="form-control font-monospace" placeholder="-1001234567890"></div>
+      <div class="col-md-6"><label class="form-label">דוא"ל <span class="ts">(לפחות אחד)</span></label><input name="r_email" class="form-control" placeholder="name@example.com"></div>
       <div class="col-12">
         <label class="form-label">קטגוריות התראה</label>
         <div class="cat-check">
@@ -373,6 +412,28 @@ document.querySelector('form').addEventListener('submit', function() {
     const checked = [...item.querySelectorAll('[data-rcat]:checked')].map(cb => cb.value);
     hidden.value = checked.join(',');
   });
+  checkRequiredFields();
 });
+
+// Highlight empty required fields in real-time
+function checkRequiredFields() {
+  document.querySelectorAll('[data-req]').forEach(function(el) {
+    const empty = !el.value || !el.value.trim();
+    el.classList.toggle('req-empty', empty);
+  });
+  // For each recipient block: warn if both telegram and email are empty
+  document.querySelectorAll('#recipients-list .repeatable-item').forEach(function(item) {
+    const tg    = item.querySelector('[name="r_telegram"]');
+    const email = item.querySelector('[name="r_email"]');
+    const noChannel = tg && email && !tg.value.trim() && !email.value.trim();
+    if (tg)    tg.classList.toggle('req-empty', noChannel);
+    if (email) email.classList.toggle('req-empty', noChannel);
+  });
+}
+
+// Run on page load (to highlight missing fields immediately after partial save)
+document.addEventListener('DOMContentLoaded', checkRequiredFields);
+// Also run on every input change
+document.querySelector('form').addEventListener('input', checkRequiredFields);
 </script>
 {% endblock %}
