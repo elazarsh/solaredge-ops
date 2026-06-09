@@ -1,4 +1,4 @@
-"""Minimal Flask web UI for browsing system state."""
+﻿"""Minimal Flask web UI for browsing system state."""
 from __future__ import annotations
 
 import json
@@ -118,7 +118,7 @@ def _default_config() -> Config:
     from datetime import time as _time
     from .config import (
         PollingConfig, ActiveHours, RuleConfig,
-        TelegramConfig, WhatsAppConfig, EmailConfig, MonthlyReportConfig, WeatherConfig,
+        TelegramConfig, EmailConfig, MonthlyReportConfig, WeatherConfig,
         Recipient,
     )
     from .models import Severity
@@ -138,7 +138,6 @@ def _default_config() -> Config:
             "alert_count_jump":        RuleConfig(enabled=True,  options={}),
         },
         telegram=TelegramConfig(enabled=False, bot_token=""),
-        whatsapp=WhatsAppConfig(enabled=False, instance_id="", api_token=""),
         email=EmailConfig(
             enabled=False,
             smtp_host="smtp.gmail.com",
@@ -181,7 +180,7 @@ def _load_config_loose(path: Path) -> Config:
     from datetime import time as _time
     from .config import (
         PollingConfig, ActiveHours, RuleConfig,
-        TelegramConfig, WhatsAppConfig, EmailConfig, MonthlyReportConfig, WeatherConfig,
+        TelegramConfig, EmailConfig, MonthlyReportConfig, WeatherConfig,
         SiteConfig, Recipient, _parse_time,
     )
     from .models import Severity
@@ -222,7 +221,6 @@ def _load_config_loose(path: Path) -> Config:
     # notifications
     notifications = raw.get("notifications") or {}
     tg = notifications.get("telegram") or {}
-    wa = notifications.get("whatsapp") or {}
     em = notifications.get("email") or {}
 
     # alert rules — merge saved rules with defaults (so new rules always appear)
@@ -254,7 +252,6 @@ def _load_config_loose(path: Path) -> Config:
                 role=r.get("role", ""),
                 phone=str(r["phone"]) if r.get("phone") else None,
                 telegram_chat_id=str(r["telegram_chat_id"]) if r.get("telegram_chat_id") else None,
-                whatsapp_chat_id=str(r["whatsapp_chat_id"]) if r.get("whatsapp_chat_id") else None,
                 email=r.get("email") or None,
                 categories=list(r.get("categories") or ["all"]),
                 min_severity=sev,
@@ -282,11 +279,6 @@ def _load_config_loose(path: Path) -> Config:
         telegram=TelegramConfig(
             enabled=bool(tg.get("enabled", False)),
             bot_token=tg.get("bot_token", ""),
-        ),
-        whatsapp=WhatsAppConfig(
-            enabled=bool(wa.get("enabled", False)),
-            instance_id=wa.get("instance_id", ""),
-            api_token=wa.get("api_token", ""),
         ),
         email=EmailConfig(
             enabled=bool(em.get("enabled", False)),
@@ -317,7 +309,7 @@ def _config_warnings(config: Config) -> list[str]:
     if not config.sites:
         warnings.append("sites")
     no_channel = [r.name for r in config.recipients
-                  if not r.telegram_chat_id and not r.whatsapp_chat_id and not r.email]
+                  if not r.telegram_chat_id and not r.email]
     if no_channel:
         warnings.append("no_channel:" + ",".join(no_channel))
     return warnings
@@ -464,14 +456,13 @@ def _form_to_yaml(f) -> str:
         alert_rules[rk] = entry
 
     # recipients — parallel lists (one value per recipient per field)
-    r_names      = f.getlist("r_name")
-    r_roles      = f.getlist("r_role")
-    r_phones     = f.getlist("r_phone")
-    r_severities = f.getlist("r_severity")
-    r_telegrams  = f.getlist("r_telegram")
-    r_whatsapps  = f.getlist("r_whatsapp")
-    r_emails     = f.getlist("r_email")
-    r_cats_list  = f.getlist("r_categories")  # comma-joined string per recipient
+    r_names     = f.getlist("r_name")
+    r_roles     = f.getlist("r_role")
+    r_phones    = f.getlist("r_phone")
+    r_severities= f.getlist("r_severity")
+    r_telegrams = f.getlist("r_telegram")
+    r_emails    = f.getlist("r_email")
+    r_cats_list = f.getlist("r_categories")  # comma-joined string per recipient
 
     recipients = []
     for i, name in enumerate(r_names):
@@ -485,13 +476,11 @@ def _form_to_yaml(f) -> str:
             "categories": cats,
             "min_severity": r_severities[i] if i < len(r_severities) else "info",
         }
-        phone = r_phones[i].strip()     if i < len(r_phones)     else ""
-        tg    = r_telegrams[i].strip()  if i < len(r_telegrams)  else ""
-        wa    = r_whatsapps[i].strip()  if i < len(r_whatsapps)  else ""
-        email = r_emails[i].strip()     if i < len(r_emails)     else ""
+        phone = r_phones[i].strip() if i < len(r_phones) else ""
+        tg    = r_telegrams[i].strip() if i < len(r_telegrams) else ""
+        email = r_emails[i].strip() if i < len(r_emails) else ""
         if phone: rec["phone"] = phone
         if tg:    rec["telegram_chat_id"] = tg
-        if wa:    rec["whatsapp_chat_id"] = wa
         if email: rec["email"] = email
         recipients.append(rec)
 
@@ -507,11 +496,6 @@ def _form_to_yaml(f) -> str:
             "telegram": {
                 "enabled": "telegram_enabled" in f,
                 "bot_token": f.get("telegram_token", ""),
-            },
-            "whatsapp": {
-                "enabled": "whatsapp_enabled" in f,
-                "instance_id": f.get("whatsapp_instance_id", "").strip(),
-                "api_token":   f.get("whatsapp_api_token",   "").strip(),
             },
             "email": {
                 "enabled": "email_enabled" in f,

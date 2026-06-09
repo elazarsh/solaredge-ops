@@ -1,4 +1,4 @@
-import pytest
+﻿import pytest
 
 from solaredge_ops.config import load_config
 from solaredge_ops.models import Severity
@@ -118,7 +118,7 @@ def test_load_config_rejects_recipient_without_a_channel(tmp_path):
     )
     config_path.write_text(bad_yaml, encoding="utf-8")
 
-    with pytest.raises(ValueError, match="Ronit - Finance.*no notification channel"):
+    with pytest.raises(ValueError, match="Ronit - Finance.*telegram_chat_id nor email"):
         load_config(config_path)
 
 

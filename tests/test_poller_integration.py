@@ -1,4 +1,4 @@
-"""End-to-end smoke test: fake API responses -> rule evaluation -> dedup -> notification.
+﻿"""End-to-end smoke test: fake API responses -> rule evaluation -> dedup -> notification.
 
 Exercises the full `run_once` pipeline the way `solaredge-ops check` would, without
 hitting the real SolarEdge API or a real Telegram/email endpoint.
@@ -6,7 +6,7 @@ hitting the real SolarEdge API or a real Telegram/email endpoint.
 from datetime import datetime
 
 from solaredge_ops.api_client import SolarEdgeClient
-from solaredge_ops.config import ActiveHours, Config, MonthlyReportConfig, PollingConfig, RuleConfig, SiteConfig, TelegramConfig, WhatsAppConfig, EmailConfig
+from solaredge_ops.config import ActiveHours, Config, MonthlyReportConfig, PollingConfig, RuleConfig, SiteConfig, TelegramConfig, EmailConfig
 from solaredge_ops.models import Alert
 from solaredge_ops.notifiers.base import Notifier
 from solaredge_ops.poller import run_once
@@ -67,7 +67,6 @@ def _config(tmp_path, sites, rules):
         polling=PollingConfig(interval_minutes=30, active_hours=ActiveHours(start=_time("06:00"), end=_time("18:00"))),
         alert_rules=rules,
         telegram=TelegramConfig(enabled=False),
-        whatsapp=WhatsAppConfig(enabled=False),
         email=EmailConfig(enabled=False),
         monthly_report=MonthlyReportConfig(enabled=False),
         recipients=[],
