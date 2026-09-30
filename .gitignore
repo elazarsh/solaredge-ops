@@ -12,6 +12,8 @@ data/
 # Keep project skills (video toolchain) under version control; ignore other local Claude files.
 .claude/*
 !.claude/skills/
+!.claude/hooks/
+!.claude/settings.json
 dist/
 
 # video-studio build output
