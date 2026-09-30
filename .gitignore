@@ -9,5 +9,12 @@ data/
 *.log
 *.egg-info/
 .pytest_cache/
-.claude/
+# Keep project skills (video toolchain) under version control; ignore other local Claude files.
+.claude/*
+!.claude/skills/
 dist/
+
+# video-studio build output
+video-studio/**/node_modules/
+video-studio/**/out/
+video-studio/**/.hyperframes/
