@@ -38,6 +38,10 @@ Score each 1–5; anything < 4 gets a fix before delivery.
 - One message. Body pays off the hook. Specific facts > adjectives.
 - Emotional beat present (a face, a moment, a place).
 
+**Offer / promo readability (user feedback, ep. 1 v7)**
+- A promotion (prizes, conditions) needs ≥ 4 s on screen, and a compact version of it must stay on the
+  **last frame** together with the contact, so a paused/ended video still shows the full offer.
+
 **CTA**
 - Single action, on screen ≥ 3 s, phone/WhatsApp large, brand name visible.
 - Legal note if required (gender note for job ads).
