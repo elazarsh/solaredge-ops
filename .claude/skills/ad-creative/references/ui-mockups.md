@@ -15,6 +15,12 @@ no WhatsApp/Instagram logo or name on screen, and no claim that the brand endors
 | Group sender names | Distinct saturated colors per person (#C2185B, #1F7AEC, #7B3FE4 …) |
 | Details that sell it | Date pill ("היום"), "⤻⤻ הועבר פעמים רבות" in italic gray, reaction chip under the bubble with a count, long-press menu (השב / סמן בכוכב / העבר / פרטי הודעה), bottom sheet for message info |
 
+## Stay native inside the mock
+- Every message inside the fake app uses the **app's own typography** (same font, size, colors, bubble) —
+  including the brand's message. Emphasis only the way the app does it (bold, emoji), never a different design.
+- Messages arrive **whole**, like the real app. To pace a long message, highlight its lines one by one
+  (marker sweep) and echo each line as a big headline *outside* the phone.
+
 ## Making a UI mock feel like TV, not a screenshot
 - Put the phone on bold brand-color backgrounds that **cut on the beat**; add large kinetic headlines
   above the phone (outside the UI) that echo what happens inside it.

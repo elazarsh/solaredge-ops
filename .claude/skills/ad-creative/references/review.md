@@ -11,6 +11,16 @@ Score each 1–5; anything < 4 gets a fix before delivery.
 - After the reveal, the message + brand are unmistakable; the twist dramatizes a real product truth.
 - Pace, text size and VO speed match the age band (`audiences.md`).
 
+**Pacing (user feedback, ep. 1 v2 → v3)**
+- Every punchline / reveal is **held ≥ 2–3 s** after it lands (≈ 5–6 beats at 120 BPM). Energy comes from
+  motion *within* a held moment (punch-ins, pulses, slow push), not from cutting away early.
+- Reading time: on-screen text needs ≈ 0.3 s per word + 0.5 s; a list of facts gets ≥ 1 s (2 beats) per item.
+- The twist and the payoff are the two slowest moments of the ad; the setup can be fast.
+
+**Voice-over**
+- VO lines never overlap. Leave **1–2 s of silence between VO segments** (compute: next start ≥ previous
+  start + measured duration + 1.0). Don't change the VO level to "fix" overlap — fix the timing.
+
 **Clarity on mute**
 - Every beat understandable from on-screen text alone.
 - Captions match VO exactly, 1–2 lines, never split a phrase in a way that breaks RTL reading.
