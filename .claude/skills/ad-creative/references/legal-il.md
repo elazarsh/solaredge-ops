@@ -19,6 +19,13 @@
 - Staff/testimonials: written consent for face, name and quote.
 - Don't use real people's likeness or voice (celebs, politicians) without permission; no fake testimonials.
 
+## Ads aimed at minors (kids / teens)
+- Consumer-protection and broadcast ad rules restrict advertising to minors: no direct call on
+  children to buy or to pressure parents ("תבקשו מאמא"), no exploiting inexperience or credulity,
+  no depicting dangerous behavior they might copy, no implying the child is inferior without the product.
+- Address purchase messages to parents; keep prices/conditions clear.
+- Twists for kids must not frighten (no scary fake-outs) — magic and silliness, not horror.
+
 ## Music, fonts, footage
 - Only licensed or royalty-free music; trending sounds in organic posts ≠ licensed for paid ads.
 - Fonts in `video-studio/remotion/public/fonts` are open-licensed (OFL) and fine for commercial use.

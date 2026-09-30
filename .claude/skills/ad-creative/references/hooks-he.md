@@ -20,6 +20,9 @@ address (at/ata/atem) to the audience; for job ads see `legal-il.md`.
 | Local pride | Place name first | "הר ברכה, יש לנו הודעה בשבילך." |
 
 ## Rules
+- **Twist concepts (the default):** the hook sets up the misdirection and must not reveal the
+  offer. Patterns like POV, mid-action, mid-conversation, open loop, quiz and scale shift fit best;
+  "direct question" and "local pride" belong to direct-response variants or the final link line.
 - Lead with the audience, not the brand. Logo can come at the end.
 - One idea per hook. No greetings ("שלום לכולם"), no slow logo intro.
 - Movement in frame 1 (a word slamming in, a zoom, a hand) — a static first frame loses.

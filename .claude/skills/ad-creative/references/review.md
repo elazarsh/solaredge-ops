@@ -6,6 +6,11 @@ Score each 1–5; anything < 4 gets a fix before delivery.
 - First frame already has motion and a readable message (not a logo, not black).
 - Hook text ≤ 6 words, readable at phone size in 0.5 s.
 
+**Twist**
+- The offer is *not* stated in the first 3 s; the reveal is one clear visual moment.
+- After the reveal, the message + brand are unmistakable; the twist dramatizes a real product truth.
+- Pace, text size and VO speed match the age band (`audiences.md`).
+
 **Clarity on mute**
 - Every beat understandable from on-screen text alone.
 - Captions match VO exactly, 1–2 lines, never split a phrase in a way that breaks RTL reading.
