@@ -21,6 +21,19 @@ no WhatsApp/Instagram logo or name on screen, and no claim that the brand endors
 - Messages arrive **whole**, like the real app. To pace a long message, highlight its lines one by one
   (marker sweep) and echo each line as a big headline *outside* the phone.
 
+## Showing "history" inside a chat (ep. 1 v4 — preferred over info sheets / timeline cards)
+- Scroll the chat itself back in time: a tall history strip above today's messages with native date pills
+  ("יולי 2026", "ינואר 2026"…) and stub bubbles; animate one wrapper's `y` with fixed section heights so the
+  scroll targets are exact. Age the screen to sepia while going back, clear it when coming forward.
+- Pull-to-refresh can then fast-forward to the moment that matters (a pinned message).
+
+## Bringing a client's flyer to life
+- Crop elements from the flyer (hero illustration, prize photos, glitter) and rebuild the layout in the video;
+  re-set the headline as live text so it can animate.
+- Paper backgrounds never match exactly (vignettes): feather crop edges with `mask-image: radial-gradient(...)`
+  and `mix-blend-mode: multiply`, on a soft radial paper background — don't color-key (it punches holes in whites).
+- To lift an illustration off its paper, flood-fill from the image border only (keeps interior whites).
+
 ## Making a UI mock feel like TV, not a screenshot
 - Put the phone on bold brand-color backgrounds that **cut on the beat**; add large kinetic headlines
   above the phone (outside the UI) that echo what happens inside it.
