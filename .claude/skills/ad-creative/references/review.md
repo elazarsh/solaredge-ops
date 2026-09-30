@@ -42,6 +42,12 @@ Score each 1–5; anything < 4 gets a fix before delivery.
 - A promotion (prizes, conditions) needs ≥ 4 s on screen, and a compact version of it must stay on the
   **last frame** together with the contact, so a paused/ended video still shows the full offer.
 
+**Page fill & end-card aesthetics (user feedback, ep. 1 v8)**
+- A promo page uses the whole safe box: large visuals (prize photos ≥ 430 px wide, framed in white rounded cards
+  with a soft shadow), no half-empty page. Decorative shapes may fill the area below the safe zone.
+- The end card stays clean: logo, CTA, contact, legal. Show the offer there as one designed element (e.g. a
+  pink ribbon in the client's flyer style + a small mascot) — never pasted photo thumbnails.
+
 **CTA**
 - Single action, on screen ≥ 3 s, phone/WhatsApp large, brand name visible.
 - Legal note if required (gender note for job ads).

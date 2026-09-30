@@ -108,24 +108,21 @@
       #finc { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, #F7F6F6 0%, #F0EEEE 70%, #E9E6E6 100%); }
       .glit { position: absolute; left: 0; top: 0; width: 620px; height: 540px; background: url("assets/img/glitter.jpg") 0 0/cover no-repeat; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(ellipse 100% 100% at 0% 0%, #000 45%, transparent 85%); mask-image: radial-gradient(ellipse 100% 100% at 0% 0%, #000 45%, transparent 85%); }
       .balloon { position: absolute; background: url("assets/img/balloon.png") center/contain no-repeat; -webkit-mask-image: radial-gradient(closest-side, #000 90%, transparent 100%); mask-image: radial-gradient(closest-side, #000 90%, transparent 100%); }
-      .rtitle { position: absolute; left: 50px; width: 620px; top: 330px; text-align: center; direction: rtl; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; color: var(--pink); line-height: 1; font-size: 140px; }
-      .rsub { position: absolute; left: 50px; width: 620px; top: 640px; text-align: center; direction: rtl; font-size: 44px; font-weight: 800; color: var(--cocoa); line-height: 1.2; }
-      .prize { position: absolute; top: 800px; width: 440px; text-align: center; direction: rtl; }
-      .prize .img { width: 440px; height: 320px; background-position: center; background-size: contain; background-repeat: no-repeat; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(closest-side, #000 88%, transparent 100%); mask-image: radial-gradient(closest-side, #000 88%, transparent 100%); }
-      .prize .cap { font-size: 36px; font-weight: 800; color: var(--cocoa); }
+      .rtitle { position: absolute; left: 40px; width: 600px; top: 320px; text-align: center; direction: rtl; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; color: var(--pink); line-height: 1.02; font-size: 150px; }
+      .rsub { position: absolute; left: 40px; width: 600px; top: 650px; text-align: center; direction: rtl; font-size: 40px; font-weight: 800; color: var(--cocoa); line-height: 1.25; white-space: nowrap; }
+      .prize { position: absolute; top: 860px; width: 470px; text-align: center; direction: rtl; background: #fff; border-radius: 36px; padding: 18px 18px 14px; box-shadow: 0 10px 30px rgba(91,64,50,.12); }
+      .prize .img { width: 434px; height: 330px; background-position: center; background-size: contain; background-repeat: no-repeat; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(closest-side, #000 88%, transparent 100%); mask-image: radial-gradient(closest-side, #000 88%, transparent 100%); }
+      .prize .cap { margin-top: 6px; font-size: 34px; white-space: nowrap; font-weight: 800; color: var(--cocoa); }
       /* stage B of the final card */
-      .strip { position: absolute; left: 50px; right: 50px; top: 270px; height: 330px; background: #fff; border-radius: 40px; box-shadow: 0 6px 20px rgba(0,0,0,.08); direction: rtl; }
-      .strip .sb { position: absolute; left: 24px; top: 14px; width: 150px; height: 200px; background: url("assets/img/balloon.png") center/contain no-repeat; }
-      .strip .st { position: absolute; right: 34px; top: 18px; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; font-size: 64px; color: var(--pink); line-height: 1.05; }
-      .strip .ss { position: absolute; right: 34px; top: 96px; font-size: 32px; font-weight: 700; color: var(--cocoa); }
-      .strip .pz { position: absolute; top: 146px; width: 300px; text-align: center; }
-      .strip .pz i { display: block; width: 300px; height: 136px; background-position: center; background-size: contain; background-repeat: no-repeat; mix-blend-mode: multiply; }
-      .strip .pz b { display: block; font-size: 28px; font-weight: 800; color: var(--cocoa); }
-      .fwrap { position: absolute; left: 60px; right: 60px; top: 620px; display: flex; flex-direction: column; align-items: center; direction: rtl; text-align: center; }
-      .logo { width: 220px; height: 220px; background: url("assets/img/har-bracha-logo.png") center/contain no-repeat; }
+      .ribbon { position: relative; margin-top: 30px; width: 900px; padding: 22px 150px 22px 40px; background: linear-gradient(180deg, #F48A94, #E8717D); border-radius: 26px; color: #fff; text-align: right; box-shadow: 0 8px 22px rgba(232,113,125,.3); }
+      .ribbon b { display: block; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; font-size: 50px; line-height: 1.05; }
+      .ribbon span { display: block; font-size: 30px; font-weight: 600; margin-top: 4px; }
+      .ribbon .bb { position: absolute; right: 14px; top: -40px; width: 120px; height: 160px; background: url("assets/img/balloon.png") center/contain no-repeat; }
+      .fwrap { position: absolute; left: 60px; right: 60px; top: 290px; display: flex; flex-direction: column; align-items: center; direction: rtl; text-align: center; }
+      .logo { width: 280px; height: 280px; background: url("assets/img/har-bracha-logo.png") center/contain no-repeat; }
       .cta { margin-top: 14px; background: var(--green); color: #fff; border-radius: 70px; padding: 10px 50px; font-family: "Rubik", sans-serif; font-weight: 900; font-size: 58px; display: flex; gap: 18px; align-items: center; }
       .cta i { display: block; font-style: normal; }
-      .contact { margin-top: 18px; }
+      .contact { margin-top: 26px; }
       .contact .k { font-size: 40px; font-weight: 700; color: var(--forest); }
       .contact .v { font-family: "Rubik", sans-serif; font-size: 76px; font-weight: 900; color: var(--green); line-height: 1.05; }
       .terms { margin-top: 10px; font-size: 28px; font-weight: 600; color: #3C3C3C; line-height: 1.3; }
@@ -261,19 +258,25 @@
       <!-- ===================== END 2: referral + lockup (beat 58 →) ===================== -->
       <div id="finc" class="clip" data-start="29.42" data-duration="7.78" data-track-index="2" data-layout-allow-overlap>
         <div class="glit" id="glit"></div>
+        <div id="deco">
+          <div class="dot" style="left:-80px; top:1420px; width:360px; height:360px; background:rgba(239,127,138,.14)"></div>
+          <div class="dot" style="left:760px; top:1500px; width:420px; height:420px; background:rgba(239,127,138,.10)"></div>
+          <div style="position:absolute; left:90px; top:1340px; font-size:80px; transform:rotate(-14deg)">🎀</div>
+          <div style="position:absolute; left:880px; top:1300px; font-size:64px; transform:rotate(12deg)">🎀</div>
+        </div>
         <!-- stage A: the flyer, alive -->
         <div id="stA">
-          <div class="balloon" id="balloon" style="left:660px; top:250px; width:380px; height:506px"></div>
+          <div class="balloon" id="balloon" style="left:600px; top:230px; width:450px; height:600px"></div>
           <div class="rtitle"><div class="h" id="rt1">המלצת?</div><div class="h" id="rt2">הרווחת!</div></div>
-          <div class="rsub h" id="rsub">ממליצים על מטפלת לצוות המעון, וזוכים בפרס מפנק!</div>
-          <div class="prize h" id="p1" style="right:70px"><div class="img" style="background-image:url('assets/img/prize1.png')"></div><div class="cap">מכונת קפה מפנקת</div></div>
-          <div class="prize h" id="p2" style="left:70px"><div class="img" style="background-image:url('assets/img/prize2.png')"></div><div class="cap">לילה זוגי ב״ספא בראשית״</div></div>
+          <div class="rsub h" id="rsub">ממליצים על מטפלת לצוות המעון,<span style="display:block">וזוכים בפרס מפנק לבחירה!</span></div>
+          <div class="prize h" id="p1" style="right:45px"><div class="img" style="background-image:url('assets/img/prize1.png')"></div><div class="cap">מכונת קפה מפנקת</div></div>
+          <div class="prize h" id="p2" style="left:45px"><div class="img" style="background-image:url('assets/img/prize2.png')"></div><div class="cap">לילה זוגי ב״ספא בראשית״</div></div>
         </div>
         <!-- stage B: compact referral strip + lockup -->
-        <div class="strip h" id="strip"><div class="sb"></div><div class="st">המלצת? הרווחת! 🎈</div><div class="ss">ממליצים על מטפלת לצוות וזוכים בפרס לבחירה:</div><div class="pz" style="right:40px"><i style="background-image:url('assets/img/prize1.png')"></i><b>מכונת קפה</b></div><div class="pz" style="right:360px"><i style="background-image:url('assets/img/prize2.png')"></i><b>לילה ב״ספא בראשית״</b></div></div>
         <div class="fwrap">
           <div class="logo h" id="logo"></div>
           <div class="cta h" id="cta"><i id="ctaI">↻</i>בדקו שוב</div>
+          <div class="ribbon h" id="ribbon"><div class="bb"></div><b>המלצת? הרווחת!</b><span>זוכים במכונת קפה או בלילה ב״ספא בראשית״</span></div>
           <div class="contact h" id="contact"><div class="k">לפרטים ולהמלצות: אירית</div><div class="v"><span class="ltr">054-7889019</span></div></div>
           <div class="terms h" id="terms"><span>*פרס ההמלצה ניתן לאחר התמדה של 3 חודשי עבודה, לפחות 80% משרה.</span><span>למשרות קטנות – פרס / סכום יחסי.</span></div>
           <div class="legal h" id="legal">מחפשים מטפלות ומטפלים · המודעה מיועדת לכל המינים</div>
@@ -396,16 +399,18 @@
       tl.fromTo("#balloon", { y: 120 }, { y: 0, duration: 1.4, ease: "power2.out" }, B(59.6));
       tl.to("#balloon", { y: -14, duration: 1.2, yoyo: true, repeat: 2, ease: "sine.inOut" }, B(59.6) + 1.4);
       tl.fromTo("#glit", { opacity: 0 }, { opacity: 1, duration: 0.6 }, B(59.8));
+      tl.fromTo("#deco", { opacity: 0 }, { opacity: 1, duration: 0.8 }, B(60));
       tl.fromTo("#rt1", { y: 24, opacity: 0 }, { y: 0, opacity: 1, ...enter }, B(60));
       tl.fromTo("#rt2", { y: 24, opacity: 0 }, { y: 0, opacity: 1, ...enter }, B(60.6));
       tl.fromTo("#rsub", { opacity: 0 }, { opacity: 1, duration: 0.5 }, B(61.2));
       tl.fromTo(["#p1", "#p2"], { y: 24, opacity: 0 }, { y: 0, opacity: 1, ...enter, stagger: 0.25 }, B(61.8));
-      tl.to("#stA", { opacity: 0, duration: 0.45 }, B(68.2) - 0.45);
-      tl.fromTo("#strip", { opacity: 0 }, { opacity: 1, duration: 0.5 }, B(68.2));
+      tl.to(["#stA", "#deco"], { opacity: 0, duration: 0.45 }, B(68.2) - 0.45);
+      
       tl.fromTo("#logo", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, B(68.5));
       tl.fromTo("#cta", { opacity: 0 }, { opacity: 1, duration: 0.5 }, B(69.1));
-      tl.fromTo("#contact", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, B(69.7));
-      tl.fromTo(["#terms", "#legal"], { opacity: 0 }, { opacity: 1, duration: 0.5 }, B(70.4));
+      tl.fromTo("#ribbon", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, B(69.7));
+      tl.fromTo("#contact", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, B(70.3));
+      tl.fromTo(["#terms", "#legal"], { opacity: 0 }, { opacity: 1, duration: 0.5 }, B(71));
 
       window.__timelines["main"] = tl;
       tl.seek(0);
