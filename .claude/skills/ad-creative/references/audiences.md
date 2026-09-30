@@ -69,6 +69,22 @@ Codes: `kids` · `teens` · `young` · `adults` · `parents` · `mature` · `sen
 
 ---
 
+## Motion intensity by age (research + user feedback, ep. 1 v5 → v6)
+
+Women 25–60 found a beat-slammed cut "תזזיתי". What changed, at the same length:
+- **Shot/beat length:** 18–34 → 1–3 s; 35–44 → 2–4 s; **45–65 → 3–5 s** per idea.
+- **Reading speed:** budget **~13 characters/second** for mixed/older audiences (12–15 cps research range;
+  17+ cps only for young). Compute every text hold: `chars / 13 + 0.5 s`.
+- **One focal point at a time:** never a big headline *and* new chat text *and* a counter at once. Drop
+  headlines that only repeat what's already readable.
+- **Motion vocabulary for 30+:** fade + short rise (≈0.5 s, power2.out). No elastic slams, no shakes,
+  no rotations, no punch-in zooms; at most one barely-there slow push during a long read.
+  Vestibular disorders affect ~35% of adults over 40 — avoid screen shakes, flashes, parallax.
+- **Background changes:** 3–4 per ad, 0.6 s cross-fades — not a hard color cut every bar.
+- **Sound stays energetic** (music, soft SFX): energy comes from audio and story, not from motion.
+- **To keep length:** cut redundant beats (repeated headlines, extra replies, duplicated referral) instead
+  of speeding up what remains.
+
 ## Quick matrix
 
 | | Cut every | Caption size | VO speed | Humor |

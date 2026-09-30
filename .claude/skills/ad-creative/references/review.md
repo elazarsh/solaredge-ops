@@ -17,6 +17,10 @@ Score each 1–5; anything < 4 gets a fix before delivery.
 - Reading time: on-screen text needs ≈ 0.3 s per word + 0.5 s; a list of facts gets ≥ 1 s (2 beats) per item.
 - The twist and the payoff are the two slowest moments of the ad; the setup can be fast.
 
+**Motion intensity**
+- Matches the age band (`audiences.md` → Motion intensity). For 30+: no shakes/slams/punch-ins, one focal
+  point at a time, text holds from `chars / 13 + 0.5 s`.
+
 **Voice-over**
 - VO lines never overlap. Leave **1–2 s of silence between VO segments** (compute: next start ≥ previous
   start + measured duration + 1.0). Don't change the VO level to "fix" overlap — fix the timing.
