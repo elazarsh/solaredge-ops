@@ -20,3 +20,4 @@ dist/
 video-studio/**/node_modules/
 video-studio/**/out/
 video-studio/**/.hyperframes/
+video-studio/**/snapshots/
