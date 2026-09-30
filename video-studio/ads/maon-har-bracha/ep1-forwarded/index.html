@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="he">
+  <!-- Never put dir="rtl" on <html>: it renders a blank video. Scope direction: rtl to text elements. -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/Heebo-VF.ttf"); font-weight: 100 900; }
+      @font-face { font-family: "Rubik"; src: url("assets/fonts/Rubik-VF.ttf"); font-weight: 300 900; }
+      @font-face { font-family: "Emoji"; src: url("assets/fonts/NotoColorEmoji.ttf"); }
+
+      :root {
+        --wall: #ECE5DD; --ink: #1E1E24; --muted: #6B6F76; --head: #2B2D42;
+        --bubble: #FFFFFF; --brand: #FF5A5F; --sun: #FFB400; --teal: #00A699;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--wall); }
+      #root { width: 100%; height: 100%; position: relative; font-family: "Heebo", "Emoji", sans-serif; color: var(--ink); }
+      .rtl { direction: rtl; unicode-bidi: isolate; text-align: right; }
+      .ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+
+      /* ---------- chat scene ---------- */
+      #chat { position: absolute; inset: 0; overflow: hidden; }
+      .wall { position: absolute; inset: 0; background:
+        radial-gradient(circle at 20% 30%, rgba(0,0,0,.035) 0 6px, transparent 7px) 0 0/120px 120px,
+        radial-gradient(circle at 70% 80%, rgba(0,0,0,.03) 0 4px, transparent 5px) 0 0/90px 90px, var(--wall); }
+      .top { z-index: 2; position: absolute; left: 0; right: 0; top: 0; height: 430px; background: var(--head); }
+      .header { z-index: 3; position: absolute; left: 0; right: 0; top: 290px; height: 140px; display: flex; align-items: center; gap: 28px; padding: 0 48px; direction: rtl; }
+      .avatar { width: 96px; height: 96px; border-radius: 50%; background: var(--sun); display: flex; align-items: center; justify-content: center; font-size: 52px; flex: none; }
+      .gnames { position: relative; height: 110px; flex: 1; }
+      .gname { position: absolute; inset: 0; color: #fff; }
+      .gname b { display: block; font-size: 50px; font-weight: 800; line-height: 1.15; }
+      .gname span { display: block; font-size: 32px; color: #C9CBD6; }
+
+      #list { z-index: 1; position: absolute; left: 0; right: 0; top: 470px; padding: 0 44px; display: flex; flex-direction: column; gap: 26px; }
+      .msg { position: relative; background: var(--bubble); border-radius: 34px; border-top-right-radius: 8px; padding: 26px 34px 30px; max-width: 960px; align-self: flex-end; box-shadow: 0 3px 0 rgba(0,0,0,.08); direction: rtl; }
+      .fwd { font-size: 30px; color: var(--muted); font-style: italic; margin-bottom: 6px; }
+      .sender { font-size: 34px; font-weight: 800; color: #C2185B; margin-bottom: 6px; }
+      .text { font-size: 60px; white-space: nowrap; font-weight: 600; line-height: 1.22; }
+      .time { font-size: 26px; color: var(--muted); text-align: left; margin-top: 8px; }
+      .react { position: absolute; bottom: -34px; right: 40px; background: #fff; border-radius: 40px; padding: 6px 20px; font-size: 36px; box-shadow: 0 2px 8px rgba(0,0,0,.15); display: flex; gap: 10px; align-items: center; direction: ltr; }
+      .count { position: relative; width: 70px; height: 44px; }
+      .count span { position: absolute; left: 0; top: 0; font-weight: 800; color: var(--ink); }
+      .stale { position: absolute; top: 18px; left: 26px; background: var(--muted); color: #fff; font-size: 28px; font-weight: 800; padding: 6px 18px; border-radius: 14px; }
+
+      .replies { position: absolute; left: 44px; right: 44px; top: 350px; height: 150px; }
+      .reply { position: absolute; left: 0; top: 0; background: var(--bubble); border-radius: 30px; border-top-left-radius: 8px; padding: 20px 30px; font-size: 44px; font-weight: 600; box-shadow: 0 3px 0 rgba(0,0,0,.08); direction: rtl; }
+
+      #mnew { align-self: flex-end; border: 6px solid var(--teal); }
+      #mnew .sender { color: var(--teal); font-size: 40px; }
+      .newhead { font-size: 40px; font-weight: 800; color: var(--muted); margin-bottom: 14px; }
+      .fact { font-size: 50px; font-weight: 700; line-height: 1.3; }
+      .fact.big { margin-top: 14px; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; color: var(--brand); font-size: 58px; }
+
+      .spinner { z-index: 4; position: absolute; top: 470px; left: 50%; margin-left: -50px; width: 100px; height: 100px; border-radius: 50%; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.2); display: flex; align-items: center; justify-content: center; }
+      .spinner i { font-style: normal; font-size: 70px; font-weight: 800; color: #007A70; line-height: 1; display: block; }
+
+      .menu { z-index: 5; position: absolute; top: 880px; right: 90px; width: 560px; background: #fff; border-radius: 28px; box-shadow: 0 10px 40px rgba(0,0,0,.25); padding: 16px 0; direction: rtl; }
+      .menu div { font-size: 44px; font-weight: 600; padding: 20px 40px; }
+      .menu .hl { background: #E7F7F5; color: var(--teal); font-weight: 800; }
+
+      .dim { z-index: 6; position: absolute; inset: 0; background: rgba(0,0,0,.45); }
+      .sheet { z-index: 7; position: absolute; left: 0; right: 0; top: 640px; bottom: 0; background: #fff; border-radius: 48px 48px 0 0; padding: 60px 70px; direction: rtl; }
+      .sheet h3 { font-size: 46px; font-weight: 800; color: var(--muted); margin-bottom: 50px; }
+      .sheet .lbl { font-size: 48px; font-weight: 600; color: var(--ink); }
+      .sheet .date { font-family: "Rubik", sans-serif; font-size: 150px; font-weight: 900; color: var(--brand); line-height: 1.1; margin-top: 10px; }
+      .sheet .sub { font-size: 40px; color: var(--muted); margin-top: 24px; }
+
+      .wow { z-index: 8; position: absolute; left: 60px; right: 60px; top: 470px; text-align: center; direction: rtl; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; font-size: 130px; color: var(--sun); -webkit-text-stroke: 6px var(--ink); paint-order: stroke fill; line-height: 1.05; }
+
+      .finger { z-index: 9; position: absolute; left: 0; top: 0; width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,.55); border: 6px solid rgba(43,45,66,.55); }
+      .inputbar { z-index: 2; position: absolute; left: 36px; right: 36px; bottom: 60px; height: 110px; border-radius: 55px; background: #fff; }
+
+      /* ---------- end card ---------- */
+      #end { position: absolute; inset: 0; overflow: hidden; }
+      .endbg { position: absolute; inset: 0; background: linear-gradient(160deg, #C8102E 0%, #A4133C 55%, #6A0F49 100%); }
+      .endwrap { position: absolute; left: 70px; right: 70px; top: 330px; display: flex; flex-direction: column; align-items: center; gap: 26px; text-align: center; direction: rtl; color: #fff; }
+      .e1 { font-size: 72px; font-weight: 700; line-height: 1.2; }
+      .e2 { color: var(--sun); font-family: "Rubik", sans-serif; font-size: 170px; font-weight: 900; line-height: 1; }
+      .cta { margin-top: 30px; background: #fff; color: #C8102E; border-radius: 80px; padding: 26px 70px; font-family: "Rubik", sans-serif; font-weight: 900; font-size: 84px; display: flex; gap: 24px; align-items: center; }
+      .cta i { font-style: normal; display: block; color: #007A70; }
+      .ctasub { font-size: 44px; font-weight: 700; }
+      .brand { margin-top: 20px; font-family: "Rubik", sans-serif; font-size: 64px; font-weight: 900; }
+      .brand span { display: block; font-family: "Heebo", sans-serif; font-size: 46px; font-weight: 600; }
+      .h { opacity: 0; }
+      .mark { position: absolute; left: 50%; top: 1330px; width: 700px; margin-left: -350px; text-align: center; font-family: "Rubik", sans-serif; font-size: 560px; font-weight: 900; line-height: 1; color: rgba(255,255,255,.08); }
+      .legal { position: absolute; left: 70px; right: 70px; top: 1180px; text-align: center; direction: rtl; color: #fff; font-size: 34px; font-weight: 600; opacity: .95; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="27" data-width="1080" data-height="1920">
+
+      <!-- ===== Scene 1: the rumor chat (0–21s) ===== -->
+      <div id="chat" class="clip" data-start="0" data-duration="21" data-track-index="0">
+        <div class="wall"></div>
+        <div class="top"></div>
+        <div class="header" data-layout-allow-overlap>
+          <div class="avatar">🏡</div>
+          <div class="gnames">
+            <div class="gname" id="g1"><b>שכנות רחוב הגפן</b><span>34 משתתפות</span></div>
+            <div class="gname h" id="g2"><b>הורים גן שקד</b><span>61 משתתפים</span></div>
+            <div class="gname h" id="g3"><b>בנות שירות הר ברכה 💫</b><span>112 משתתפות</span></div>
+          </div>
+        </div>
+
+        <div id="list" data-layout-allow-overlap>
+          <div class="msg" id="m1" data-layout-allow-overlap>
+            <div class="fwd">↪ הועבר פעמים רבות</div>
+            <div class="text">שמעתן כמה מרוויחים במעון? 😬</div>
+            <div class="text">לא הייתי הולכת לשם</div>
+            <div class="time">08:14</div>
+            <div class="stale h" id="stale">מידע לא מעודכן</div>
+            <div class="react" id="react1">😬
+              <div class="count"><span id="c1">3</span><span class="h" id="c2">17</span><span class="h" id="c3">43</span></div>
+            </div>
+          </div>
+          <div class="replies" id="replies" data-layout-allow-overlap>
+            <div class="reply h" id="r1">באמת?! 😳</div>
+            <div class="reply h" id="r2">כולם יודעים את זה</div>
+            <div class="reply h" id="r3">חבל, דווקא חשבתי על זה…</div>
+          </div>
+          <div class="msg h" id="mnew">
+            <div class="sender">מעונות הר ברכה ✓</div>
+            <div class="newhead">📌 המידע המעודכן</div>
+            <div class="fact h" id="f1">💰 45 ₪ לשעה עם תעודה</div>
+            <div class="fact h" id="f2">📈 קפיצות שכר בשנים 3, 9, 12</div>
+            <div class="fact h" id="f3">🧾 חצי מבונוס ההתמדה נכנס לבסיס</div>
+            <div class="fact h" id="f4">🎓 קרן השתלמות משנה 5</div>
+            <div class="fact big h" id="f5">מהתנאים הגבוהים בשומרון</div>
+            <div class="react h" id="react2">😍 🙌 <b>212</b></div>
+          </div>
+        </div>
+
+        <div class="spinner h" id="spin"><i id="spinI">↻</i></div>
+        <div class="menu h" id="menu" data-layout-allow-overlap>
+          <div>↩ השב</div>
+          <div>⭐ סמן בכוכב</div>
+          <div class="hl" id="menuInfo">ⓘ פרטי הודעה</div>
+        </div>
+        <div class="dim h" id="dim"></div>
+        <div class="sheet" id="sheet" data-layout-allow-overlap>
+          <h3>פרטי הודעה</h3>
+          <div class="lbl">נשלחה לראשונה:</div>
+          <div class="date"><span class="ltr" id="oldDate">14.03.2016</span></div>
+          <div class="sub">הועברה מאז 1,208 פעמים</div>
+        </div>
+        <div class="wow h" id="wow" data-layout-allow-overlap>רגע… <span class="ltr old-year">2016</span>?!</div>
+        <div class="inputbar"></div>
+        <div class="finger h" id="finger"></div>
+      </div>
+
+      <!-- ===== Scene 2: end card (21–27s) ===== -->
+      <div id="end" class="clip" data-start="21" data-duration="6" data-track-index="1">
+        <div class="endbg"></div>
+        <div class="mark" id="mark">↻</div>
+        <div class="endwrap">
+          <div class="e1" id="e1">השמועה נשארה ב-<span class="ltr old-year">2016</span>.</div>
+          <div class="e2" id="e2">המעון לא.</div>
+          <div class="cta" id="cta"><i id="ctaI">↻</i>בדקו שוב</div>
+          <div class="ctasub" id="ctasub">[קישור / וואטסאפ]</div>
+          <div class="brand" id="brand">הר ברכה<span>חינוך במקום הראשון</span></div>
+        </div>
+        <div class="legal" id="legal">מחפשים מטפלות ומטפלים · המודעה מיועדת לכל המינים</div>
+      </div>
+
+      <!-- ===== SFX ===== -->
+      <audio id="sfx-n1" src="assets/sfx/notification.mp3" data-start="0.25" data-duration="1.2" data-track-index="10" data-volume="0.7"></audio>
+      <audio id="sfx-w1" src="assets/sfx/whoosh-short.mp3" data-start="2.4" data-duration="0.57" data-track-index="11" data-volume="0.6"></audio>
+      <audio id="sfx-w2" src="assets/sfx/whoosh-short.mp3" data-start="4.5" data-duration="0.57" data-track-index="12" data-volume="0.6"></audio>
+      <audio id="sfx-p1" src="assets/sfx/pop.mp3" data-start="1.3" data-duration="0.7" data-track-index="13" data-volume="0.5"></audio>
+      <audio id="sfx-p2" src="assets/sfx/pop.mp3" data-start="3.3" data-duration="0.7" data-track-index="14" data-volume="0.5"></audio>
+      <audio id="sfx-p3" src="assets/sfx/pop.mp3" data-start="5.4" data-duration="0.7" data-track-index="15" data-volume="0.5"></audio>
+      <audio id="sfx-c1" src="assets/sfx/click-soft.mp3" data-start="8.3" data-duration="0.36" data-track-index="16" data-volume="0.8"></audio>
+      <audio id="sfx-c2" src="assets/sfx/click-soft.mp3" data-start="9.2" data-duration="0.36" data-track-index="17" data-volume="0.8"></audio>
+      <audio id="sfx-rise" src="assets/sfx/riser.mp3" data-start="9.4" data-duration="1.3" data-track-index="18" data-volume="0.35"></audio>
+      <audio id="sfx-wow" src="assets/sfx/pop.mp3" data-start="10.7" data-duration="0.7" data-track-index="19" data-volume="0.9"></audio>
+      <audio id="sfx-w3" src="assets/sfx/whoosh-short.mp3" data-start="13.3" data-duration="0.57" data-track-index="20" data-volume="0.6"></audio>
+      <audio id="sfx-n2" src="assets/sfx/notification.mp3" data-start="15.3" data-duration="1.2" data-track-index="21" data-volume="0.7"></audio>
+      <audio id="sfx-s1" src="assets/sfx/sparkle.mp3" data-start="19.0" data-duration="1.5" data-track-index="22" data-volume="0.5"></audio>
+      <audio id="sfx-w4" src="assets/sfx/whoosh-short.mp3" data-start="20.8" data-duration="0.57" data-track-index="23" data-volume="0.6"></audio>
+      <audio id="sfx-ch" src="assets/sfx/chime.mp3" data-start="22.1" data-duration="2.2" data-track-index="24" data-volume="0.6"></audio>
+    </div>
+
+    <script>
+      // ⚠ Draft value: the year before the pay reform. Replace with the real year (also update #oldDate).
+      const OLD_YEAR = "2016";
+      document.querySelectorAll(".old-year").forEach((el) => (el.textContent = OLD_YEAR));
+
+      const tl = gsap.timeline({ paused: true });
+      const pop = { duration: 0.45, ease: "back.out(2)" };
+
+      // --- initial states
+      tl.fromTo("#sheet", { yPercent: 100 }, { yPercent: 100, duration: 0.01 }, 0);
+
+      // --- 0–6.6: the rumor lands and spreads across groups
+      tl.fromTo("#m1", { scale: 0.6, opacity: 0, transformOrigin: "100% 0%" }, { scale: 1, opacity: 1, ...pop }, 0.2);
+      tl.fromTo("#react1", { scale: 0 }, { scale: 1, ...pop }, 0.9);
+      tl.fromTo("#r1", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35 }, 1.3);
+
+      [["#g1", "#g2", "#c1", "#c2", "#r1", "#r2", 2.4], ["#g2", "#g3", "#c2", "#c3", "#r2", "#r3", 4.5]].forEach(([gOut, gIn, cOut, cIn, rOut, rIn, t]) => {
+        tl.to(gOut, { opacity: 0, x: 60, duration: 0.25 }, t);
+        tl.fromTo(gIn, { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.3 }, t + 0.1);
+        tl.to("#m1", { x: -24, duration: 0.08, yoyo: true, repeat: 3 }, t);
+        tl.to(cOut, { opacity: 0, duration: 0.1 }, t + 0.3);
+        tl.to(cIn, { opacity: 1, duration: 0.1 }, t + 0.3);
+        tl.fromTo("#react1", { scale: 1.4 }, { scale: 1, duration: 0.3 }, t + 0.3);
+        tl.to(rOut, { opacity: 0, duration: 0.2 }, t);
+        tl.fromTo(rIn, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35 }, t + 0.9);
+      });
+
+      // --- 6.8–9.4: long-press → message info
+      tl.fromTo("#finger", { x: 700, y: 1500, opacity: 0 }, { x: 560, y: 640, opacity: 1, duration: 0.8, ease: "power2.out" }, 6.8);
+      tl.to("#finger", { scale: 0.8, duration: 0.2 }, 7.7);
+      tl.to("#m1", { backgroundColor: "#DDF3F0", duration: 0.5 }, 7.8);
+      tl.fromTo("#menu", { scale: 0.7, opacity: 0, transformOrigin: "100% 0%" }, { scale: 1, opacity: 1, ...pop }, 8.3);
+      tl.to("#finger", { scale: 1, x: 640, y: 1090, duration: 0.5, ease: "power2.inOut" }, 8.6);
+      tl.to("#finger", { scale: 0.8, duration: 0.15, yoyo: true, repeat: 1 }, 9.15);
+
+      // --- 9.4–12.8: the twist — first sent years ago
+      tl.to("#menu", { opacity: 0, duration: 0.2 }, 9.4);
+      tl.to("#finger", { opacity: 0, duration: 0.2 }, 9.4);
+      tl.to("#dim", { opacity: 1, duration: 0.3 }, 9.4);
+      tl.to("#sheet", { yPercent: 0, duration: 0.55, ease: "power3.out" }, 9.45);
+      tl.fromTo("#oldDate", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.5)" }, 10.1);
+      tl.fromTo("#wow", { scale: 0.3, rotation: -8, opacity: 0 }, { scale: 1, rotation: -4, opacity: 1, duration: 0.5, ease: "back.out(2.2)" }, 10.7);
+      tl.to("#wow", { opacity: 0, duration: 0.25 }, 12.6);
+      tl.to("#sheet", { yPercent: 100, duration: 0.45, ease: "power3.in" }, 12.6);
+      tl.to("#dim", { opacity: 0, duration: 0.3 }, 12.8);
+      tl.to("#m1", { backgroundColor: "#FFFFFF", duration: 0.2 }, 12.8);
+
+      // --- 13.2–15.2: pull to refresh
+      tl.to("#replies", { opacity: 0, duration: 0.3 }, 13.0);
+      tl.set("#finger", { x: 480, y: 560, scale: 1 }, 13.05);
+      tl.to("#finger", { opacity: 1, duration: 0.2 }, 13.1);
+      tl.to("#finger", { y: 900, duration: 0.7, ease: "power2.out" }, 13.3);
+      tl.to("#list", { y: 210, duration: 0.7, ease: "power2.out" }, 13.3);
+      tl.fromTo("#spin", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3 }, 13.4);
+      tl.fromTo("#spinI", { rotation: 0 }, { rotation: 720, duration: 1.5, ease: "none" }, 13.5);
+      tl.to("#finger", { opacity: 0, duration: 0.2 }, 14.1);
+      tl.to("#m1", { opacity: 0.55, filter: "grayscale(1)", duration: 0.4 }, 14.3);
+      tl.fromTo("#stale", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 14.4);
+      tl.to("#spin", { opacity: 0, scale: 0.4, duration: 0.25 }, 15.0);
+      tl.to("#list", { y: -360, duration: 0.6, ease: "power3.inOut" }, 15.0);
+      tl.to("#m1", { opacity: 0, duration: 0.4 }, 15.0);
+
+      // --- 15.3–20.6: the updated reality
+      tl.fromTo("#mnew", { scale: 0.6, opacity: 0, transformOrigin: "100% 0%" }, { scale: 1, opacity: 1, ...pop }, 15.3);
+      ["#f1", "#f2", "#f3", "#f4"].forEach((f, i) => {
+        tl.fromTo(f, { x: 80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 16.0 + i * 0.6);
+      });
+      tl.fromTo("#f5", { scale: 0.5, opacity: 0, transformOrigin: "100% 50%" }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.5)" }, 18.5);
+      tl.fromTo("#react2", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, ...pop }, 19.0);
+      tl.to("#chat", { opacity: 0, duration: 0.4 }, 20.6);
+
+      // --- 21–27: end card
+      tl.fromTo("#e1", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 21.2);
+      tl.fromTo("#e2", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(2.2)" }, 22.0);
+      tl.fromTo("#cta", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.8)" }, 23.1);
+      tl.fromTo("#ctaI", { rotation: 0 }, { rotation: 360, duration: 0.9, ease: "power2.inOut" }, 23.5);
+      tl.fromTo("#ctasub", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 23.7);
+      tl.fromTo("#brand", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, 24.2);
+      tl.fromTo("#legal", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 24.4);
+      tl.fromTo("#mark", { rotation: -90 }, { rotation: 270, duration: 6, ease: "none" }, 21);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
