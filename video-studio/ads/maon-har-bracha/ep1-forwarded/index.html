@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="he">
-  <!-- Never put dir="rtl" on <html>: it renders a blank video. Scope direction: rtl to text elements. -->
+  <!--
+    פרק 1 "הועבר פעמים רבות" — v2 (TV level)
+    Beat grid: 123 BPM (tools/beat-grid.py on assets/bgm/track.wav), music trimmed to the first downbeat,
+    so beat n is at B(n) = n * 60/123. Every change lands on a beat; big turns land on downbeats.
+    Spec: one phone, never cut until the end-card iris. WhatsApp-style light UI (RTL: incoming on the right).
+    Banned: dead beats, colors outside the logo palette, template stock look.
+    Never put dir="rtl" on <html>: it renders a blank video. Scope direction: rtl to text elements.
+  -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
@@ -9,259 +16,416 @@
       @font-face { font-family: "Heebo"; src: url("assets/fonts/Heebo-VF.ttf"); font-weight: 100 900; }
       @font-face { font-family: "Rubik"; src: url("assets/fonts/Rubik-VF.ttf"); font-weight: 300 900; }
       @font-face { font-family: "Emoji"; src: url("assets/fonts/NotoColorEmoji.ttf"); }
-
       :root {
-        --wall: #ECE5DD; --ink: #1E1E24; --muted: #6B6F76; --head: #2B2D42;
-        --bubble: #FFFFFF; --brand: #FF5A5F; --sun: #FFB400; --teal: #00A699;
+        --green: #0E9447; --lime: #8CC63F; --blue: #1B75BC; --orange: #EE8425; --magenta: #B72F7A; --forest: #0B4D2A;
+        --wa-wall: #EFEAE2; --wa-in: #FFFFFF; --wa-out: #D9FDD3; --wa-ink: #111B21; --wa-sub: #667781; --wa-green: #00A884; --wa-teal: #008069;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--wall); }
-      #root { width: 100%; height: 100%; position: relative; font-family: "Heebo", "Emoji", sans-serif; color: var(--ink); }
-      .rtl { direction: rtl; unicode-bidi: isolate; text-align: right; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--green); }
+      #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Heebo", "Emoji", sans-serif; }
       .ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
-
-      /* ---------- chat scene ---------- */
-      #chat { position: absolute; inset: 0; overflow: hidden; }
-      .wall { position: absolute; inset: 0; background:
-        radial-gradient(circle at 20% 30%, rgba(0,0,0,.035) 0 6px, transparent 7px) 0 0/120px 120px,
-        radial-gradient(circle at 70% 80%, rgba(0,0,0,.03) 0 4px, transparent 5px) 0 0/90px 90px, var(--wall); }
-      .top { z-index: 2; position: absolute; left: 0; right: 0; top: 0; height: 430px; background: var(--head); }
-      .header { z-index: 3; position: absolute; left: 0; right: 0; top: 290px; height: 140px; display: flex; align-items: center; gap: 28px; padding: 0 48px; direction: rtl; }
-      .avatar { width: 96px; height: 96px; border-radius: 50%; background: var(--sun); display: flex; align-items: center; justify-content: center; font-size: 52px; flex: none; }
-      .gnames { position: relative; height: 110px; flex: 1; }
-      .gname { position: absolute; inset: 0; color: #fff; }
-      .gname b { display: block; font-size: 50px; font-weight: 800; line-height: 1.15; }
-      .gname span { display: block; font-size: 32px; color: #C9CBD6; }
-
-      #list { z-index: 1; position: absolute; left: 0; right: 0; top: 470px; padding: 0 44px; display: flex; flex-direction: column; gap: 26px; }
-      .msg { position: relative; background: var(--bubble); border-radius: 34px; border-top-right-radius: 8px; padding: 26px 34px 30px; max-width: 960px; align-self: flex-end; box-shadow: 0 3px 0 rgba(0,0,0,.08); direction: rtl; }
-      .fwd { font-size: 30px; color: var(--muted); font-style: italic; margin-bottom: 6px; }
-      .sender { font-size: 34px; font-weight: 800; color: #C2185B; margin-bottom: 6px; }
-      .text { font-size: 60px; white-space: nowrap; font-weight: 600; line-height: 1.22; }
-      .time { font-size: 26px; color: var(--muted); text-align: left; margin-top: 8px; }
-      .react { position: absolute; bottom: -34px; right: 40px; background: #fff; border-radius: 40px; padding: 6px 20px; font-size: 36px; box-shadow: 0 2px 8px rgba(0,0,0,.15); display: flex; gap: 10px; align-items: center; direction: ltr; }
-      .count { position: relative; width: 70px; height: 44px; }
-      .count span { position: absolute; left: 0; top: 0; font-weight: 800; color: var(--ink); }
-      .stale { position: absolute; top: 18px; left: 26px; background: var(--muted); color: #fff; font-size: 28px; font-weight: 800; padding: 6px 18px; border-radius: 14px; }
-
-      .replies { position: absolute; left: 44px; right: 44px; top: 350px; height: 150px; }
-      .reply { position: absolute; left: 0; top: 0; background: var(--bubble); border-radius: 30px; border-top-left-radius: 8px; padding: 20px 30px; font-size: 44px; font-weight: 600; box-shadow: 0 3px 0 rgba(0,0,0,.08); direction: rtl; }
-
-      #mnew { align-self: flex-end; border: 6px solid var(--teal); }
-      #mnew .sender { color: var(--teal); font-size: 40px; }
-      .newhead { font-size: 40px; font-weight: 800; color: var(--muted); margin-bottom: 14px; }
-      .fact { font-size: 50px; font-weight: 700; line-height: 1.3; }
-      .fact.big { margin-top: 14px; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; color: var(--brand); font-size: 58px; }
-
-      .spinner { z-index: 4; position: absolute; top: 470px; left: 50%; margin-left: -50px; width: 100px; height: 100px; border-radius: 50%; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.2); display: flex; align-items: center; justify-content: center; }
-      .spinner i { font-style: normal; font-size: 70px; font-weight: 800; color: #007A70; line-height: 1; display: block; }
-
-      .menu { z-index: 5; position: absolute; top: 880px; right: 90px; width: 560px; background: #fff; border-radius: 28px; box-shadow: 0 10px 40px rgba(0,0,0,.25); padding: 16px 0; direction: rtl; }
-      .menu div { font-size: 44px; font-weight: 600; padding: 20px 40px; }
-      .menu .hl { background: #E7F7F5; color: var(--teal); font-weight: 800; }
-
-      .dim { z-index: 6; position: absolute; inset: 0; background: rgba(0,0,0,.45); }
-      .sheet { z-index: 7; position: absolute; left: 0; right: 0; top: 640px; bottom: 0; background: #fff; border-radius: 48px 48px 0 0; padding: 60px 70px; direction: rtl; }
-      .sheet h3 { font-size: 46px; font-weight: 800; color: var(--muted); margin-bottom: 50px; }
-      .sheet .lbl { font-size: 48px; font-weight: 600; color: var(--ink); }
-      .sheet .date { font-family: "Rubik", sans-serif; font-size: 150px; font-weight: 900; color: var(--brand); line-height: 1.1; margin-top: 10px; }
-      .sheet .sub { font-size: 40px; color: var(--muted); margin-top: 24px; }
-
-      .wow { z-index: 8; position: absolute; left: 60px; right: 60px; top: 470px; text-align: center; direction: rtl; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; font-size: 130px; color: var(--sun); -webkit-text-stroke: 6px var(--ink); paint-order: stroke fill; line-height: 1.05; }
-
-      .finger { z-index: 9; position: absolute; left: 0; top: 0; width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,.55); border: 6px solid rgba(43,45,66,.55); }
-      .inputbar { z-index: 2; position: absolute; left: 36px; right: 36px; bottom: 60px; height: 110px; border-radius: 55px; background: #fff; }
-
-      /* ---------- end card ---------- */
-      #end { position: absolute; inset: 0; overflow: hidden; }
-      .endbg { position: absolute; inset: 0; background: linear-gradient(160deg, #C8102E 0%, #A4133C 55%, #6A0F49 100%); }
-      .endwrap { position: absolute; left: 70px; right: 70px; top: 330px; display: flex; flex-direction: column; align-items: center; gap: 26px; text-align: center; direction: rtl; color: #fff; }
-      .e1 { font-size: 72px; font-weight: 700; line-height: 1.2; }
-      .e2 { color: var(--sun); font-family: "Rubik", sans-serif; font-size: 170px; font-weight: 900; line-height: 1; }
-      .cta { margin-top: 30px; background: #fff; color: #C8102E; border-radius: 80px; padding: 26px 70px; font-family: "Rubik", sans-serif; font-weight: 900; font-size: 84px; display: flex; gap: 24px; align-items: center; }
-      .cta i { font-style: normal; display: block; color: #007A70; }
-      .ctasub { font-size: 44px; font-weight: 700; }
-      .brand { margin-top: 20px; font-family: "Rubik", sans-serif; font-size: 64px; font-weight: 900; }
-      .brand span { display: block; font-family: "Heebo", sans-serif; font-size: 46px; font-weight: 600; }
       .h { opacity: 0; }
-      .mark { position: absolute; left: 50%; top: 1330px; width: 700px; margin-left: -350px; text-align: center; font-family: "Rubik", sans-serif; font-size: 560px; font-weight: 900; line-height: 1; color: rgba(255,255,255,.08); }
-      .legal { position: absolute; left: 70px; right: 70px; top: 1180px; text-align: center; direction: rtl; color: #fff; font-size: 34px; font-weight: 600; opacity: .95; }
+
+      .bgc { position: absolute; inset: 0; }
+      .dot { position: absolute; border-radius: 50%; }
+      .stem { position: absolute; width: 14px; border-radius: 7px; }
+
+      #hook { position: absolute; left: 60px; right: 60px; top: 520px; display: flex; flex-direction: column; align-items: center; gap: 6px; direction: rtl; }
+      .hw { font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; font-size: 190px; line-height: 1; color: #fff; text-align: center; }
+      .hw.y { color: #FFE14D; }
+
+      .ov { position: absolute; left: 50px; right: 50px; text-align: center; direction: rtl; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; color: #fff; line-height: 1.05; }
+      .stroke { -webkit-text-stroke: 10px var(--forest); paint-order: stroke fill; }
+      .tag { display: inline-block; background: #fff; color: var(--forest); padding: 10px 34px; border-radius: 60px; font-size: 64px; }
+
+      #cam { position: absolute; left: 100px; top: 480px; width: 880px; height: 1700px; }
+      .phone { position: absolute; inset: 0; background: #16181D; border-radius: 96px; box-shadow: 0 40px 90px rgba(0,0,0,.35); }
+      .screen { position: absolute; inset: 22px; border-radius: 76px; overflow: hidden; background: var(--wa-wall); }
+      .wall { position: absolute; inset: 0; background:
+        radial-gradient(circle at 25% 25%, rgba(17,27,33,.05) 0 5px, transparent 6px) 0 0/110px 110px,
+        radial-gradient(circle at 70% 65%, rgba(17,27,33,.04) 0 8px, transparent 9px) 0 0/150px 150px,
+        radial-gradient(circle at 50% 50%, rgba(17,27,33,.03) 0 3px, transparent 4px) 30px 60px/70px 70px, var(--wa-wall); }
+      .sbar { position: absolute; left: 0; right: 0; top: 0; height: 64px; background: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 70px; font-size: 30px; font-weight: 700; color: var(--wa-ink); }
+      .whead { position: absolute; left: 0; right: 0; top: 64px; height: 124px; background: #fff; border-bottom: 1px solid #E9EDEF; display: flex; align-items: center; gap: 22px; padding: 0 30px; direction: rtl; }
+      .back { font-size: 46px; color: var(--wa-ink); font-weight: 500; }
+      .gav { width: 84px; height: 84px; border-radius: 50%; background: #F9D5E5; display: flex; align-items: center; justify-content: center; font-size: 46px; flex: none; }
+      .gtxt { flex: 1; }
+      .gtxt b { display: block; font-size: 40px; font-weight: 700; color: var(--wa-ink); line-height: 1.15; }
+      .gtxt span { display: block; font-size: 27px; color: var(--wa-sub); }
+      .icons { display: flex; gap: 34px; font-size: 36px; color: var(--wa-ink); direction: ltr; font-weight: 700; }
+      .pill { position: absolute; top: 212px; left: 50%; width: 140px; margin-left: -70px; text-align: center; background: #fff; color: var(--wa-sub); font-size: 26px; font-weight: 600; padding: 6px 0; border-radius: 16px; box-shadow: 0 1px 1px rgba(0,0,0,.08); }
+
+      #msgs { position: absolute; left: 0; right: 0; top: 270px; height: 900px; }
+      .row { position: absolute; left: 22px; right: 22px; display: flex; direction: rtl; }
+      .row.in { justify-content: flex-start; }
+      .row.out { justify-content: flex-end; }
+      .b { position: relative; max-width: 720px; padding: 14px 24px 12px; border-radius: 22px; box-shadow: 0 1px 1.5px rgba(11,20,26,.13); direction: rtl; text-align: right; }
+      .in .b { background: var(--wa-in); border-top-right-radius: 0; }
+      .out .b { background: var(--wa-out); border-top-left-radius: 0; }
+      .who { font-size: 29px; font-weight: 700; margin-bottom: 2px; }
+      .fwd { font-size: 27px; color: var(--wa-sub); font-style: italic; margin-bottom: 4px; }
+      .t { font-size: 44px; font-weight: 500; color: var(--wa-ink); line-height: 1.28; }
+      .t.big { font-size: 46px; font-weight: 600; white-space: nowrap; }
+      .meta { font-size: 23px; color: var(--wa-sub); text-align: left; margin-top: 2px; direction: ltr; }
+      .tick { color: #53BDEB; font-weight: 800; }
+      .rx { position: absolute; bottom: -30px; right: 22px; background: #fff; border: 1px solid #E9EDEF; border-radius: 30px; padding: 3px 14px; font-size: 30px; display: flex; gap: 8px; align-items: center; direction: ltr; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+      .rx b { position: relative; display: block; width: 62px; height: 36px; font-weight: 600; font-size: 28px; color: var(--wa-sub); }
+      .rx b span { position: absolute; left: 0; top: 0; }
+      .hl { position: absolute; left: -8px; right: -8px; top: -8px; bottom: -8px; border: 7px solid #FFD400; border-radius: 30px; }
+      .stamp { position: absolute; top: 50%; left: 50%; width: 520px; margin: -40px 0 0 -260px; text-align: center; background: rgba(234,0,56,.92); color: #fff; font-family: "Rubik", sans-serif; font-weight: 900; font-size: 50px; padding: 8px 0; border-radius: 14px; }
+
+      .fact { font-size: 41px; font-weight: 700; color: var(--wa-ink); line-height: 1.42; white-space: nowrap; }
+      .fact.top { font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; color: var(--green); font-size: 42px; }
+      .logoav { width: 84px; height: 84px; border-radius: 50%; background: #fff url("assets/img/har-bracha-logo.png") center/78% no-repeat; flex: none; border: 1px solid #E9EDEF; }
+
+      .input { position: absolute; left: 18px; right: 18px; top: 1180px; height: 96px; display: flex; gap: 14px; direction: rtl; }
+      .ifield { flex: 1; background: #fff; border-radius: 48px; display: flex; align-items: center; padding: 0 34px; font-size: 34px; color: var(--wa-sub); }
+      .mic { width: 96px; height: 96px; border-radius: 50%; background: var(--wa-green); flex: none; }
+
+      .menu { position: absolute; top: 540px; right: 70px; width: 470px; background: #fff; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.25); padding: 10px 0; direction: rtl; }
+      .menu div { font-size: 38px; padding: 18px 34px; color: var(--wa-ink); }
+      .menu .on { background: #E7FCE3; font-weight: 700; }
+      .scrim { position: absolute; inset: 0; background: rgba(11,20,26,.45); }
+      .sheet { position: absolute; left: 0; right: 0; top: 440px; height: 1300px; background: #fff; border-radius: 40px 40px 0 0; padding: 44px 50px; direction: rtl; }
+      .sheet h4 { font-size: 40px; color: var(--wa-ink); font-weight: 700; margin-bottom: 36px; }
+      .sheet .lbl { font-size: 36px; color: var(--wa-sub); }
+      .sheet .dt { font-family: "Rubik", sans-serif; font-size: 118px; font-weight: 900; color: #EA0038; margin-top: 8px; line-height: 1.1; }
+      .spin { position: absolute; top: 250px; left: 50%; width: 96px; height: 96px; margin-left: -48px; border-radius: 50%; background: #fff; box-shadow: 0 3px 12px rgba(0,0,0,.22); display: flex; align-items: center; justify-content: center; }
+      .spin i { display: block; font-style: normal; font-size: 64px; font-weight: 800; color: var(--wa-teal); line-height: 1; }
+      .finger { position: absolute; left: 0; top: 0; width: 104px; height: 104px; border-radius: 50%; background: rgba(255,255,255,.6); border: 6px solid rgba(17,27,33,.5); }
+      .ring { position: absolute; left: -6px; top: -6px; width: 104px; height: 104px; border-radius: 50%; border: 8px solid var(--wa-green); }
+      .flash { position: absolute; inset: 0; background: #fff; }
+
+      #wait { position: absolute; left: 40px; right: 40px; top: 215px; text-align: center; direction: rtl; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; line-height: 1.05; }
+      #wait .w1 { font-size: 136px; color: #FFE14D; }
+      #wait .w2 { font-size: 76px; color: #fff; margin-top: 8px; }
+      #timeline { position: absolute; left: 70px; right: 70px; top: 700px; height: 420px; background: #fff; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,.3); direction: rtl; }
+      .tl-line { position: absolute; top: 150px; right: 150px; left: 150px; height: 12px; border-radius: 6px; background: var(--green); transform-origin: 100% 50%; }
+      .tl-dot { position: absolute; top: 126px; width: 60px; height: 60px; border-radius: 50%; }
+      .tl-cap { position: absolute; top: 210px; width: 360px; text-align: center; }
+      .tl-cap b { display: block; font-family: "Rubik", sans-serif; font-weight: 900; font-size: 64px; }
+      .tl-cap span { display: block; font-size: 38px; font-weight: 700; color: #444; line-height: 1.2; }
+
+      #endc { position: absolute; inset: 0; overflow: hidden; }
+      .iris { position: absolute; left: 520px; top: 780px; width: 40px; height: 40px; border-radius: 50%; background: #fff; }
+      .endwrap { position: absolute; left: 60px; right: 60px; top: 270px; display: flex; flex-direction: column; align-items: center; direction: rtl; text-align: center; }
+      .logo { width: 400px; height: 400px; background: url("assets/img/har-bracha-logo.png") center/contain no-repeat; }
+      .l1 { margin-top: 26px; font-size: 64px; font-weight: 800; color: var(--forest); }
+      .l2 { font-family: "Rubik", sans-serif; font-size: 150px; font-weight: 900; color: var(--green); line-height: 1.05; }
+      .cta { margin-top: 22px; background: var(--green); color: #fff; border-radius: 80px; padding: 18px 64px; font-family: "Rubik", sans-serif; font-weight: 900; font-size: 74px; display: flex; gap: 22px; align-items: center; }
+      .cta i { display: block; font-style: normal; }
+      .ctasub { margin-top: 12px; font-size: 40px; font-weight: 700; color: var(--forest); }
+      .legal { position: absolute; left: 60px; right: 60px; top: 1210px; text-align: center; direction: rtl; font-size: 30px; font-weight: 600; color: #3C3C3C; }
+      .confetti { position: absolute; border-radius: 50%; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="27" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="28.8" data-width="1080" data-height="1920">
 
-      <!-- ===== Scene 1: the rumor chat (0–21s) ===== -->
-      <div id="chat" class="clip" data-start="0" data-duration="21" data-track-index="0">
-        <div class="wall"></div>
-        <div class="top"></div>
-        <div class="header" data-layout-allow-overlap>
-          <div class="avatar">🏡</div>
-          <div class="gnames">
-            <div class="gname" id="g1"><b>שכנות רחוב הגפן</b><span>34 משתתפות</span></div>
-            <div class="gname h" id="g2"><b>הורים גן שקד</b><span>61 משתתפים</span></div>
-            <div class="gname h" id="g3"><b>בנות שירות הר ברכה 💫</b><span>112 משתתפות</span></div>
-          </div>
+      <div id="stage" class="clip" data-start="0" data-duration="22.2" data-track-index="0" data-layout-allow-overlap>
+        <div class="bgc" id="bg0" style="background: var(--green)"></div>
+        <div class="bgc h" id="bg1" style="background: var(--blue)"></div>
+        <div class="bgc h" id="bg2" style="background: var(--magenta)"></div>
+        <div class="bgc h" id="bg3" style="background: var(--orange)"></div>
+        <div class="bgc h" id="bg4" style="background: var(--forest)"></div>
+        <div class="bgc h" id="bg5" style="background: var(--green)"></div>
+
+        <div id="trees">
+          <div class="stem" style="left:150px; top:240px; height:260px; background:rgba(255,255,255,.14)"></div>
+          <div class="dot" style="left:60px; top:120px; width:190px; height:190px; background:rgba(255,255,255,.14)"></div>
+          <div class="stem" style="left:930px; top:1500px; height:300px; background:rgba(255,255,255,.12)"></div>
+          <div class="dot" style="left:830px; top:1360px; width:210px; height:210px; background:rgba(255,255,255,.12)"></div>
+          <div class="dot" style="left:880px; top:180px; width:120px; height:120px; background:rgba(255,255,255,.1)"></div>
+          <div class="dot" style="left:40px; top:1600px; width:150px; height:150px; background:rgba(255,255,255,.1)"></div>
         </div>
 
-        <div id="list" data-layout-allow-overlap>
-          <div class="msg" id="m1" data-layout-allow-overlap>
-            <div class="fwd">↪ הועבר פעמים רבות</div>
-            <div class="text">שמעתן כמה מרוויחים במעון? 😬</div>
-            <div class="text">לא הייתי הולכת לשם</div>
-            <div class="time">08:14</div>
-            <div class="stale h" id="stale">מידע לא מעודכן</div>
-            <div class="react" id="react1">😬
-              <div class="count"><span id="c1">3</span><span class="h" id="c2">17</span><span class="h" id="c3">43</span></div>
+        <div id="hook">
+          <div class="hw" id="hw1">שמעתן</div>
+          <div class="hw" id="hw2">כמה</div>
+          <div class="hw y" id="hw3">מרוויחים</div>
+          <div class="hw" id="hw4">במעון? 😬</div>
+        </div>
+
+        <div class="ov stroke h" id="ovFwd" style="top:270px; font-size:92px">הועבר <span class="ltr" id="fwdN">12</span> פעמים 🔁</div>
+        <div class="h" id="wait"><div class="w1 stroke">רגע…</div><div class="w2 stroke">זה מלפני העדכון?!</div></div>
+        <div class="ov h" id="ovNew" style="top:275px"><span class="tag">המידע המעודכן ✓</span></div>
+        <div class="ov stroke h" id="ov45" style="top:250px; font-size:170px"><span class="ltr">₪<span id="n45">0</span></span><span style="font-size:74px"> לשעה</span></div>
+        <div class="ov stroke h" id="ovSpread" style="top:270px; font-size:86px">עכשיו זה מה שמועבר 😍</div>
+
+        <div id="cam">
+          <div class="phone" id="phone">
+            <div class="screen" id="screen" data-layout-allow-overlap>
+              <div class="wall"></div>
+              <div class="sbar"><span class="ltr">9:41</span><span class="ltr">5G ▮▮▮ 86%</span></div>
+              <div class="whead">
+                <div class="back">→</div>
+                <div class="gav">🌸</div>
+                <div class="gtxt"><b>נשות הברכה</b><span>שירה, מיכל, נעמה ועוד 353 חברות</span></div>
+                <div class="icons"><span>⋮</span></div>
+              </div>
+              <div class="pill">היום</div>
+
+              <div id="msgs" data-layout-allow-overlap>
+                <div class="row in" id="r0" style="top:0px">
+                  <div class="b" id="m1">
+                    <div class="fwd">⤻⤻ הועבר פעמים רבות</div>
+                    <div class="who" style="color:#C2185B">שירה</div>
+                    <div class="t big">שמעתן כמה מרוויחים במעון? 😬</div>
+                    <div class="t">לא הייתי הולכת לשם</div>
+                    <div class="meta">08:14</div>
+                    <div class="rx" id="rx1">😬😱 <b><span id="k1">3</span><span class="h" id="k2">24</span><span class="h" id="k3">87</span><span class="h" id="k4">214</span></b></div>
+                    <div class="hl h" id="hl1"></div>
+                    <div class="stamp h" id="stamp">מידע לא מעודכן</div>
+                  </div>
+                </div>
+                <div class="row in h" id="r1" style="top:300px"><div class="b"><div class="who" style="color:#1F7AEC">מיכל</div><div class="t">באמת?! 😳</div><div class="meta">08:15</div></div></div>
+                <div class="row in h" id="r2" style="top:450px"><div class="b"><div class="who" style="color:#7B3FE4">נעמה</div><div class="t">כולן יודעות את זה</div><div class="meta">08:15</div></div></div>
+                <div class="row out h" id="r3" style="top:600px"><div class="b"><div class="t">חבל, דווקא חשבתי ללכת… 😕</div><div class="meta">08:16 <span class="tick">✓✓</span></div></div></div>
+
+                <div class="row in h" id="rNew" style="top:0px">
+                  <div style="display:flex; gap:14px; align-items:flex-start; direction:rtl">
+                    <div class="logoav"></div>
+                    <div class="b" id="mNew">
+                      <div class="fwd h" id="fwdNew">⤻⤻ הועבר פעמים רבות</div>
+                      <div class="who" style="color:var(--green)">מעונות הר ברכה ✓</div>
+                      <div class="fact top">📌 עדכון שכר · אוגוסט 2026</div>
+                      <div class="fact h" id="f1">💰 45 ₪ לשעה עם תעודה</div>
+                      <div class="fact h" id="f2">📈 קפיצות שכר בשנים 3, 9, 12</div>
+                      <div class="fact h" id="f3">🧾 חצי מבונוס ההתמדה נכנס לבסיס</div>
+                      <div class="fact h" id="f4">🎓 קרן השתלמות משנה 5</div>
+                      <div class="fact h" id="f5" style="color:var(--green)">🏆 מהתנאים הגבוהים בשומרון</div>
+                      <div class="meta">09:02</div>
+                      <div class="rx h" id="rx2">😍🙌🔥 <b><span id="k5">0</span></b></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row in h" id="rA" style="top:640px"><div class="b"><div class="who" style="color:#1F7AEC">מיכל</div><div class="t">רגע, מה?! 😮</div></div></div>
+                <div class="row out h" id="rB" style="top:790px"><div class="b"><div class="t">שולחת לאחותי עכשיו 😍</div><div class="meta">09:03 <span class="tick">✓✓</span></div></div></div>
+              </div>
+
+              <div class="spin h" id="spin"><i id="spinI">↻</i></div>
+              <div class="input"><div class="mic"></div><div class="ifield">הודעה</div></div>
+              <div class="scrim h" id="scrim"></div>
+              <div class="menu h" id="menu" data-layout-allow-overlap>
+                <div>↩ השב</div><div>⭐ סמן בכוכב</div><div>↪ העבר</div><div class="on">ⓘ פרטי הודעה</div>
+              </div>
+              <div class="sheet" id="sheet" data-layout-allow-overlap>
+                <h4>פרטי הודעה</h4>
+                <div class="lbl">נשלחה לראשונה</div>
+                <div class="dt"><span class="ltr" id="dt">14.03.2025</span></div>
+                <div class="lbl" style="margin-top:22px">הועברה מאז 1,208 פעמים</div>
+              </div>
+              <div class="flash h" id="flash"></div>
             </div>
           </div>
-          <div class="replies" id="replies" data-layout-allow-overlap>
-            <div class="reply h" id="r1">באמת?! 😳</div>
-            <div class="reply h" id="r2">כולם יודעים את זה</div>
-            <div class="reply h" id="r3">חבל, דווקא חשבתי על זה…</div>
-          </div>
-          <div class="msg h" id="mnew">
-            <div class="sender">מעונות הר ברכה ✓</div>
-            <div class="newhead">📌 המידע המעודכן</div>
-            <div class="fact h" id="f1">💰 45 ₪ לשעה עם תעודה</div>
-            <div class="fact h" id="f2">📈 קפיצות שכר בשנים 3, 9, 12</div>
-            <div class="fact h" id="f3">🧾 חצי מבונוס ההתמדה נכנס לבסיס</div>
-            <div class="fact h" id="f4">🎓 קרן השתלמות משנה 5</div>
-            <div class="fact big h" id="f5">מהתנאים הגבוהים בשומרון</div>
-            <div class="react h" id="react2">😍 🙌 <b>212</b></div>
-          </div>
+          <div class="finger h" id="finger"><div class="ring" id="ring"></div></div>
         </div>
 
-        <div class="spinner h" id="spin"><i id="spinI">↻</i></div>
-        <div class="menu h" id="menu" data-layout-allow-overlap>
-          <div>↩ השב</div>
-          <div>⭐ סמן בכוכב</div>
-          <div class="hl" id="menuInfo">ⓘ פרטי הודעה</div>
+        <div id="timeline" class="h" data-layout-allow-overlap>
+          <div class="tl-line" id="tlLine"></div>
+          <div class="tl-dot" style="right:120px; background:#EA0038"></div>
+          <div class="tl-dot h" id="tlDot2" style="left:120px; background:var(--green)"></div>
+          <div class="tl-cap" style="right:-30px"><b style="color:#EA0038">2025</b><span>השמועה נכתבה</span></div>
+          <div class="tl-cap h" id="tlCap2" style="left:-30px"><b style="color:var(--green)">אוג׳ 2026</b><span>עדכון שכר ↻</span></div>
         </div>
-        <div class="dim h" id="dim"></div>
-        <div class="sheet" id="sheet" data-layout-allow-overlap>
-          <h3>פרטי הודעה</h3>
-          <div class="lbl">נשלחה לראשונה:</div>
-          <div class="date"><span class="ltr" id="oldDate">14.03.2016</span></div>
-          <div class="sub">הועברה מאז 1,208 פעמים</div>
-        </div>
-        <div class="wow h" id="wow" data-layout-allow-overlap>רגע… <span class="ltr old-year">2016</span>?!</div>
-        <div class="inputbar"></div>
-        <div class="finger h" id="finger"></div>
       </div>
 
-      <!-- ===== Scene 2: end card (21–27s) ===== -->
-      <div id="end" class="clip" data-start="21" data-duration="6" data-track-index="1">
-        <div class="endbg"></div>
-        <div class="mark" id="mark">↻</div>
+      <div id="endc" class="clip" data-start="21.45" data-duration="7.35" data-track-index="1">
+        <div class="iris" id="iris"></div>
+        <div class="confetti h" id="c1" style="left:90px; top:1320px; width:90px; height:90px; background:var(--lime)"></div>
+        <div class="confetti h" id="c2" style="left:900px; top:1380px; width:120px; height:120px; background:var(--magenta)"></div>
+        <div class="confetti h" id="c3" style="left:160px; top:1560px; width:60px; height:60px; background:var(--blue)"></div>
+        <div class="confetti h" id="c4" style="left:780px; top:1620px; width:80px; height:80px; background:var(--orange)"></div>
         <div class="endwrap">
-          <div class="e1" id="e1">השמועה נשארה ב-<span class="ltr old-year">2016</span>.</div>
-          <div class="e2" id="e2">המעון לא.</div>
-          <div class="cta" id="cta"><i id="ctaI">↻</i>בדקו שוב</div>
-          <div class="ctasub" id="ctasub">[קישור / וואטסאפ]</div>
-          <div class="brand" id="brand">הר ברכה<span>חינוך במקום הראשון</span></div>
+          <div class="logo h" id="logo"></div>
+          <div class="l1 h" id="l1">השמועה לא התעדכנה.</div>
+          <div class="l2 h" id="l2">השכר כן.</div>
+          <div class="cta h" id="cta"><i id="ctaI">↻</i>בדקו שוב</div>
+          <div class="ctasub h" id="ctasub">[קישור / וואטסאפ]</div>
         </div>
-        <div class="legal" id="legal">מחפשים מטפלות ומטפלים · המודעה מיועדת לכל המינים</div>
+        <div class="legal h" id="legal">מחפשים מטפלות ומטפלים · המודעה מיועדת לכל המינים</div>
       </div>
 
-      <!-- ===== SFX ===== -->
-      <audio id="sfx-n1" src="assets/sfx/notification.mp3" data-start="0.25" data-duration="1.2" data-track-index="10" data-volume="0.7"></audio>
-      <audio id="sfx-w1" src="assets/sfx/whoosh-short.mp3" data-start="2.4" data-duration="0.57" data-track-index="11" data-volume="0.6"></audio>
-      <audio id="sfx-w2" src="assets/sfx/whoosh-short.mp3" data-start="4.5" data-duration="0.57" data-track-index="12" data-volume="0.6"></audio>
-      <audio id="sfx-p1" src="assets/sfx/pop.mp3" data-start="1.3" data-duration="0.7" data-track-index="13" data-volume="0.5"></audio>
-      <audio id="sfx-p2" src="assets/sfx/pop.mp3" data-start="3.3" data-duration="0.7" data-track-index="14" data-volume="0.5"></audio>
-      <audio id="sfx-p3" src="assets/sfx/pop.mp3" data-start="5.4" data-duration="0.7" data-track-index="15" data-volume="0.5"></audio>
-      <audio id="sfx-c1" src="assets/sfx/click-soft.mp3" data-start="8.3" data-duration="0.36" data-track-index="16" data-volume="0.8"></audio>
-      <audio id="sfx-c2" src="assets/sfx/click-soft.mp3" data-start="9.2" data-duration="0.36" data-track-index="17" data-volume="0.8"></audio>
-      <audio id="sfx-rise" src="assets/sfx/riser.mp3" data-start="9.4" data-duration="1.3" data-track-index="18" data-volume="0.35"></audio>
-      <audio id="sfx-wow" src="assets/sfx/pop.mp3" data-start="10.7" data-duration="0.7" data-track-index="19" data-volume="0.9"></audio>
-      <audio id="sfx-w3" src="assets/sfx/whoosh-short.mp3" data-start="13.3" data-duration="0.57" data-track-index="20" data-volume="0.6"></audio>
-      <audio id="sfx-n2" src="assets/sfx/notification.mp3" data-start="15.3" data-duration="1.2" data-track-index="21" data-volume="0.7"></audio>
-      <audio id="sfx-s1" src="assets/sfx/sparkle.mp3" data-start="19.0" data-duration="1.5" data-track-index="22" data-volume="0.5"></audio>
-      <audio id="sfx-w4" src="assets/sfx/whoosh-short.mp3" data-start="20.8" data-duration="0.57" data-track-index="23" data-volume="0.6"></audio>
-      <audio id="sfx-ch" src="assets/sfx/chime.mp3" data-start="22.1" data-duration="2.2" data-track-index="24" data-volume="0.6"></audio>
+      <audio id="bgm" src="assets/bgm/track-cut.wav" data-start="0" data-duration="28.8" data-track-index="10" data-volume="0.55"></audio>
+      <audio id="vo1" src="assets/voice/vo-end-1.wav" data-start="21.95" data-duration="3.7" data-track-index="11" data-volume="1"></audio>
+      <audio id="vo2" src="assets/voice/vo-end-2.wav" data-start="24.0" data-duration="4.8" data-track-index="12" data-volume="1"></audio>
+      <!-- SFX: data-start = beat time - measured peak (tools/beat-grid.py --peak) -->
+      <audio id="sfx-0" src="assets/sfx/pop.mp3" data-start="0.000" data-duration="0.7" data-track-index="20" data-volume="0.7"></audio><!-- beat 0 -->
+      <audio id="sfx-1" src="assets/sfx/pop.mp3" data-start="0.368" data-duration="0.7" data-track-index="21" data-volume="0.7"></audio><!-- beat 1 -->
+      <audio id="sfx-2" src="assets/sfx/pop.mp3" data-start="0.856" data-duration="0.7" data-track-index="22" data-volume="0.7"></audio><!-- beat 2 -->
+      <audio id="sfx-3" src="assets/sfx/pop.mp3" data-start="1.343" data-duration="0.7" data-track-index="23" data-volume="0.7"></audio><!-- beat 3 -->
+      <audio id="sfx-4" src="assets/sfx/whoosh.mp3" data-start="1.790" data-duration="0.6" data-track-index="24" data-volume="0.7"></audio><!-- beat 4 -->
+      <audio id="sfx-5" src="assets/sfx/notification.mp3" data-start="2.209" data-duration="1.2" data-track-index="25" data-volume="0.6"></audio><!-- beat 5 -->
+      <audio id="sfx-6" src="assets/sfx/pop.mp3" data-start="3.782" data-duration="0.7" data-track-index="26" data-volume="0.45"></audio><!-- beat 8 -->
+      <audio id="sfx-7" src="assets/sfx/pop.mp3" data-start="4.270" data-duration="0.7" data-track-index="27" data-volume="0.45"></audio><!-- beat 9 -->
+      <audio id="sfx-8" src="assets/sfx/notification.mp3" data-start="4.648" data-duration="1.2" data-track-index="20" data-volume="0.4"></audio><!-- beat 10 -->
+      <audio id="sfx-9" src="assets/sfx/pop.mp3" data-start="5.246" data-duration="0.7" data-track-index="21" data-volume="0.45"></audio><!-- beat 11 -->
+      <audio id="sfx-10" src="assets/sfx/whoosh-short.mp3" data-start="5.693" data-duration="0.6" data-track-index="22" data-volume="0.6"></audio><!-- beat 12 -->
+      <audio id="sfx-11" src="assets/sfx/pop.mp3" data-start="6.221" data-duration="0.7" data-track-index="23" data-volume="0.35"></audio><!-- beat 13 -->
+      <audio id="sfx-12" src="assets/sfx/pop.mp3" data-start="6.709" data-duration="0.7" data-track-index="24" data-volume="0.35"></audio><!-- beat 14 -->
+      <audio id="sfx-13" src="assets/sfx/click-soft.mp3" data-start="7.732" data-duration="0.4" data-track-index="25" data-volume="0.8"></audio><!-- beat 16 -->
+      <audio id="sfx-14" src="assets/sfx/click-soft.mp3" data-start="8.707" data-duration="0.4" data-track-index="26" data-volume="0.8"></audio><!-- beat 18 -->
+      <audio id="sfx-15" src="assets/sfx/click-soft.mp3" data-start="9.195" data-duration="0.4" data-track-index="27" data-volume="0.8"></audio><!-- beat 19 -->
+      <audio id="sfx-16" src="assets/sfx/whoosh-short.mp3" data-start="9.595" data-duration="0.6" data-track-index="20" data-volume="0.7"></audio><!-- beat 20 -->
+      <audio id="sfx-17" src="assets/sfx/impact-bass-1.mp3" data-start="9.181" data-duration="2.0" data-track-index="21" data-volume="0.8"></audio><!-- beat 21 -->
+      <audio id="sfx-18" src="assets/sfx/glitch-1.mp3" data-start="9.913" data-duration="1.2" data-track-index="22" data-volume="0.6"></audio><!-- beat 22 -->
+      <audio id="sfx-19" src="assets/sfx/whoosh.mp3" data-start="11.546" data-duration="0.6" data-track-index="23" data-volume="0.6"></audio><!-- beat 24 -->
+      <audio id="sfx-20" src="assets/sfx/ping.mp3" data-start="12.358" data-duration="1.0" data-track-index="24" data-volume="0.7"></audio><!-- beat 26 -->
+      <audio id="sfx-21" src="assets/sfx/whoosh-short.mp3" data-start="13.498" data-duration="0.6" data-track-index="25" data-volume="0.6"></audio><!-- beat 28 -->
+      <audio id="sfx-22" src="assets/sfx/whoosh.mp3" data-start="14.473" data-duration="0.6" data-track-index="26" data-volume="0.8"></audio><!-- beat 30 -->
+      <audio id="sfx-23" src="assets/sfx/notification.mp3" data-start="15.380" data-duration="1.2" data-track-index="27" data-volume="0.7"></audio><!-- beat 32 -->
+      <audio id="sfx-24" src="assets/sfx/pop.mp3" data-start="15.978" data-duration="0.7" data-track-index="20" data-volume="0.5"></audio><!-- beat 33 -->
+      <audio id="sfx-25" src="assets/sfx/pop.mp3" data-start="16.465" data-duration="0.7" data-track-index="21" data-volume="0.5"></audio><!-- beat 34 -->
+      <audio id="sfx-26" src="assets/sfx/pop.mp3" data-start="16.953" data-duration="0.7" data-track-index="22" data-volume="0.5"></audio><!-- beat 35 -->
+      <audio id="sfx-27" src="assets/sfx/pop.mp3" data-start="17.441" data-duration="0.7" data-track-index="23" data-volume="0.5"></audio><!-- beat 36 -->
+      <audio id="sfx-28" src="assets/sfx/impact-bass-1.mp3" data-start="16.986" data-duration="2.0" data-track-index="24" data-volume="0.7"></audio><!-- beat 37 -->
+      <audio id="sfx-29" src="assets/sfx/sparkle.mp3" data-start="18.996" data-duration="1.5" data-track-index="25" data-volume="0.6"></audio><!-- beat 39 -->
+      <audio id="sfx-30" src="assets/sfx/pop.mp3" data-start="19.392" data-duration="0.7" data-track-index="26" data-volume="0.5"></audio><!-- beat 40 -->
+      <audio id="sfx-31" src="assets/sfx/pop.mp3" data-start="19.880" data-duration="0.7" data-track-index="27" data-volume="0.5"></audio><!-- beat 41 -->
+      <audio id="sfx-32" src="assets/sfx/pop.mp3" data-start="20.368" data-duration="0.7" data-track-index="20" data-volume="0.5"></audio><!-- beat 42 -->
+      <audio id="sfx-33" src="assets/sfx/whoosh-cinematic.mp3" data-start="18.960" data-duration="3.0" data-track-index="21" data-volume="0.7"></audio><!-- beat 44 -->
+      <audio id="sfx-34" src="assets/sfx/impact-bass-1.mp3" data-start="22.352" data-duration="2.0" data-track-index="22" data-volume="0.7"></audio><!-- beat 48 -->
+      <audio id="sfx-35" src="assets/sfx/chime.mp3" data-start="23.971" data-duration="2.2" data-track-index="23" data-volume="0.5"></audio><!-- beat 50 -->
     </div>
 
     <script>
-      // ⚠ Draft value: the year before the pay reform. Replace with the real year (also update #oldDate).
-      const OLD_YEAR = "2016";
-      document.querySelectorAll(".old-year").forEach((el) => (el.textContent = OLD_YEAR));
-
+      const BEAT = 60 / 123;
+      const B = (n) => n * BEAT;
       const tl = gsap.timeline({ paused: true });
-      const pop = { duration: 0.45, ease: "back.out(2)" };
 
-      // --- initial states
-      tl.fromTo("#sheet", { yPercent: 100 }, { yPercent: 100, duration: 0.01 }, 0);
+      const slam = { duration: 0.32, ease: "back.out(2.2)" };
+      const soft = { duration: 0.35, ease: "power3.out" };
+      function counter(id, from, to, at, dur) {
+        const el = document.getElementById(id), o = { v: from };
+        tl.fromTo(o, { v: from }, { v: to, duration: dur, ease: "power2.out", onUpdate: () => (el.textContent = Math.round(o.v).toLocaleString("en-US")) }, at);
+      }
+      const bg = (id, beat) => tl.to(id, { opacity: 1, duration: 0.01 }, B(beat));
+      const punch = (beat, s = 1.045, rot = 0) =>
+        tl.fromTo("#cam", { scale: s, rotation: rot }, { scale: 1, rotation: 0, duration: BEAT * 0.9, ease: "power3.out", immediateRender: false }, B(beat));
 
-      // --- 0–6.6: the rumor lands and spreads across groups
-      tl.fromTo("#m1", { scale: 0.6, opacity: 0, transformOrigin: "100% 0%" }, { scale: 1, opacity: 1, ...pop }, 0.2);
-      tl.fromTo("#react1", { scale: 0 }, { scale: 1, ...pop }, 0.9);
-      tl.fromTo("#r1", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35 }, 1.3);
+      tl.fromTo("#trees", { y: 0 }, { y: -60, duration: 22, ease: "none" }, 0);
 
-      [["#g1", "#g2", "#c1", "#c2", "#r1", "#r2", 2.4], ["#g2", "#g3", "#c2", "#c3", "#r2", "#r3", 4.5]].forEach(([gOut, gIn, cOut, cIn, rOut, rIn, t]) => {
-        tl.to(gOut, { opacity: 0, x: 60, duration: 0.25 }, t);
-        tl.fromTo(gIn, { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.3 }, t + 0.1);
-        tl.to("#m1", { x: -24, duration: 0.08, yoyo: true, repeat: 3 }, t);
-        tl.to(cOut, { opacity: 0, duration: 0.1 }, t + 0.3);
-        tl.to(cIn, { opacity: 1, duration: 0.1 }, t + 0.3);
-        tl.fromTo("#react1", { scale: 1.4 }, { scale: 1, duration: 0.3 }, t + 0.3);
-        tl.to(rOut, { opacity: 0, duration: 0.2 }, t);
-        tl.fromTo(rIn, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35 }, t + 0.9);
+      // BAR 1 (beats 0-3): hook words slam on each beat
+      ["#hw1", "#hw2", "#hw3", "#hw4"].forEach((w, i) => {
+        tl.fromTo(w, { scale: 2.2, opacity: 0, rotation: i % 2 ? 4 : -4 }, { scale: 1, opacity: 1, rotation: 0, ...slam }, B(i));
       });
 
-      // --- 6.8–9.4: long-press → message info
-      tl.fromTo("#finger", { x: 700, y: 1500, opacity: 0 }, { x: 560, y: 640, opacity: 1, duration: 0.8, ease: "power2.out" }, 6.8);
-      tl.to("#finger", { scale: 0.8, duration: 0.2 }, 7.7);
-      tl.to("#m1", { backgroundColor: "#DDF3F0", duration: 0.5 }, 7.8);
-      tl.fromTo("#menu", { scale: 0.7, opacity: 0, transformOrigin: "100% 0%" }, { scale: 1, opacity: 1, ...pop }, 8.3);
-      tl.to("#finger", { scale: 1, x: 640, y: 1090, duration: 0.5, ease: "power2.inOut" }, 8.6);
-      tl.to("#finger", { scale: 0.8, duration: 0.15, yoyo: true, repeat: 1 }, 9.15);
+      // BAR 2 (4-7): pull back — the words become the bubble in the phone
+      tl.to("#hook", { scale: 0.25, y: 120, opacity: 0, duration: BEAT * 0.8, ease: "power3.in" }, B(4) - 0.25);
+      tl.fromTo("#cam", { y: 1500, rotation: 8 }, { y: 0, rotation: 0, duration: BEAT * 1.4, ease: "power4.out" }, B(4) - 0.12);
+      bg("#bg1", 4);
+      tl.fromTo("#m1", { scale: 0.5, opacity: 0, transformOrigin: "100% 0%" }, { scale: 1, opacity: 1, ...slam }, B(5));
+      tl.fromTo("#phone", { x: -10 }, { x: 10, duration: 0.05, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, B(5));
+      tl.fromTo("#rx1", { scale: 0 }, { scale: 1, ...slam }, B(6));
+      tl.fromTo("#r1", { y: 30, opacity: 0 }, { y: 0, opacity: 1, ...soft }, B(7));
 
-      // --- 9.4–12.8: the twist — first sent years ago
-      tl.to("#menu", { opacity: 0, duration: 0.2 }, 9.4);
-      tl.to("#finger", { opacity: 0, duration: 0.2 }, 9.4);
-      tl.to("#dim", { opacity: 1, duration: 0.3 }, 9.4);
-      tl.to("#sheet", { yPercent: 0, duration: 0.55, ease: "power3.out" }, 9.45);
-      tl.fromTo("#oldDate", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.5)" }, 10.1);
-      tl.fromTo("#wow", { scale: 0.3, rotation: -8, opacity: 0 }, { scale: 1, rotation: -4, opacity: 1, duration: 0.5, ease: "back.out(2.2)" }, 10.7);
-      tl.to("#wow", { opacity: 0, duration: 0.25 }, 12.6);
-      tl.to("#sheet", { yPercent: 100, duration: 0.45, ease: "power3.in" }, 12.6);
-      tl.to("#dim", { opacity: 0, duration: 0.3 }, 12.8);
-      tl.to("#m1", { backgroundColor: "#FFFFFF", duration: 0.2 }, 12.8);
+      // BAR 3 (8-11): the chat piles on
+      punch(8); tl.fromTo("#r2", { y: 30, opacity: 0 }, { y: 0, opacity: 1, ...soft }, B(8));
+      tl.to("#k1", { opacity: 0, duration: 0.01 }, B(9)); tl.to("#k2", { opacity: 1, duration: 0.01 }, B(9));
+      punch(10, 1.05, -1); tl.fromTo("#r3", { y: 30, opacity: 0 }, { y: 0, opacity: 1, ...soft }, B(10));
+      tl.to("#k2", { opacity: 0, duration: 0.01 }, B(11)); tl.to("#k3", { opacity: 1, duration: 0.01 }, B(11));
 
-      // --- 13.2–15.2: pull to refresh
-      tl.to("#replies", { opacity: 0, duration: 0.3 }, 13.0);
-      tl.set("#finger", { x: 480, y: 560, scale: 1 }, 13.05);
-      tl.to("#finger", { opacity: 1, duration: 0.2 }, 13.1);
-      tl.to("#finger", { y: 900, duration: 0.7, ease: "power2.out" }, 13.3);
-      tl.to("#list", { y: 210, duration: 0.7, ease: "power2.out" }, 13.3);
-      tl.fromTo("#spin", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3 }, 13.4);
-      tl.fromTo("#spinI", { rotation: 0 }, { rotation: 720, duration: 1.5, ease: "none" }, 13.5);
-      tl.to("#finger", { opacity: 0, duration: 0.2 }, 14.1);
-      tl.to("#m1", { opacity: 0.55, filter: "grayscale(1)", duration: 0.4 }, 14.3);
-      tl.fromTo("#stale", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 14.4);
-      tl.to("#spin", { opacity: 0, scale: 0.4, duration: 0.25 }, 15.0);
-      tl.to("#list", { y: -360, duration: 0.6, ease: "power3.inOut" }, 15.0);
-      tl.to("#m1", { opacity: 0, duration: 0.4 }, 15.0);
+      // BAR 4 (12-15): it spreads
+      bg("#bg2", 12);
+      tl.fromTo("#ovFwd", { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, ...slam }, B(12));
+      counter("fwdN", 12, 356, B(12), BEAT * 3.2);
+      tl.fromTo("#hl1", { opacity: 0, scale: 1.2 }, { opacity: 1, scale: 1, ...slam }, B(13));
+      tl.to("#k3", { opacity: 0, duration: 0.01 }, B(14)); tl.to("#k4", { opacity: 1, duration: 0.01 }, B(14));
+      punch(14, 1.06, 1);
+      tl.to("#ovFwd", { opacity: 0, y: -40, duration: 0.25 }, B(15) + 0.2);
+      tl.to("#hl1", { opacity: 0, duration: 0.2 }, B(15) + 0.2);
 
-      // --- 15.3–20.6: the updated reality
-      tl.fromTo("#mnew", { scale: 0.6, opacity: 0, transformOrigin: "100% 0%" }, { scale: 1, opacity: 1, ...pop }, 15.3);
-      ["#f1", "#f2", "#f3", "#f4"].forEach((f, i) => {
-        tl.fromTo(f, { x: 80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 16.0 + i * 0.6);
+      // BAR 5 (16-19): long-press → message info
+      tl.fromTo("#finger", { x: 700, y: 1500, opacity: 0 }, { x: 470, y: 420, opacity: 1, duration: BEAT * 1.4, ease: "power3.out" }, B(15) - 0.2);
+      tl.to("#finger", { scale: 0.85, duration: 0.15 }, B(16));
+      tl.fromTo("#ring", { scale: 0.4, opacity: 0 }, { scale: 1.7, opacity: 1, duration: BEAT * 2, ease: "none" }, B(16));
+      tl.to("#m1", { backgroundColor: "#D1F4EC", duration: 0.3 }, B(17));
+      tl.to("#ring", { opacity: 0, duration: 0.1 }, B(18));
+      tl.fromTo("#menu", { scale: 0.6, opacity: 0, transformOrigin: "100% 0%" }, { scale: 1, opacity: 1, ...slam }, B(18));
+      tl.to("#finger", { scale: 1, x: 560, y: 1010, duration: BEAT * 0.8, ease: "power3.inOut" }, B(18) + 0.05);
+      tl.to("#finger", { scale: 0.82, duration: 0.1, yoyo: true, repeat: 1 }, B(19) - 0.05);
+
+      // BAR 6 (20-23): the twist
+      tl.to(["#menu", "#finger"], { opacity: 0, duration: 0.15 }, B(20) - 0.05);
+      tl.to("#scrim", { opacity: 1, duration: 0.2 }, B(20));
+      tl.fromTo("#sheet", { yPercent: 100 }, { yPercent: 0, duration: BEAT * 0.9, ease: "power4.out" }, B(20));
+      tl.fromTo("#dt", { scale: 2.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power4.in" }, B(21) - 0.28);
+      punch(21, 1.08, -1.5);
+      bg("#bg4", 22);
+      tl.to("#cam", { filter: "grayscale(1)", duration: 0.2 }, B(22));
+      tl.fromTo("#wait", { scale: 0.4, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -3, ...slam }, B(22));
+      tl.fromTo("#cam", { x: -14 }, { x: 14, duration: 0.04, repeat: 7, yoyo: true, ease: "none", immediateRender: false }, B(22));
+      tl.to("#cam", { x: 0, duration: 0.05 }, B(22) + 0.34);
+
+      // BAR 7 (24-27): why — 2025 rumor → Aug 2026 pay reform
+      tl.to("#wait", { opacity: 0, y: -40, duration: 0.25 }, B(24) - 0.1);
+      tl.fromTo("#timeline", { y: 300, opacity: 0, rotation: 3 }, { y: 0, opacity: 1, rotation: 0, duration: BEAT, ease: "power4.out" }, B(24));
+      tl.fromTo("#tlLine", { scaleX: 0 }, { scaleX: 1, duration: BEAT * 2, ease: "power2.inOut" }, B(24) + 0.2);
+      tl.fromTo(["#tlDot2", "#tlCap2"], { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, ...slam }, B(26));
+      tl.to("#timeline", { y: -200, opacity: 0, duration: 0.3, ease: "power3.in" }, B(28) - 0.3);
+
+      // BAR 8 (28-31): pull to refresh
+      bg("#bg3", 28);
+      tl.to("#sheet", { yPercent: 100, duration: 0.3, ease: "power3.in" }, B(28) - 0.3);
+      tl.to("#scrim", { opacity: 0, duration: 0.2 }, B(28) - 0.1);
+      tl.to("#cam", { filter: "grayscale(0)", duration: 0.2 }, B(28) - 0.2);
+      tl.to("#m1", { backgroundColor: "#FFFFFF", duration: 0.1 }, B(28) - 0.2);
+      tl.to(["#r1", "#r2", "#r3"], { opacity: 0, duration: 0.2 }, B(28) - 0.1);
+      tl.set("#finger", { x: 380, y: 330, scale: 1 }, B(28) - 0.02);
+      tl.to("#finger", { opacity: 1, duration: 0.12 }, B(28));
+      tl.to("#finger", { y: 700, duration: BEAT * 1.6, ease: "power2.out" }, B(28) + 0.05);
+      tl.to("#msgs", { y: 260, duration: BEAT * 1.6, ease: "power2.out" }, B(28) + 0.05);
+      tl.fromTo("#spin", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, ...slam }, B(29));
+      tl.fromTo("#spinI", { rotation: 0 }, { rotation: 720, duration: BEAT * 2.2, ease: "power1.inOut" }, B(29));
+      tl.to("#finger", { opacity: 0, duration: 0.15 }, B(30) - 0.1);
+      tl.fromTo("#flash", { opacity: 0.9 }, { opacity: 0, duration: 0.35, immediateRender: false }, B(30));
+      tl.fromTo("#stamp", { scale: 2.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: -6, duration: 0.25, ease: "power4.in" }, B(30) - 0.22);
+      tl.to("#m1", { filter: "grayscale(1)", duration: 0.2 }, B(30));
+      tl.to("#spin", { opacity: 0, scale: 0.3, duration: 0.2 }, B(31));
+      tl.to("#msgs", { y: 0, duration: BEAT * 0.8, ease: "power3.inOut" }, B(31));
+      tl.to("#r0", { y: -420, opacity: 0, duration: BEAT * 0.8, ease: "power3.inOut" }, B(31));
+
+      // BARS 9-10 (32-39): the update lands, one fact per beat
+      bg("#bg5", 32);
+      tl.fromTo("#rNew", { y: 60, opacity: 0, scale: 0.7, transformOrigin: "100% 0%" }, { y: 0, opacity: 1, scale: 1, ...slam }, B(32));
+      tl.fromTo("#phone", { x: -10 }, { x: 10, duration: 0.05, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, B(32));
+      tl.to("#phone", { x: 0, duration: 0.05 }, B(32) + 0.3);
+      tl.fromTo("#ovNew", { y: -60, opacity: 0 }, { y: 0, opacity: 1, ...slam }, B(32));
+      tl.to("#ovNew", { opacity: 0, duration: 0.15 }, B(33) - 0.1);
+      tl.fromTo("#ov45", { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, ...slam }, B(33));
+      counter("n45", 0, 45, B(33), BEAT * 1.6);
+      ["#f1", "#f2", "#f3", "#f4", "#f5"].forEach((f, i) => {
+        tl.fromTo(f, { x: 90, opacity: 0 }, { x: 0, opacity: 1, duration: 0.28, ease: "back.out(1.8)" }, B(33 + i));
       });
-      tl.fromTo("#f5", { scale: 0.5, opacity: 0, transformOrigin: "100% 50%" }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.5)" }, 18.5);
-      tl.fromTo("#react2", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, ...pop }, 19.0);
-      tl.to("#chat", { opacity: 0, duration: 0.4 }, 20.6);
+      punch(36, 1.04);
+      tl.to("#ov45", { opacity: 0, y: -40, duration: 0.2 }, B(37) - 0.1);
+      punch(37, 1.07, 1);
+      tl.fromTo("#rx2", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, ...slam }, B(39));
+      counter("k5", 0, 356, B(39), BEAT * 3);
 
-      // --- 21–27: end card
-      tl.fromTo("#e1", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 21.2);
-      tl.fromTo("#e2", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(2.2)" }, 22.0);
-      tl.fromTo("#cta", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.8)" }, 23.1);
-      tl.fromTo("#ctaI", { rotation: 0 }, { rotation: 360, duration: 0.9, ease: "power2.inOut" }, 23.5);
-      tl.fromTo("#ctasub", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 23.7);
-      tl.fromTo("#brand", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, 24.2);
-      tl.fromTo("#legal", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 24.4);
-      tl.fromTo("#mark", { rotation: -90 }, { rotation: 270, duration: 6, ease: "none" }, 21);
+      // BAR 11 (40-43): now the truth is what gets forwarded (callback)
+      tl.fromTo("#ovSpread", { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, ...slam }, B(40));
+      tl.fromTo("#rA", { y: 30, opacity: 0 }, { y: 0, opacity: 1, ...soft }, B(40));
+      tl.fromTo("#rB", { y: 30, opacity: 0 }, { y: 0, opacity: 1, ...soft }, B(41));
+      tl.fromTo("#fwdNew", { opacity: 0, scale: 1.6, transformOrigin: "100% 50%" }, { opacity: 1, scale: 1, ...slam }, B(42));
+      punch(42, 1.05, -1);
+
+      // BAR 12+ (44-): iris out into the end card
+      tl.to("#cam", { scale: 0.85, y: 120, duration: BEAT, ease: "power3.in" }, B(44) - 0.2);
+      tl.to("#ovSpread", { opacity: 0, duration: 0.2 }, B(44) - 0.2);
+      tl.fromTo("#iris", { scale: 0 }, { scale: 110, duration: BEAT * 1.2, ease: "power3.in" }, B(44) - 0.02);
+      tl.fromTo("#l1", { y: 50, opacity: 0 }, { y: 0, opacity: 1, ...soft }, B(45));
+      tl.fromTo("#l2", { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, ...slam }, B(46));
+      tl.fromTo("#logo", { scale: 0.2, opacity: 0, rotation: -8 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.5, ease: "back.out(1.9)" }, B(48));
+      ["#c1", "#c2", "#c3", "#c4"].forEach((c, i) => {
+        tl.fromTo(c, { scale: 0, opacity: 0, y: 80 }, { scale: 1, opacity: 1, y: 0, duration: 0.45, ease: "back.out(2)" }, B(48) + i * 0.06);
+        tl.to(c, { y: -40 - i * 12, duration: 5, ease: "sine.inOut" }, B(49));
+      });
+      tl.fromTo("#cta", { y: 60, opacity: 0 }, { y: 0, opacity: 1, ...slam }, B(50));
+      tl.fromTo("#ctaI", { rotation: 0 }, { rotation: 720, duration: BEAT * 4, ease: "power2.inOut" }, B(50));
+      tl.fromTo("#ctasub", { opacity: 0 }, { opacity: 1, duration: 0.3 }, B(51));
+      tl.fromTo("#legal", { opacity: 0 }, { opacity: 1, duration: 0.3 }, B(52));
+      tl.to("#cta", { scale: 1.06, duration: BEAT / 2, yoyo: true, repeat: 7, ease: "sine.inOut" }, B(53));
 
       window.__timelines["main"] = tl;
       tl.seek(0);

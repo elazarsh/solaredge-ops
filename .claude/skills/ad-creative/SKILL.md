@@ -99,6 +99,7 @@ do not silently rewrite their offer.
 
 Route through `/hyperframes` (default) or Remotion (`video-studio/remotion`). Rules:
 - Build the **storyboard frames first** as stills, show them, then animate.
+- Recreating a familiar app (WhatsApp, Instagram, notifications) → `references/ui-mockups.md`.
 - For premium motion use `/motion-craft`: beat grid from the music (`tools/beat-grid.py`), reveal on a
   downbeat, springs as pure functions of time (`tools/lib/motion.js`), one-frame-per-beat preflight,
   motion-blur render (`tools/motion-blur.sh`).

@@ -1,0 +1,5 @@
+# .media · 2 assets
+
+id         type   dur   dims   path                       description
+voice_001  voice  3.7s  —      assets/voice/vo-end-1.wav  הַשְּׁמוּעָה לֹא הִתְעַדְּכְנָה. הַשָּׂכָר כֵּן.
+voice_002  voice  4.8s  —      assets/voice/vo-end-2.wav  מְעוֹנוֹת הַר בְּרָכָה. חִנּוּךְ בַּמָּקוֹם הָרִאשׁוֹן.

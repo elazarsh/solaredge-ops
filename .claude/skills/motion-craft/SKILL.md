@@ -79,6 +79,12 @@ For Reels delivery 30 fps is fine; 60 fps for showcase loops.
 
 ## Gotchas (each one has bitten someone)
 
+- **`<audio>` created from JavaScript is NOT discovered** by HyperFrames (the timeline shows none) → the
+  render is missing those sounds. Generate static `<audio>` tags (compute the times in Python from the
+  beat grid) and verify with `npx hyperframes timeline --json`.
+- Music from Lyria: ask for the BPM in the prompt, then **measure** it with beat-grid.py (it came back
+  123 when 124 was asked) and trim the file so the first downbeat is t=0.
+
 - **Never put `will-change` on anything the camera scales** — text renders blurry. Scale a wrapper.
 - Text swapping inside a morphing container without separate enter/exit timing → overlap.
 - Last frame ≠ first frame (even cursor speed) → the loop stutters.
