@@ -39,6 +39,10 @@ Ask only what you can't infer, in one message, max ~6 questions. Must-haves:
 
 If the user is short on time, fill gaps with explicit assumptions marked `[הנחה]` and proceed.
 
+If the user brings existing scripts, decks or notes (even ones they dislike), run
+`references/script-doctor.md`: harvest facts into `facts.md` (marked unverified), keep real insights,
+flag risky claims, then rebuild the facts as reveals inside twist concepts. Never polish the old script.
+
 ## Stage 1 — Diagnose before creating
 
 An ad solves a **behavior problem**, not a design problem. Write down:
