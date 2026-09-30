@@ -1,0 +1,47 @@
+{
+  "tts_provider": "gemini",
+  "voice_id": "Leda",
+  "bgm": null,
+  "bgm_pending": false,
+  "bgm_provider": null,
+  "bgm_pid": null,
+  "bgm_log": null,
+  "bgm_mode": null,
+  "bgm_target_duration_s": null,
+  "bgm_seed_duration_s": null,
+  "bgm_loop_count": null,
+  "voices": [
+    {
+      "id": "01-hook",
+      "path": "assets/voice/01-hook.wav",
+      "duration_s": 3.2,
+      "words": []
+    },
+    {
+      "id": "02-maon",
+      "path": "assets/voice/02-maon.wav",
+      "duration_s": 5.36,
+      "words": []
+    },
+    {
+      "id": "03-benefits",
+      "path": "assets/voice/03-benefits.wav",
+      "duration_s": 5.8,
+      "words": []
+    },
+    {
+      "id": "04-meaning",
+      "path": "assets/voice/04-meaning.wav",
+      "duration_s": 3.96,
+      "words": []
+    },
+    {
+      "id": "05-cta",
+      "path": "assets/voice/05-cta.wav",
+      "duration_s": 4.48,
+      "words": []
+    }
+  ],
+  "sfx": [],
+  "total_duration_s": 22.8
+}

@@ -1,0 +1,15 @@
+{
+  "provider": "gemini",
+  "tts_model": "gemini-3.8-flash-tts",
+  "voice": "Leda",
+  "lang": "he",
+  "style": "Young Israeli woman, native Hebrew, warm, friendly and energetic with a smile in the voice. Natural conversational pace, short pause between sentences.",
+  "lines": [
+    { "id": "01-hook", "text": "אוהבת ילדים? יש לנו מקום בשבילך." },
+    { "id": "02-maon", "text": "במעון בהר ברכה אנחנו מגדלים את הדור הבא, עם הרבה אהבה וחיוך." },
+    { "id": "03-benefits", "text": "צוות מגבש ותומך. שעות נוחות. הכשרה מקצועית ושכר הוגן." },
+    { "id": "04-meaning", "text": "עבודה שיש בה משמעות, קרוב לבית.", "style": "Softer and heartfelt, slightly slower, warm." },
+    { "id": "05-cta", "text": "מחפשות מטפלות עכשיו. שלחי הודעה ובואי להכיר!", "style": "Upbeat, inviting, energetic call to action." }
+  ],
+  "bgm": { "mode": "none" }
+}
