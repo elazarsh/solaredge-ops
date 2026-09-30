@@ -12,6 +12,27 @@ export const GEMINI_TTS_MODELS = [
   "gemini-2.5-flash-preview-tts",
 ];
 
+const HEBREW_LETTER = /[א-ת]/gu;
+// Vowel points, dagesh/mapiq, shin/sin dots and qamats qatan (U+05B0–U+05BC, U+05C1–U+05C2, U+05C7).
+const HEBREW_NIQQUD = /[ְ-ׇּׁׂ]/gu;
+// Full niqqud leaves only matres lectionis and some final letters bare, so a
+// vocalized line sits well above this; plain text sits at 0.
+export const MIN_NIQQUD_RATIO = 0.5;
+
+// Gemini guesses vowels on unpointed Hebrew and gets words and stress wrong,
+// so Hebrew lines must arrive fully vocalized. Returns null when text passes.
+export function hebrewNiqqudProblem(text) {
+  const letters = String(text).match(HEBREW_LETTER)?.length ?? 0;
+  if (!letters) return null;
+  const marks = String(text).match(HEBREW_NIQQUD)?.length ?? 0;
+  if (marks / letters >= MIN_NIQQUD_RATIO) return null;
+  return (
+    `Hebrew text must be sent to Gemini TTS with full niqqud ` +
+    `(${marks} vowel marks for ${letters} letters, need at least ${MIN_NIQQUD_RATIO * 100}%). ` +
+    `Vocalize every word before synthesis; see references/tts.md → Hebrew narration`
+  );
+}
+
 // 3.8 returns WAV; older models return PCM that we wrap without resampling.
 // The shared engine transcribes the saved audio for word timings.
 export async function synthesizeGemini(
@@ -24,6 +45,8 @@ export async function synthesizeGemini(
       throw new Error(`Unsupported Gemini TTS model: ${model}`);
     }
     if (speed !== 1) throw new Error("Gemini TTS uses style for pacing; omit speed or use 1");
+    const niqqudProblem = hebrewNiqqudProblem(text);
+    if (niqqudProblem) throw new Error(niqqudProblem);
     const modern = model.startsWith("gemini-3.8-");
     if (!modern && /^(voice_|voicekey_)/.test(voiceId)) {
       throw new Error(

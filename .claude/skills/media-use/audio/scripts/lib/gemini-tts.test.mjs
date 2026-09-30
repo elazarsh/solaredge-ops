@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { synthesizeGemini, GEMINI_TTS_MODEL } from "./gemini-tts.mjs";
+import { synthesizeGemini, hebrewNiqqudProblem, GEMINI_TTS_MODEL } from "./gemini-tts.mjs";
 import { pickProvider, resolveVoiceId, synthesizeOne } from "./tts.mjs";
 
 function fixture(t) {
@@ -107,6 +107,32 @@ test("invalid config fails before spending a generation request", async (t) => {
   delete process.env.GEMINI_API_KEY;
   assert.match((await synthesizeGemini(args, deps)).error, /needs GEMINI_API_KEY/);
   assert.equal(existsSync(args.wavAbs), false);
+});
+
+test("Hebrew without niqqud fails before spending a generation request", async (t) => {
+  const { args } = fixture(t);
+  const deps = { fetchImpl: () => assert.fail("must not call the API") };
+  for (const text of ["אוהבת ילדים? יש לנו מקום בשבילך.", "Call מעון הר ברכה now"]) {
+    const result = await synthesizeGemini({ ...args, text }, deps);
+    assert.equal(result.ok, false);
+    assert.match(result.error, /full niqqud/);
+  }
+  assert.equal(existsSync(args.wavAbs), false);
+});
+
+test("vocalized Hebrew and non-Hebrew text reach the API", async (t) => {
+  const { payload, args } = fixture(t);
+  const sent = [];
+  t.mock.method(globalThis, "fetch", async (_url, options) => {
+    sent.push(JSON.parse(options.body).input[0].content[0].text);
+    return Response.json(payload);
+  });
+  const vocalized = "אוֹהֶבֶת יְלָדִים? יֵשׁ לָנוּ מָקוֹם בִּשְׁבִילֵךְ.";
+  for (const text of [vocalized, "Hello there."]) {
+    assert.equal((await synthesizeGemini({ ...args, text })).ok, true);
+  }
+  assert.deepEqual(sent, [vocalized, "Hello there."]);
+  assert.equal(hebrewNiqqudProblem(vocalized), null);
 });
 
 test("HTTP and network failures stay actionable without leaking the key", async (t) => {

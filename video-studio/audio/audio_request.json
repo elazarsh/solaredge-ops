@@ -5,11 +5,30 @@
   "lang": "he",
   "style": "Young Israeli woman, native Hebrew, warm, friendly and energetic with a smile in the voice. Natural conversational pace, short pause between sentences.",
   "lines": [
-    { "id": "01-hook", "text": "אוהבת ילדים? יש לנו מקום בשבילך." },
-    { "id": "02-maon", "text": "במעון בהר ברכה אנחנו מגדלים את הדור הבא, עם הרבה אהבה וחיוך." },
-    { "id": "03-benefits", "text": "צוות מגבש ותומך. שעות נוחות. הכשרה מקצועית ושכר הוגן." },
-    { "id": "04-meaning", "text": "עבודה שיש בה משמעות, קרוב לבית.", "style": "Softer and heartfelt, slightly slower, warm." },
-    { "id": "05-cta", "text": "מחפשות מטפלות עכשיו. שלחי הודעה ובואי להכיר!", "style": "Upbeat, inviting, energetic call to action." }
+    {
+      "id": "01-hook",
+      "text": "אוֹהֶבֶת יְלָדִים? יֵשׁ לָנוּ מָקוֹם בִּשְׁבִילֵךְ."
+    },
+    {
+      "id": "02-maon",
+      "text": "בַּמְּעוֹן בְּהַר בְּרָכָה אֲנַחְנוּ מְגַדְּלִים אֶת הַדּוֹר הַבָּא, עִם הַרְבֵּה אַהֲבָה וְחִיּוּךְ."
+    },
+    {
+      "id": "03-benefits",
+      "text": "צֶוֶת מְגַבֵּשׁ וְתוֹמֵךְ. שָׁעוֹת נוֹחוֹת. הַכְשָׁרָה מִקְצוֹעִית וְשָׂכָר הוֹגֵן."
+    },
+    {
+      "id": "04-meaning",
+      "text": "עֲבוֹדָה שֶׁיֵּשׁ בָּהּ מַשְׁמָעוּת, קָרוֹב לַבַּיִת.",
+      "style": "Softer and heartfelt, slightly slower, warm."
+    },
+    {
+      "id": "05-cta",
+      "text": "מְחַפְּשׂוֹת מְטַפְּלוֹת עַכְשָׁיו. שִׁלְחִי הוֹדָעָה וּבוֹאִי לְהַכִּיר!",
+      "style": "Upbeat, inviting, energetic call to action."
+    }
   ],
-  "bgm": { "mode": "none" }
+  "bgm": {
+    "mode": "none"
+  }
 }

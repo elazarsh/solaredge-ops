@@ -162,6 +162,39 @@ not native TTS timestamps. Do not distribute words evenly across a clip.
   scripts accept `--provider gemini --voice Kore --tts-model gemini-3.8-flash-tts
 --style "Warm and clear"`.
 
+### Hebrew narration: niqqud is mandatory
+
+Gemini guesses the vowels of unpointed Hebrew, so it misreads words (ספר as
+sefer/sapar/sfar), puts stress in the wrong place, and flattens the delivery.
+Every Hebrew line sent to Gemini must therefore be **fully vocalized**. The
+helper enforces this: a line whose Hebrew letters carry fewer niqqud marks than
+`MIN_NIQQUD_RATIO` (50%) fails before any API call, with the error
+`Hebrew text must be sent to Gemini TTS with full niqqud`.
+
+When preparing a Hebrew script:
+
+1. Keep the plain script for captions and on-screen text. Put only the
+   vocalized version in the request's `text`.
+2. Vocalize every word yourself, fully, including dagesh and the shin/sin dot
+   (שׁ / שׂ). Point by the intended spoken, everyday Israeli pronunciation and
+   by context: בִּשְׁבִילֵךְ (to a woman) vs. בִּשְׁבִילְךָ (to a man), מְטַפֶּלֶת,
+   שִׁלְחִי, בּוֹאִי.
+3. Mark ambiguous words with care: names of places and people, loanwords,
+   construct forms, and the definite article after a preposition (בַּמְּעוֹן,
+   not בְּמְעוֹן).
+4. Keep numbers, phone numbers and English words as you want them spoken.
+   Write a phone number as vocalized Hebrew digits when it must be read in
+   Hebrew.
+5. Keep punctuation: commas, periods and question marks shape the intonation.
+6. Put tone and pacing in `style` (English is fine), never in `text`.
+7. Before sending, reread each line once more for a missing vowel or a
+   wrong gender form, then listen to the result and re-vocalize any word that
+   comes out wrong.
+
+```json
+{ "id": "01-hook", "text": "אוֹהֶבֶת יְלָדִים? יֵשׁ לָנוּ מָקוֹם בִּשְׁבִילֵךְ." }
+```
+
 An API error is reported as a failed line; an explicitly chosen Gemini voice
 never silently falls back to another provider. Check the engine's anomalies
 and output metadata, not only its exit code.
