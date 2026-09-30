@@ -12,6 +12,9 @@ if ! command -v ffmpeg >/dev/null; then
 fi
 mkdir -p ~/.fonts && cp remotion/public/fonts/*.ttf ~/.fonts/ && fc-cache -f >/dev/null
 
+echo "==> Python audio analysis (beat grid)"
+python3 -c "import numpy" 2>/dev/null || pip install -q numpy 2>/dev/null
+
 echo "==> Remotion project dependencies"
 (cd remotion && npm install --no-audit --no-fund --silent)
 

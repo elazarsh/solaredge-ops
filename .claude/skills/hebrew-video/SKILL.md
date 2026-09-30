@@ -19,6 +19,7 @@ description: Rules for any Hebrew video, ad, motion graphic or caption work in t
 | Headline | Rubik 800–900, Fredoka (Latin+Hebrew rounded) | Heebo 800 | Secular One, Karantina Bold, Suez One |
 | Body / captions | Heebo 500–700 | Assistant 600 | Heebo 700 |
 | Soft / kids | Varela Round | | |
+Latin UI fonts in English prompts (Geist, Inter, SF) have **no Hebrew** — swap to Heebo (UI) or Rubik.
 Max 2 families per ad. Hebrew needs ~10% larger size than Latin for the same legibility; add
 word spacing if needed, **never letter-spacing** (breaks letter shapes).
 
