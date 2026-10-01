@@ -1,0 +1,36 @@
+[
+ {
+  "src": "clips/test_laptop.mp4",
+  "in": 0.0,
+  "out": 8.0
+ },
+ {
+  "src": "clips/s3_sticky.mp4",
+  "in": 1.6,
+  "out": 7.4
+ },
+ {
+  "src": "clips/s4_badge.mp4",
+  "in": 1.0,
+  "out": 7.6,
+  "speed": 1.3,
+  "hold": 1.42
+ },
+ {
+  "src": "clips/s5_drawing_sock.mp4",
+  "in": 1.6,
+  "out": 7.2,
+  "speed": 1.15
+ },
+ {
+  "src": "clips/s6b_glitter.mp4",
+  "in": 1.5,
+  "out": 5.7
+ },
+ {
+  "src": "clips/s6b_glitter.mp4",
+  "in": 7.1,
+  "out": 7.95,
+  "hold": 6.82
+ }
+]
