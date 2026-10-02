@@ -27,7 +27,7 @@
       #dim { position: absolute; inset: 0; background: rgba(8, 20, 14, .55); }
 
       /* story stickers */
-      .stk { position: absolute; left: 0; right: 0; top: 150px; text-align: center; direction: rtl; }
+      .stk { position: absolute; left: 0; right: 0; top: 1560px; text-align: center; direction: rtl; }
       .stk span { display: inline-block; background: #fff; color: #111; font-family: "Rubik", "Emoji", sans-serif; font-weight: 800; font-size: 56px; padding: 14px 34px 16px; border-radius: 22px; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
       .stk.fact span { font-size: 66px; background: #FFF6C2; }
 
@@ -63,14 +63,17 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="44" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="46.5" data-width="1080" data-height="1920">
 
-      <video id="footage" class="clip" src="assets/footage.mp4" data-start="0" data-duration="36.4" data-track-index="0" muted playsinline></video>
+      <video id="footage" class="clip" src="assets/footage.mp4" data-start="0" data-duration="38.7" data-track-index="0" muted playsinline></video>
 
-      <div id="over" class="clip" data-start="0" data-duration="36.4" data-track-index="1" data-layout-allow-overlap>
+      <div id="over" class="clip" data-start="0" data-duration="38.7" data-track-index="1" data-layout-allow-overlap>
         <div id="dim" class="h"></div>
         <div class="stk h" id="c1"><span>בוקר רגיל ביישוב ☕</span></div>
         <div class="stk h" id="c2"><span>356 חברות. 0 שקט 😅</span></div>
+        <div class="stk h" id="c0"><span>רגע… זה בכלל נכון? 🤔</span></div>
+        <div class="stk h" id="c4"><span>בודקת בקבוצת העדכונים 👀</span></div>
+        <div class="stk h" id="c5"><span>מעבירה לנשות הברכה ⤻</span></div>
         <div class="stk fact h" id="k1"><span>₪45 לשעה עם תעודה 💰</span></div>
         <div class="stk fact h" id="k2"><span>קפיצות שכר · 3 · 9 · 12 📈</span></div>
         <div class="stk fact h" id="k3"><span>הבונוס נכנס לבסיס 🧾</span></div>
@@ -81,7 +84,7 @@
         <div class="l2 h" id="l2"><b>השכר</b> כן.</div>
       </div>
 
-      <div id="finc" class="clip" data-start="35.9" data-duration="8.1" data-track-index="2" data-layout-allow-overlap>
+      <div id="finc" class="clip" data-start="38.3" data-duration="8.2" data-track-index="2" data-layout-allow-overlap>
         <div class="glit" id="glit"></div>
         <div id="deco">
           <div class="dot" style="left:-80px; top:1420px; width:360px; height:360px; background:rgba(239,127,138,.14)"></div>
@@ -106,10 +109,10 @@
         </div>
       </div>
 
-      <audio id="foley" src="assets/foley.wav" data-start="0" data-duration="32" data-track-index="10" data-volume="1"></audio>
-      <audio id="bgm" src="assets/bgm/bgm-vlog.wav" data-start="0" data-duration="44" data-track-index="11" data-volume="0.5"></audio>
-      <audio id="vo1" src="assets/voice/vo-end-1.wav" data-start="31.9" data-duration="3.68" data-track-index="12" data-volume="1"></audio>
-      <audio id="vo2" src="assets/voice/vo-end-2.wav" data-start="37.1" data-duration="4.76" data-track-index="13" data-volume="1"></audio>
+      <audio id="foley" src="assets/foley.wav" data-start="0" data-duration="34.3" data-track-index="10" data-volume="1"></audio>
+      <audio id="bgm" src="assets/bgm/bgm-vlog.wav" data-start="0" data-duration="46.5" data-track-index="11" data-volume="0.5"></audio>
+      <audio id="vo1" src="assets/voice/vo-end-1.wav" data-start="34.3" data-duration="3.68" data-track-index="12" data-volume="1"></audio>
+      <audio id="vo2" src="assets/voice/vo-end-2.wav" data-start="39.5" data-duration="4.76" data-track-index="13" data-volume="1"></audio>
     </div>
 
     <script>
@@ -119,24 +122,27 @@
         tl.fromTo(id, { y: 16, opacity: 0 }, { y: 0, opacity: 1, ...enter }, a);
         tl.to(id, { opacity: 0, duration: 0.3 }, b - 0.3);
       };
-      // stickers (same seconds as ui/index.html → T)
+      // stickers (same seconds as ui/index.html → T); they sit low, over the empty chat area, so the chat header stays readable
       stk("#c1", 0.3, 3.2);
       stk("#c2", 3.7, 7.4);
-      const F = 20.1, S = 1.45;
+      stk("#c0", 7.8, 9.9);
+      stk("#c4", 17.9, 20.0);
+      const F = 20.5, S = 1.45;
       ["#k1", "#k2", "#k3", "#k4", "#k5"].forEach((id, i) => {
         tl.fromTo(id, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, F + i * S);
-        tl.to(id, { opacity: 0, duration: 0.2 }, i < 4 ? F + (i + 1) * S - 0.05 : 27.5);
+        tl.to(id, { opacity: 0, duration: 0.2 }, i < 4 ? F + (i + 1) * S - 0.05 : 27.9);
       });
-      stk("#c3", 28.4, 31.3);
+      stk("#c5", 28.1, 30.0);
+      stk("#c3", 30.3, 33.5);
 
       // VO1 over the blurred, dimmed footage
-      tl.fromTo("#footage", { filter: "blur(0px)" }, { filter: "blur(14px)", duration: 0.8, ease: "power2.inOut" }, 31.3);
-      tl.fromTo("#dim", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.inOut" }, 31.3);
-      tl.fromTo("#l1", { y: 20, opacity: 0 }, { y: 0, opacity: 1, ...enter }, 32.0);
-      tl.fromTo("#l2", { y: 20, opacity: 0 }, { y: 0, opacity: 1, ...enter }, 33.9);
+      tl.fromTo("#footage", { filter: "blur(0px)" }, { filter: "blur(14px)", duration: 0.8, ease: "power2.inOut" }, 33.6);
+      tl.fromTo("#dim", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.inOut" }, 33.6);
+      tl.fromTo("#l1", { y: 20, opacity: 0 }, { y: 0, opacity: 1, ...enter }, 34.4);
+      tl.fromTo("#l2", { y: 20, opacity: 0 }, { y: 0, opacity: 1, ...enter }, 36.35);
 
       // referral page (4.4 s) → lockup with Irit, kept to the last frame
-      const R = 35.9;
+      const R = 38.3;
       tl.fromTo("#finc", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, R);
       tl.fromTo("#balloon", { y: 120 }, { y: 0, duration: 1.4, ease: "power2.out" }, R);
       tl.to("#balloon", { y: -14, duration: 1.2, yoyo: true, repeat: 1, ease: "sine.inOut" }, R + 1.4);
@@ -146,12 +152,13 @@
       tl.fromTo("#rt2", { y: 24, opacity: 0 }, { y: 0, opacity: 1, ...enter }, R + 0.6);
       tl.fromTo("#rsub", { opacity: 0 }, { opacity: 1, duration: 0.5 }, R + 0.9);
       tl.fromTo(["#p1", "#p2"], { y: 24, opacity: 0 }, { y: 0, opacity: 1, ...enter, stagger: 0.25 }, R + 1.2);
-      tl.to(["#stA", "#deco"], { opacity: 0, duration: 0.45 }, 40.3);
-      tl.fromTo("#logo", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, 40.6);
-      tl.fromTo("#cta", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 41.0);
-      tl.fromTo("#ribbon", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, 41.4);
-      tl.fromTo("#contact", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, 41.8);
-      tl.fromTo(["#terms", "#legal"], { opacity: 0 }, { opacity: 1, duration: 0.5 }, 42.2);
+      const L = R + 4.4;
+      tl.to(["#stA", "#deco"], { opacity: 0, duration: 0.45 }, L);
+      tl.fromTo("#logo", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 0.3);
+      tl.fromTo("#cta", { opacity: 0 }, { opacity: 1, duration: 0.5 }, L + 0.7);
+      tl.fromTo("#ribbon", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 1.1);
+      tl.fromTo("#contact", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 1.5);
+      tl.fromTo(["#terms", "#legal"], { opacity: 0 }, { opacity: 1, duration: 0.5 }, L + 1.9);
 
       window.__timelines["main"] = tl;
       tl.seek(0);

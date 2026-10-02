@@ -28,7 +28,7 @@
         radial-gradient(circle at 70% 65%, rgba(17,27,33,.04) 0 10px, transparent 11px) 0 0/200px 200px, var(--wall); }
       .sbar { position: absolute; left: 0; right: 0; top: 0; height: 110px; background: #fff; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 90px 14px; font-size: 44px; font-weight: 700; z-index: 6; }
       .whead { position: absolute; left: 0; right: 0; top: 110px; height: 190px; background: #fff; border-bottom: 2px solid #E9EDEF; display: flex; align-items: center; gap: 28px; padding: 0 40px; direction: rtl; z-index: 5; }
-      .back { font-size: 70px; font-weight: 500; }
+      .back { font-size: 70px; font-weight: 500; width: 110px; height: 110px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none; }
       .gav { width: 130px; height: 130px; border-radius: 50%; background: #F9D5E5; display: flex; align-items: center; justify-content: center; font-size: 70px; flex: none; }
       .gav.hb { background: #fff url("assets/har-bracha-logo.png") center/78% no-repeat; border: 2px solid #E9EDEF; }
       .gtxt { flex: 1; min-width: 0; }
@@ -70,13 +70,14 @@
       .ifield.has { color: var(--ink); border-radius: 44px; }
       .caret { display: inline-block; width: 4px; height: 58px; background: var(--wa); vertical-align: -10px; margin-right: 2px; }
       .mic { width: 130px; height: 130px; border-radius: 50%; background: var(--wa); flex: none; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 60px; }
-      #kb { position: absolute; left: 0; right: 0; bottom: 0; height: 900px; background: var(--kb); transform: translateY(100%); padding: 20px 10px 0; z-index: 4; }
+      #kb { position: absolute; left: 0; right: 0; bottom: 0; height: 1000px; background: var(--kb); transform: translateY(100%); padding: 20px 10px 0; z-index: 4; }
       .sugg { height: 110px; display: flex; justify-content: space-around; align-items: center; direction: rtl; font-size: 50px; color: #3C4043; border-bottom: 2px solid #D5D7DB; margin-bottom: 18px; }
-      .krow { display: flex; justify-content: center; gap: 12px; margin-bottom: 22px; direction: rtl; }
-      .key { position: relative; width: 92px; height: 130px; background: #fff; border-radius: 16px; box-shadow: 0 3px 0 #B9BCC1; display: flex; align-items: center; justify-content: center; font-size: 60px; color: #202124; }
-      .key.w { width: 150px; background: #CDD0D6; font-size: 46px; }
+      .krow { display: flex; justify-content: center; gap: 12px; margin-bottom: 26px; direction: ltr; }
+      .key { position: relative; width: 88px; height: 150px; background: #fff; border-radius: 16px; box-shadow: 0 3px 0 #B9BCC1; display: flex; align-items: center; justify-content: center; font-size: 60px; color: #202124; }
+      .key.w { width: 130px; background: #CDD0D6; font-size: 46px; }
       .key.sp { width: 420px; }
       .key.on { background: #BFC4CB; }
+      .key.w.on { background: #8E959C; color: #fff; }
       .pop { position: absolute; width: 130px; height: 170px; background: #fff; border-radius: 22px; box-shadow: 0 6px 16px rgba(0,0,0,.25); display: flex; align-items: center; justify-content: center; font-size: 84px; opacity: 0; z-index: 7; }
 
       /* chats list */
@@ -100,6 +101,26 @@
       .fwdbtn { width: 80px; height: 80px; border-radius: 50%; background: rgba(17,27,33,.12); display: flex; align-items: center; justify-content: center; font-size: 52px; color: #fff; align-self: center; flex: none; }
       .adminbar { position: absolute; left: 0; right: 0; bottom: 0; height: 190px; background: #F7F8FA; z-index: 4; text-align: center; direction: rtl; font-size: 44px; color: var(--sub); padding-top: 50px; }
 
+
+      /* forward sheet */
+      #fsheet { z-index: 4; background: transparent; pointer-events: none; }
+      .fshade { position: absolute; inset: 0; background: rgba(0,0,0,.35); opacity: 0; }
+      .fbody { position: absolute; left: 0; right: 0; bottom: 0; height: 2250px; background: #fff; border-radius: 50px 50px 0 0; direction: rtl; }
+      .fgrab { width: 140px; height: 12px; border-radius: 6px; background: #D1D7DB; margin: 22px auto 10px; }
+      .ftitle { display: flex; justify-content: space-between; align-items: center; padding: 10px 50px 30px; font-size: 56px; }
+      .ftitle b { font-size: 62px; }
+      .fsec { font-size: 44px; color: var(--sub); padding: 10px 50px; }
+      .frow { position: relative; height: 200px; display: flex; align-items: center; gap: 34px; padding: 0 50px; }
+      .frow .gav { width: 140px; height: 140px; }
+      .frow .ct { flex: 1; }
+      .frow .ct b { display: block; font-size: 56px; font-weight: 700; }
+      .frow .ct span { display: block; font-size: 42px; color: var(--sub); }
+      .chk { width: 80px; height: 80px; border-radius: 50%; border: 5px solid #C4CBD0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 50px; font-weight: 800; }
+      .chk i { font-style: normal; opacity: 0; }
+      .fbar { position: absolute; left: 0; right: 0; bottom: 0; height: 220px; background: #F0F2F5; display: flex; align-items: center; justify-content: space-between; padding: 0 50px; }
+      .fchip { font-size: 50px; color: var(--ink); }
+      .fsend { width: 150px; height: 150px; border-radius: 50%; background: var(--wa); color: #fff; font-size: 70px; display: flex; align-items: center; justify-content: center; }
+      .tapfx { background: rgba(0,0,0,.12) !important; }
       /* lock screen */
       #lock { background: linear-gradient(170deg, #0B4D2A 0%, #0E9447 100%); }
       .clock { position: absolute; left: 0; right: 0; top: 260px; text-align: center; color: #fff; font-family: "Rubik", sans-serif; font-weight: 600; font-size: 280px; line-height: 1; }
@@ -113,14 +134,14 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="32" data-width="1080" data-height="2590">
-      <div id="ui" class="clip" data-start="0" data-duration="32" data-track-index="0" data-layout-allow-overlap>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="34.3" data-width="1080" data-height="2590">
+      <div id="ui" class="clip" data-start="0" data-duration="34.3" data-track-index="0" data-layout-allow-overlap>
 
         <!-- נשות הברכה -->
         <div class="pane" id="chatA" data-layout-allow-overlap>
           <div class="wall"></div>
           <div class="sbar"><span class="ltr">9:41</span><span class="ltr">5G ▮▮▮ 86%</span></div>
-          <div class="whead"><div class="back">→</div><div class="gav">🌸</div><div class="gtxt"><b>נשות הברכה</b><span><i id="subA">רחלי, שירה, נעמה ועוד 353</i><i id="subT" class="typing h">רחלי מקלידה…</i></span></div><div class="back" style="font-size:56px">⋮</div></div>
+          <div class="whead"><div class="back" id="backA">→</div><div class="gav">🌸</div><div class="gtxt"><b>נשות הברכה</b><span><i id="subA">רחלי, שירה, נעמה ועוד 353</i><i id="subT" class="typing h">רחלי מקלידה…</i></span></div><div class="back" style="font-size:56px">⋮</div></div>
           <div class="list" id="listA" data-layout-allow-overlap>
             <div class="row in" style="top:0px"><div class="b"><div class="who" style="color:#7B3FE4">אסתי</div><div class="t">מישהי מוכרת עגלת תאומים?</div></div></div>
             <div class="row in" style="top:230px"><div class="b"><div class="who" style="color:#1F7AEC">הדס</div><div class="t">באיזו שעה נפתח הדואר היום?</div></div></div>
@@ -161,10 +182,11 @@
           </div>
           <div id="kb" data-layout-allow-overlap>
             <div class="sugg"><span id="s1">נראה</span><span id="s2">אני</span><span id="s3">בטוחה</span></div>
+            <!-- real Hebrew layout, left → right (as on a physical/Gboard keyboard); ⌫ at the right end of the top row -->
             <div class="krow"><div class="key">'</div><div class="key">ק</div><div class="key">ר</div><div class="key">א</div><div class="key">ט</div><div class="key">ו</div><div class="key">ן</div><div class="key">ם</div><div class="key">פ</div><div class="key w" data-k="⌫">⌫</div></div>
             <div class="krow"><div class="key">ש</div><div class="key">ד</div><div class="key">ג</div><div class="key">כ</div><div class="key">ע</div><div class="key">י</div><div class="key">ח</div><div class="key">ל</div><div class="key">ך</div><div class="key">ף</div></div>
-            <div class="krow"><div class="key">ז</div><div class="key">ס</div><div class="key">ב</div><div class="key">ה</div><div class="key">נ</div><div class="key">מ</div><div class="key">צ</div><div class="key">ת</div><div class="key">ץ</div><div class="key w" data-k="↵">↵</div></div>
-            <div class="krow"><div class="key w">123</div><div class="key w" data-k="🙂">🙂</div><div class="key">,</div><div class="key sp" data-k=" ">עברית</div><div class="key">.</div><div class="key">?</div></div>
+            <div class="krow"><div class="key">ז</div><div class="key">ס</div><div class="key">ב</div><div class="key">ה</div><div class="key">נ</div><div class="key">מ</div><div class="key">צ</div><div class="key">ת</div><div class="key">ץ</div></div>
+            <div class="krow"><div class="key w">123</div><div class="key w" data-k="🙂">🙂</div><div class="key">,</div><div class="key sp" data-k=" ">עברית</div><div class="key">.</div><div class="key w" data-k="↵">↵</div></div>
             <div class="pop" id="pop"></div>
           </div>
         </div>
@@ -208,6 +230,23 @@
           <div class="adminbar">רק מנהלים יכולים לשלוח הודעות</div>
         </div>
 
+
+        <!-- forward sheet: "העברה אל…" -->
+        <div class="pane" id="fsheet" data-layout-allow-overlap>
+          <div class="fshade" id="fshade"></div>
+          <div class="fbody" id="fbody">
+            <div class="fgrab"></div>
+            <div class="ftitle"><span>✕</span><b>העברה אל…</b><span style="width:60px"></span></div>
+            <div class="search" style="position:relative; top:0; left:0; right:0; margin: 0 40px 20px">🔍 חיפוש</div>
+            <div class="fsec">צ'אטים אחרונים</div>
+            <div class="frow" id="frA"><div class="gav">🌸</div><div class="ct"><b>נשות הברכה</b><span>356 חברות</span></div><div class="chk" id="chkA"><i>✓</i></div></div>
+            <div class="frow"><div class="gav" style="background:#D6EEFF">❤️</div><div class="ct"><b>משפחה</b><span>12 חברים</span></div><div class="chk"></div></div>
+            <div class="frow"><div class="gav" style="background:#FFE7C2">🧸</div><div class="ct"><b>הורים – גן מורן</b><span>28 חברים</span></div><div class="chk"></div></div>
+            <div class="frow"><div class="gav" style="background:#E3F7E9">🥖</div><div class="ct"><b>המכולת</b><span>עסק</span></div><div class="chk"></div></div>
+            <div class="fbar" id="fbar"><span class="fchip">🌸 נשות הברכה</span><div class="fsend" id="fsend">➤</div></div>
+          </div>
+        </div>
+
         <!-- lock screen -->
         <div class="pane" id="lock" data-layout-allow-overlap>
           <div class="clock"><span class="ltr">9:41</span></div>
@@ -224,10 +263,11 @@
       const T = window.T = {
         n2: 0.9, n3: 1.9, open: 3.3,             // lock screen on the table, tap → chat
         sel: 9.2, reply: 9.5,                     // long-press the rumor → reply
-        type0: 10.2, send: 17.1,                  // typing (ends ≈16.85), send
-        back: 18.0, tapB: 19.0, chatB: 19.3,      // chats list → updates group
-        facts: 20.1, factStep: 1.45,              // 5 facts
-        fwd: 27.6, toA: 27.9, fwIn: 28.1, typingIn: 28.8, oops: 29.9, end: 32,
+        type0: 10.15, del0: 12.6, delStep: 0.05,  // typing; ⌫ press-and-hold while the right thumb covers ⌫ in clips/type3a (2.6–2.95 s)
+        send: 17.45,
+        back: 18.2, tapB: 19.4, chatB: 19.65,     // back arrow → chats list → updates group (RTL push transitions)
+        facts: 20.5, factStep: 1.45,              // 5 facts
+        fwd: 28.0, sheet: 28.15, pick: 29.0, fsend: 29.6, toA: 29.75, fwIn: 30.05, typingIn: 30.7, oops: 31.8, end: 34.3,
       };
       const tl = gsap.timeline({ paused: true });
       const ease = "power2.inOut";
@@ -237,9 +277,9 @@
       const type = (s, cps) => { for (const ch of Array.from(s)) { const prev = ev.length ? ev[ev.length - 1].text : ""; ev.push({ t, text: prev + ch, key: ch === "\n" ? "↵" : ch }); t += 1 / cps; } };
       const del = (n, cps) => { for (let i = 0; i < n; i++) { const prev = ev[ev.length - 1].text; ev.push({ t, text: Array.from(prev).slice(0, -1).join(""), key: "⌫" }); t += 1 / cps; } };
       const pause = (s) => (t += s);
-      type("רחלי, את טועה", 13); pause(0.6); del(7, 16); pause(0.35);
+      type("רחלי, את טועה", 13 / (T.del0 - T.type0 - 0.25)); t = Math.max(t, T.del0); del(7, 1 / T.delStep); pause(0.35);
       type("נראה לי שאת טועה 🙂", 14); pause(0.25); type("\n", 10);
-      type("אני כמעט בטוחה ששלחו על זה הודעה בקבוצת העדכונים", 19);
+      type("אני כמעט בטוחה ששלחו על זה הודעה בקבוצת העדכונים", 22);
       window.__typeEnd = t;
 
       const keys = {}; document.querySelectorAll("#kb .key").forEach((k) => (keys[k.dataset.k || k.textContent] = k));
@@ -254,7 +294,9 @@
         document.getElementById("mic").textContent = text ? "➤" : "🎤";
         if (lastKey) { lastKey.classList.remove("on"); lastKey = null; }
         pop.style.opacity = 0;
-        if (i >= 0 && !sent && now - ev[i].t < 0.09) {
+        const holdDel = ev.some((e) => e.key === "⌫" && now >= e.t && now < e.t + T.delStep + 0.02);
+        if (holdDel) { keys["⌫"].classList.add("on"); lastKey = keys["⌫"]; }
+        if (i >= 0 && !sent && !holdDel && now - ev[i].t < 0.09) {
           const k = keys[ev[i].key === " " ? " " : ev[i].key];
           if (k) {
             k.classList.add("on"); lastKey = k;
@@ -284,7 +326,7 @@
       tl.to("#m1sel", { opacity: 1, duration: 0.15 }, T.sel);
       tl.to("#m1sel", { opacity: 0, duration: 0.3 }, T.reply + 0.2);
       tl.to("#kb", { y: 0, duration: 0.35, ease: "power2.out" }, T.reply + 0.15);
-      tl.to("#bottom", { y: -900, duration: 0.35, ease: "power2.out" }, T.reply + 0.15);
+      tl.to("#bottom", { y: -1000, duration: 0.35, ease: "power2.out" }, T.reply + 0.15);
       tl.set("#replybar", { display: "block" }, T.reply + 0.1);
       tl.to("#listA", { y: -1520, duration: 0.45, ease }, T.reply + 0.15);
       // grow the field as the text wraps (keep the rumor visible above)
@@ -293,15 +335,23 @@
       tl.set("#replybar", { display: "none" }, T.send);
       tl.fromTo("#rMe", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, T.send);
       tl.to("#listA", { y: -2000, duration: 0.45, ease }, T.send);
-      tl.to("#kb", { y: 900, duration: 0.35, ease: "power2.in" }, T.send + 0.5);
+      tl.to("#kb", { y: 1100, duration: 0.35, ease: "power2.in" }, T.send + 0.5);
       tl.to("#bottom", { y: 0, duration: 0.35, ease: "power2.in" }, T.send + 0.5);
       tl.to("#listA", { y: -1550, duration: 0.45, ease }, T.send + 0.5);
 
-      // ---- back to the chats list → tap "עדכונים הר ברכה" ----
-      tl.fromTo("#chats", { xPercent: -100 }, { xPercent: 0, duration: 0.35, ease, immediateRender: true }, T.back);
+      // ---- back arrow → chats list → "עדכונים הר ברכה" (Hebrew/RTL navigation: the old page slides left, the new one comes from the left) ----
+      tl.set("#backA", { backgroundColor: "rgba(0,0,0,.10)" }, T.back - 0.15);
+      tl.set("#backA", { backgroundColor: "rgba(0,0,0,0)" }, T.back + 0.1);
+      tl.set("#chatA", { zIndex: 6 }, T.back);
+      tl.fromTo("#chats", { xPercent: 30 }, { xPercent: 0, duration: 0.45, ease, immediateRender: false }, T.back);
+      tl.fromTo("#chatA", { xPercent: 0 }, { xPercent: -100, duration: 0.45, ease, immediateRender: false }, T.back);
+      tl.set("#chatA", { zIndex: 1, xPercent: 0 }, T.back + 0.5);
+      tl.set("#chats", { xPercent: -100 }, 0);
+      tl.set("#chats", { xPercent: 30 }, T.back - 0.01);
       tl.to("#rowBhl", { opacity: 1, duration: 0.1 }, T.tapB);
-      tl.fromTo("#chatB", { xPercent: 100 }, { xPercent: 0, duration: 0.35, ease, immediateRender: true }, T.chatB);
-      tl.set("#rowBhl", { opacity: 0 }, T.chatB + 0.4);
+      tl.fromTo("#chatB", { xPercent: -100 }, { xPercent: 0, duration: 0.45, ease, immediateRender: true }, T.chatB);
+      tl.to("#chats", { xPercent: 30, duration: 0.45, ease }, T.chatB);
+      tl.set("#rowBhl", { opacity: 0 }, T.chatB + 0.5);
 
       // ---- the update, line by line (barely-there scroll) ----
       ["#f1", "#f2", "#f3", "#f4", "#f5"].forEach((f, i) => {
@@ -312,10 +362,19 @@
       tl.fromTo("#listB", { y: 0 }, { y: -160, duration: 5 * T.factStep, ease: "sine.inOut", immediateRender: false }, T.facts);
       tl.to("#fwdbtn", { backgroundColor: "rgba(0,168,132,.85)", duration: 0.12 }, T.fwd);
 
-      // ---- forward to נשות הברכה → Rachli types → oops ----
-      tl.set("#chats", { xPercent: -100 }, T.toA);
-      tl.to("#chatB", { xPercent: 100, duration: 0.35, ease }, T.toA);
-      tl.set("#listA", { y: -2280 }, T.toA);
+      // ---- forward: sheet "העברה אל…" → tick נשות הברכה → send → that chat opens ----
+      tl.to("#fshade", { opacity: 1, duration: 0.3 }, T.sheet);
+      tl.set("#fbody", { yPercent: 100 }, 0);
+      tl.to("#fbody", { yPercent: 0, duration: 0.45, ease: "power2.out" }, T.sheet);
+      tl.set("#frA", { backgroundColor: "rgba(0,0,0,.06)" }, T.pick);
+      tl.to("#chkA", { backgroundColor: "#00A884", borderColor: "#00A884", duration: 0.15 }, T.pick);
+      tl.to("#chkA i", { opacity: 1, duration: 0.15 }, T.pick);
+      tl.set("#fbar", { yPercent: 100 }, 0);
+      tl.to("#fbar", { yPercent: 0, duration: 0.3, ease: "power2.out" }, T.pick + 0.1);
+      tl.to("#fsend", { scale: 0.9, duration: 0.08, yoyo: true, repeat: 1 }, T.fsend);
+      tl.set("#chatA", { zIndex: 7 }, T.toA - 0.01);
+      tl.set("#listA", { y: -2280 }, T.toA - 0.01);
+      tl.fromTo("#chatA", { xPercent: -100 }, { xPercent: 0, duration: 0.45, ease, immediateRender: false }, T.toA);
       tl.fromTo("#rFw", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, T.fwIn);
       tl.to("#subA", { opacity: 0, duration: 0.15 }, T.typingIn);
       tl.to("#subT", { opacity: 1, duration: 0.15 }, T.typingIn);

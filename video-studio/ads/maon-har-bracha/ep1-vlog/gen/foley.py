@@ -2,7 +2,7 @@
 # Keyboard clicks land exactly on the UI's keystrokes (same typing script as ui/index.html), phone buzz on the wood,
 # taps, the WhatsApp send pop and an incoming-message ping, over a quiet kitchen room tone.
 import json, re, subprocess, numpy as np
-SR = 48000; DUR = 32.0
+SR = 48000; DUR = 34.3
 rng = np.random.default_rng(3)
 html = open("ui/index.html", encoding="utf-8").read()
 T = {k: float(v) for k, v in re.findall(r"(\w+): ([\d.]+)", html[html.index("const T = window.T"):html.index("};", html.index("const T = window.T"))])}
@@ -40,15 +40,15 @@ def typ(s, cps):
 def dele(n, cps):
     global t
     for _ in range(n): ev.append((t, "⌫")); t += 1 / cps
-typ("רחלי, את טועה", 13); t += 0.6; dele(7, 16); t += 0.35
+typ("רחלי, את טועה", 13 / (T["del0"] - T["type0"] - 0.25)); t = max(t, T["del0"]); dele(7, 1 / T["delStep"]); t += 0.35
 typ("נראה לי שאת טועה 🙂", 14); t += 0.25; typ("\n", 10)
-typ("אני כמעט בטוחה ששלחו על זה הודעה בקבוצת העדכונים", 19)
+typ("אני כמעט בטוחה ששלחו על זה הודעה בקבוצת העדכונים", 22)
 for at, ch in ev:
     add(click(rng.uniform(0.6, 1.4) if ch not in " ⌫\n" else 0.2), at + rng.uniform(-0.004, 0.004), 0.16 if ch != " " else 0.2, pan=rng.uniform(-0.15, 0.15))
 
 # phone on the table
 for at in (0.15, T["n2"], T["n3"]): add(buzz(), at - 0.05, 0.22)
-for at in (T["open"], T["sel"], T["back"], T["tapB"], T["fwd"]): add(click(0.3), at, 0.12)
+for at in (T["open"], T["sel"], T["back"], T["tapB"], T["fwd"], T["pick"], T["fsend"]): add(click(0.3), at, 0.12)
 pop, ping = load("../ep1-forwarded/assets/sfx/pop.mp3"), load("../ep1-forwarded/assets/sfx/notification.mp3")
 add(pop, T["send"], 0.35); add(pop, T["fwIn"], 0.3); add(ping, T["oops"], 0.3)
 
