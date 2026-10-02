@@ -69,9 +69,6 @@
 
       <div id="over" class="clip" data-start="0" data-duration="38.7" data-track-index="1" data-layout-allow-overlap>
         <div id="dim" class="h"></div>
-        <div class="stk h" id="c1"><span>בוקר רגיל ביישוב ☕</span></div>
-        <div class="stk h" id="c2"><span>356 חברות. 0 שקט 😅</span></div>
-        <div class="stk h" id="c0"><span>רגע… זה בכלל נכון? 🤔</span></div>
         <div class="stk h" id="c4"><span>בודקת בקבוצת העדכונים 👀</span></div>
         <div class="stk h" id="c5"><span>מעבירה לנשות הברכה ⤻</span></div>
         <div class="stk fact h" id="k1"><span>₪45 לשעה עם תעודה 💰</span></div>
@@ -79,7 +76,6 @@
         <div class="stk fact h" id="k3"><span>הבונוס נכנס לבסיס 🧾</span></div>
         <div class="stk fact h" id="k4"><span>קרן השתלמות משנה 5 🎓</span></div>
         <div class="stk fact h" id="k5"><span>מהגבוהים בשומרון 🏆</span></div>
-        <div class="stk h" id="c3"><span>עכשיו זה מה שמועבר 😍</span></div>
         <div class="l1 h" id="l1">השמועה לא התעדכנה.</div>
         <div class="l2 h" id="l2"><b>השכר</b> כן.</div>
       </div>
@@ -123,9 +119,6 @@
         tl.to(id, { opacity: 0, duration: 0.3 }, b - 0.3);
       };
       // stickers (same seconds as ui/index.html → T); they sit low, over the empty chat area, so the chat header stays readable
-      stk("#c1", 0.3, 3.2);
-      stk("#c2", 3.7, 7.4);
-      stk("#c0", 7.8, 9.9);
       stk("#c4", 17.9, 20.0);
       const F = 20.5, S = 1.45;
       ["#k1", "#k2", "#k3", "#k4", "#k5"].forEach((id, i) => {
@@ -133,7 +126,6 @@
         tl.to(id, { opacity: 0, duration: 0.2 }, i < 4 ? F + (i + 1) * S - 0.05 : 27.9);
       });
       stk("#c5", 28.1, 30.0);
-      stk("#c3", 30.3, 33.5);
 
       // VO1 over the blurred, dimmed footage
       tl.fromTo("#footage", { filter: "blur(0px)" }, { filter: "blur(14px)", duration: 0.8, ease: "power2.inOut" }, 33.6);

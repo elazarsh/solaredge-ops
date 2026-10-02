@@ -85,6 +85,12 @@ for seg in EDL:
         us = cv2.resize(u, (int(UW * s), int(UH * s)), interpolation=cv2.INTER_AREA)
         Hm = cv2.getPerspectiveTransform(np.float32([[0, 0], [us.shape[1], 0], [us.shape[1], us.shape[0]], [0, us.shape[0]]]), q)
         uw = cv2.warpPerspective(us, Hm, (W, H), flags=cv2.INTER_LINEAR).astype(np.float32)
+        # the top band of the screen (where some phones have a notch) is always screen: at high zoom the keyed notch
+        # edge looks jagged, so the UI simply covers it (thumbs never reach that band)
+        band = np.zeros(us.shape[:2], np.float32); bh, bw = band.shape
+        band[: int(0.075 * bh), int(0.12 * bw): int(0.88 * bw)] = 1
+        band = cv2.warpPerspective(band, Hm, (W, H), flags=cv2.INTER_LINEAR)
+        A = np.maximum(A, band[..., None]); fg = fg * (1 - band[..., None])
         uw = cv2.GaussianBlur(uw, (0, 0), 0.45)                # a touch of camera softness (text stays sharp at any zoom)
         uw = uw * 0.94 + 8                                     # an emissive screen filmed in daylight: a bit less contrast
         # diagonal sheen across the glass
