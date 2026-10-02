@@ -1,0 +1,20 @@
+{
+  "provider": "gemini",
+  "tts_model": "gemini-3.8-flash-tts",
+  "voice": "Sulafat",
+  "lang": "he",
+  "style": "A real Israeli woman in her thirties recording a casual personal vlog on her phone at her kitchen table, talking to her followers. Spontaneous, warm, a little self-ironic, smiling, natural small breaths and tiny hesitations, conversational rhythm, not polished, absolutely not an announcer or an ad voice.",
+  "lines": [
+    { "id": "01", "text": "הַיי! אָז... עוֹד פֶּרֶק שֶׁל ״מָה יֵשׁ לִי בַּתִּיק״. וְהַפַּעַם — לִפְנֵי וְאַחֲרֵי.", "style": "Upbeat vlog opener, friendly, like pressing record and greeting followers." },
+    { "id": "02", "text": "קֹדֶם כֹּל, הַמַּחְשֵׁב. כֵּן, הוּא נוֹסֵעַ אִתִּי הַבַּיְתָה כָּל עֶרֶב." },
+    { "id": "03", "text": "שְׁנֵי מִטְעָנִים. כִּי אֶחָד תָּמִיד נִגְמָר בְּאֶמְצַע שִׂיחָה." },
+    { "id": "04", "text": "וְהַפֶּתֶק שֶׁאֲנִי הֲכִי לֹא אוֹהֶבֶת: ״לַחֲזֹר לַלָּקוֹחַ, אַחֲרֵי שֶׁהַיְּלָדִים נִרְדָּמִים״.", "style": "Quieter, honest, a small tired sigh before reading the note. Not dramatic." },
+    { "id": "05", "text": "זֶה הָיָה הַתִּיק שֶׁלִּי. וְעַכְשָׁו... חֲצִי שָׁנָה אַחֲרֵי.", "style": "Turning point, the smile comes back into the voice." },
+    { "id": "06", "text": "הֶחְלַפְתִּי עֲבוֹדָה. אֲנִי מְטַפֶּלֶת בִּמְעוֹנוֹת הַר בְּרָכָה.", "style": "Proud and happy, simple, like sharing good news with friends." },
+    { "id": "07", "text": "צִיּוּר שֶׁקִּבַּלְתִּי הַבֹּקֶר. הֻקְדַּשׁ לִי אִישִׁית.", "style": "Soft and touched, a little laugh." },
+    { "id": "08", "text": "גֶּרֶב... לֹא שֶׁלִּי. אַחֲזִיר מָחָר.", "style": "Amused, deadpan, small laugh at the end." },
+    { "id": "09", "text": "וְרֶגַע, תִּרְאוּ מָה עוֹד יֵשׁ פֹּה. פַּעַם לָקַחְתִּי עֲבוֹדָה הַבַּיְתָה. הַיּוֹם? רַק נְצָנְצִים.", "style": "Playful build-up while turning the bag over, then laughing warmly on the last words." },
+    { "id": "10", "text": "אִם גַּם לָךְ מַתְאִים תִּיק כָּזֶה, מְעוֹנוֹת הַר בְּרָכָה מְחַפְּשִׂים מְטַפְּלוֹת. דַּבְּרִי עִם אִירִית, הַמִּסְפָּר כָּאן לְמַטָּה.", "style": "Warm, direct to a friend, inviting, clear but still casual." }
+  ],
+  "bgm": { "mode": "none" }
+}

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="he">
+  <!-- Never put dir="rtl" on <html>: it renders a blank video. Scope direction: rtl to text elements. -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/Heebo-VF.ttf"); font-weight: 100 900; }
+      @font-face { font-family: "Rubik"; src: url("assets/fonts/Rubik-VF.ttf"); font-weight: 300 900; }
+      @font-face { font-family: "GveretLevin"; src: url("assets/fonts/gveret-levin-hebrew-400-normal.woff2"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      /* camera: footage + things written on objects move together */
+      #cam { position: absolute; inset: 0; }
+      #footage { position: absolute; inset: 0; width: 1080px; height: 1920px; object-fit: cover; }
+      .ink { position: absolute; direction: rtl; unicode-bidi: isolate; text-align: center; opacity: 0; }
+      #note-ink { left: 446px; top: 1190px; width: 204px; height: 196px; display: flex; align-items: center; justify-content: center;
+                  font-family: "GveretLevin", sans-serif; font-size: 37px; line-height: 1.12; color: #1c2766; white-space: pre-line;
+                  mix-blend-mode: multiply; transform: rotate(-1deg); }
+      #badge-ink { left: 462px; top: 1240px; width: 218px; height: 135px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+                   mix-blend-mode: multiply; }
+      #badge-ink .b1 { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 31px; color: #1d2a5c; line-height: 1; }
+      #badge-ink .b2 { font-family: "Heebo", sans-serif; font-weight: 600; font-size: 22px; color: #6b3b5a; }
+      #badge-ink .b3 { width: 120px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, #f7c948, #f48fb1, #7fd8c9); }
+      #endshade { position: absolute; inset: 0; background: rgba(40, 22, 8, 0); }
+
+      /* vlog subtitles */
+      .sub { position: absolute; left: 50px; right: 50px; top: 300px; text-align: center; direction: rtl; unicode-bidi: isolate; opacity: 0;
+             font-family: "Heebo", sans-serif; font-weight: 800; font-size: 60px; line-height: 1.22; color: #fff;
+             -webkit-text-stroke: 10px #111; paint-order: stroke fill; text-shadow: 0 4px 14px rgba(0,0,0,0.45); }
+      #tag { position: absolute; left: 0; right: 0; top: 440px; display: flex; justify-content: center; opacity: 0; }
+      #tag span { direction: rtl; unicode-bidi: isolate; background: #fff; color: #111; font-family: "Heebo", sans-serif; font-weight: 700; font-size: 40px;
+                  padding: 8px 26px 12px; border-radius: 18px; box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+      #punch { position: absolute; left: 40px; right: 40px; top: 300px; text-align: center; direction: rtl; unicode-bidi: isolate; opacity: 0; }
+      #punch .p1 { font-family: "Heebo", sans-serif; font-weight: 800; font-size: 64px; color: #fff; -webkit-text-stroke: 10px #111; paint-order: stroke fill; }
+      #punch .p2 { display: inline-block; margin-top: 18px; background: #ffd84d; color: #141414; font-family: "Rubik", sans-serif; font-weight: 800; font-size: 104px;
+                   padding: 6px 40px 18px; border-radius: 26px; box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+      #later { position: absolute; left: 0; right: 0; top: 820px; text-align: center; direction: rtl; unicode-bidi: isolate; opacity: 0; }
+      #later .t1 { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 110px; color: #fff; text-shadow: 0 6px 30px rgba(0,0,0,0.5); }
+      #later .t2 { font-family: "Heebo", sans-serif; font-weight: 700; font-size: 60px; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+      #flash { position: absolute; inset: 0; background: #fff6e8; opacity: 0; }
+      .ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+
+      /* end card */
+      #end { position: absolute; left: 60px; right: 124px; top: 272px; opacity: 0; }
+      #end-card { position: relative; background: #fffaf2; border-radius: 44px; box-shadow: 0 30px 80px rgba(40, 20, 5, 0.45);
+                  display: flex; flex-direction: column; align-items: center; padding: 26px 26px 20px; gap: 8px; direction: rtl; unicode-bidi: isolate; text-align: center; }
+      #end .name { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 70px; line-height: 1; color: #1d2a5c; }
+      #end .role { font-family: "Heebo", sans-serif; font-weight: 800; font-size: 50px; color: #1d2a5c; }
+      #end .perks { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 34px; color: #4a4a58; }
+      #offer { width: 100%; margin-top: 4px; padding: 14px 14px 12px; border-radius: 28px; background: #fde8ee;
+               display: flex; flex-direction: column; align-items: center; gap: 8px; }
+      #offer .oh { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 54px; color: #d6336c; line-height: 1.05; }
+      #offer .os { font-family: "Heebo", sans-serif; font-weight: 700; font-size: 32px; color: #5a2a3e; }
+      #prizes { display: flex; gap: 20px; width: 100%; justify-content: center; }
+      .prize { width: 410px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+      .prize img { width: 410px; height: 200px; object-fit: cover; border-radius: 22px; border: 6px solid #fff; box-shadow: 0 10px 24px rgba(90, 40, 60, 0.25); }
+      .prize div { font-family: "Heebo", sans-serif; font-weight: 700; font-size: 31px; color: #3a2230; line-height: 1.15; }
+      #offer .terms { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 24px; color: #6a5560; line-height: 1.3; }
+      #phone { margin-top: 6px; background: #d9482c; color: #fff; border-radius: 999px; padding: 10px 44px 16px; font-family: "Heebo", sans-serif; font-weight: 800; font-size: 54px;
+               box-shadow: 0 12px 30px rgba(217, 72, 44, 0.4); }
+      #end .legal { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 25px; color: #6d6d78; }
+      #end1 { position: absolute; left: 60px; right: 124px; top: 560px; opacity: 0; }
+      #end1 .c { background: #fffaf2; border-radius: 44px; box-shadow: 0 30px 80px rgba(40, 20, 5, 0.45); padding: 46px 30px 40px;
+                 display: flex; flex-direction: column; align-items: center; gap: 16px; direction: rtl; unicode-bidi: isolate; text-align: center; }
+      #end1 .name { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 84px; line-height: 1; color: #1d2a5c; }
+      #end1 .role { font-family: "Heebo", sans-serif; font-weight: 800; font-size: 60px; color: #1d2a5c; }
+      #end1 .perks { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 40px; color: #4a4a58; }
+      #end1 .bar { width: 220px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #f7c948, #f48fb1, #7fd8c9); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="50.3" data-width="1080" data-height="1920">
+      <div id="cam">
+        <video id="footage" class="clip" src="assets/footage.mp4" data-start="0" data-duration="50.3" data-track-index="0" muted playsinline></video>
+        <div class="ink" id="note-ink" data-layout-allow-overlap data-layout-allow-occlusion>לחזור ללקוח
+אחרי שהילדים
+נרדמים</div>
+        <div class="ink" id="badge-ink" data-layout-allow-overlap data-layout-allow-occlusion>
+          <div class="b1">מעונות הר ברכה</div><div class="b2">צוות המעון</div><div class="b3"></div>
+        </div>
+        <div id="endshade"></div>
+      </div>
+      <div id="flash"></div>
+
+      <div id="tag"><span>פרק 12 · מה יש לי בתיק</span></div>
+      <div class="sub" id="s1">היי! עוד פרק של ״מה יש לי בתיק״</div>
+      <div class="sub" id="s2">הפעם… לפני ואחרי.</div>
+      <div class="sub" id="s3">המחשב, שחזר איתי הביתה כל ערב.</div>
+      <div class="sub" id="s4">שני מטענים, כי אחד תמיד נגמר באמצע שיחה.</div>
+      <div class="sub" id="s5">קפה מהבוקר… עוד לא הספקתי לשתות.</div>
+      <div class="sub" id="s6">והפתק הזה…</div>
+      <div class="sub" id="s7">״לחזור ללקוח אחרי שהילדים נרדמים״</div>
+      <div class="sub" id="s8">ועכשיו?</div>
+      <div class="sub" id="s9">אני מטפלת במעונות הר ברכה</div>
+      <div class="sub" id="s10">ציור שהוקדש לי אישית… וגרב לא שלי.</div>
+      <div class="sub" id="s11">מדבקת כוכב.</div>
+      <div class="sub" id="s12">קיבלתי היום, על התנהגות יפה.</div>
+      <div class="sub" id="s13">פעם לקחתי עבודה הביתה.</div>
+      <div id="punch"><div class="p1">היום?</div><div class="p2">רק נצנצים ✨</div></div>
+      <div id="later"><div class="t1">חצי שנה אחרי</div><div class="t2"><span class="ltr">16:05</span></div></div>
+
+      <div id="end1"><div class="c"><div class="name">מעונות הר ברכה</div><div class="role">מחפשים מטפלות</div><div class="bar"></div><div class="perks">משרות מגוונות · ימים ושעות גמישים</div></div></div>
+      <div id="end">
+        <div id="end-card">
+          <div class="name">מעונות הר ברכה</div>
+          <div class="role">מחפשים מטפלות</div>
+          <div class="perks">משרות מגוונות · ימים ושעות גמישים</div>
+          <div id="offer">
+            <div class="oh">המלצת? הרווחת!</div>
+            <div class="os">ממליצים על מטפלת שמצטרפת וזוכים בפרס:</div>
+            <div id="prizes">
+              <div class="prize"><img src="assets/img/prize-coffee.jpg" alt="" /><div>מכונת קפה מפנקת</div></div>
+              <div class="prize"><img src="assets/img/prize-spa.jpg" alt="" /><div>לילה זוגי בצימר ״ספא בראשית״</div></div>
+            </div>
+            <div class="terms">*הפרס לאחר 3 חודשי עבודה, לפחות <span class="ltr">80%</span> משרה. במשרות קטנות: פרס או סכום יחסי.</div>
+          </div>
+          <div id="phone">אירית · <span class="ltr">054-7889019</span></div>
+          <div class="legal">המודעה מנוסחת בלשון נקבה אך מיועדת לכל המינים</div>
+        </div>
+      </div>
+
+      <audio id="vo-intro" src="assets/vo/intro.wav" data-start="0.2" data-duration="5.77" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-laptop" src="assets/vo/laptop.wav" data-start="6.3" data-duration="2.69" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-chargers" src="assets/vo/chargers.wav" data-start="9.3" data-duration="2.61" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-coffee" src="assets/vo/coffee.wav" data-start="11.95" data-duration="2.92" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-note" src="assets/vo/note.wav" data-start="15.0" data-duration="3.39" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-now" src="assets/vo/now.wav" data-start="19.8" data-duration="2.93" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-drawing" src="assets/vo/drawing.wav" data-start="23.8" data-duration="4.25" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-star" src="assets/vo/star.wav" data-start="28.1" data-duration="4.18" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-punch" src="assets/vo/punch.wav" data-start="32.4" data-duration="4.36" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-job" src="assets/vo/job.wav" data-start="37.1" data-duration="2.86" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo-job2" src="assets/vo/job2.wav" data-start="40.0" data-duration="9.52" data-track-index="20" data-volume="1"></audio>
+
+      <!-- room sound from the shots -->
+      <audio id="foley" src="assets/foley.wav" data-start="0" data-duration="50.3" data-track-index="21" data-volume="0.6"></audio>
+
+      <!-- music: soft acoustic evening → light afternoon -->
+      <audio id="music-a" src="assets/music/A2.mp3" data-start="0" data-duration="19.9" data-track-index="22" data-volume="0.03"
+        data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":1},{"t":19.1,"v":1},{"t":19.9,"v":0}]}]}'></audio>
+      <audio id="music-b" src="assets/music/B2.mp3" data-start="19.4" data-media-start="25.4" data-duration="30.9" data-track-index="23" data-volume="0.03"
+        data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":0.6,"v":1},{"t":16.3,"v":1},{"t":16.6,"v":2},{"t":17.6,"v":2},{"t":17.9,"v":1},{"t":30.9,"v":1}]}]}'></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const out = "power2.out", inout = "power2.inOut";
+      function show(sel, a, b, rise = 14) {
+        tl.fromTo(sel, { opacity: 0, y: rise }, { opacity: 1, y: 0, duration: 0.3, ease: out }, a);
+        tl.to(sel, { opacity: 0, duration: 0.2, ease: "power1.in" }, b - 0.2);
+      }
+      // vlog subtitles (timed to the voice)
+      show("#tag", 0.0, 2.9, 10);
+      show("#s1", 0.2, 2.9); show("#s2", 2.9, 6.1);
+      show("#s3", 6.3, 9.1);
+      show("#s4", 9.3, 11.9);
+      show("#s5", 11.95, 14.85);
+      show("#s6", 15.0, 16.1); show("#s7", 16.2, 19.3);
+      show("#s8", 20.0, 21.0); show("#s9", 21.1, 23.6);
+      show("#s10", 23.8, 28.0);
+      show("#s11", 28.1, 29.6); show("#s12", 29.6, 32.3);
+      show("#s13", 32.4, 34.5);
+
+      // the note: ink once it lies still; camera leans in to read it
+      tl.to("#note-ink", { opacity: 0.92, duration: 0.35, ease: out }, 17.2);
+      tl.fromTo("#cam", { scale: 1 }, { scale: 1.2, duration: 2.2, ease: inout, transformOrigin: "548px 1288px" }, 17.2);
+      tl.set("#note-ink", { opacity: 0 }, 19.4);
+
+      // half a year later
+      tl.set("#cam", { scale: 1 }, 19.4);
+      tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.85, duration: 0.15, ease: "power1.in" }, 19.25);
+      tl.to("#flash", { opacity: 0, duration: 0.45, ease: out }, 19.4);
+      tl.fromTo("#later", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 19.4);
+      tl.to("#later", { opacity: 0, duration: 0.25 }, 20.3);
+
+      // the badge: name appears when it lies still; camera leans in
+      tl.to("#badge-ink", { opacity: 0.95, duration: 0.3, ease: out }, 22.3);
+      tl.to("#cam", { scale: 1.14, duration: 1.25, ease: inout, transformOrigin: "571px 1307px" }, 22.3);
+      tl.set("#badge-ink", { opacity: 0 }, 23.586);
+      tl.set("#cam", { scale: 1 }, 23.586);
+
+      // punchline
+      tl.set("#punch", { opacity: 1 }, 34.5);
+      tl.fromTo("#punch .p1", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 34.6);
+      tl.fromTo("#punch .p2", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.4, ease: out }, 35.45);
+      tl.to("#punch", { opacity: 0, duration: 0.3 }, 37.6);
+
+      // end card: the job first, then the referral bonus unfolds — slowly
+      tl.to("#endshade", { backgroundColor: "rgba(40, 22, 8, 0.5)", duration: 0.8, ease: inout }, 37.4);
+      tl.fromTo("#footage", { filter: "blur(0px)" }, { filter: "blur(10px)", duration: 0.8, ease: inout }, 37.4);
+      tl.fromTo("#end1", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.8, ease: out }, 37.6);
+      tl.to("#end1", { opacity: 0, y: -30, duration: 0.6, ease: inout }, 42.0);
+      tl.fromTo("#end", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: out }, 42.2);
+      tl.fromTo("#prizes", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: out }, 42.7);
+      tl.fromTo("#phone", { scale: 1 }, { scale: 1.06, duration: 0.4, ease: "sine.inOut", yoyo: true, repeat: 1 }, 48.4);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
