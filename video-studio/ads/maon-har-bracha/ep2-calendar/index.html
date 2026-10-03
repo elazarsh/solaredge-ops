@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="he">
   <!--
-    פרק 2 "היומן" (65.8 s). 0–57.6 s: Esti's phone (assets/footage.mp4 = Veo hand shots + the calendar UI keyed onto
-    the green screen by gen/composite.py, per edl.json; sound in assets/foley.wav). On top: one story sticker (opening),
-    the science card (Harvard, 37.4 s) and the signature card (53.6 s) over the blurred, dimmed footage, then the fixed
-    referral page → lockup with Irit (57.6 s, from ep1). Calm motion for women 25–60. VO segments ≥ 1.5 s apart.
-    Never put dir="rtl" on <html>.
+    פרק 2 "היומן" v4 (59.8 s). 0–51.8 s: Michal's planner on her phone (assets/footage.mp4 = Veo hand shots + the calendar
+    UI keyed onto the green screen by gen/composite.py, per edl.json; sound in assets/foley.wav). On top: one story sticker
+    (opening), the science card (Harvard, 34.0 s) and the closing card "בייביסיטר… / מטפלת…" (45.8 s) over the blurred,
+    dimmed footage, then the fixed referral page → lockup with Irit (51.8 s, from ep1). No calendar years anywhere.
+    Calm motion for women 25–60. VO segments ≥ 1.5 s apart. Never put dir="rtl" on <html>.
   -->
   <head>
     <meta charset="UTF-8" />
@@ -36,6 +36,10 @@
       .sci.b b { color: #FFD66B; }
       .sci.c { top: 1060px; font-size: 64px; font-weight: 700; }
       .sci.src { top: 1600px; font-size: 32px; font-weight: 500; opacity: .85; }
+      /* closing card */
+      .sg1 { position: absolute; left: 60px; right: 60px; top: 560px; text-align: center; direction: rtl; font-size: 70px; font-weight: 700; color: rgba(255,255,255,.88); line-height: 1.25; text-shadow: 0 3px 20px rgba(0,0,0,.35); }
+      .sg2 { position: absolute; left: 40px; right: 40px; top: 830px; text-align: center; direction: rtl; font-family: "Rubik", sans-serif; font-size: 120px; font-weight: 900; color: #fff; line-height: 1.12; text-shadow: 0 4px 30px rgba(0,0,0,.35); }
+      .sg2 b { color: #9BE37A; }
       /* VO1 over the dimmed footage */
       .l1 { position: absolute; left: 60px; right: 60px; top: 640px; text-align: center; direction: rtl; font-size: 76px; font-weight: 800; color: #fff; text-shadow: 0 3px 20px rgba(0,0,0,.35); }
       .l2 { position: absolute; left: 60px; right: 60px; top: 770px; text-align: center; direction: rtl; font-family: "Rubik", sans-serif; font-size: 180px; font-weight: 900; color: #fff; line-height: 1.05; text-shadow: 0 4px 30px rgba(0,0,0,.35); }
@@ -68,22 +72,22 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="65.8" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="59.8" data-width="1080" data-height="1920">
 
-      <video id="footage" class="clip" src="assets/footage.mp4" data-start="0" data-duration="57.6" data-track-index="0" muted playsinline></video>
+      <video id="footage" class="clip" src="assets/footage.mp4" data-start="0" data-duration="51.8" data-track-index="0" muted playsinline></video>
 
-      <div id="over" class="clip" data-start="0" data-duration="57.6" data-track-index="1" data-layout-allow-overlap>
+      <div id="over" class="clip" data-start="0" data-duration="51.8" data-track-index="1" data-layout-allow-overlap>
         <div id="dim" class="h"></div>
-        <div class="stk h" id="c1"><span>יום רגיל של מנכ״לית? 👀</span></div>
+        <div class="stk h" id="c1"><span>מי קובעת פגישות לעוד 13 שנה? 👀</span></div>
         <div class="sci a h" id="s1">בשנים הראשונות לחיים,</div>
         <div class="sci b h" id="s2">המוח יוצר <b>יותר ממיליון</b> קשרים חדשים</div>
         <div class="sci c h" id="s3">בכל שנייה.</div>
         <div class="sci src h" id="s4">מקור: המרכז להתפתחות הילד, אוניברסיטת הרווארד</div>
-        <div class="l1 h" id="l1">הכינוי לא התעדכן.</div>
-        <div class="l2 h" id="l2"><b>התפקיד</b> כן. <span style="font-size:110px">↻</span></div>
+        <div class="sg1 h" id="l1">בייביסיטר שומרת על הילד<br>לכמה שעות.</div>
+        <div class="sg2 h" id="l2">מטפלת בונה אותו<br><b>לכל החיים.</b></div>
       </div>
 
-      <div id="finc" class="clip" data-start="57.6" data-duration="8.2" data-track-index="2" data-layout-allow-overlap>
+      <div id="finc" class="clip" data-start="51.8" data-duration="8.0" data-track-index="2" data-layout-allow-overlap>
         <div class="glit" id="glit"></div>
         <div id="deco">
           <div class="dot" style="left:-80px; top:1420px; width:360px; height:360px; background:rgba(239,127,138,.14)"></div>
@@ -109,10 +113,10 @@
       </div>
 
       
-      <audio id="foley" src="assets/foley.wav" data-start="0" data-duration="57.6" data-track-index="10" data-volume="1"></audio>
-      <audio id="bgm" src="assets/bgm/bgm.wav" data-start="2.4" data-duration="63.4" data-track-index="11" data-volume="0.45"></audio>
-      <audio id="vo1" src="assets/voice/vo-end-1.wav" data-start="54.0" data-duration="3.36" data-track-index="12" data-volume="1"></audio>
-      <audio id="vo2" src="assets/voice/vo-end-2.wav" data-start="59.0" data-duration="4.76" data-track-index="13" data-volume="1"></audio>
+      <audio id="foley" src="assets/foley.wav" data-start="0" data-duration="51.8" data-track-index="10" data-volume="1"></audio>
+      <audio id="bgm" src="assets/bgm/bgm.wav" data-start="0" data-duration="59.8" data-track-index="11" data-volume="0.5"></audio>
+      <audio id="vo1" src="assets/voice/vo-end-1.wav" data-start="46.0" data-duration="5.89" data-track-index="12" data-volume="1"></audio>
+      <audio id="vo2" src="assets/voice/vo-end-2.wav" data-start="52.9" data-duration="4.76" data-track-index="13" data-volume="1"></audio>
     </div>
 
     <script>
@@ -124,7 +128,7 @@
       fadeUp("#c1", 0.6); tl.to("#c1", { opacity: 0, duration: 0.3 }, 3.3);
 
       // the science card over the whole day (37.4–42.2)
-      const D1 = 37.4, D2 = 42.2;
+      const D1 = 33.6, D2 = 38.2;
       tl.fromTo("#footage", { filter: "blur(0px)" }, { filter: "blur(14px)", duration: 0.8, ease: "power2.inOut" }, D1);
       tl.fromTo("#dim", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.inOut" }, D1);
       fadeUp("#s1", D1 + 0.5); fadeUp("#s2", D1 + 1.1); fadeUp("#s3", D1 + 1.9);
@@ -133,14 +137,14 @@
       tl.to("#footage", { filter: "blur(0px)", duration: 0.6, ease: "power2.inOut" }, D2 - 0.3);
       tl.to("#dim", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, D2 - 0.3);
 
-      // signature, under VO1 (54.0 s; "התפקיד כן" starts ~1.5 s in)
-      const G = 53.4;
+      // closing card, under VO1 (46.0 s; the second sentence starts ~2.9 s in)
+      const G = 45.4;
       tl.to("#footage", { filter: "blur(14px)", duration: 0.8, ease: "power2.inOut" }, G);
       tl.to("#dim", { opacity: 1, duration: 0.8, ease: "power2.inOut" }, G);
-      fadeUp("#l1", 54.0); fadeUp("#l2", 55.8);
+      fadeUp("#l1", 46.0); fadeUp("#l2", 48.8);
 
       // referral page (4.4 s) → lockup with Irit, kept to the last frame
-      const R = 57.6;
+      const R = 51.8;
       tl.fromTo("#finc", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, R);
       tl.fromTo("#balloon", { y: 120 }, { y: 0, duration: 1.4, ease: "power2.out" }, R);
       tl.to("#balloon", { y: -14, duration: 1.2, yoyo: true, repeat: 1, ease: "sine.inOut" }, R + 1.4);

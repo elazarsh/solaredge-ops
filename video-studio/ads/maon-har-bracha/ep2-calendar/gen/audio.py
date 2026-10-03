@@ -5,7 +5,12 @@ def call(model, body):
     r = urllib.request.Request(B + model + ":generateContent", json.dumps(body).encode(), {"Content-Type": "application/json", "x-goog-api-key": KEY})
     return json.load(urllib.request.urlopen(r, timeout=600))
 if sys.argv[1] == "music":
-    P = ("Instrumental, no vocals, 84 BPM, key of G major, 64 seconds long. Warm, tender, hopeful early-morning mood for a heartfelt "
+    P = ("Instrumental, no vocals, 88 BPM, key of D major, 62 seconds long. Pleasant, warm, gently uplifting background music for a "
+         "heartfelt commercial about the women who raise and educate toddlers: bright fingerpicked acoustic guitar and soft warm piano "
+         "carrying a simple, singable, smiling melody, light shaker and soft kick, a little glockenspiel sparkle. Clearly audible and "
+         "flowing from the very first second with a steady consistent groove; a gentle fuller lift with soft strings from 34 seconds, "
+         "then ending cleanly on a sweet D major chord at about 60 seconds. Not sad, no drones, no sudden hits, no tempo changes.")
+    P_OLD = ("Instrumental, no vocals, 84 BPM, key of G major, 64 seconds long. Warm, tender, hopeful early-morning mood for a heartfelt "
          "commercial about the people who raise our children: soft felt piano melody with fingerpicked nylon acoustic guitar, light "
          "brushed percussion and a gentle music-box sparkle. Quiet and intimate for the first 34 seconds with a steady calm groove, then "
          "a soft emotional lift with warm strings from 34 to 52 seconds, then it settles and ends cleanly on a soft G major chord at about 62 seconds. "
@@ -13,10 +18,10 @@ if sys.argv[1] == "music":
     for i in (1, 2):
         d = call("lyria-3-pro-preview", {"contents": [{"parts": [{"text": P}]}]})
         for p in d["candidates"][0]["content"]["parts"]:
-            if "inlineData" in p: open(f"assets/bgm/take{i}.mp3", "wb").write(base64.b64decode(p["inlineData"]["data"])); print("take", i)
+            if "inlineData" in p: open(f"assets/bgm/v4-take{i}.mp3", "wb").write(base64.b64decode(p["inlineData"]["data"])); print("take", i)
 else:
-    lines = {"vo-end-1": "הַכִּנּוּי לֹא הִתְעַדְכֵּן. הַתַּפְקִיד כֵּן."}
-    style = "Say warmly and confidently, smiling: "
+    lines = {"vo-end-1": "בֵּייבִּיסִיטֶר שׁוֹמֶרֶת עַל הַיֶּלֶד לְכַמָּה שָׁעוֹת. מְטַפֶּלֶת בּוֹנָה אוֹתוֹ לְכָל הַחַיִּים."}
+    style = ""
     for k, txt in lines.items():
         for take in (1, 2):
             d = call("gemini-3.8-flash-tts", {"contents": [{"parts": [{"text": style + txt}]}],
