@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="he">
+  <!--
+    פרק 2 "היומן" (65.8 s). 0–57.6 s: Esti's phone (assets/footage.mp4 = Veo hand shots + the calendar UI keyed onto
+    the green screen by gen/composite.py, per edl.json; sound in assets/foley.wav). On top: one story sticker (opening),
+    the science card (Harvard, 37.4 s) and the signature card (53.6 s) over the blurred, dimmed footage, then the fixed
+    referral page → lockup with Irit (57.6 s, from ep1). Calm motion for women 25–60. VO segments ≥ 1.5 s apart.
+    Never put dir="rtl" on <html>.
+  -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/Heebo-VF.ttf"); font-weight: 100 900; }
+      @font-face { font-family: "Rubik"; src: url("assets/fonts/Rubik-VF.ttf"); font-weight: 300 900; }
+      @font-face { font-family: "Emoji"; src: url("assets/fonts/NotoColorEmoji.ttf"); }
+      :root { --green: #0E9447; --forest: #0B4D2A; --pink: #EF7F8A; --cocoa: #5B4032; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #1a1a1a; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Heebo", "Emoji", sans-serif; }
+      .ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+      .h { opacity: 0; }
+      #footage { position: absolute; inset: 0; width: 1080px; height: 1920px; object-fit: cover; }
+      #dim { position: absolute; inset: 0; background: rgba(8, 20, 14, .55); }
+
+      /* story stickers */
+      .stk { position: absolute; left: 0; right: 0; top: 1560px; text-align: center; direction: rtl; }
+      .stk span { display: inline-block; background: #fff; color: #111; font-family: "Rubik", "Emoji", sans-serif; font-weight: 800; font-size: 56px; padding: 14px 34px 16px; border-radius: 22px; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+      .stk.fact span { font-size: 66px; background: #FFF6C2; }
+
+      /* science + signature cards over the dimmed footage */
+      .sci { position: absolute; left: 70px; right: 70px; text-align: center; direction: rtl; color: #fff; text-shadow: 0 3px 20px rgba(0,0,0,.4); }
+      .sci.a { top: 560px; font-size: 64px; font-weight: 700; }
+      .sci.b { top: 660px; font-family: "Rubik", "Emoji", sans-serif; font-size: 104px; font-weight: 900; line-height: 1.1; }
+      .sci.b b { color: #FFD66B; }
+      .sci.c { top: 1060px; font-size: 64px; font-weight: 700; }
+      .sci.src { top: 1600px; font-size: 32px; font-weight: 500; opacity: .85; }
+      /* VO1 over the dimmed footage */
+      .l1 { position: absolute; left: 60px; right: 60px; top: 640px; text-align: center; direction: rtl; font-size: 76px; font-weight: 800; color: #fff; text-shadow: 0 3px 20px rgba(0,0,0,.35); }
+      .l2 { position: absolute; left: 60px; right: 60px; top: 770px; text-align: center; direction: rtl; font-family: "Rubik", sans-serif; font-size: 180px; font-weight: 900; color: #fff; line-height: 1.05; text-shadow: 0 4px 30px rgba(0,0,0,.35); }
+      .l2 b { color: #9BE37A; }
+
+      /* referral page + lockup (from v8) */
+      #finc { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, #F7F6F6 0%, #F0EEEE 70%, #E9E6E6 100%); }
+      .dot { position: absolute; border-radius: 50%; }
+      .glit { position: absolute; left: 0; top: 0; width: 620px; height: 540px; background: url("assets/img/glitter.jpg") 0 0/cover no-repeat; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(ellipse 100% 100% at 0% 0%, #000 45%, transparent 85%); mask-image: radial-gradient(ellipse 100% 100% at 0% 0%, #000 45%, transparent 85%); }
+      .balloon { position: absolute; background: url("assets/img/balloon.png") center/contain no-repeat; -webkit-mask-image: radial-gradient(closest-side, #000 90%, transparent 100%); mask-image: radial-gradient(closest-side, #000 90%, transparent 100%); }
+      .rtitle { position: absolute; left: 40px; width: 600px; top: 320px; text-align: center; direction: rtl; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; color: var(--pink); line-height: 1.02; font-size: 150px; }
+      .rsub { position: absolute; left: 40px; width: 600px; top: 650px; text-align: center; direction: rtl; font-size: 40px; font-weight: 800; color: var(--cocoa); line-height: 1.25; white-space: nowrap; }
+      .prize { position: absolute; top: 860px; width: 470px; text-align: center; direction: rtl; background: #fff; border-radius: 36px; padding: 18px 18px 14px; box-shadow: 0 10px 30px rgba(91,64,50,.12); }
+      .prize .img { width: 434px; height: 330px; background-position: center; background-size: contain; background-repeat: no-repeat; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(closest-side, #000 88%, transparent 100%); mask-image: radial-gradient(closest-side, #000 88%, transparent 100%); }
+      .prize .cap { margin-top: 6px; font-size: 34px; white-space: nowrap; font-weight: 800; color: var(--cocoa); }
+      .ribbon { position: relative; margin-top: 30px; width: 900px; padding: 22px 150px 22px 40px; background: linear-gradient(180deg, #F48A94, #E8717D); border-radius: 26px; color: #fff; text-align: right; box-shadow: 0 8px 22px rgba(232,113,125,.3); }
+      .ribbon b { display: block; font-family: "Rubik", "Emoji", sans-serif; font-weight: 900; font-size: 50px; line-height: 1.05; }
+      .ribbon span { display: block; font-size: 30px; font-weight: 600; margin-top: 4px; }
+      .ribbon .bb { position: absolute; right: 14px; top: -40px; width: 120px; height: 160px; background: url("assets/img/balloon.png") center/contain no-repeat; }
+      .fwrap { position: absolute; left: 60px; right: 60px; top: 290px; display: flex; flex-direction: column; align-items: center; direction: rtl; text-align: center; }
+      .hblogo { width: 280px; height: 280px; background: url("assets/img/har-bracha-logo.png") center/contain no-repeat; }
+      .cta { margin-top: 14px; background: var(--green); color: #fff; border-radius: 70px; padding: 10px 50px; font-family: "Rubik", sans-serif; font-weight: 900; font-size: 58px; display: flex; gap: 18px; align-items: center; }
+      .cta i { display: block; font-style: normal; }
+      .contact { margin-top: 26px; }
+      .contact .k { font-size: 40px; font-weight: 700; color: var(--forest); }
+      .contact .v { font-family: "Rubik", sans-serif; font-size: 76px; font-weight: 900; color: var(--green); line-height: 1.05; }
+      .terms { margin-top: 10px; font-size: 28px; font-weight: 600; color: #3C3C3C; line-height: 1.3; }
+      .terms span { display: block; }
+      .legal { margin-top: 6px; font-size: 28px; font-weight: 600; color: #3C3C3C; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="65.8" data-width="1080" data-height="1920">
+
+      <video id="footage" class="clip" src="assets/footage.mp4" data-start="0" data-duration="57.6" data-track-index="0" muted playsinline></video>
+
+      <div id="over" class="clip" data-start="0" data-duration="57.6" data-track-index="1" data-layout-allow-overlap>
+        <div id="dim" class="h"></div>
+        <div class="stk h" id="c1"><span>יום רגיל של מנכ״לית? 👀</span></div>
+        <div class="sci a h" id="s1">בשנים הראשונות לחיים,</div>
+        <div class="sci b h" id="s2">המוח יוצר <b>יותר ממיליון</b> קשרים חדשים</div>
+        <div class="sci c h" id="s3">בכל שנייה.</div>
+        <div class="sci src h" id="s4">מקור: המרכז להתפתחות הילד, אוניברסיטת הרווארד</div>
+        <div class="l1 h" id="l1">הכינוי לא התעדכן.</div>
+        <div class="l2 h" id="l2"><b>התפקיד</b> כן. <span style="font-size:110px">↻</span></div>
+      </div>
+
+      <div id="finc" class="clip" data-start="57.6" data-duration="8.2" data-track-index="2" data-layout-allow-overlap>
+        <div class="glit" id="glit"></div>
+        <div id="deco">
+          <div class="dot" style="left:-80px; top:1420px; width:360px; height:360px; background:rgba(239,127,138,.14)"></div>
+          <div class="dot" style="left:760px; top:1500px; width:420px; height:420px; background:rgba(239,127,138,.10)"></div>
+          <div style="position:absolute; left:90px; top:1340px; font-size:80px; font-family:Emoji; transform:rotate(-14deg)">🎀</div>
+          <div style="position:absolute; left:880px; top:1300px; font-size:64px; font-family:Emoji; transform:rotate(12deg)">🎀</div>
+        </div>
+        <div id="stA">
+          <div class="balloon" id="balloon" style="left:600px; top:230px; width:450px; height:600px"></div>
+          <div class="rtitle"><div class="h" id="rt1">המלצת?</div><div class="h" id="rt2">הרווחת!</div></div>
+          <div class="rsub h" id="rsub">ממליצים על מטפלת לצוות המעון,<span style="display:block">וזוכים בפרס מפנק לבחירה!</span></div>
+          <div class="prize h" id="p1" style="right:45px"><div class="img" style="background-image:url('assets/img/prize1.png')"></div><div class="cap">מכונת קפה מפנקת</div></div>
+          <div class="prize h" id="p2" style="left:45px"><div class="img" style="background-image:url('assets/img/prize2.png')"></div><div class="cap">לילה זוגי ב״ספא בראשית״</div></div>
+        </div>
+        <div class="fwrap">
+          <div class="hblogo h" id="logo"></div>
+          <div class="cta h" id="cta"><i>↻</i>בדקו שוב</div>
+          <div class="ribbon h" id="ribbon"><div class="bb"></div><b>המלצת? הרווחת!</b><span>זוכים במכונת קפה או בלילה ב״ספא בראשית״</span></div>
+          <div class="contact h" id="contact"><div class="k">לפרטים ולהמלצות: אירית</div><div class="v"><span class="ltr">054-7889019</span></div></div>
+          <div class="terms h" id="terms"><span>*פרס ההמלצה ניתן לאחר התמדה של 3 חודשי עבודה, לפחות 80% משרה.</span><span>למשרות קטנות – פרס / סכום יחסי.</span></div>
+          <div class="legal h" id="legal">מחפשים מטפלות ומטפלים · המודעה מיועדת לכל המינים</div>
+        </div>
+      </div>
+
+      
+      <audio id="foley" src="assets/foley.wav" data-start="0" data-duration="57.6" data-track-index="10" data-volume="1"></audio>
+      <audio id="bgm" src="assets/bgm/bgm.wav" data-start="2.4" data-duration="63.4" data-track-index="11" data-volume="0.45"></audio>
+      <audio id="vo1" src="assets/voice/vo-end-1.wav" data-start="54.0" data-duration="3.36" data-track-index="12" data-volume="1"></audio>
+      <audio id="vo2" src="assets/voice/vo-end-2.wav" data-start="59.0" data-duration="4.76" data-track-index="13" data-volume="1"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const enter = { duration: 0.5, ease: "power2.out" };
+      const fadeUp = (id, at) => tl.fromTo(id, { y: 20, opacity: 0 }, { y: 0, opacity: 1, ...enter }, at);
+
+      // opening sticker (the only one)
+      fadeUp("#c1", 0.6); tl.to("#c1", { opacity: 0, duration: 0.3 }, 3.3);
+
+      // the science card over the whole day (37.4–42.2)
+      const D1 = 37.4, D2 = 42.2;
+      tl.fromTo("#footage", { filter: "blur(0px)" }, { filter: "blur(14px)", duration: 0.8, ease: "power2.inOut" }, D1);
+      tl.fromTo("#dim", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.inOut" }, D1);
+      fadeUp("#s1", D1 + 0.5); fadeUp("#s2", D1 + 1.1); fadeUp("#s3", D1 + 1.9);
+      tl.fromTo("#s4", { opacity: 0 }, { opacity: 1, duration: 0.5 }, D1 + 2.3);
+      tl.to(["#s1", "#s2", "#s3", "#s4"], { opacity: 0, duration: 0.4 }, D2 - 0.4);
+      tl.to("#footage", { filter: "blur(0px)", duration: 0.6, ease: "power2.inOut" }, D2 - 0.3);
+      tl.to("#dim", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, D2 - 0.3);
+
+      // signature, under VO1 (54.0 s; "התפקיד כן" starts ~1.5 s in)
+      const G = 53.4;
+      tl.to("#footage", { filter: "blur(14px)", duration: 0.8, ease: "power2.inOut" }, G);
+      tl.to("#dim", { opacity: 1, duration: 0.8, ease: "power2.inOut" }, G);
+      fadeUp("#l1", 54.0); fadeUp("#l2", 55.8);
+
+      // referral page (4.4 s) → lockup with Irit, kept to the last frame
+      const R = 57.6;
+      tl.fromTo("#finc", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, R);
+      tl.fromTo("#balloon", { y: 120 }, { y: 0, duration: 1.4, ease: "power2.out" }, R);
+      tl.to("#balloon", { y: -14, duration: 1.2, yoyo: true, repeat: 1, ease: "sine.inOut" }, R + 1.4);
+      tl.fromTo("#glit", { opacity: 0 }, { opacity: 1, duration: 0.6 }, R + 0.1);
+      tl.fromTo("#deco", { opacity: 0 }, { opacity: 1, duration: 0.8 }, R + 0.2);
+      tl.fromTo("#rt1", { y: 24, opacity: 0 }, { y: 0, opacity: 1, ...enter }, R + 0.3);
+      tl.fromTo("#rt2", { y: 24, opacity: 0 }, { y: 0, opacity: 1, ...enter }, R + 0.6);
+      tl.fromTo("#rsub", { opacity: 0 }, { opacity: 1, duration: 0.5 }, R + 0.9);
+      tl.fromTo(["#p1", "#p2"], { y: 24, opacity: 0 }, { y: 0, opacity: 1, ...enter, stagger: 0.25 }, R + 1.2);
+      const L = R + 4.4;
+      tl.to(["#stA", "#deco"], { opacity: 0, duration: 0.45 }, L);
+      tl.fromTo("#logo", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 0.3);
+      tl.fromTo("#cta", { opacity: 0 }, { opacity: 1, duration: 0.5 }, L + 0.7);
+      tl.fromTo("#ribbon", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 1.1);
+      tl.fromTo("#contact", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 1.5);
+      tl.fromTo(["#terms", "#legal"], { opacity: 0 }, { opacity: 1, duration: 0.5 }, L + 1.9);
+
+      
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
