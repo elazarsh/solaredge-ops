@@ -62,6 +62,6 @@ for at in (1.2, 6.8, 19.5, 29.0, 44.0):
     chirp = np.sin(2 * np.pi * (3600 + 1400 * np.sin(2 * np.pi * 18 * tt)) * tt) * np.hanning(n)
     for k in range(3): add(chirp, at + k * 0.16, 0.012, pan=-0.6)
 fade = np.clip((DUR - np.arange(len(out)) / SR) / 1.0, 0, 1)[:, None]   # the room fades under the signature card
-out = np.clip(out * fade, -1, 1)
+out = np.clip(out * fade, -1, 1).astype(np.float32)   # float32! (float64 bytes read as f32le = loud static)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", "-", "assets/foley.wav"], input=out.tobytes(), check=True)
 print("foley ok", DUR, "s")
