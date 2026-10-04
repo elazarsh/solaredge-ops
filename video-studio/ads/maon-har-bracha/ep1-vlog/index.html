@@ -51,7 +51,15 @@
       .ribbon span { display: block; font-size: 30px; font-weight: 600; margin-top: 4px; }
       .ribbon .bb { position: absolute; right: 14px; top: -40px; width: 120px; height: 160px; background: url("assets/img/balloon.png") center/contain no-repeat; }
       .fwrap { position: absolute; left: 60px; right: 60px; top: 290px; display: flex; flex-direction: column; align-items: center; direction: rtl; text-align: center; }
-      .hblogo { width: 280px; height: 280px; background: url("assets/img/har-bracha-logo.png") center/contain no-repeat; }
+      .hblogo { width: 220px; height: 220px; background: url("assets/img/har-bracha-logo.png") center/contain no-repeat; }
+      /* the daycare's own logo: brown hands+roots and tagline (no background), then its watercolor blooms behind it */
+      .logos { display: flex; align-items: center; gap: 34px; direction: rtl; }
+      .maon { position: relative; width: 330px; height: 340px; }
+      .wc { position: absolute; left: -45px; top: -40px; width: 420px; height: 400px; background: url("assets/img/maon-watercolor.jpg") center/cover no-repeat; mix-blend-mode: multiply;
+            -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 var(--r), transparent calc(var(--r) + 18%)); mask-image: radial-gradient(circle at 50% 45%, #000 var(--r), transparent calc(var(--r) + 18%)); --r: 0%; }
+      .mark { position: absolute; left: 15px; top: 0; width: 300px; height: 228px; background: url("assets/img/maon-mark.png") center/contain no-repeat; clip-path: inset(var(--t) 0 var(--b) 0); --t: 56%; --b: 44%; }
+      .mtext { position: absolute; left: 15px; top: 238px; width: 300px; height: 92px; background: url("assets/img/maon-text.png") center/contain no-repeat; }
+      .vsep { width: 3px; height: 220px; background: rgba(91,64,50,.18); border-radius: 2px; }
       .cta { margin-top: 14px; background: var(--green); color: #fff; border-radius: 70px; padding: 10px 50px; font-family: "Rubik", sans-serif; font-weight: 900; font-size: 58px; display: flex; gap: 18px; align-items: center; }
       .cta i { display: block; font-style: normal; }
       .contact { margin-top: 26px; }
@@ -96,7 +104,11 @@
           <div class="prize h" id="p2" style="left:45px"><div class="img" style="background-image:url('assets/img/prize2.png')"></div><div class="cap">לילה זוגי ב״ספא בראשית״</div></div>
         </div>
         <div class="fwrap">
-          <div class="hblogo h" id="logo"></div>
+          <div class="logos">
+            <div class="maon" id="maon"><div class="wc" id="wc"></div><div class="mark h" id="mark"></div><div class="mtext h" id="mtext"></div></div>
+            <div class="vsep h" id="vsep"></div>
+            <div class="hblogo h" id="logo"></div>
+          </div>
           <div class="cta h" id="cta"><i>↻</i>בדקו שוב</div>
           <div class="ribbon h" id="ribbon"><div class="bb"></div><b>המלצת? הרווחת!</b><span>זוכים במכונת קפה או בלילה ב״ספא בראשית״</span></div>
           <div class="contact h" id="contact"><div class="k">לפרטים ולהמלצות: אירית</div><div class="v"><span class="ltr">054-7889019</span></div></div>
@@ -146,11 +158,16 @@
       tl.fromTo(["#p1", "#p2"], { y: 24, opacity: 0 }, { y: 0, opacity: 1, ...enter, stagger: 0.25 }, R + 1.2);
       const L = R + 4.4;
       tl.to(["#stA", "#deco"], { opacity: 0, duration: 0.45 }, L);
-      tl.fromTo("#logo", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 0.3);
-      tl.fromTo("#cta", { opacity: 0 }, { opacity: 1, duration: 0.5 }, L + 0.7);
-      tl.fromTo("#ribbon", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 1.1);
-      tl.fromTo("#contact", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 1.5);
-      tl.fromTo(["#terms", "#legal"], { opacity: 0 }, { opacity: 1, duration: 0.5 }, L + 1.9);
+      // the daycare logo: hands and roots grow out of the trunk, the tagline settles, then the watercolor soaks in behind
+      tl.fromTo("#mark", { "--t": "56%", "--b": "44%" }, { "--t": "0%", "--b": "0%", duration: 0.9, ease: "power2.out" }, L + 0.2);
+      tl.fromTo("#mark", { scale: 0.92, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.9, ease: "power2.out" }, L + 0.2);
+      tl.fromTo("#mtext", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, L + 0.75);
+      tl.fromTo("#wc", { "--r": "0%", scale: 0.85, filter: "blur(6px)" }, { "--r": "62%", scale: 1, filter: "blur(0px)", duration: 1.1, ease: "power2.out" }, L + 1.0);
+      tl.fromTo(["#vsep", "#logo"], { opacity: 0 }, { opacity: 1, duration: 0.45 }, L + 1.2);
+      tl.fromTo("#cta", { opacity: 0 }, { opacity: 1, duration: 0.45 }, L + 1.4);
+      tl.fromTo("#ribbon", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 1.65);
+      tl.fromTo("#contact", { opacity: 0, y: 20 }, { opacity: 1, y: 0, ...enter }, L + 1.9);
+      tl.fromTo(["#terms", "#legal"], { opacity: 0 }, { opacity: 1, duration: 0.5 }, L + 2.15);
 
       window.__timelines["main"] = tl;
       tl.seek(0);
