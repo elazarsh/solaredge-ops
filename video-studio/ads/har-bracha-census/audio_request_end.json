@@ -1,0 +1,16 @@
+{
+ "provider": "gemini",
+ "tts_model": "gemini-3.8-flash-tts",
+ "voice": "Orus",
+ "lang": "he",
+ "style": "Professional Israeli commercial announcer, deep warm confident male voice, proud brand sign-off, clear pause between the two sentences.",
+ "lines": [
+  {
+   "id": "vo-end",
+   "text": "הַר בְּרָכָה. כָּל נֶפֶשׁ נִסְפֶּרֶת, וְכָל טִפָּה נֶחְשֶׁבֶת."
+  }
+ ],
+ "bgm": {
+  "mode": "none"
+ }
+}

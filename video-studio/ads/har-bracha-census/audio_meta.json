@@ -1,0 +1,47 @@
+{
+  "tts_provider": "gemini",
+  "voice_id": "Achird",
+  "bgm": null,
+  "bgm_pending": false,
+  "bgm_provider": null,
+  "bgm_pid": null,
+  "bgm_log": null,
+  "bgm_mode": null,
+  "bgm_target_duration_s": null,
+  "bgm_seed_duration_s": null,
+  "bgm_loop_count": null,
+  "voices": [
+    {
+      "id": "vo-1",
+      "path": "assets/voice/vo-1.wav",
+      "duration_s": 3.64,
+      "words": []
+    },
+    {
+      "id": "vo-2",
+      "path": "assets/voice/vo-2.wav",
+      "duration_s": 9,
+      "words": []
+    },
+    {
+      "id": "vo-4",
+      "path": "assets/voice/vo-4.wav",
+      "duration_s": 5.16,
+      "words": []
+    },
+    {
+      "id": "vo-5",
+      "path": "assets/voice/vo-5.wav",
+      "duration_s": 5.88,
+      "words": []
+    },
+    {
+      "id": "vo-6",
+      "path": "assets/voice/vo-6.wav",
+      "duration_s": 7.16,
+      "words": []
+    }
+  ],
+  "sfx": [],
+  "total_duration_s": 30.84
+}

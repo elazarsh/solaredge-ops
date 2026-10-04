@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="he">
+  <!--
+    הר ברכה — סקר נפשות (פרסומת הסברה לתושבים), 1080x1920, ~46.5s
+    קצב רגוע: כל רעיון 4–7 שניות, כניסות fade+rise בלבד, בלי רעידות או זומים. קריינות עם רווחי ≥1.2s.
+    סדר: ידיים בכיור (Veo) → גרפיקה: מכסה לפי נפשות → סקר → "2 נפשות" → ספח → לוגו.
+    Never put dir="rtl" on <html>.
+  -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/Heebo-VF.ttf"); font-weight: 100 900; }
+      @font-face { font-family: "Rubik"; src: url("assets/fonts/Rubik-VF.ttf"); font-weight: 300 900; }
+      :root {
+        --green: #0E9447; --lime: #8CC63F; --blue: #1B75BC; --orange: #EE8425; --magenta: #B72F7A; --forest: #0B4D2A;
+        --cream: #FBF7EF; --water: #4FB3E8;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--cream); }
+      #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Heebo", sans-serif; }
+      .ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+      .abs { position: absolute; }
+      .scene { position: absolute; inset: 0; opacity: 0; }
+      .clip { position: absolute; inset: 0; width: 1080px; height: 1920px; object-fit: cover; }
+      .bgfill { position: absolute; inset: 0; background: radial-gradient(circle at 50% 38%, #FFFFFF 0%, var(--cream) 55%, #F3ECDC 100%); }
+      .hill { position: absolute; border-radius: 50%; }
+
+      .t { position: absolute; left: 50px; right: 50px; text-align: center; direction: rtl; unicode-bidi: isolate; font-family: "Rubik", sans-serif; font-weight: 800; color: var(--forest); line-height: 1.14; opacity: 0; }
+      .t em { font-style: normal; color: var(--green); }
+      .t .or { color: var(--orange); }
+      .t .bl { color: var(--blue); }
+      .plate { background: rgba(255,255,255,.94); border-radius: 56px; padding: 30px 40px; box-shadow: 0 18px 50px rgba(11,77,42,.18); }
+
+      .person { position: absolute; opacity: 0; }
+      .meter { position: absolute; left: 140px; width: 800px; height: 70px; border-radius: 35px; background: #E6EEF3; overflow: hidden; box-shadow: inset 0 3px 8px rgba(0,0,0,.12); direction: ltr; }
+      .meter .fill { position: absolute; right: 0; top: 0; bottom: 0; width: 100%; background: linear-gradient(90deg, #7FD0F5, var(--blue)); border-radius: 35px; }
+      .mlabel { position: absolute; left: 140px; width: 800px; text-align: right; direction: rtl; unicode-bidi: isolate; font-family: "Rubik", sans-serif; font-weight: 600; font-size: 44px; color: var(--blue); }
+
+      .phone { position: absolute; left: 0; top: 0; width: 520px; height: 1000px; background: #16181D; border-radius: 76px; box-shadow: 0 40px 90px rgba(0,0,0,.30); opacity: 0; }
+      .screen { position: absolute; inset: 18px; border-radius: 60px; overflow: hidden; background: #F4F7F4; direction: rtl; }
+      .shead { background: var(--green); color: #fff; height: 150px; padding-top: 52px; text-align: center; font-family: "Rubik", sans-serif; font-weight: 700; font-size: 38px; }
+      .scard { position: absolute; left: 28px; right: 28px; background: #fff; border-radius: 30px; box-shadow: 0 6px 20px rgba(0,0,0,.08); padding: 26px 28px; }
+      .scard h4 { font-family: "Rubik", sans-serif; font-weight: 700; font-size: 38px; color: var(--forest); margin-bottom: 18px; }
+      .step { display: flex; align-items: center; justify-content: center; gap: 36px; direction: ltr; }
+      .step .b { width: 84px; height: 84px; border-radius: 42px; background: #E8F3EC; color: var(--green); font-size: 56px; font-weight: 800; display: flex; align-items: center; justify-content: center; font-family: "Rubik", sans-serif; }
+      .step .n { font-family: "Rubik", sans-serif; font-weight: 900; font-size: 96px; color: var(--forest); width: 110px; text-align: center; }
+      .sbtn { position: absolute; left: 28px; right: 28px; height: 96px; border-radius: 48px; background: var(--green); color: #fff; font-family: "Rubik", sans-serif; font-weight: 700; font-size: 40px; display: flex; align-items: center; justify-content: center; }
+      .row { height: 18px; border-radius: 9px; background: #E3EAE5; margin-top: 14px; }
+      #finger { position: absolute; width: 90px; height: 90px; border-radius: 50%; background: rgba(14,148,71,.28); border: 5px solid rgba(14,148,71,.65); opacity: 0; }
+
+      .house { position: absolute; opacity: 0; }
+      .bar2 { position: absolute; height: 52px; border-radius: 26px; background: #E6EEF3; overflow: hidden; direction: ltr; }
+      .bar2 .f { position: absolute; right: 0; top: 0; bottom: 0; width: 100%; border-radius: 26px; }
+      .chip { position: absolute; font-family: "Rubik", sans-serif; font-weight: 700; color: #fff; border-radius: 60px; padding: 14px 40px; font-size: 54px; opacity: 0; direction: rtl; unicode-bidi: isolate; white-space: nowrap; }
+
+      #lockup { position: absolute; left: 0; right: 0; top: 330px; text-align: center; opacity: 0; }
+      #lockup img { width: 600px; }
+      #logoSm { position: absolute; right: 60px; top: 70px; width: 150px; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="46.5" data-width="1080" data-height="1920">
+
+      <!-- background for graphic scenes -->
+      <div class="bgfill scene" id="bg"></div>
+      <div class="hill" id="hill1" style="left:-220px; bottom:-440px; width:1100px; height:800px; background: var(--lime); opacity:.0"></div>
+      <div class="hill" id="hill2" style="left:260px; bottom:-480px; width:1100px; height:800px; background: var(--green); opacity:.0"></div>
+
+      <!-- S1: hands at the sink -->
+      <div class="scene" id="s1">
+        <video id="sink" class="clip" src="assets/sink.mp4" data-start="0" data-duration="6" data-track-index="0" muted playsinline></video>
+        <div class="t plate" id="hook" style="top:300px; left:70px; right:70px; font-size:84px;">כמה מים מגיעים לכם <em>במחיר מוזל</em>?</div>
+      </div>
+
+      <!-- S2: quota depends on registered persons -->
+      <div class="scene" id="s2">
+        <div class="t" id="t2a" style="top:280px; font-size:74px;">המכסה <em>המוזלת</em> נקבעת לפי מספר <span class="bl">הנפשות הרשומות</span> בבית</div>
+        <svg class="abs" id="house2" style="left:288px; top:470px;" width="504" height="374" viewBox="0 0 700 520">
+          <polygon points="350,10 690,230 10,230" fill="#B72F7A"/>
+          <rect x="60" y="225" width="580" height="290" rx="14" fill="#0E9447"/>
+          <rect x="300" y="52" width="100" height="14" rx="7" fill="#fff" opacity="0"/>
+          <circle cx="350" cy="150" r="30" fill="#fff"/>
+          <circle cx="350" cy="150" r="14" fill="#0E9447"/>
+        </svg>
+        <div id="people2"></div>
+        <div class="mlabel" id="ml2" style="top:880px; opacity:0;">מים במחיר מוזל 💧</div>
+        <div class="meter" id="m2" style="top:945px; opacity:0;"><div class="fill" id="mf2"></div></div>
+        <div class="t plate" id="t2b" style="top:1040px; left:80px; right:80px; font-size:62px; padding:22px 30px;">יותר נפשות רשומות = <em>יותר מים במחיר מוזל</em></div>
+      </div>
+
+      <!-- S3: the survey -->
+      <div class="scene" id="s3">
+        <div class="t" id="t3a" style="top:280px; font-size:80px;">בימים הקרובים:<br/><em>סקר נפשות קצר</em></div>
+        <div id="phwrap" style="position:absolute; left:373px; top:510px; width:520px; height:1000px; transform:scale(.64); transform-origin:0 0;"><div class="phone" id="ph">
+          <div class="screen">
+            <div class="shead">סקר נפשות · הר ברכה</div>
+            <div class="scard" style="top:190px;">
+              <h4>כמה נפשות גרות בבית?</h4>
+              <div class="step"><div class="b">+</div><div class="n" id="num">4</div><div class="b">−</div></div>
+            </div>
+            <div class="scard" style="top:530px;">
+              <h4>נוספו בני משפחה?</h4>
+              <div class="row" style="width:90%"></div><div class="row" style="width:62%"></div>
+            </div>
+            <div class="sbtn" id="sbtn" style="top:790px;">שליחה</div>
+          </div>
+          <div id="finger"></div>
+        </div></div>
+        <div class="t" id="t3b" style="top:1180px; font-size:52px; color:#33563f; white-space:nowrap;">נולד תינוק? הצטרף מישהו למשפחה?</div>
+      </div>
+
+      <!-- S4: not updated = 2 persons -->
+      <div class="scene" id="s4">
+        <div class="t" id="t4a" style="top:280px; font-size:72px;">מי שלא מעדכן, יירשם לפי <span class="bl">רשות המים</span></div>
+        <div class="house" id="hA" style="left:600px; top:500px; width:380px; height:450px;">
+          <svg width="380" height="285" viewBox="0 0 700 520"><polygon points="350,10 690,230 10,230" fill="#8CC63F"/><rect x="60" y="225" width="580" height="290" rx="14" fill="#0E9447"/></svg>
+          <div class="chip" id="cA" style="left:20px; top:300px; background:var(--green); opacity:1;">מעודכן</div>
+          <div class="bar2" style="left:20px; top:390px; width:340px;"><div class="f" id="fA" style="background:linear-gradient(90deg,#7FD0F5,var(--blue));"></div></div>
+        </div>
+        <div class="house" id="hB" style="left:100px; top:500px; width:380px; height:450px;">
+          <svg width="380" height="285" viewBox="0 0 700 520"><polygon points="350,10 690,230 10,230" fill="#C9C2B4"/><rect x="60" y="225" width="580" height="290" rx="14" fill="#9C9686"/></svg>
+          <div class="chip" id="cB" style="left:20px; top:300px; background:var(--orange); opacity:1;">לא עודכן</div>
+          <div class="bar2" style="left:20px; top:390px; width:340px;"><div class="f" id="fB" style="background:linear-gradient(90deg,#9AD8F4,#6BB6DE);"></div></div>
+        </div>
+        <div class="t" id="big2" style="left:100px; right:600px; top:640px; font-size:150px; color:#fff; text-shadow:0 4px 14px rgba(0,0,0,.25);"><span class="ltr">2</span></div>
+        <div class="t plate" id="t4b" style="top:1030px; left:60px; right:60px; font-size:74px; white-space:nowrap;">בלי עדכון: <span class="or">2 נפשות בלבד</span></div>
+      </div>
+
+      <!-- S5: documents -->
+      <div class="scene" id="s5">
+        <div class="t" id="t5a" style="top:280px; font-size:76px;">עקבו אחרי <em>ההודעות</em> מהמזכירות 🔔</div>
+        <svg class="abs" id="doc" style="left:190px; top:500px; opacity:0;" width="700" height="490" viewBox="0 0 800 560">
+          <rect x="20" y="30" width="360" height="500" rx="26" fill="#fff" stroke="#0E9447" stroke-width="8"/>
+          <rect x="420" y="30" width="360" height="500" rx="26" fill="#fff" stroke="#0E9447" stroke-width="8"/>
+          <circle cx="200" cy="170" r="62" fill="#C9D9CF"/><rect x="110" y="250" width="180" height="120" rx="60" fill="#C9D9CF"/>
+          <rect x="60" y="410" width="280" height="22" rx="11" fill="#E3EAE5"/><rect x="60" y="455" width="200" height="22" rx="11" fill="#E3EAE5"/>
+          <rect x="470" y="90" width="260" height="22" rx="11" fill="#E3EAE5"/><rect x="470" y="140" width="220" height="22" rx="11" fill="#E3EAE5"/>
+          <rect x="470" y="190" width="260" height="22" rx="11" fill="#E3EAE5"/><rect x="470" y="240" width="180" height="22" rx="11" fill="#E3EAE5"/>
+          <rect x="470" y="300" width="260" height="170" rx="18" fill="#F1F6F2"/>
+          <path d="M600 330 l30 40 l60 -70" stroke="#0E9447" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="tick"/>
+        </svg>
+        <div class="t plate" id="t5b" style="top:1040px; left:50px; right:50px; font-size:66px; white-space:nowrap;">הכינו מראש <em>ספח ת״ז פתוח</em></div>
+        <div class="t" id="t5c" style="top:1175px; font-size:54px; color:#33563f; white-space:nowrap;">שלכם <b>ושל כל ילד מעל גיל <span class="ltr">18</span></b></div>
+      </div>
+
+      <!-- S6: logo lockup -->
+      <div class="scene" id="s6">
+        <div id="lockup"><img src="assets/logo-har-bracha.png" alt="הר ברכה" /></div>
+        <div class="t" id="t6" style="top:1000px; font-size:70px;">כל <em>נפש</em> נספרת,<br/>וכל <span class="bl">טיפה</span> נחשבת</div>
+      </div>
+
+      <img id="logoSm" src="assets/logo-har-bracha.png" alt="" />
+
+      <!-- audio -->
+      <audio id="bgm" src="assets/bgm/bed.wav" data-start="0" data-duration="46.5" data-track-index="10" data-volume="0.20"></audio>
+      <audio id="amb" src="assets/sink-audio.wav" data-start="0" data-duration="5.6" data-track-index="11" data-volume="0.7"></audio>
+      <audio id="vo1" src="assets/voice/vo-1.wav" data-start="1.6" data-duration="3.64" data-track-index="12" data-volume="1"></audio>
+      <audio id="vo2" src="assets/voice/vo-2.wav" data-start="6.0" data-duration="9.0" data-track-index="13" data-volume="1"></audio>
+      <audio id="vo4" src="assets/voice/vo-4.wav" data-start="16.4" data-duration="5.16" data-track-index="14" data-volume="1"></audio>
+      <audio id="vo5" src="assets/voice/vo-5.wav" data-start="22.8" data-duration="5.88" data-track-index="15" data-volume="1"></audio>
+      <audio id="vo6" src="assets/voice/vo-6.wav" data-start="29.9" data-duration="7.16" data-track-index="16" data-volume="1"></audio>
+      <audio id="voE" src="assets/voice/vo-end.wav" data-start="38.6" data-duration="6.12" data-track-index="17" data-volume="1"></audio>
+      <audio id="sw1" src="assets/sfx/whoosh-short.mp3" data-start="5.6" data-duration="0.6" data-track-index="20" data-volume="0.35"></audio>
+      <audio id="p1" src="assets/sfx/pop.mp3" data-start="7.2" data-duration="0.7" data-track-index="21" data-volume="0.3"></audio>
+      <audio id="p2" src="assets/sfx/pop.mp3" data-start="7.9" data-duration="0.7" data-track-index="22" data-volume="0.3"></audio>
+      <audio id="p3" src="assets/sfx/pop.mp3" data-start="8.6" data-duration="0.7" data-track-index="23" data-volume="0.3"></audio>
+      <audio id="p4" src="assets/sfx/pop.mp3" data-start="9.3" data-duration="0.7" data-track-index="24" data-volume="0.3"></audio>
+      <audio id="p5" src="assets/sfx/pop.mp3" data-start="10.0" data-duration="0.7" data-track-index="25" data-volume="0.3"></audio>
+      <audio id="sp1" src="assets/sfx/sparkle.mp3" data-start="11.1" data-duration="1.5" data-track-index="26" data-volume="0.3"></audio>
+      <audio id="sw2" src="assets/sfx/whoosh-short.mp3" data-start="15.7" data-duration="0.6" data-track-index="27" data-volume="0.35"></audio>
+      <audio id="ck" src="assets/sfx/click-soft.mp3" data-start="19.3" data-duration="0.4" data-track-index="28" data-volume="0.5"></audio>
+      <audio id="sw3" src="assets/sfx/whoosh-short.mp3" data-start="22.0" data-duration="0.6" data-track-index="29" data-volume="0.35"></audio>
+      <audio id="pp1" src="assets/sfx/pop.mp3" data-start="26.0" data-duration="0.7" data-track-index="30" data-volume="0.35"></audio>
+      <audio id="sw4" src="assets/sfx/whoosh-short.mp3" data-start="29.1" data-duration="0.6" data-track-index="31" data-volume="0.35"></audio>
+      <audio id="sw5" src="assets/sfx/whoosh.mp3" data-start="37.4" data-duration="0.6" data-track-index="32" data-volume="0.35"></audio>
+      <audio id="ch" src="assets/sfx/chime.mp3" data-start="38.2" data-duration="2.2" data-track-index="33" data-volume="0.4"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const enter = { duration: 0.65, ease: "power2.out" };
+      const rise = (id, at, y = 28) => tl.fromTo(id, { y, opacity: 0 }, { y: 0, opacity: 1, ...enter }, at);
+      const fade = (id, a, b, d = 0.5) => { tl.to(id, { opacity: 1, duration: d, ease: "power1.inOut" }, a); if (b != null) tl.to(id, { opacity: 0, duration: d, ease: "power1.inOut" }, b); };
+
+      // Build the 5 person icons inside house 2
+      const colors = ["#FFFFFF", "#FFE7A8", "#FFFFFF", "#FFE7A8", "#FFFFFF"];
+      const sizes = [1.0, 0.7, 0.95, 0.6, 0.85];
+      const ppl = document.getElementById("people2");
+      const xs = [270, 400, 530, 330, 460]; // positions inside the house body
+      const person = (x, y, s, c, id, parent) => {
+        const d = document.createElement("div");
+        d.className = "person"; d.id = id;
+        d.style.cssText = `left:${x}px; top:${y}px; width:${100 * s}px; height:${170 * s}px;`;
+        d.innerHTML = `<svg width="100%" height="100%" viewBox="0 0 100 170"><circle cx="50" cy="30" r="26" fill="${c}"/><rect x="8" y="64" width="84" height="106" rx="40" fill="${c}"/></svg>`;
+        parent.appendChild(d);
+      };
+      [[340,690],[416,712],[492,690],[568,712],[644,690]].forEach(([x,y],i)=>person(x,y,[0.72,0.56,0.72,0.56,0.72][i],colors[i],`pp${i}`,ppl));
+
+      tl.set(["#mf2","#fA","#fB"], { scaleX: 0.05, transformOrigin: "100% 50%" }, 0);
+      tl.set("#mf2", { scaleX: 0.12 }, 0);
+      // ===== S1 (0–6.2): hands at the sink, then the tap closes ===
+      fade("#s1", 0, 5.7, 0.4);
+      tl.set("#s1", { opacity: 1 }, 0);
+      rise("#hook", 0.4);
+      tl.to("#hook", { opacity: 0, duration: 0.5 }, 5.2);
+      tl.fromTo("#sink", { scale: 1.0 }, { scale: 1.04, duration: 6, ease: "none" }, 0);
+
+      // ===== S2 (5.8–16.2) ===
+      fade("#bg", 5.6, 46.3, 0.6);
+      tl.to("#hill1", { opacity: 0.35, duration: 0.8 }, 6.0);
+      tl.to("#hill2", { opacity: 0.30, duration: 0.8 }, 6.0);
+      tl.to("#logoSm", { opacity: 1, duration: 0.6 }, 6.4);
+      fade("#s2", 5.8, 15.9, 0.6);
+      rise("#t2a", 6.4);
+      tl.fromTo("#house2", { y: 40, opacity: 0 }, { y: 0, opacity: 1, ...enter }, 6.6);
+      tl.to("#ml2", { opacity: 1, duration: 0.5 }, 7.0);
+      tl.to("#m2", { opacity: 1, duration: 0.5 }, 7.0);
+      [7.2, 7.9, 8.6, 9.3, 10.0].forEach((t, i) => {
+        tl.fromTo(`#pp${i}`, { y: 24, opacity: 0, scale: 0.8 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, t);
+        tl.to("#mf2", { scaleX: 0.24 + 0.19 * i + 0.19, duration: 0.6, ease: "power2.out" }, t + 0.1);
+      });
+      tl.to("#mf2", { scaleX: 1, duration: 0.8, ease: "power2.out" }, 11.0);
+      rise("#t2b", 11.0);
+      tl.to("#t2a", { opacity: 0, duration: 0.5 }, 11.0);
+      // t2a text opacity restored? no — it stays hidden after the second message lands.
+
+      // ===== S3 (16–22.6) ===
+      fade("#s3", 15.8, 22.4, 0.6);
+      rise("#t3a", 16.2);
+      tl.fromTo("#ph", { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" }, 16.5);
+      tl.fromTo("#finger", { x: 380, y: 410, opacity: 0, scale: 1 }, { x: 142, y: 372, opacity: 1, duration: 1.1, ease: "power2.out" }, 18.0);
+      tl.to("#finger", { scale: 0.8, duration: 0.14, yoyo: true, repeat: 1 }, 19.2);
+      tl.call(() => { document.getElementById("num").textContent = "5"; }, null, 19.3);
+      tl.call(() => { document.getElementById("num").textContent = "4"; }, null, 0);
+      tl.to("#finger", { opacity: 0, duration: 0.3 }, 19.7);
+      tl.fromTo("#sbtn", { scale: 1 }, { scale: 1.04, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, 20.2);
+      rise("#t3b", 19.8);
+
+      // ===== S4 (22–29.4) ===
+      fade("#s4", 22.0, 29.0, 0.6);
+      rise("#t4a", 22.6);
+      tl.fromTo("#hA", { y: 40, opacity: 0 }, { y: 0, opacity: 1, ...enter }, 23.2);
+      tl.to("#fA", { scaleX: 1, duration: 1.0, ease: "power2.out" }, 23.8);
+      tl.fromTo("#hB", { y: 40, opacity: 0 }, { y: 0, opacity: 1, ...enter }, 25.0);
+      tl.to("#fB", { scaleX: 0.28, duration: 0.8, ease: "power2.out" }, 25.6);
+      tl.fromTo("#big2", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)" }, 25.9);
+      rise("#t4b", 26.3);
+
+      // ===== S5 (29–37.4) ===
+      fade("#s5", 29.0, 36.9, 0.5);
+      rise("#t5a", 29.8);
+      tl.fromTo("#doc", { y: 50, opacity: 0 }, { y: 0, opacity: 1, ...enter }, 31.2);
+      rise("#t5b", 32.4);
+      tl.to("#tick", { opacity: 1, duration: 0.5 }, 33.8);
+      rise("#t5c", 34.0);
+
+      // ===== S6 (37.2–46.5) ===
+      fade("#s6", 37.2, null, 0.5);
+      tl.to("#logoSm", { opacity: 0, duration: 0.4 }, 36.9);
+      tl.to("#hill1", { opacity: 0.55, duration: 0.8 }, 37.4);
+      tl.to("#hill2", { opacity: 0.5, duration: 0.8 }, 37.4);
+      tl.fromTo("#lockup", { y: 60, opacity: 0, scale: 0.94 }, { y: 0, opacity: 1, scale: 1, duration: 1.1, ease: "power3.out" }, 37.5);
+      rise("#t6", 41.2);
+      tl.to("#root", { opacity: 0, duration: 0.8 }, 45.7);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
