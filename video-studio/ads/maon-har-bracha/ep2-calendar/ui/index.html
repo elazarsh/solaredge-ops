@@ -56,6 +56,20 @@
       .send { position: absolute; left: 60px; right: 60px; top: 1640px; height: 190px; border-radius: 95px; background: var(--wa); color: #fff; font-size: 66px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 24px; direction: rtl; }
       .send .hl { position: absolute; inset: 0; border-radius: 95px; background: rgba(0,0,0,.18); opacity: 0; }
 
+      /* ---------- the past: writing the note and setting the reminder ---------- */
+      #past .top { position: absolute; top: 110px; left: 0; right: 0; height: 300px; padding: 40px 60px 0; direction: rtl; border-bottom: 2px solid var(--line); }
+      #past .top .who { font-size: 46px; color: var(--sub); font-weight: 700; }
+      #past .top .d { font-family: "Rubik", "Emoji"; font-size: 80px; font-weight: 800; margin-top: 8px; }
+      #past .wrap { position: absolute; top: 470px; left: 50px; right: 50px; direction: rtl; }
+      .dict { display: inline-flex; align-items: center; gap: 18px; font-size: 46px; font-weight: 800; color: #C5221F; margin: 30px 0 0; }
+      .dict i { width: 90px; height: 90px; border-radius: 50%; background: #EA4335; color: #fff; font-style: normal; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+      .rrow { margin-top: 50px; border: 4px solid var(--acc); border-radius: 40px; padding: 30px 40px; direction: rtl; }
+      .rrow .k { font-size: 46px; color: var(--acc); font-weight: 800; }
+      .rrow .m { font-family: "Rubik", "Emoji"; font-size: 64px; font-weight: 800; line-height: 1.25; margin-top: 10px; }
+      .rrow .save { position: relative; margin-top: 30px; height: 150px; border-radius: 75px; background: var(--acc); color: #fff; font-size: 58px; font-weight: 800; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+      .rrow .save .hl { position: absolute; inset: 0; background: rgba(0,0,0,.2); opacity: 0; }
+      .rrow .ok { position: absolute; inset: 0; background: #188038; display: flex; align-items: center; justify-content: center; opacity: 0; }
+
       /* ---------- chat with the keyboard open ---------- */
       #chat { background: var(--wall); }
       .whead { position: absolute; left: 0; right: 0; top: 110px; height: 190px; background: #fff; border-bottom: 2px solid #E9EDEF; display: flex; align-items: center; gap: 28px; padding: 0 40px; direction: rtl; z-index: 5; }
@@ -99,8 +113,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="40.8" data-width="1080" data-height="2590">
-      <div id="ui" class="clip" data-start="0" data-duration="40.8" data-track-index="0" data-layout-allow-overlap>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="44.8" data-width="1080" data-height="2590">
+      <div id="ui" class="clip" data-start="0" data-duration="44.8" data-track-index="0" data-layout-allow-overlap>
 
         <!-- lock screen with the reminder -->
         <div class="pane" id="lock" style="z-index:1">
@@ -115,8 +129,31 @@
           </div>
         </div>
 
-        <!-- the reminder + the original note -->
-        <div class="pane" id="rem" style="z-index:2">
+        <!-- the past (4 years ago): dictating the note, setting the follow-up -->
+        <div class="pane" id="past" style="z-index:2">
+          <div class="sbar"><span class="ltr">7:42</span><span class="ltr">4G ▮▮▮ 71%</span></div>
+          <div class="top"><div class="who">📒 היומן של מיכל · כיתת הפעוטות</div><div class="d">יום רביעי, 07:42</div></div>
+          <div class="wrap">
+            <div class="card" style="transform:none">
+              <div class="who">📝 יואב, בן שנתיים</div>
+              <div class="t" id="ptxt" style="min-height:190px"></div>
+              <div class="dict" id="dict"><i>🎙️</i>מכתיבה…</div>
+            </div>
+            <div class="chips">
+              <div class="chip h" id="pc0" style="background:var(--c2); color:var(--c2d)">🧗 טיפס לבד</div>
+              <div class="chip h" id="pc1" style="background:var(--c1); color:var(--c1d)">🗣️ מילים ראשונות</div>
+              <div class="chip h" id="pc2" style="background:var(--c3); color:var(--c3d)">🤝 למד לחכות לתור</div>
+            </div>
+            <div class="rrow h" id="prow">
+              <div class="k">🔔 תזכורת מעקב</div>
+              <div class="m">כשיואב יעלה לכיתה א':<br>לשלוח לו ברכה 💌</div>
+              <div class="save"><div class="hl" id="psaveHl"></div>שמירה<div class="ok" id="pok">✓ התזכורת נשמרה</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- the reminder today (back in the present) -->
+        <div class="pane" id="rem" style="z-index:3">
           <div class="sbar"><span class="ltr">6:52</span><span class="ltr">5G ▮▮▮ 92%</span></div>
           <div class="band">
             <div class="bar"><span>✕</span><span style="font-size:54px">⋮</span></div>
@@ -126,22 +163,17 @@
             <div class="set" id="setChip">🔁 נקבעה לפני 4 שנים</div>
           </div>
           <div class="orig">
-            <div class="lbl">📝 הפתק שכתבתי אז</div>
+            <div class="lbl">📝 הפתק שכתבתי אז, בכיתת הפעוטות</div>
             <div class="card" id="card">
               <div class="who">יואב, בן שנתיים · כיתת הפעוטות</div>
               <div class="t">"היום נפרד מאבא בחיוך. פעם ראשונה! ❤️"</div>
-            </div>
-            <div class="chips">
-              <div class="chip h" id="ch0" style="background:var(--c2); color:var(--c2d)">🧗 טיפס לבד</div>
-              <div class="chip h" id="ch1" style="background:var(--c1); color:var(--c1d)">🗣️ מילים ראשונות</div>
-              <div class="chip h" id="ch2" style="background:var(--c3); color:var(--c3d)">🤝 למד לחכות לתור</div>
             </div>
           </div>
           <div class="send" id="sendBtn"><div class="hl" id="sendHl"></div>💌 לשלוח ליואב ברכה</div>
         </div>
 
         <!-- chat with Yoav's mom -->
-        <div class="pane" id="chat" style="z-index:3">
+        <div class="pane" id="chat" style="z-index:4">
           <div class="sbar" style="background:#fff"><span class="ltr">6:53</span><span class="ltr">5G ▮▮▮ 92%</span></div>
           <div class="whead"><div class="back">→</div><div class="gav">🎒</div><div class="gtxt"><b>שירה · אמא של יואב</b><span id="wsub">מחובר/ת</span></div></div>
           <div class="list" id="clist">
@@ -161,7 +193,7 @@
         </div>
 
         <!-- my follow-ups -->
-        <div class="pane" id="mine" style="z-index:4">
+        <div class="pane" id="mine" style="z-index:5">
           <div class="sbar"><span class="ltr">6:55</span><span class="ltr">5G ▮▮▮ 92%</span></div>
           <div class="band"><b>🔁 המעקב שלי</b></div>
           <div id="mrows"></div>
@@ -172,9 +204,9 @@
     <script>
       // ---- the edit (final-video seconds); keep in sync with ../edl.json, ../index.html and gen/foley.py ----
       const T = window.T = {
-        tapNotif: 4.8, rem: 5.0, chip0: 7.0, chipStep: 0.55,
-        tapSend: 10.8, chat: 11.0, type0: 11.7, send: 14.6, kbDown: 15.0, momTyping: 15.3, mom: 16.0,
-        mine: 26.8, rows: 28.0, rowStep: 0.95, end: 40.8,
+        tapNotif: 4.8, past: 5.4, write0: 5.9, write1: 7.3, chip0: 7.5, chipStep: 0.4, remRow: 8.4, tapSave: 9.2, present: 10.8,
+        tapSend: 12.4, chat: 12.6, type0: 13.3, send: 16.2, kbDown: 16.6, momTyping: 16.9, mom: 17.6,
+        mine: 30.8, rows: 32.0, rowStep: 0.95, end: 44.8,
       };
       const ease = "power2.inOut";
 
@@ -215,17 +247,24 @@
 
       // ---------------- timeline ----------------
       const tl = gsap.timeline({ paused: true });
-      tl.set(["#rem", "#chat", "#mine"], { xPercent: -100 }, 0);
+      tl.set(["#past", "#rem", "#chat", "#mine"], { xPercent: -100 }, 0);
       tl.set("#kb", { yPercent: 100 }, 0);
       // the notification breathes in on the counter
       tl.fromTo("#notif", { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power2.out", immediateRender: false }, 0.3);
-      // tap the notification → the reminder
+      // tap the notification → (rewind, see ../index.html) → the past: dictating the note, setting the follow-up
       tl.to("#notifHl", { opacity: 1, duration: 0.1 }, T.tapNotif);
-      tl.to("#rem", { xPercent: 0, duration: 0.45, ease }, T.rem);
-      tl.to("#lock", { xPercent: 30, duration: 0.45, ease }, T.rem);
-      tl.fromTo("#setChip", { scale: 1 }, { scale: 1.08, duration: 0.35, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, T.rem + 0.8);
-      tl.fromTo("#card", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power2.out", immediateRender: false }, T.rem + 0.6);
-      [0, 1, 2].forEach((k) => tl.fromTo("#ch" + k, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, T.chip0 + k * T.chipStep));
+      tl.set("#past", { xPercent: 0 }, T.past);
+      tl.set("#lock", { opacity: 0 }, T.past);
+      tl.fromTo("#dict i", { scale: 1 }, { scale: 1.12, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, T.write0 - 0.2);
+      tl.to("#dict", { opacity: 0, duration: 0.25 }, T.write1 + 0.1);
+      [0, 1, 2].forEach((k) => tl.fromTo("#pc" + k, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, T.chip0 + k * T.chipStep));
+      tl.fromTo("#prow", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power2.out", immediateRender: false }, T.remRow);
+      tl.to("#psaveHl", { opacity: 1, duration: 0.1 }, T.tapSave);
+      tl.to("#pok", { opacity: 1, duration: 0.25 }, T.tapSave + 0.15);
+      // (fast-forward, see ../index.html) → today's reminder
+      tl.set("#rem", { xPercent: 0 }, T.present);
+      tl.set("#past", { opacity: 0 }, T.present);
+      tl.fromTo("#setChip", { scale: 1 }, { scale: 1.08, duration: 0.35, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, T.present + 0.5);
       // send a greeting → chat, keyboard up, typing, send, mom answers
       tl.to("#sendHl", { opacity: 1, duration: 0.1 }, T.tapSend);
       tl.to("#chat", { xPercent: 0, duration: 0.45, ease }, T.chat);
@@ -251,8 +290,10 @@
       [1, 2, 3].forEach((k) => tl.to("#st" + k, { opacity: 0.35 + k * 0.2, duration: 0.25 }, S + 0.15 + (k - 1) * 0.3));
       tl.to("#arr", { opacity: 1, duration: 0.3 }, S + 1.0);
 
+      const PW = '"היום נפרד מאבא בחיוך. פעם ראשונה! ❤️"'.split(" ");
+      const pastText = (now) => { const p = Math.min(1, Math.max(0, (now - T.write0) / (T.write1 - T.write0))); document.getElementById("ptxt").textContent = PW.slice(0, Math.round(p * PW.length)).join(" "); };
       const clock = { v: 0 };
-      tl.to(clock, { v: 1, duration: T.end, ease: "none", onUpdate: () => typingState(tl.time()) }, 0);
+      tl.to(clock, { v: 1, duration: T.end, ease: "none", onUpdate: () => { typingState(tl.time()); pastText(tl.time()); } }, 0);
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
       tl.seek(0);

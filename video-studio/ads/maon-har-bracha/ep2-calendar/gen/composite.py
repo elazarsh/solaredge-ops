@@ -1,6 +1,7 @@
 # Composite the rendered phone UI onto the green screens of the Veo footage → footage.mp4 (1080×1920, 30 fps, no audio).
 # usage: composite.py edl.json ui.mp4 out.mp4
 # EDL rows (final-video seconds): {"clip": "type", "in": 0.4, "start": 10.2, "end": 18.2, "zoom": 1.4}
+#  optional "solid": true keeps only skin (the finger) inside the screen, for shots where Veo drew on the green
 #  optional camera keyframes instead of a fixed zoom: "cam": [[t, zoom, u, v], ...] — at time t the point (u, v) of the
 #  SCREEN (0..1, from the segment's median quad, so the phone keeps its natural handheld drift) sits at the frame centre;
 #  zoom and focus ease between keyframes (smoothstep) → slow, calm push-ins.
@@ -72,6 +73,11 @@ for seg in EDL:
         # key on green DOMINANCE (not brightness), so dark-green drawings on the screen (gen/chroma-keyboard.py) key fully
         gr = (g - np.maximum(r, b)) / np.maximum(g, 1)
         a = np.clip((gr - 0.22) / 0.33, 0, 1) * (poly / 255.0)
+        if seg.get("solid"):   # Veo drew things on the screen (e.g. a keyboard): inside the screen keep only skin (the finger)
+            skin = np.clip(((r - b) - 18) / 25, 0, 1) * np.clip(((r - g) - 4) / 14, 0, 1)
+            skin = cv2.GaussianBlur(cv2.morphologyEx(skin, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8)), (0, 0), 1.2 * Z)
+            inner = cv2.erode(poly, np.ones((int(6 * Z), int(6 * Z)), np.uint8)) / 255.0
+            a = np.maximum(a, inner * (1 - skin))
         a = cv2.GaussianBlur(a, (0, 0), 0.8 * Z)
         A = a[..., None]
         fg = bg.astype(np.float32) * (1 - A)

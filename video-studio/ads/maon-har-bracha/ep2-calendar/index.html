@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="he">
   <!--
-    פרק 2 "היומן" v7 (48.8 s). 0–40.8 s: Michal's phone (assets/footage.mp4 = Veo hand shots + the UI keyed onto the green
+    פרק 2 "היומן" v8 (52.8 s). 0–44.8 s: Michal's phone (assets/footage.mp4 = Veo hand shots + the UI keyed onto the green
     screen by gen/composite.py, per edl.json; sound in assets/foley.wav). On top: short headlines that guide the viewer,
-    the science → "המטפלת." section (16.4–26.6 s) and the closing card (34.0 s) over the blurred, dimmed footage, then the
-    fixed referral page → lockup with Irit (40.8 s, from ep1). Music (bgm.wav) dips under both VO lines.
+    a rewind into the past (4.9 s, sepia + "⏪ לפני 4 שנים") and back to today (10.4 s), the science → "המטפלת." section
+    (20.4–30.6 s) and the closing card (38.0 s) over the blurred, dimmed footage, then the referral page → lockup (44.8 s). Music (bgm.wav) dips under both VO lines.
     Calm motion for women 25–60. VO segments ≥ 1.5 s apart. Never put dir="rtl" on <html>.
   -->
   <head>
@@ -36,6 +36,12 @@
       .sci.b b { color: #FFD66B; }
       .sci.c { top: 1060px; font-size: 64px; font-weight: 700; }
       .sci.src { top: 1600px; font-size: 32px; font-weight: 500; opacity: .85; }
+      /* flashback: rewind into the past, fast-forward back to today */
+      #flash { position: absolute; inset: 0; background: #FFF4E0; }
+      #vign { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(60,35,10,.55) 100%); }
+      .tchip { position: absolute; left: 0; right: 0; top: 860px; text-align: center; direction: rtl; }
+      .tchip span { display: inline-block; font-family: "Rubik", "Emoji", sans-serif; font-size: 110px; font-weight: 900; color: #fff; background: rgba(90,55,20,.9); border-radius: 70px; padding: 26px 70px 34px; box-shadow: 0 16px 50px rgba(0,0,0,.35); }
+      #ff span { background: rgba(14,148,71,.92); }
       /* guiding headlines over the top of the phone */
       #topband { position: absolute; left: 0; right: 0; top: 0; height: 520px; background: linear-gradient(180deg, rgba(10,20,15,.62), rgba(10,20,15,0)); }
       .hd { position: absolute; left: 40px; right: 40px; top: 130px; text-align: center; direction: rtl; font-family: "Rubik", "Emoji", sans-serif; font-size: 74px; font-weight: 900; color: #fff; line-height: 1.12; text-shadow: none; }
@@ -82,12 +88,16 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="48.8" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="52.8" data-width="1080" data-height="1920">
 
-      <video id="footage" class="clip" src="assets/footage.mp4" data-start="0" data-duration="40.8" data-track-index="0" muted playsinline></video>
+      <video id="footage" class="clip" src="assets/footage.mp4" data-start="0" data-duration="44.8" data-track-index="0" muted playsinline></video>
 
-      <div id="over" class="clip" data-start="0" data-duration="40.8" data-track-index="1" data-layout-allow-overlap>
+      <div id="over" class="clip" data-start="0" data-duration="44.8" data-track-index="1" data-layout-allow-overlap>
         <div id="dim" class="h"></div>
+        <div id="flash" class="h"></div>
+        <div id="vign" class="h"></div>
+        <div class="tchip h" id="rw"><span>⏪ לפני 4 שנים</span></div>
+        <div class="tchip h" id="ff"><span>⏩ היום</span></div>
         <div id="topband" class="h"></div>
         <div class="hd h" id="h1"><span>תזכורת שנקבעה<br>לפני 4 שנים.</span></div>
         <div class="hd h" id="h2"><span>מיכל,<br>מטפלת במעון הר ברכה.</span></div>
@@ -101,7 +111,7 @@
         <div class="sg2 h" id="l2">מטפלת מלווה אותו<br><b>בשנים הכי חשובות.</b></div>
       </div>
 
-      <div id="finc" class="clip" data-start="40.8" data-duration="8.0" data-track-index="2" data-layout-allow-overlap>
+      <div id="finc" class="clip" data-start="44.8" data-duration="8.0" data-track-index="2" data-layout-allow-overlap>
         <div class="glit" id="glit"></div>
         <div id="deco">
           <div class="dot" style="left:-80px; top:1420px; width:360px; height:360px; background:rgba(239,127,138,.14)"></div>
@@ -127,10 +137,10 @@
       </div>
 
       
-      <audio id="foley" src="assets/foley.wav" data-start="0" data-duration="40.8" data-track-index="10" data-volume="1"></audio>
-      <audio id="bgm" src="assets/bgm/bgm.wav" data-start="0" data-duration="48.8" data-track-index="11" data-volume="0.75"></audio>
-      <audio id="vo1" src="assets/voice/vo-end-1.wav" data-start="34.4" data-duration="6.05" data-track-index="12" data-volume="1"></audio>
-      <audio id="vo2" src="assets/voice/vo-end-2.wav" data-start="42.0" data-duration="4.76" data-track-index="13" data-volume="1"></audio>
+      <audio id="foley" src="assets/foley.wav" data-start="0" data-duration="44.8" data-track-index="10" data-volume="1"></audio>
+      <audio id="bgm" src="assets/bgm/bgm.wav" data-start="0" data-duration="52.8" data-track-index="11" data-volume="0.75"></audio>
+      <audio id="vo1" src="assets/voice/vo-end-1.wav" data-start="38.4" data-duration="5.82" data-track-index="12" data-volume="1"></audio>
+      <audio id="vo2" src="assets/voice/vo-end-2.wav" data-start="46.0" data-duration="4.76" data-track-index="13" data-volume="1"></audio>
     </div>
 
     <script>
@@ -145,26 +155,44 @@
         tl.fromTo("#topband", { opacity: 0 }, { opacity: 1, duration: 0.4, immediateRender: false }, a - 0.1);
         tl.to("#topband", { opacity: 0, duration: 0.4 }, b - 0.3);
       };
-      head("#h1", 0.5, 4.3); head("#h2", 7.6, 10.7); head("#h3", 26.9, 30.0);
+      head("#h1", 0.5, 4.7); head("#h2", 6.4, 10.0); head("#h3", 30.9, 34.0);
+
+      // rewind into the past (sepia, vignette, "⏪ לפני 4 שנים" → a small badge at the bottom), then back to today
+      const RW = 4.9, FF = 10.4;
+      tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.85, duration: 0.25, ease: "power1.in", immediateRender: false }, RW);
+      tl.to("#flash", { opacity: 0, duration: 0.45, ease: "power1.out" }, RW + 0.3);
+      tl.fromTo("#footage", { filter: "blur(0px) sepia(0)" }, { filter: "blur(6px) sepia(0.6)", duration: 0.3, immediateRender: false }, RW);
+      tl.to("#footage", { filter: "blur(0px) sepia(0.6)", duration: 0.5 }, RW + 0.35);
+      tl.fromTo("#vign", { opacity: 0 }, { opacity: 1, duration: 0.6, immediateRender: false }, RW + 0.2);
+      tl.fromTo("#rw", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.6)", immediateRender: false }, RW + 0.15);
+      tl.to("#rw", { y: 780, scale: 0.55, duration: 0.6, ease: "power2.inOut" }, RW + 1.2);
+      tl.to("#rw", { opacity: 0, duration: 0.3 }, FF - 0.1);
+      tl.to("#flash", { opacity: 0.7, duration: 0.2, ease: "power1.in" }, FF);
+      tl.to("#flash", { opacity: 0, duration: 0.45, ease: "power1.out" }, FF + 0.25);
+      tl.to("#footage", { filter: "blur(6px) sepia(0)", duration: 0.3 }, FF);
+      tl.to("#footage", { filter: "blur(0px) sepia(0)", duration: 0.5 }, FF + 0.35);
+      tl.to("#vign", { opacity: 0, duration: 0.5 }, FF + 0.1);
+      tl.fromTo("#ff", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.6)", immediateRender: false }, FF + 0.15);
+      tl.to("#ff", { opacity: 0, duration: 0.4 }, FF + 1.3);
 
       // science → "המטפלת." → what she does (16.4–26.6)
-      const D1 = 16.4, D2 = 26.6;
-      tl.fromTo("#footage", { filter: "blur(0px)" }, { filter: "blur(14px)", duration: 0.8, ease: "power2.inOut" }, D1);
+      const D1 = 20.4, D2 = 30.6;
+      tl.fromTo("#footage", { filter: "blur(0px) sepia(0)" }, { filter: "blur(14px) sepia(0)", duration: 0.8, ease: "power2.inOut", immediateRender: false }, D1);
       tl.fromTo("#dim", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.inOut" }, D1);
       fadeUp("#s1", D1 + 0.5); tl.fromTo("#s1s", { opacity: 0 }, { opacity: 1, duration: 0.5 }, D1 + 1.0);
-      fadeUp("#s2", 20.4); fadeUp("#s3", 22.2); fadeUp("#s4", 23.4);
+      fadeUp("#s2", 24.4); fadeUp("#s3", 26.2); fadeUp("#s4", 27.4);
       tl.to(["#s1", "#s1s", "#s2", "#s3", "#s4"], { opacity: 0, duration: 0.4 }, D2 - 0.4);
-      tl.to("#footage", { filter: "blur(0px)", duration: 0.6, ease: "power2.inOut" }, D2 - 0.3);
+      tl.to("#footage", { filter: "blur(0px) sepia(0)", duration: 0.6, ease: "power2.inOut" }, D2 - 0.3);
       tl.to("#dim", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, D2 - 0.3);
 
-      // closing card, under VO1 (34.4 s; the second sentence starts ~2.4 s in)
-      const G = 34.0;
-      tl.to("#footage", { filter: "blur(14px)", duration: 0.8, ease: "power2.inOut" }, G);
+      // closing card, under VO1 (38.4 s; the second sentence starts ~2.5 s in)
+      const G = 38.0;
+      tl.to("#footage", { filter: "blur(14px) sepia(0)", duration: 0.8, ease: "power2.inOut" }, G);
       tl.to("#dim", { opacity: 1, duration: 0.8, ease: "power2.inOut" }, G);
-      fadeUp("#l1", 34.4); fadeUp("#l2", 36.8);
+      fadeUp("#l1", 38.4); fadeUp("#l2", 40.9);
 
       // referral page (4.4 s) → lockup with Irit, kept to the last frame
-      const R = 40.8;
+      const R = 44.8;
       tl.fromTo("#finc", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, R);
       tl.fromTo("#balloon", { y: 120 }, { y: 0, duration: 1.4, ease: "power2.out" }, R);
       tl.to("#balloon", { y: -14, duration: 1.2, yoyo: true, repeat: 1, ease: "sine.inOut" }, R + 1.4);

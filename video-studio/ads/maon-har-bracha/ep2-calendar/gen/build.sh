@@ -15,5 +15,5 @@ python3 gen/foley.py
 python3 gen/composite.py edl.json ui.mp4 assets/footage.mp4
 npx --yes hyperframes@0.8.96 render -o out/ep2-calendar-raw.mp4 -f 30 -q high -w 2 --quiet
 bash $TOOLS/loudnorm.sh out/ep2-calendar-raw.mp4 out/ep2-calendar-norm.mp4
-ffmpeg -v error -y -i out/ep2-calendar-norm.mp4 -c:v libx264 -crf 21 -preset slow -pix_fmt yuv420p -movflags +faststart -c:a copy out/ep2-calendar-v7.mp4
-bash $TOOLS/ad-qa.sh out/ep2-calendar-v7.mp4
+ffmpeg -v error -y -i out/ep2-calendar-norm.mp4 -c:v libx264 -crf 21 -preset slow -pix_fmt yuv420p -movflags +faststart -c:a copy out/ep2-calendar-v8.mp4
+bash $TOOLS/ad-qa.sh out/ep2-calendar-v8.mp4

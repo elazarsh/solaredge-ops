@@ -1,8 +1,9 @@
 # Real-life sound for the phone part → assets/foley.wav (48 kHz stereo, final-video seconds).
-# Reads the edit times (T) and the greeting text from ui/index.html: the phone buzzing on the counter, finger taps,
+# Reads the edit times (T) and the greeting text from ui/index.html: the phone buzzing on the counter, finger taps, the
+# rewind into the past and the whoosh back to today,
 # a keyboard click on every keystroke, WhatsApp send/receive, rising chimes on the salary steps, quiet room tone.
 import re, subprocess, numpy as np
-SR = 48000; DUR = 40.8
+SR = 48000; DUR = 44.8
 rng = np.random.default_rng(5)
 html = open("ui/index.html", encoding="utf-8").read()
 blk = html[html.index("const T = window.T"):html.index("};", html.index("const T = window.T"))]
@@ -45,7 +46,12 @@ def click(bright=1.0):
     s_ = 0.35 * np.convolve(rng.normal(0, 1, n) * np.exp(-t * 260), np.ones(4) / 4, "same") + 0.5 * np.sin(2 * np.pi * (1800 + 600 * bright) * t) * np.exp(-t * 420) + 0.6 * np.sin(2 * np.pi * 180 * t) * np.exp(-t * 90)
     return s_ / np.abs(s_).max()
 for at in (0.35, 1.05): add(buzz(), at, 0.22)                           # the reminder buzzes on the counter
-for at in (T["tapNotif"], T["tapSend"]): add(tap(), at, 0.13)
+for at in (T["tapNotif"], T["tapSave"], T["tapSend"]): add(tap(), at, 0.13)
+# flashback: a reversed whoosh + fast reverse ticks into the past, a forward whoosh back to today
+wh = load("assets/sfx/whoosh-cinematic.mp3")
+add(wh[::-1][-int(1.2 * SR):], 4.85, 0.35)
+for j in range(10): add(tick(), 4.95 + j * 0.07, 0.05)
+add(wh[: int(1.2 * SR)], 10.3, 0.3)
 # keystrokes: same timing as the UI (MSG spread evenly from type0 to send-0.25)
 msg = re.search(r'const MSG = "([^"]+)"', html).group(1).replace("\\n", "\n")
 chars = list(msg); cps = len(chars) / (T["send"] - 0.25 - T["type0"])
