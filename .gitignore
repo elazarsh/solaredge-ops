@@ -21,3 +21,7 @@ video-studio/**/node_modules/
 video-studio/**/out/
 video-studio/**/.hyperframes/
 video-studio/**/snapshots/
+# ep1 vlog: regenerated intermediates (gen/composite.py, ui render, gen/foley.py)
+video-studio/ads/maon-har-bracha/ep1-vlog/assets/footage.mp4
+video-studio/ads/maon-har-bracha/ep1-vlog/assets/foley.wav
+video-studio/ads/maon-har-bracha/ep1-vlog/ui.mp4
