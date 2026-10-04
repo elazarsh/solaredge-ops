@@ -1,0 +1,16 @@
+{
+ "provider": "gemini",
+ "tts_model": "gemini-3.8-flash-tts",
+ "voice": "Sulafat",
+ "lang": "he",
+ "style": "A warm, mature Israeli woman speaking kindly and clearly to friends in the community, good natural Hebrew, light gentle smile in the voice, steady conversational pace (not slow, not rushed), a short pause between sentences.",
+ "lines": [
+  {
+   "id": "h5",
+   "text": "עִקְבוּ אַחֲרֵי הַהוֹדָעוֹת, וְהָכִינוּ סֶפַח תְּעוּדַת זֶהוּת פָּתוּחַ, שֶׁלָּכֶם וְשֶׁל כָּל יֶלֶד מֵעַל גִּיל שְׁמוֹנֶה עֶשְׂרֵה."
+  }
+ ],
+ "bgm": {
+  "mode": "none"
+ }
+}
