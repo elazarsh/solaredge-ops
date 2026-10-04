@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Full rebuild of ep2 "היומן" from the committed Veo clips (clips/*.mp4 + tracked quads clips/*.json).
 #  1. ui/        → ui.mp4               phone screen only (1080×2590), timeline in final-video seconds (T in ui/index.html)
-#  2. foley.py   → assets/foley.wav     taps, swipes, dictation ticks, age ticks, save pops, salary chimes, room tone (reads T)
+#  2. foley.py   → assets/foley.wav     buzz, taps, keystroke clicks, send/receive, salary chimes, room tone (reads T)
 #  3. composite  → assets/footage.mp4   calendar UI keyed + perspective-warped onto the green screens per edl.json
 #  4. index.html → out/…-raw.mp4        opening sticker, science card, closing card, referral page, lockup, audio
 #  5. loudnorm + delivery encode + QA
@@ -15,5 +15,5 @@ python3 gen/foley.py
 python3 gen/composite.py edl.json ui.mp4 assets/footage.mp4
 npx --yes hyperframes@0.8.96 render -o out/ep2-calendar-raw.mp4 -f 30 -q high -w 2 --quiet
 bash $TOOLS/loudnorm.sh out/ep2-calendar-raw.mp4 out/ep2-calendar-norm.mp4
-ffmpeg -v error -y -i out/ep2-calendar-norm.mp4 -c:v libx264 -crf 21 -preset slow -pix_fmt yuv420p -movflags +faststart -c:a copy out/ep2-calendar-v4.mp4
-bash $TOOLS/ad-qa.sh out/ep2-calendar-v4.mp4
+ffmpeg -v error -y -i out/ep2-calendar-norm.mp4 -c:v libx264 -crf 21 -preset slow -pix_fmt yuv420p -movflags +faststart -c:a copy out/ep2-calendar-v7.mp4
+bash $TOOLS/ad-qa.sh out/ep2-calendar-v7.mp4

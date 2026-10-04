@@ -20,7 +20,7 @@ if sys.argv[1] == "music":
         for p in d["candidates"][0]["content"]["parts"]:
             if "inlineData" in p: open(f"assets/bgm/v4-take{i}.mp3", "wb").write(base64.b64decode(p["inlineData"]["data"])); print("take", i)
 else:
-    lines = {"vo-end-1": "בֵּייבִּיסִיטֶר שׁוֹמֶרֶת עַל הַיֶּלֶד לְכַמָּה שָׁעוֹת. מְטַפֶּלֶת בּוֹנָה אוֹתוֹ לְכָל הַחַיִּים."}
+    lines = {"vo-end-1": "בֵּייבִּיסִיטֶר שׁוֹמֶרֶת עַל הַיֶּלֶד לְכַמָּה שָׁעוֹת. מְטַפֶּלֶת מְלַוָּה אוֹתוֹ בַּשָּׁנִים הֲכִי חֲשׁוּבוֹת."}
     style = ""
     for k, txt in lines.items():
         for take in (1, 2):

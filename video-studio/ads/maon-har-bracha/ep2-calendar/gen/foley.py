@@ -1,8 +1,8 @@
 # Real-life sound for the phone part → assets/foley.wav (48 kHz stereo, final-video seconds).
-# Reads the edit times (T) from ui/index.html: finger taps, soft swipes, dictation on/off ticks, the age counter ticking,
-# a pop when a follow-up is saved, rising chimes on the salary steps, over a quiet early-morning kitchen room tone.
+# Reads the edit times (T) and the greeting text from ui/index.html: the phone buzzing on the counter, finger taps,
+# a keyboard click on every keystroke, WhatsApp send/receive, rising chimes on the salary steps, quiet room tone.
 import re, subprocess, numpy as np
-SR = 48000; DUR = 51.8
+SR = 48000; DUR = 40.8
 rng = np.random.default_rng(5)
 html = open("ui/index.html", encoding="utf-8").read()
 blk = html[html.index("const T = window.T"):html.index("};", html.index("const T = window.T"))]
@@ -40,24 +40,25 @@ def buzz(d=0.35):
     return s * env
 
 ping, pop, chime = load("assets/sfx/notification.mp3"), load("assets/sfx/pop.mp3"), load("assets/sfx/chime.mp3")
-K = [float(x) for x in re.search(r"K: \[([^\]]+)\]", blk).group(1).split(",")]
-AGES = [(2, 6), (2, 7), (2, 6), (2, 15)]
-for at in [T["toDay"] - 0.15, T["tapBlk"], T["tapMine"]] + [k + T["tapR"] for k in K]: add(tap(), at, 0.13)
-for k in K[1:]: add(swish(), k - 0.5, 0.05)
-add(swish(), T["backDay"], 0.04)
-for k, (a0, a1) in zip(K, AGES):
-    add(tick(), k + 0.2, 0.05); add(tick(), k + T["okAt"], 0.05)          # dictation on / off
-    a, b = k + T["roll0"], k + T["roll1"]
-    for j in range(1, a1 - a0 + 1):                                         # one soft tick per year of age (ease-out like the UI)
-        p = 1 - np.sqrt(1 - j / (a1 - a0)); add(tick(), a + p * (b - a), 0.06)
-    add(pop, k + T["savedAt"], 0.18)
-S = T["mine"] + 0.6 + 3 * T["mineStep"]
+def click(bright=1.0):
+    n = int(0.03 * SR); t = np.arange(n) / SR
+    s_ = 0.35 * np.convolve(rng.normal(0, 1, n) * np.exp(-t * 260), np.ones(4) / 4, "same") + 0.5 * np.sin(2 * np.pi * (1800 + 600 * bright) * t) * np.exp(-t * 420) + 0.6 * np.sin(2 * np.pi * 180 * t) * np.exp(-t * 90)
+    return s_ / np.abs(s_).max()
+for at in (0.35, 1.05): add(buzz(), at, 0.22)                           # the reminder buzzes on the counter
+for at in (T["tapNotif"], T["tapSend"]): add(tap(), at, 0.13)
+# keystrokes: same timing as the UI (MSG spread evenly from type0 to send-0.25)
+msg = re.search(r'const MSG = "([^"]+)"', html).group(1).replace("\\n", "\n")
+chars = list(msg); cps = len(chars) / (T["send"] - 0.25 - T["type0"])
+for k, ch in enumerate(chars):
+    add(click(rng.uniform(0.6, 1.4) if ch not in " \n" else 0.2), T["type0"] + k / cps + rng.uniform(-0.004, 0.004), 0.14, pan=rng.uniform(-0.15, 0.15))
+add(pop, T["send"], 0.3); add(ping, T["mom"], 0.25)
+S = T["rows"] + 3 * T["rowStep"]
 for j in range(3): add(chime[: int(0.6 * SR)], S + 0.15 + j * 0.3, 0.06 + 0.02 * j)   # the salary steps climb
 
 # room tone: soft brown noise + a far bird
 w = np.cumsum(rng.normal(0, 1, len(out))); w -= np.convolve(w, np.ones(4800) / 4800, "same"); w /= np.abs(w).max()
 out += np.stack([w, np.roll(w, 900)], 1) * 0.012
-for at in (1.2, 6.8, 19.5, 29.0, 44.0):
+for at in (2.2, 8.0, 29.0):
     n = int(0.12 * SR); tt = np.arange(n) / SR
     chirp = np.sin(2 * np.pi * (3600 + 1400 * np.sin(2 * np.pi * 18 * tt)) * tt) * np.hanning(n)
     for k in range(3): add(chirp, at + k * 0.16, 0.012, pan=-0.6)
