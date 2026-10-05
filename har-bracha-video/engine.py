@@ -2,7 +2,7 @@
 import numpy as np, cv2, math, json, os, sys
 from fx import *
 from scenes import S as SCENES, BEAT
-FPS=30; TOTAL=80.0
+FPS=30; TOTAL=81.0
 files_rel=json.load(open(f"{SCR}/order.json"))
 # ---------- הגדרות לכל סצנה: סגנון, אפקטים, מעבר
 # style: full / card / circle / dip_slant / dip_straight
@@ -357,7 +357,7 @@ TEXTS=[
  _T(sid="M34",o=0.1,d=3.7,txt="הקהילה שלנו",kind="pill",col='blue',size=110,pos=(W/2,H*0.88)),
  _T(sid="C01",o=0.2,d=2.6,txt="תודה על שנה מדהימה",kind="end",size=118,pos=(W/2,H*0.5)),
  _T(sid="C02",o=0.2,d=2.6,txt="והשנה החדשה כבר כאן",kind="end",size=112,pos=(W/2,H*0.5)),
- _T(sid="C03",o=0.2,d=2.6,txt="נתראה במתנ\"ס!",kind="end",size=124,pos=(W/2,H*0.5),accent=True),
+ _T(sid="C03",o=0.2,d=3.6,txt="תקופת השינויים בחוגים",sub="עד יום רביעי 07/10  ·  הקישור בהודעה",kind="end",size=116,pos=(W/2,H*0.45),accent=True),
 ]
 def draw_text(f,tabs):
     for T in TEXTS:
@@ -390,6 +390,10 @@ def draw_text(f,tabs):
                 w=int(spr.shape[1]*0.82*e_out(clamp((t-0.3)/0.8)))
                 if w>5: cv2.rectangle(f,(int(W/2-w/2),int(y+spr.shape[0]*0.38)),(int(W/2+w/2),int(y+spr.shape[0]*0.38)+10),PALETTE['orange'][::-1],-1)
             blit(f,spr,T['pos'][0],y,scale=1.0+0.02*(t/dur),alpha=a)
+            if T.get('sub'):
+                a2=e_out(clamp((t-0.5)/0.6))*clamp((dur-t)/0.5)
+                sp2=text_sprite(T["sub"],72,(255,200,90),None,shadow=True,pad=(10,6),wght=700)
+                blit(f,sp2,T['pos'][0],y+spr.shape[0]*0.95+(1-e_out(clamp((t-0.5)/0.8)))*20,alpha=a2)
 # ---------- מסגרת ראשית
 TIMES=[]; _t=0
 for s in SCENES: TIMES.append((s[0],_t,_t+s[2])); _t+=s[2]
