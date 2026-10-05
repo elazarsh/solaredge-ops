@@ -1,0 +1,4 @@
+*.xlsx
+*.mp4
+thumbs_tmp/
+__pycache__/
