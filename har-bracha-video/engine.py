@@ -2,7 +2,7 @@
 import numpy as np, cv2, math, json, os, sys
 from fx import *
 from scenes import S as SCENES, BEAT
-FPS=30; TOTAL=79.0
+FPS=30; TOTAL=80.0
 files_rel=json.load(open(f"{SCR}/order.json"))
 # ---------- הגדרות לכל סצנה: סגנון, אפקטים, מעבר
 # style: full / card / circle / dip_slant / dip_straight
@@ -354,7 +354,7 @@ TEXTS=[
  _T(sid="M28",o=0.1,d=2.8,txt="70",sub="תלמידי מוזיקה",kind="counter",col='pink',num=70,pos=(W/2,H*0.84),small=True),
  _T(sid="M29",o=0.0,d=2.0,txt="בבניין החדש",kind="pill",col='pink',size=100,pos=(W/2,H*0.88)),
  _T(sid="M30",o=0.0,d=2.0,txt="ספרים, צלילים, צבעים",kind="pill",col='orange',size=96,pos=(W/2,H*0.88)),
- _T(sid="M34",o=0.0,d=4.0,txt="קהילה אחת",kind="big",col='blue',size=190,pos=(W/2,H*0.8)),
+ _T(sid="M34",o=0.1,d=3.7,txt="הקהילה שלנו",kind="pill",col='blue',size=110,pos=(W/2,H*0.88)),
  _T(sid="C01",o=0.2,d=2.6,txt="תודה על שנה מדהימה",kind="end",size=118,pos=(W/2,H*0.5)),
  _T(sid="C02",o=0.2,d=2.6,txt="והשנה החדשה כבר כאן",kind="end",size=112,pos=(W/2,H*0.5)),
  _T(sid="C03",o=0.2,d=2.6,txt="נתראה במתנ\"ס!",kind="end",size=124,pos=(W/2,H*0.5),accent=True),

@@ -74,8 +74,8 @@ def figure_sprite(n,t,flat,phase,amp=1.0):
 # ---------- הגדרות פריסה
 SM0=0.78; WM0=(960,760)          # מתנ"ס בסצנה המשותפת (עולם)
 SH0=0.80; WH0=(1010,400)         # הר ברכה בסצנה המשותפת (רקע)
-SC_M=0.50; FM=(W*0.27,H*0.5)     # מתנ"ס סופי
-SH_F=0.66; FH=(W*0.73,H*0.5)     # הר ברכה סופי
+SC_M=0.56; FM=(W*0.255,H*0.5)     # מתנ"ס סופי
+SH_F=0.74; FH=(W*0.745,H*0.5)     # הר ברכה סופי
 M_ANCH=(768,683); H_ANCH=(466,466)
 def wpos_m(n):
     c=LM[n]['c']; return (WM0[0]+(c[0]-M_ANCH[0])*SM0, WM0[1]+(c[1]-M_ANCH[1])*SM0)
@@ -90,6 +90,37 @@ APPEAR_M={'person_orange':(0.0,0.5,'popb'),'child':(0.08,0.5,'popb'),'person_blu
  'tree_big':(0.7,0.5,'grow'),'tree_dark':(0.8,0.5,'grow'),'book':(1.0,0.5,'pop'),'sun':(1.2,0.55,'pop'),'arc':(1.4,0.8,'draw'),'heart':(1.9,0.5,'pop')}
 APPEAR_H={'tower':(1.0,0.5,'drop'),'bldg_orange':(1.1,0.5,'drop'),'bldg_back':(1.05,0.5,'drop'),'tree_pink':(1.3,0.5,'grow'),'tree_left':(1.4,0.5,'grow'),'tree_right':(1.5,0.5,'grow'),'house':(1.6,0.45,'pop'),'book':(1.75,0.5,'pop')}
 SPLIT_T0=3.4
+PLAY0=5.3
+# לוח זמנים של משחק הכדור: (התחלה, סיום, מ-, אל-, גובה קשת)
+BALL=[(5.3,5.8,'HOME','A',150),(5.9,6.8,'A','B',260),(7.0,7.9,'B','A',260),(8.1,9.0,'A','B',260),(9.0,9.6,'B','HOME',200)]
+CATCH={'person_orange':[5.8,7.9],'person_blue':[6.8,9.0]}
+def bump(t,tc):
+    x=clamp((t-(tc-0.2))/0.75); return math.sin(math.pi*x)
+def hands():
+    out={}
+    for n,side in (('person_orange','L'),('person_blue','R')):
+        L=LM[n]; a=L['img'][...,3]>128; ys,xs=np.where(a)
+        if side=='L': xe=xs.min(); sel=xs<xe+25; x=xe+8
+        else: xe=xs.max(); sel=xs>xe-25; x=xe-8
+        y=ys[sel].mean(); out[n]=(L['bb'][0]+x,L['bb'][1]+y)
+    return out
+def screen_f(pt): return (FM[0]+(pt[0]-M_ANCH[0])*SC_M, FM[1]+(pt[1]-M_ANCH[1])*SC_M)
+def ball_state(t):
+    if t<BALL[0][0] or t>=BALL[-1][1]: return None
+    hd=hands(); P={'A':screen_f((hd['person_orange'][0]-10,hd['person_orange'][1]-30)),'B':screen_f((hd['person_blue'][0]+10,hd['person_blue'][1]-30)),'HOME':screen_f(LM['sun']['c'])}
+    prev_end=None
+    for (t0,t1,a,b,h) in BALL:
+        if t0<=t<t1:
+            s=(t-t0)/(t1-t0); pa,pb=P[a],P[b]
+            x=lerp(pa[0],pb[0],s); y=lerp(pa[1],pb[1],s)-4*h*SC_M*2*s*(1-s)
+            sc=0.6+0.4*(1 if (a=='HOME' or b=='HOME') and False else 0)
+            return (x,y,s)
+    # בין מסירות: הכדור ביד האחרונה
+    last=None
+    for (t0,t1,a,b,h) in BALL:
+        if t>=t1: last=b
+    return (P[last][0],P[last][1],1.0)
+
 ORDER_H_BACK=['bldg_back','tower','bldg_orange','tree_pink','house','tree_left','tree_right','book']
 def draw_layer(f,L,pos,scale,alpha=1.0,angle=0,sx=None,sy=None):
     blit(f,L['img'],pos[0],pos[1],scale=scale,angle=angle,alpha=alpha,sx=sx,sy=sy)
@@ -107,7 +138,7 @@ def render(t,tabs):
     def cam(p): return (W/2+(p[0]-fx_)*kz, H/2+(p[1]-fy_)*kz)
     sp=clamp((t-SPLIT_T0)/1.5)                     # התקדמות פיצול כללית
     flat=e_io(clamp((t-SPLIT_T0)/1.8))
-    hug=e_io(clamp((t-5.7)/1.0))*0.035*W
+    hug=0.0
     idle=1.0 if t<SPLIT_T0+1.8 else 0.35
     # --- רקע: הר ברכה (נראה כרקע חיוור בסצנה המשותפת, מתמלא בפיצול)
     for n in ORDER_H_BACK:
@@ -144,6 +175,7 @@ def render(t,tabs):
         if L is None: continue
         st,du,eff=APPEAR_M[n]; x=clamp((t-st)/du)
         if x<=0: continue
+        if n=='sun' and ball_state(t) is not None: continue
         e=e_back(x,1.5); sx=sy=1.0; dy=0
         if eff=='rise': dy=(1-e)*420
         elif eff=='grow': sy=max(0.01,e)
@@ -153,9 +185,9 @@ def render(t,tabs):
         fp=fpos_m(n); fp=(fp[0]+hug,fp[1])
         pos=(lerp(wp[0],fp[0],pe),lerp(wp[1],fp[1],pe)+dy*kz*(1-pe)); sc=lerp(sw,SC_M,pe)
         ang=math.sin(pe*math.pi)*(5 if idx%2 else -5)
-        draw_layer(f,L,pos,sc,angle=ang,sx=sc*sx,sy=sc*sy)
-        if n=='arc':
-            pass
+        al_=1.0
+        if n=='arc' and ball_state(t) is not None: al_=0.35
+        draw_layer(f,L,pos,sc,alpha=al_,angle=ang,sx=sc*sx,sy=sc*sy)
     # קו מקווקו: חשיפה זוויתית
     # (מיושם בתוך draw ע"י מסכה)
     # --- צללים ודמויות חיות
@@ -167,8 +199,15 @@ def render(t,tabs):
         idx=['person_orange','child','person_blue'].index(n)+8; pe=e_back(clamp((t-SPLIT_T0-idx*0.04)/1.25),1.05)
         fp=fpos_m(n); fp=(fp[0]+hug,fp[1])
         j=abs(math.sin(math.pi*(t/1.0+ph)));  # קפיצה כל שנייה (2 פעימות)
-        jump=j*(0.20*(L['bb'][3]-L['bb'][1])*idle)
-        sq=1+0.07*(1-j)*idle; stt=1-0.04*(1-j)*idle
+        if t>=PLAY0-0.3:
+            evs=CATCH.get(n,[5.8,6.8,7.9,9.0])
+            jb=max([bump(t,tc) for tc in evs]+[0.0]); 
+            if n=='child': jb=max([bump(t,tc+0.1) for tc in (5.8,6.8,7.9,9.0)]+[0.0])
+            j=max(jb,0.18*abs(math.sin(math.pi*(t/1.0+ph)))) if t<9.6 else j*0.0+0.0
+            idle_=1.0
+        else: idle_=idle
+        jump=j*((0.30 if t>=PLAY0-0.3 else 0.20)*(L['bb'][3]-L['bb'][1])*idle_)
+        sq=1+0.07*(1-j)*idle_; stt=1-0.04*(1-j)*idle_
         base=lerp(sw,SC_M,pe); sc=base
         pos=(lerp(wp[0],fp[0],pe),lerp(wp[1],fp[1],pe)-jump*sc)
         # צל על הקרקע
@@ -176,9 +215,20 @@ def render(t,tabs):
         if flat<0.98:
             sh=np.zeros((60,260,4),np.uint8); cv2.ellipse(sh,(130,30),(110,18),0,0,360,(40,40,40,150),-1,cv2.LINE_AA); sh=cv2.GaussianBlur(sh,(0,0),6)
             blit(f,sh,pos[0],bot-8*sc,scale=sc*(0.9+0.5*(1-j))*(L['bb'][2]-L['bb'][0])/260,alpha=(1-flat)*(0.8+0.2*(1-j)))
-        spr=figure_sprite(n,t,flat,ph,amp=idle)
+        spr=figure_sprite(n,t,flat,ph,amp=idle_*(1.5 if t>=PLAY0-0.3 and t<9.6 else 1.0))
         s_=e if x<1 else 1.0
-        blit(f,spr,pos[0],pos[1],sx=sc*stt*max(0.01,s_),sy=sc*sq*max(0.01,s_),angle=math.sin(2*math.pi*(t/1.0+ph))*2.0*idle)
+        blit(f,spr,pos[0],pos[1],sx=sc*stt*max(0.01,s_),sy=sc*sq*max(0.01,s_),angle=math.sin(2*math.pi*(t/1.0+ph))*2.0*idle_)
+    bs=ball_state(t)
+    if bs is not None:
+        x,y,s_=bs; spr=LM['sun']['img']; sc=SC_M*0.85
+        # זנב
+        for k,al in ((3,0.10),(2,0.18),(1,0.28)):
+            ts=max(0,t-0.035*k); b2=ball_state(ts)
+            if b2: blit(f,spr,b2[0],b2[1],scale=sc*(1-0.08*k),alpha=al)
+        sq=1.0
+        for tc in (5.8,6.8,7.9,9.0):
+            if 0<=t-tc<0.12: sq=1-0.25*math.sin(math.pi*(t-tc)/0.12)
+        blit(f,spr,x,y,sx=sc/ max(sq,0.5),sy=sc*sq,angle=t*420)
     # --- טקסטים של מתנ"ס
     for n,st,du,eff in (('text_matnas',SPLIT_T0+1.3,0.6,'pop'),('text_harbracha',SPLIT_T0+1.8,0.6,'fade')):
         L=LM.get(n); x=clamp((t-st)/du)
@@ -195,10 +245,5 @@ def render(t,tabs):
         ov=f.copy(); cv2.rectangle(ov,(W//2-int(14*(1-x)),H//2-hgt//2),(W//2+int(14*(1-x)),H//2+hgt//2),(255,230,160),-1)
         a_=0.8*(1-x); cv2.addWeighted(ov,a_,f,1-a_,0,f)
         ring_burst(f,W/2,H/2,x,'sun',1200,30,0.6)
-    if 4.5<t<7.0:
-        for k in range(16):
-            a=k*0.7+t*2.2; r=70+60*math.sin(t*3+k); col=('orange','blue','green','pink','lime')[k%5]
-            blit(f,shape_sprite('spark',col,50),W/2+math.cos(a)*r*0.6,H/2+math.sin(a)*r*3.4-10,scale=0.55*clamp((t-4.5)*2)*max(0,1-(t-6.2)/0.9),angle=t*120)
-    if t>5.9: cv2.line(f,(W//2,int(H*0.26)),(W//2,int(H*0.74)),(170,170,170),3,cv2.LINE_AA)
-    if t>8.3: f=flash(f,e_io((t-8.3)/0.7)*0.98)
+    if t>9.4: f=flash(f,e_io((t-9.4)/0.6)*0.98)
     return f
