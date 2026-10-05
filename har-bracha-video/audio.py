@@ -1,198 +1,229 @@
 # -*- coding: utf-8 -*-
-"""פסקול זמני (placeholder) מסונתז: 100 BPM, מותאם לסטוריבורד. להחלפה במוזיקה מורשית."""
+"""פסקול זמני אנרגטי (placeholder) מסונתז: 120 BPM, פופ-דאנס אופטימי בסול מז'ור, סיידצ'יין, דרופים. להחלפה במוזיקה מורשית."""
 import numpy as np, wave, subprocess, os, sys
 from scipy.signal import fftconvolve, lfilter
-from scenes import S as SCENES, BEAT
-SR=44100; TOTAL=108.0; N=int(SR*TOTAL)
-SCR="/tmp/claude-0/-home-user-solaredge-ops/73fe8d55-5833-5852-9694-53b5adaa6cc2/scratchpad"
-rng=np.random.RandomState(5)
-L=np.zeros(N,np.float32); R=np.zeros(N,np.float32); REV=np.zeros(N,np.float32)
-def add(sig,t,gain=1.0,pan=0.0,rev=0.0):
-    i=int(t*SR); 
-    if i>=N or i<0: 
-        if i<0: sig=sig[-i:]; i=0
-        else: return
-    sig=sig[:N-i]; n=len(sig)
-    gl=gain*(1-max(0,pan)); gr=gain*(1+min(0,pan))
-    L[i:i+n]+=sig*gl; R[i:i+n]+=sig*gr
+from scenes import S as SCENES, BEAT, start
+SR=44100
+import engine
+TOTAL=engine.TOTAL; N=int(SR*TOTAL)
+SCR=engine.SCR
+rng=np.random.RandomState(11)
+BUS={k:[np.zeros(N,np.float32),np.zeros(N,np.float32)] for k in ('m','d')}
+REV=np.zeros(N,np.float32); kick_times=[]
+def add(sig,t,gain=1.0,pan=0.0,rev=0.0,bus='d'):
+    i=int(t*SR)
+    if i<0: sig=sig[-i:]; i=0
+    if i>=N: return
+    sig=sig[:N-i]; n=len(sig); L,R=BUS[bus]
+    L[i:i+n]+=sig*gain*(1-max(0,pan)); R[i:i+n]+=sig*gain*(1+min(0,pan))
     if rev: REV[i:i+n]+=sig*rev
 def tt(d): return np.arange(int(d*SR))/SR
-def env(d,a=0.005,dec=3.0,rel=0.0):
-    t=tt(d); e=np.minimum(1,t/max(a,1e-4))*np.exp(-t*dec); 
-    if rel: e*=np.clip((d-t)/rel,0,1)
-    return e
-def note(f): return 440*2**((f-69)/12)
-def piano(m,d=1.2,vel=0.5):
+def note(m): return 440*2**((m-69)/12)
+def saw(f,t,det=0.0): return 2*((f*(1+det)*t)%1.0)-1
+def lp(x,a): return lfilter([1-a],[1,-a],x)
+def piano(m,d=1.0,vel=0.4):
     f=note(m); t=tt(d); s=np.zeros_like(t)
-    for h,a in ((1,1),(2,0.45),(3,0.25),(4,0.14),(5,0.08),(6,0.04)):
-        s+=a*np.sin(2*np.pi*f*h*t*(1+0.0003*h*h))*np.exp(-t*(2.2+h*1.1))
+    for h,a in ((1,1),(2,0.45),(3,0.25),(4,0.14),(5,0.08)): s+=a*np.sin(2*np.pi*f*h*t)*np.exp(-t*(2.4+h*1.2))
     return (s*vel*np.minimum(1,t/0.004)).astype(np.float32)
-def pluck(m,d=0.5,vel=0.4):
-    f=note(m); t=tt(d); s=np.zeros_like(t)
-    for h,a in ((1,1),(2,0.6),(3,0.5),(4,0.3),(5,0.2),(6,0.12)):
-        s+=a*np.sin(2*np.pi*f*h*t)*np.exp(-t*(5+h*3))
-    return (s*vel).astype(np.float32)
-def pad(ms,d,vel=0.12,a=0.8,rel=0.8):
+def pluck_saw(m,d=0.35,vel=0.35,bright=0.9):
+    f=note(m); t=tt(d); x=(saw(f,t,0.004)+saw(f,t,-0.004))*0.5; x=x*np.exp(-t*7)
+    y=lp(x,bright*0.55)*0.6+x*0.4
+    return (y*vel*np.minimum(1,t/0.003)).astype(np.float32)
+def stab(ms,d=0.4,vel=0.22):
     t=tt(d); s=np.zeros_like(t)
     for m in ms:
         f=note(m)
-        for det in (-0.07,0,0.07):
-            ph=2*np.pi*f*(1+det*0.01)*t
-            s+=(np.sin(ph)+0.5*np.sin(2*ph)+0.25*np.sin(3*ph))/3
+        for det in (-0.012,0,0.012): s+=saw(f,t,det)
+    s=s/(len(ms)*3)*np.exp(-t*5.5)*np.minimum(1,t/0.004)
+    return (lp(s,0.45)*vel*3).astype(np.float32)
+def pad(ms,d,vel=0.12,a=0.5,rel=0.5):
+    t=tt(d); s=np.zeros_like(t)
+    for m in ms:
+        f=note(m)
+        for det in (-0.006,0,0.006): s+=saw(f,t,det)
     e=np.minimum(1,t/a)*np.clip((d-t)/rel,0,1)
-    s=s/len(ms)*e*vel
-    return lfilter([0.08],[1,-0.92],s).astype(np.float32)*6
-def bass(m,d=0.55,vel=0.5):
-    f=note(m); t=tt(d); s=(np.sin(2*np.pi*f*t)+0.35*np.sin(4*np.pi*f*t))*np.exp(-t*3.2)*np.minimum(1,t/0.006)
-    return (s*vel).astype(np.float32)
-def kick(vel=0.9):
-    t=tt(0.32); f=45+110*np.exp(-t*28); ph=2*np.pi*np.cumsum(f)/SR
-    return (np.sin(ph)*np.exp(-t*11)*vel).astype(np.float32)
-def clap(vel=0.5):
-    out=np.zeros(int(0.25*SR),np.float32)
-    for off,g in ((0,0.7),(0.012,0.8),(0.026,1.0)):
-        n=int(0.12*SR); x=rng.randn(n); x=x-lfilter([0.5],[1,-0.5],x); x=x*np.exp(-np.arange(n)/SR*28)*g
-        i=int(off*SR); out[i:i+n]+=x[:len(out)-i]*0.5
-    return out*vel
-def hat(vel=0.18,d=0.05):
-    n=int(d*SR); x=rng.randn(n); x=np.diff(x,prepend=0); return (x*np.exp(-np.arange(n)/SR*90)*vel).astype(np.float32)
+    return (lp(s/(len(ms)*3),0.9)*e*vel*4).astype(np.float32)
+def bass(m,d=0.3,vel=0.55):
+    f=note(m); t=tt(d); s=(np.sin(2*np.pi*f*t)+0.5*saw(f,t)*0.4+0.3*np.sin(4*np.pi*f*t))*np.minimum(1,t/0.004)*np.clip((d-t)/0.03,0,1)*np.exp(-t*2.2)
+    return (lp(s,0.8)*vel).astype(np.float32)
+def kick(vel=0.95):
+    t=tt(0.34); f=48+150*np.exp(-t*32); ph=2*np.pi*np.cumsum(f)/SR
+    return ((np.sin(ph)*np.exp(-t*10)+0.25*np.sin(ph*0.5)*np.exp(-t*6))*vel*1.1).astype(np.float32)
+def clap(vel=0.55):
+    out=np.zeros(int(0.3*SR),np.float32)
+    for off,g in ((0,0.6),(0.011,0.8),(0.024,1.0)):
+        n=int(0.16*SR); x=rng.randn(n); x=x-lp(x,0.55); x=x*np.exp(-np.arange(n)/SR*24)*g; i=int(off*SR); out[i:i+n]+=x[:len(out)-i]*0.5
+    return out*vel*1.4
+def snare(vel=0.5):
+    t=tt(0.25); n=rng.randn(len(t)); x=(n-lp(n,0.5))*np.exp(-t*20)+np.sin(2*np.pi*190*t)*np.exp(-t*28)*0.6
+    return (x*vel).astype(np.float32)
+def hat(vel=0.18,d=0.05,op=False):
+    d=0.22 if op else d; n=int(d*SR); x=np.diff(rng.randn(n),prepend=0); return (x*np.exp(-np.arange(n)/SR*(18 if op else 90))*vel).astype(np.float32)
+def shaker(vel=0.1):
+    n=int(0.06*SR); x=np.diff(rng.randn(n),prepend=0); return (x*np.exp(-np.arange(n)/SR*60)*vel).astype(np.float32)
+def tom(f0,vel=0.5):
+    t=tt(0.3); f=f0*(1+0.6*np.exp(-t*20)); ph=2*np.pi*np.cumsum(f)/SR; return (np.sin(ph)*np.exp(-t*9)*vel).astype(np.float32)
 def noise_sweep(d,up=True,vel=0.4):
-    t=tt(d); n=rng.randn(len(t)); k=(t/d) if up else (1-t/d)
-    # lowpass sweep via varying blend of smoothed noise
-    s1=lfilter([0.02],[1,-0.98],n)*8; s2=lfilter([0.3],[1,-0.7],n)*1.5; s3=np.diff(n,prepend=0)*0.5
-    x=s1*(1-k)**2+s2*(k*(1-k)*4)+s3*(k**2)
-    e=np.sin(np.pi*np.clip(k,0,1)**(0.7 if up else 1.4))
-    return (x*e*vel).astype(np.float32)
+    t=tt(d); k=(t/d) if up else (1-t/d); n=rng.randn(len(t))
+    x=lp(n,0.97)*8*(1-k)**2+lp(n,0.6)*1.5*(k*(1-k)*4)+np.diff(n,prepend=0)*0.5*k**2
+    e=np.sin(np.pi*np.clip(k,0,1)**(0.7 if up else 1.4)); return (x*e*vel).astype(np.float32)
 def riser(d,vel=0.35):
-    t=tt(d); k=t/d; n=rng.randn(len(t)); n=np.diff(n,prepend=0)
-    return (n*k**2*vel*0.7+np.sin(2*np.pi*(300+1800*k**2)*t)*k**3*vel*0.4).astype(np.float32)
+    t=tt(d); k=t/d; n=np.diff(rng.randn(len(t)),prepend=0)
+    return (n*k**2*vel*0.7+np.sin(2*np.pi*(250+2200*k**2)*t)*k**3*vel*0.4).astype(np.float32)
+def crash(d=1.8,vel=0.3):
+    n=int(d*SR); x=np.diff(rng.randn(n),prepend=0); return (x*np.exp(-np.arange(n)/SR*2.4)*vel).astype(np.float32)
+def boom(vel=0.8):
+    t=tt(1.2); f=60*np.exp(-t*2.5)+28; ph=2*np.pi*np.cumsum(f)/SR; return (np.sin(ph)*np.exp(-t*3.0)*vel).astype(np.float32)
 def pop(f=1800,d=0.12,vel=0.25):
     t=tt(d); return (np.sin(2*np.pi*(f+900*t/d)*t)*np.exp(-t*34)*vel).astype(np.float32)
 def zap(vel=0.25):
     t=tt(0.18); return (np.sign(np.sin(2*np.pi*(900-3000*t)*t))*np.exp(-t*20)*vel*0.4+rng.randn(len(t))*np.exp(-t*40)*vel*0.3).astype(np.float32)
-def crash(d=1.6,vel=0.28):
-    n=int(d*SR); x=rng.randn(n); x=np.diff(x,prepend=0); return (x*np.exp(-np.arange(n)/SR*2.8)*vel).astype(np.float32)
-def chord_midi(name):
-    return {'C':[60,64,67],'G':[55,59,62],'Am':[57,60,64],'F':[53,57,60]}[name]
-PROG=['C','G','Am','F']
-def chord_at(beat): return PROG[int(beat//4)%4]
-BEATS=int(TOTAL/BEAT)  # 180
-# ---- שכבות לפי חלקים
+CH={'G':[55,59,62,67],'D':[50,54,57,62],'Em':[52,55,59,64],'C':[48,52,55,60]}
+ROOT={'G':43,'D':38,'Em':40,'C':36}
+PROG=['G','D','Em','C']
+def ch_at(b): return PROG[int(b//4)%4]
+# מבנה
+T_DROP=start('M08'); T_GROW=start('M27'); T_BUILD=start('M34'); T_CLOSE=start('C01'); T_LOGO=start('L01'); T_SPLIT=T_LOGO+3.5; T_END=T_LOGO+7.0
+HOOK=[[71,74,76,74,71,74,76,79],[76,74,71,69,67,69,71,74]]
+BEATS=int(TOTAL/BEAT)
+def section(t):
+    if t<T_DROP: return 'intro'
+    if t<T_GROW: return 'drop'
+    if t<T_BUILD: return 'grow'
+    if t<T_CLOSE: return 'build'
+    if t<T_LOGO: return 'close'
+    if t<T_END: return 'logo'
+    return 'end'
 for b in range(BEATS):
-    t=b*BEAT; ch=chord_at(b); cm=chord_midi(ch); root={'C':36,'G':31,'Am':33,'F':29}[ch]
-    # פעימות-על
-    sec = 'A' if t<20.4 else 'B' if t<51.6 else 'T' if t<54 else 'C' if t<72 else 'D' if t<82.8 else 'E' if t<94.8 else 'L'
-    # פסנתר: ארפג'ו שמיניות
-    arp=[cm[0],cm[1],cm[2],cm[1]+12]
-    if sec in('A','B','D','E','L') and not (sec=='L' and t>=104.4) or (sec=='C' and True):
+    t=b*BEAT; sec=section(t); ch=ch_at(b); cm=CH[ch]; root=ROOT[ch]; bi=b%4
+    ph8=b*2
+    # ארפג'ו פסנתר/פלאק
+    if sec in('intro','grow','close'):
         for h in range(2):
-            m=arp[(b*2+h)%4]+ (12 if sec in('A','D','E','L') else 0)
-            v=0.30 if sec in('A',) else 0.34 if sec in('B','L') else 0.28
-            if sec=='E' and t>=90: v=0.22
-            if sec=='C' and h==1 and (b%2): continue
-            add(piano(m,1.0,v),t+h*BEAT/2,1.0,pan=0.25*(1 if h else -1),rev=0.35)
-    # פד
-    if b%4==0 and not (sec=='L' and t>=104.4):
-        dd=4*BEAT+0.3
-        v=0.10 if sec=='A' else 0.16 if sec in('B','C') else 0.13
-        add(pad([m+12 if sec in('C','D') else m for m in cm],dd,v),t,1.0,rev=0.5)
-    # גיטרה פריטה מקטע A (פעימה 8) עד סוף B
-    if 8<=b<34 or 34<=b<86:
-        if b%2==0 or sec=='B':
-            add(pluck(cm[(b)%3]+12,0.4,0.22 if sec=='A' else 0.28),t+BEAT*0.5,1.0,pan=-0.3,rev=0.2)
+            m=cm[((b*2+h)%4)]+12
+            v={'intro':0.30,'grow':0.34,'close':0.26}[sec]
+            if sec=='intro' and t<2: v*=t/2
+            add(piano(m,1.0,v),t+h*BEAT/2,1.0,pan=0.3*(1 if h else -1),rev=0.35,bus='m')
+    if sec=='intro' and t>=4:
+        add(pluck_saw(cm[b%4]+24,0.25,0.22),t+BEAT/2,1.0,pan=-0.3,bus='m')
+    # פדים
+    if bi==0 and sec!='end':
+        v={'intro':0.10,'drop':0.14,'grow':0.17,'build':0.18,'close':0.13,'logo':0.15}[sec]
+        add(pad([m+(12 if sec in('grow','close') else 0) for m in cm],4*BEAT+0.4,v),t,1.0,rev=0.4,bus='m')
     # תופים
-    if sec=='A':
-        if b>=16 and b%2==1: add(clap(0.25),t)
-        if b>=20: add(hat(0.08),t+BEAT/2)
-    if sec=='B':
-        add(kick(0.95),t) if b%2==0 else add(kick(0.55),t+BEAT*0.5)
-        if b%2==1: add(clap(0.55),t)
-        add(hat(0.16),t+BEAT/2); add(hat(0.08),t)
-        add(bass(root+12*0,BEAT*0.9,0.55),t,1.0)
-        if b%4==3: add(bass(root+7,BEAT*0.4,0.4),t+BEAT*0.5)
-    if sec=='T':   # האטה
-        if b%2==0: add(kick(0.4),t)
-    if sec=='C':
-        if b%2==0: add(kick(0.45),t)
-        add(bass(root,BEAT*1.8,0.4),t) if b%2==0 else None
-    if sec=='D' and t>=76:
-        add(kick(0.5),t) if b%2==0 else None
-        add(clap(0.3),t) if b%2==1 else None
-    if sec=='L' and t<104.4:
-        add(kick(0.8),t); add(hat(0.14),t+BEAT/2)
-        if b%2==1: add(clap(0.45),t)
-        add(bass(root,BEAT*0.9,0.5),t)
-    if sec=='E':
-        add(bass(root,BEAT*3.5,0.35),t) if (b%4==0 and t<90) else None
-# ---- אירועים בנקודות מפתח
-add(riser(2.4,0.35),15.6); add(riser(3.6,0.0),0)   # ריזר לפני הדרופ
-for k in range(8): add(hat(0.15),18.0+k*0.15)
-add(crash(2.2,0.4),20.4); add(kick(1.0),20.4); add(bass(36,2.4,0.7),20.4)
-add(noise_sweep(1.2,False,0.4),19.2)
-# רגשי: קרשנדו 72–82.8
-add(riser(10.8,0.20),72.0); add(crash(2.0,0.3),82.8)
-# סיום: משפטים והפסקות
-add(riser(4.8,0.30),90.0)
-add(crash(3.0,0.55),94.8); add(kick(1.0),94.8); add(noise_sweep(1.5,True,0.5),93.6)
-# אקורד אחרון
-for m in (48,52,55,60,64,67,72): add(piano(m,3.8,0.35),104.4,rev=0.7)
-add(pad([48,55,60,64,67],4.2,0.2,0.2,2.0),104.4,rev=0.6)
-# SFX לפי מעברים וטקסט
-import engine  # CFG, TEXTS
+    if sec=='intro':
+        if t>=4 and bi in(1,3): add(clap(0.45),t)
+        if t>=2: add(shaker(0.09),t); add(shaker(0.07),t+BEAT/2)
+        if t>=8: add(kick(0.7),t) if bi in(0,2) else None; kick_times.append(t) if (t>=8 and bi in(0,2)) else None
+        if t>=12 and t<T_DROP-0.5: add(kick(0.8),t) if bi in(1,3) else None; kick_times.append(t) if (bi in(1,3)) else None
+        if t>=8: add(hat(0.12),t+BEAT/2)
+    if sec in('drop','logo'):
+        add(kick(1.0),t); kick_times.append(t)
+        if bi in(1,3): add(clap(0.9),t); add(snare(0.4),t)
+        add(hat(0.17),t+BEAT/2); add(hat(0.07),t+BEAT/4); add(hat(0.07),t+3*BEAT/4)
+        if bi in(0,2): add(hat(0.10,op=True),t+BEAT/2) if False else None
+        add(hat(0.2,op=True),t+BEAT/2) if bi==3 else None
+        # בס מתגלגל: 8ביות
+        seq=[0,0,12,0,0,0,12,7]
+        for h in range(2): add(bass(root+seq[(b*2+h)%8],BEAT*0.45,1.0 if h==0 else 0.85),t+h*BEAT/2,bus='m')
+        # סטאבים אקורד על אוף-ביט
+        if bi in(0,1,2,3): add(stab(cm,0.28,0.38 if sec=='drop' else 0.42),t+BEAT/2,1.0,pan=0.2*(1 if bi%2 else -1),bus='m')
+        # מנגינה (hook)
+        bar=(b//4)%2
+        for h in range(4):
+            idx=(bi*2+ (h//2))%8
+        for h in range(8):
+            pass
+    if sec=='grow':
+        add(kick(0.62),t); kick_times.append(t)
+        if bi in(1,3): add(clap(0.32),t)
+        add(hat(0.09),t+BEAT/2)
+        add(bass(root,BEAT*1.8,0.4),t,bus='m') if bi in(0,2) else None
+    if sec=='build':
+        add(kick(0.85),t); kick_times.append(t)
+        add(clap(0.4+0.25*(t-T_BUILD)/(T_CLOSE-T_BUILD)),t) if bi in(1,3) else None
+    if sec=='close':
+        pass
+# hook לדרופ וללוגו
+def hook(t0,t1,vel=0.30):
+    t=t0; bar=0
+    while t<t1-1e-6:
+        for h in range(8):
+            tn=t+h*BEAT/2
+            if tn>=t1: break
+            m=HOOK[bar%2][h]; add(pluck_saw(m,0.4,vel),tn,1.0,pan=0.25*(1 if h%2 else -1),rev=0.25,bus='m'); add(pluck_saw(m+12,0.3,vel*0.4),tn+0.18,1.0,pan=-0.2,bus='m')
+        t+=4*BEAT; bar+=1
+hook(T_DROP+4.0, T_GROW,0.5)  # מבר 3 של הדרופ
+hook(T_LOGO,T_END,0.55)
+# מעברי מקטעים
+def snare_roll(t0,t1,v0=0.15,v1=0.55):
+    n=int((t1-t0)/(BEAT/4)); 
+    for k in range(n):
+        x=k/max(1,n-1); add(snare(v0+(v1-v0)*x),t0+k*(BEAT/4)*(1 if k<n*0.5 else 1))
+snare_roll(T_DROP-4.0,T_DROP-0.5,0.12,0.6)
+add(riser(3.5,0.35),T_DROP-4.0); add(noise_sweep(1.0,True,0.5),T_DROP-1.5)
+for k in range(4): add(tom(150-k*20,0.45),T_DROP-1.5+k*0.25*BEAT*2)
+add(boom(0.9),T_DROP); add(crash(2.4,0.42),T_DROP); add(kick(1.0),T_DROP)
+add(crash(2.0,0.3),T_GROW); add(noise_sweep(0.9,False,0.35),T_GROW-0.9)
+snare_roll(T_BUILD,T_CLOSE,0.12,0.5); add(riser(T_CLOSE-T_BUILD,0.35),T_BUILD)
+add(crash(2.0,0.3),T_CLOSE)
+add(riser(3.0,0.3),T_LOGO-3.0)
+add(boom(1.0),T_LOGO); add(crash(2.6,0.5),T_LOGO); add(noise_sweep(1.2,True,0.45),T_LOGO-1.2)
+add(boom(0.8),T_SPLIT); add(crash(2.0,0.35),T_SPLIT); add(zap(0.4),T_SPLIT)
+# אקורד סיום
+for m in (43,55,59,62,67,71,74): add(piano(m,3.5,0.30),T_END,rev=0.7,bus='m')
+add(pad([55,59,62,67,71],3.6,0.25,0.15,1.8),T_END,rev=0.6,bus='m'); add(crash(3.0,0.5),T_END); add(boom(0.9),T_END)
+# SFX מעברים וטקסט
 t=0
 for s in SCENES:
     sid=s[0]; cfg=engine.CFG[sid]; ttype,td=cfg['tr']
     if t>0:
-        if ttype in('whip','whipL'): add(noise_sweep(0.5,True,0.45),t-0.18,pan=0.3 if ttype=='whip' else -0.3)
-        elif ttype=='zoom': add(noise_sweep(0.8,True,0.5),t-0.3); add(kick(0.5),t)
-        elif ttype in('flash',): add(zap(0.35),t-0.05)
+        if ttype in('whip','whipL'): add(noise_sweep(0.45,True,0.45),t-0.15,pan=0.3 if ttype=='whip' else -0.3)
+        elif ttype=='zoom': add(noise_sweep(0.7,True,0.45),t-0.25); add(tom(110,0.5),t)
+        elif ttype=='flash': add(zap(0.35),t-0.05)
         elif ttype=='glitch': add(zap(0.5),t)
-        elif ttype in('diag','diagO','push','blinds'): add(noise_sweep(0.45,True,0.35),t-0.15)
-        elif ttype=='circle': add(pop(900,0.2,0.3),t+0.05); add(noise_sweep(0.6,True,0.3),t-0.2)
-    if cfg['style'] in('card','circle','card_video') and t>0: add(pop(1200,0.15,0.22),t+0.12)
+        elif ttype in('diag','diagO','push','blinds'): add(noise_sweep(0.4,True,0.35),t-0.12)
+        elif ttype=='circle': add(pop(900,0.2,0.3),t+0.05); add(noise_sweep(0.5,True,0.3),t-0.15)
+    if cfg['style'] in('card','circle','card_video') and t>0: add(pop(1200,0.15,0.22),t+0.1)
     t+=s[2]
 for T in engine.TEXTS:
     if T['kind'] in('pill','big','counter'):
         add(pop(1500,0.12,0.30),T['t0']+0.05); add(pop(2200,0.1,0.18),T['t0']+0.25)
     if T['kind']=='counter':
         for k in range(8): add(pop(900+k*120,0.05,0.08),T['t0']+k*0.1)
-# לוגו: הרכבת חלקים
-for k,tl in enumerate([95.4,95.6,95.75,95.95,96.1,96.35,96.6,96.9,97.2,97.5]): add(pop(700+k*140,0.12,0.28),tl)
-add(noise_sweep(0.6,True,0.4),98.0)   # פירוק
-for k,tl in enumerate([100.7,101.0,101.3,101.6,101.9,102.2,102.6,102.9,103.2]): add(pop(600+k*160,0.14,0.28),tl)
-add(noise_sweep(1.0,True,0.4),104.4)
-for k in range(6): add(pop(1800+k*300,0.2,0.18),105.4+k*0.15)
-# ---- דוכס: פסנתר חי מהסרטון S34 (61.2–64.8) בתוך הערבוב
+    if T['kind']=='end': add(pop(1100,0.2,0.2),T['t0']+0.2)
+# לוגו SFX
+for k,tl in enumerate([0.0,0.2,0.4,0.9,1.2,1.5,1.9]): add(pop(700+k*150,0.12,0.28),T_LOGO+tl)
+for k in range(8): add(pop(1400+k*200,0.15,0.18),T_LOGO+4.8+k*0.15)
+# פסנתר חי מהסרטון
 vid=f"{SCR}/src/מוזיקה/WhatsApp_Video_2026-07-30_at_19.03.17.mp4"
-subprocess.run(["ffmpeg","-v","error","-y","-i",vid,"-t","3.6","-ac","1","-ar",str(SR),f"{SCR}/clip_piano.wav"])
-import wave as _w
-with _w.open(f"{SCR}/clip_piano.wav") as w:
-    x=np.frombuffer(w.readframes(w.getnframes()),np.int16).astype(np.float32)/32768
-duck_ranges=[(61.2,64.8,0.45)]
-# ---- ריוורב
-ir=(rng.randn(int(1.8*SR))*np.exp(-np.arange(int(1.8*SR))/SR*2.6)).astype(np.float32)
-ir=lfilter([0.3],[1,-0.7],ir)*0.5
+subprocess.run(["ffmpeg","-v","error","-y","-i",vid,"-t","3.0","-ac","1","-ar",str(SR),f"{SCR}/clip_piano.wav"])
+with wave.open(f"{SCR}/clip_piano.wav") as w: xclip=np.frombuffer(w.readframes(w.getnframes()),np.int16).astype(np.float32)/32768
+# סיידצ'יין
+duck=np.ones(N,np.float32)
+for kt in kick_times:
+    i=int(kt*SR); n=int(0.3*SR); seg=1-0.68*np.exp(-np.arange(min(n,N-i))/SR/0.085); 
+    if i<N: duck[i:i+len(seg)]=np.minimum(duck[i:i+len(seg)],seg)
+Lm,Rm=BUS['m']; Ld,Rd=BUS['d']
+ir=lp((rng.randn(int(1.6*SR))*np.exp(-np.arange(int(1.6*SR))/SR*2.8)).astype(np.float32),0.6)*0.5
 rv=fftconvolve(REV,ir)[:N].astype(np.float32)
-L+=rv*0.5; R+=np.roll(rv,int(0.013*SR))*0.5
-# ---- הפסקות מכוונות בין משפטי הסיום (שקט)
-def gain_env(ranges,N=N):
+L=Lm*duck+Ld+rv*0.45; R=Rm*duck+Rd+np.roll(rv,int(0.013*SR))*0.45
+# הפסקות מכוונות בין משפטי הסיום
+def gain_env(ranges):
     g=np.ones(N,np.float32)
     for a,b,v in ranges:
-        i,j=int(a*SR),int(b*SR); fade=int(0.12*SR)
-        g[i:j]=v
-        g[i-fade:i]=np.linspace(1,v,fade) if i-fade>=0 else g[i-fade:i]
-        g[j:j+fade]=np.linspace(v,1,fade)
+        i,j=int(a*SR),int(b*SR); fade=int(0.08*SR); g[i:j]=np.minimum(g[i:j],v); 
+        g[max(0,i-fade):i]=np.minimum(g[max(0,i-fade):i],np.linspace(1,v,len(g[max(0,i-fade):i]))); g[j:j+fade]=np.minimum(g[j:j+fade],np.linspace(v,1,len(g[j:j+fade])))
     return g
-g=gain_env([(85.3,86.5,0.12),(89.0,90.0,0.12)]+duck_ranges)
+ends=[(T['t0']+2.65,T['t1']+0.35,0.25) for T in engine.TEXTS if T['kind']=='end']
+g=gain_env(ends+[(start('M28'),start('M28')+3.0,0.5)])
+# הרמה בסוף כל משפט (הפסקה אמיתית): נשארת שקט קצר
 L*=g; R*=g
-# מיקס הקליפ החי
-i0=int(61.2*SR); xs=x[:int(3.6*SR)]*1.6; L[i0:i0+len(xs)]+=xs; R[i0:i0+len(xs)]+=xs
-# פייד פתיחה/סגירה
-fi=int(1.2*SR); L[:fi]*=np.linspace(0,1,fi); R[:fi]*=np.linspace(0,1,fi)
-fo=int(1.8*SR); L[-fo:]*=np.linspace(1,0,fo); R[-fo:]*=np.linspace(1,0,fo)
-# נרמול + סאטורציה רכה
-m=np.stack([L,R],1); peak=np.abs(m).max(); m=np.tanh(m/peak*1.3)*0.85
+i0=int(start('M28')*SR); xs=xclip*1.8; n=min(len(xs),N-i0); L[i0:i0+n]+=xs[:n]; R[i0:i0+n]+=xs[:n]
+fi=int(0.4*SR); L[:fi]*=np.linspace(0,1,fi); R[:fi]*=np.linspace(0,1,fi)
+fo=int(1.6*SR); L[-fo:]*=np.linspace(1,0,fo); R[-fo:]*=np.linspace(1,0,fo)
+m=np.stack([L,R],1); peak=float(np.percentile(np.abs(m),99.6)); m=np.tanh(m/peak*0.95)*0.92
 pcm=(m*32767).astype(np.int16)
 with wave.open(f"{SCR}/soundtrack.wav","wb") as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes(pcm.tobytes())
-print("audio ok",peak)
+print("audio ok",peak,TOTAL)

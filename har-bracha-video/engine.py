@@ -2,56 +2,50 @@
 import numpy as np, cv2, math, json, os, sys
 from fx import *
 from scenes import S as SCENES, BEAT
-FPS=30; TOTAL=108.0
+FPS=30; TOTAL=79.0
 files_rel=json.load(open(f"{SCR}/order.json"))
 # ---------- הגדרות לכל סצנה: סגנון, אפקטים, מעבר
 # style: full / card / circle / dip_slant / dip_straight
 CFG={
-"S01":dict(style="full",fx=["leak","sparkle"],tr=("iris",0.9)),
-"S02":dict(style="card",bg=("blue","lime"),tilt=-3,fx=["shapes"],tr=("diag",0.6)),
-"S03":dict(style="circle",bg="orange",fx=["confetti_slow"],tr=("cut",0.0),pop=True),
-"S04":dict(style="full",fx=["rgbpulse"],tr=("zoom",0.45)),
-"S05":dict(style="dip_slant",bg=("pink","orange"),tr=("push",0.45)),
-"S06":dict(style="full",fx=["confetti"],tr=("cross",0.4)),
-"S07":dict(style="dip_straight",bg=("green","lime"),tr=("flash",0.3)),
-"S08":dict(style="full",fx=["rgbpulse","flashbeat","shake"],tr=("whip",0.35)),
-"S09":dict(style="full",fx=["ring","stickers_star"],tr=("cut",0.0)),
-"S10":dict(style="full",fx=["duotone_blue","glitch"],tr=("glitch",0.25)),
-"S11":dict(style="dip_slant",bg=("blue","navy"),tr=("cut",0.0)),
-"S12":dict(style="dip_straight",bg=("orange","pink"),tr=("flash",0.25)),
-"S13":dict(style="full",fx=["confetti","ring"],tr=("zoom",0.5)),
-"S14":dict(style="card",bg=("orange","pink"),tilt=4,fx=["shapes"],tr=("circle",0.4)),
-"S15":dict(style="full",fx=["vhs","rgbpulse"],tr=("whipL",0.3)),
-"S16":dict(style="full",fx=["leak","flashbeat"],tr=("whip",0.3)),
-"S17":dict(style="circle",bg="green",fx=["shapes"],tr=("diag",0.35),pop=True),
-"S18":dict(style="full",fx=["confetti","ring"],tr=("whip",0.3)),
-"S19":dict(style="dip_slant",bg=("lime","green"),flip=True,tr=("cut",0.0)),
-"S20":dict(style="full",fx=["leak","ring","stickers_spark"],tr=("circle",0.4)),
-"S21":dict(style="card",bg=("pink","blue"),tilt=-4,fx=["shapes"],tr=("flash",0.25)),
-"S22":dict(style="full",fx=["glitch"],tr=("glitch",0.25)),
-"S23":dict(style="dip_straight",bg=("blue","lime"),tr=("blinds",0.35)),
-"S24":dict(style="full",fx=["duotone_orange","rgbpulse"],tr=("cut",0.0)),
-"S25":dict(style="circle",bg="blue",fx=["shapes"],tr=("diagO",0.35),pop=True),
-"S26":dict(style="full",fx=["confetti","stickers_heart","ring"],tr=("zoom",0.45)),
-"S27":dict(style="full",fx=["flashbeat"],tr=("flash",0.2)),
-"S28":dict(style="dip_slant",bg=("pink","lime"),tr=("cut",0.0)),
-"S29":dict(style="full",fx=["rgbpulse"],tr=("whip",0.3)),
-"S30":dict(style="card",bg=("sun","orange"),tilt=3,fx=["shapes"],tr=("glitch",0.2)),
-"S31":dict(style="full",fx=["leak"],tr=("cross",0.7)),
-"S32":dict(style="dip_straight",bg=("lime","blue"),fx=["bokeh"],tr=("cross",0.7)),
-"S33":dict(style="full",fx=["leak_soft"],tr=("cross",0.6)),
-"S34":dict(style="card_video",bg=("navy","blue"),tilt=0,fx=["bokeh"],tr=("cross",0.6)),
-"S35":dict(style="full",fx=[],tr=("cut",0.0)),
-"S36":dict(style="full",fx=["leak_soft"],tr=("flash",0.25)),
-"S37":dict(style="full",fx=["bokeh"],tr=("cross",0.8)),
-"S38":dict(style="dip_straight",bg=("orange","sun"),fx=["bokeh"],tr=("cross",0.7)),
-"S39":dict(style="full",fx=[],tr=("cross",0.6)),
-"S40":dict(style="full",fx=["leak_soft"],tr=("cross",0.6)),
-"S41":dict(style="full",fx=["bokeh"],tr=("circle",0.8)),
-"C01":dict(style="dim",tr=("cross",0.8)),
-"C02":dict(style="dim",tr=("cross",0.7)),
-"C03":dict(style="night",tr=("cross",0.7)),
-"L01":dict(style="logo",tr=("cross",0.6)),"L02":dict(style="logo",tr=("cut",0)),"L03":dict(style="logo",tr=("cut",0)),
+"M01":dict(style="full",fx=["leak","sparkle"],tr=("iris",0.9)),
+"M02":dict(style="card",bg=("blue","lime"),tilt=-3,fx=["shapes"],tr=("diag",0.5)),
+"M03":dict(style="dip_slant",bg=("pink","orange"),tr=("push",0.45)),
+"M04":dict(style="full",fx=["sparkle"],tr=("zoom",0.45)),
+"M05":dict(style="dip_straight",bg=("green","lime"),tr=("flash",0.3)),
+"M06":dict(style="circle",bg="orange",fx=["confetti_slow"],tr=("cross",0.4)),
+"M07":dict(style="full",fx=["leak_soft"],tr=("whip",0.35)),
+"M08":dict(style="full",fx=["rgbpulse","flashbeat","shake"],tr=("whip",0.3)),
+"M09":dict(style="full",fx=["ring","stickers_star"],tr=("cut",0.0)),
+"M10":dict(style="dip_slant",bg=("blue","navy"),tr=("glitch",0.2)),
+"M11":dict(style="full",fx=["confetti","ring"],tr=("zoom",0.45)),
+"M12":dict(style="dip_straight",bg=("orange","pink"),tr=("flash",0.2)),
+"M13":dict(style="card",bg=("orange","pink"),tilt=4,fx=["shapes"],tr=("circle",0.35)),
+"M14":dict(style="full",fx=["vhs","rgbpulse"],tr=("whipL",0.25)),
+"M15":dict(style="circle",bg="green",fx=["shapes"],tr=("diag",0.3)),
+"M16":dict(style="full",fx=["confetti","ring"],tr=("whip",0.25)),
+"M17":dict(style="dip_slant",bg=("lime","green"),flip=True,tr=("cut",0.0)),
+"M18":dict(style="full",fx=["leak","ring","stickers_spark"],tr=("circle",0.4)),
+"M19":dict(style="card",bg=("pink","blue"),tilt=-4,fx=["shapes"],tr=("flash",0.2)),
+"M20":dict(style="full",fx=["glitch"],tr=("glitch",0.2)),
+"M21":dict(style="dip_straight",bg=("blue","lime"),tr=("blinds",0.3)),
+"M22":dict(style="full",fx=["confetti","stickers_heart","ring"],tr=("zoom",0.4)),
+"M23":dict(style="full",fx=["duotone_orange","rgbpulse"],tr=("cut",0.0)),
+"M24":dict(style="circle",bg="blue",fx=["shapes"],tr=("diagO",0.3)),
+"M25":dict(style="card",bg=("sun","orange"),tilt=3,fx=["shapes"],tr=("glitch",0.2)),
+"M26":dict(style="full",fx=["leak"],tr=("cross",0.6)),
+"M27":dict(style="dip_straight",bg=("lime","blue"),fx=["bokeh"],tr=("cross",0.6)),
+"M28":dict(style="card_video",bg=("navy","blue"),tilt=0,fx=["bokeh"],tr=("cross",0.5)),
+"M29":dict(style="dip_slant",bg=("navy","pink"),fx=["bokeh"],tr=("cross",0.5)),
+"M30":dict(style="full",fx=["leak_soft"],tr=("cross",0.5)),
+"M31":dict(style="full",fx=["bokeh"],tr=("cross",0.6)),
+"M32":dict(style="full",fx=["leak_soft"],tr=("flash",0.25)),
+"M33":dict(style="dip_straight",bg=("orange","sun"),fx=["bokeh"],tr=("cross",0.6)),
+"M34":dict(style="full",fx=["bokeh"],tr=("cross",0.6)),
+"M35":dict(style="full",fx=["leak_soft"],tr=("circle",0.6)),
+"C01":dict(style="night",bg=("navy","blue"),tr=("cross",0.8)),
+"C02":dict(style="night",bg=("navy","pink"),tr=("cross",0.7)),
+"C03":dict(style="night",bg=("navy","green"),tr=("cross",0.7)),
+"L01":dict(style="logo",tr=("cross",0.6)),
 }
 FOC={24:(0.5,0.42),26:(0.55,0.4),58:(0.55,0.45),63:(0.6,0.5),13:(0.5,0.55),14:(0.5,0.6),36:(0.5,0.5),65:(0.5,0.55),55:(0.5,0.5),
  71:(0.5,0.55),62:(0.5,0.4),16:(0.5,0.55),3:(0.5,0.6),48:(0.5,0.5),6:(0.5,0.55)}
@@ -101,7 +95,8 @@ def camera_params(kind,t,d):
     if kind=="dim": return 1.05+0.06*x,0,0
     return 1.0,0,0
 def beat_pulse(tabs):
-    if not (20.4<=tabs<51.6): return 0.0
+    from scenes import start
+    if not (start('M08')<=tabs<start('M27')): return 0.0
     ph=(tabs/BEAT)%1.0; return max(0,1-ph/0.28)
 # ---------- שכבות ביניים לפי סגנון
 def S_by_id(): return {s[0]:s for s in SCENES}
@@ -173,10 +168,10 @@ def render_dip(sid,s,t,tabs,cfg,slant):
     right=np.full((H,W,3),0,np.uint8); right[:]=f
     xB=W-wB
     ob=np.roll(B,off,axis=0) if off>0 else B
-    if off>0: ob[:off]=PALETTE['white'][::-1]
+    if off>0: ob[:off]=f[:off,xB:]
     right[:,xB:]=ob
     wA=W//2+sk+gap; A=panel(a,wA,H,t,s[2],True); oa=np.roll(A,-off,axis=0) if off>0 else A.copy()
-    if off>0: oa[H-off:]=PALETTE['white'][::-1]
+    if off>0: oa[H-off:]=f[H-off:,:wA]
     out=right
     mask=np.zeros((H,W),np.uint8)
     poly=np.array([[0,0],[W//2+sk//2,0],[W//2-sk//2,H],[0,H]],np.int32) if slant else np.array([[0,0],[W//2-gap//2,0],[W//2-gap//2,H],[0,H]],np.int32)
@@ -193,7 +188,7 @@ def render_dim(sid,s,t,tabs,dim=0.32):
     f=cv2.GaussianBlur(f,(0,0),3.2); f=(f.astype(np.float32)*dim+np.array([40,22,10])*0.35).astype(np.uint8)
     bokeh(f,tabs,hash(sid)%100,alpha=0.18); return f
 def render_night(sid,s,t,tabs):
-    f=gradient('navy','blue',60).copy(); f=(f.astype(np.float32)*(0.55+0.15*math.sin(t))).astype(np.uint8)
+    f=gradient(*CFG[sid]['bg'],60).copy(); f=(f.astype(np.float32)*(0.55+0.15*math.sin(t))).astype(np.uint8)
     bokeh(f,tabs,3,n=30,alpha=0.3)
     for k in range(8): blit(f,shape_sprite('spark','white',70),(k*277+t*30)%W,(k*131*2+ (t*-40))%H,scale=0.4+0.2*math.sin(t*3+k),angle=t*30,alpha=0.5)
     return f
@@ -293,44 +288,7 @@ def logo_scene_m(f,t,center,scale,progress_t,mode,zoomk=1.0,focus=(1000,400),jum
             crop=crop.copy(); crop[...,3]=crop[...,3]*m
         blit(f,crop,px,py,sx=sx,sy=sy,angle=ang,alpha=al)
 def render_logo(sid,t,tabs):
-    f=logo_bg(tabs)
-    if sid=="L01":
-        sc=0.92
-        logo_scene_hb(f,t,(W/2,H/2),sc,t)
-        # בום בהגעה (טבעות + ניצוצות)
-        ring_burst(f,W/2,H/2,clamp((t-1.2)/0.7),'orange',900,26,0.8)
-        if t<0.25: f=flash(f,0.5*(1-t/0.25))
-        if t>1.2:
-            for k in range(6): blit(f,shape_sprite('spark',('sun','pink','blue','green','orange','lime')[k],60),W/2+math.cos(k*1.05)*(300+200*(t-1.2)),H/2+math.sin(k*1.05)*(300+200*(t-1.2)),scale=0.6*max(0,1-(t-1.2)/1.3),angle=t*90,alpha=1)
-    elif sid=="L02":
-        # HB מתפרק החוצה
-        if t<1.0: logo_scene_hb(f,t,(W/2,H/2),0.92,9,out_t=t)
-        # מתנ"ס: זום חזק -> החוצה -> גליסה שמאלה
-        zin=2.7; sc=SC_M
-        if t<1.8: zoomk=zin; cen=(W/2,H*0.55); foc=(1000,400)
-        else:
-            x=e_io((t-1.8)/3.2); zoomk=zin+(1.0-zin)*x
-            foc=(1000+(768-1000)*x,400+(683-400)*x)
-            cen=(W/2,H*0.55+(H*0.5-H*0.55)*x)
-        sl=e_io(clamp((t-5.0)/1.0)); cen=(cen[0]+(W*0.27-W/2)*sl,cen[1])
-        logo_scene_m(f,t,cen,sc,t-1.8 if t>1.8 else -1,"",zoomk=zoomk,focus=foc,jump_t=t,figpop=e_back(clamp((t-0.55)/0.45),1.8))
-        # הבהוב צבעוני בזמן הזום
-        if t<0.35: f=flash(f,0.4*(1-t/0.35))
-        if 1.8<=t<2.2: ring_burst(f,W/2,H*0.5,(t-1.8)/0.4,'orange',1000,22,0.5)
-    elif sid=="L03":
-        # הצבה סופית: HB ימין, מתנ"ס שמאל. חיבוק.
-        hug=e_io(clamp((t-1.0)/1.2))
-        cxm=W*0.27+W*0.035*hug; cxh=W*0.73-W*0.035*hug
-        logo_scene_m(f,t,(cxm,H*0.5),SC_M,99,"",zoomk=1.0,focus=(768,683),jump_t=0.0)
-        logo_scene_hb(f,t,(cxh,H*0.5),0.66,99,back_t=t)
-        if t>1.0:
-            for k in range(14):
-                a=k*0.9+t*2; r=60+40*math.sin(t*3+k)
-                col=('orange','blue','green','pink','lime')[k%5]
-                blit(f,shape_sprite('spark',col,50),W/2+math.cos(a)*r*0.4,H/2+math.sin(a)*r*2.4-20,scale=0.5*clamp((t-1.0)*2)*max(0,1-(t-2.4)/1.2),angle=t*120,alpha=0.9)
-            cv2.line(f,(W//2,int(H*0.28)),(W//2,int(H*0.72)),(150,150,150),3,cv2.LINE_AA) if t>1.4 else None
-        if t>3.0: f=flash(f,e_io((t-3.0)/0.6)*0.97)
-    return f
+    import logo_anim; return logo_anim.render(t,tabs)
 # ---------- הרכבת סצנה
 def render_scene(sid,t,tabs,idx=0):
     s=SB[sid]; cfg=CFG[sid]; st=cfg['style']; d=s[2]; t=clamp(t,0,d)
@@ -381,20 +339,25 @@ def render_scene(sid,t,tabs,idx=0):
                 cv2.rectangle(f,(x,H-120-h),(x+34,H-120),PALETTE['sun'][::-1],-1)
     return f
 # ---------- טקסטים (ציר זמן גלובלי)
+from scenes import start as _st
+def _T(**k):
+    sid=k.pop('sid'); o=k.pop('o'); d=k.pop('d'); k['t0']=_st(sid)+o; k['t1']=k['t0']+d; return k
 TEXTS=[
- dict(txt="הכול מתחיל בסקרנות",t0=0.9,t1=4.5,kind="pill",col='blue',size=104,pos=(W/2,H*0.84)),
- dict(txt="ידיים קטנות, חלומות גדולים",t0=8.7,t1=13.0,kind="pill",col='pink',size=100,pos=(W/2,H*0.86)),
- dict(txt="ואז זה מתחיל לזוז",t0=20.6,t1=23.6,kind="big",col='orange',size=170,pos=(W/2,H*0.78)),
- dict(txt="600+",sub="משתתפים בחוגים",t0=26.5,t1=29.0,kind="counter",col='green',num=600,pos=(W/2,H*0.5)),
- dict(txt="500",sub="ילדים בקייטנות הקיץ",t0=33.7,t1=36.2,kind="counter",col='orange',num=500,pos=(W/2,H*0.5)),
- dict(txt="מתחברים ביחד",t0=51.8,t1=54.2,kind="pill",col='green',size=108,pos=(W/2,H*0.85)),
- dict(txt="לומדים. יוצרים. גדלים.",t0=54.3,t1=57.6,kind="pill",col='blue',size=100,pos=(W/2,H*0.87)),
- dict(txt="70",sub="תלמידי מוזיקה",t0=61.5,t1=64.7,kind="counter",col='pink',num=70,pos=(W/2,H*0.84),small=True),
- dict(txt="ספרים, צלילים, צבעים",t0=64.9,t1=68.3,kind="pill",col='orange',size=100,pos=(W/2,H*0.86)),
- dict(txt="קהילה אחת",t0=72.2,t1=76.0,kind="big",col='blue',size=190,pos=(W/2,H*0.8)),
- dict(txt="תודה על שנה מדהימה",t0=83.0,t1=85.7,kind="end",size=118,pos=(W/2,H*0.5)),
- dict(txt="אנחנו מתכוננים לשנה מדהימה נוספת",t0=86.6,t1=89.4,kind="end",size=100,pos=(W/2,H*0.5)),
- dict(txt="ההרשמה לפעילות השנה הבאה נפתחת בקרוב",t0=90.2,t1=94.4,kind="end",size=92,pos=(W/2,H*0.5),accent=True),
+ _T(sid="M01",o=0.4,d=2.5,txt="שנת תשפ\"ו במתנ\"ס",kind="pill",col='orange',size=104,pos=(W/2,H*0.84)),
+ _T(sid="M02",o=0.3,d=2.1,txt="הכול מתחיל בסקרנות",kind="pill",col='blue',size=100,pos=(W/2,H*0.88)),
+ _T(sid="M05",o=0.0,d=3.4,txt="ידיים קטנות, חלומות גדולים",kind="pill",col='pink',size=96,pos=(W/2,H*0.88)),
+ _T(sid="M08",o=0.05,d=2.8,txt="ואז זה מתחיל לזוז",kind="big",col='orange',size=170,pos=(W/2,H*0.78)),
+ _T(sid="M11",o=0.0,d=2.6,txt="600+",sub="משתתפים בחוגים",kind="counter",col='green',num=600,pos=(W/2,H*0.5)),
+ _T(sid="M16",o=0.0,d=2.9,txt="500",sub="ילדים בקייטנות הקיץ",kind="counter",col='orange',num=500,pos=(W/2,H*0.5)),
+ _T(sid="M26",o=0.1,d=2.8,txt="מתחברים ביחד",kind="pill",col='green',size=108,pos=(W/2,H*0.85)),
+ _T(sid="M27",o=0.1,d=2.3,txt="לומדים. יוצרים. גדלים.",kind="pill",col='blue',size=96,pos=(W/2,H*0.88)),
+ _T(sid="M28",o=0.1,d=2.8,txt="70",sub="תלמידי מוזיקה",kind="counter",col='pink',num=70,pos=(W/2,H*0.84),small=True),
+ _T(sid="M29",o=0.0,d=2.0,txt="בבניין החדש",kind="pill",col='pink',size=100,pos=(W/2,H*0.88)),
+ _T(sid="M30",o=0.0,d=2.0,txt="ספרים, צלילים, צבעים",kind="pill",col='orange',size=96,pos=(W/2,H*0.88)),
+ _T(sid="M34",o=0.0,d=4.0,txt="קהילה אחת",kind="big",col='blue',size=190,pos=(W/2,H*0.8)),
+ _T(sid="C01",o=0.2,d=2.6,txt="תודה על שנה מדהימה",kind="end",size=118,pos=(W/2,H*0.5)),
+ _T(sid="C02",o=0.2,d=2.6,txt="והשנה החדשה כבר כאן",kind="end",size=112,pos=(W/2,H*0.5)),
+ _T(sid="C03",o=0.2,d=2.6,txt="נתראה במתנ\"ס!",kind="end",size=124,pos=(W/2,H*0.5),accent=True),
 ]
 def draw_text(f,tabs):
     for T in TEXTS:

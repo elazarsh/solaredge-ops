@@ -84,10 +84,8 @@ def shape_sprite(kind,color,size=160):
             pts.append((cx+rr*math.sin(ang),cy-rr*math.cos(ang)))
         d.polygon(pts,fill=c)
     elif kind=='heart':
-        r2=r*0.5
-        d.ellipse([cx-r2*1.05-r2*0.05,cy-r*0.75,cx+r2*0.05-0.0,cy-r*0.75+2*r2],fill=c)
-        d.ellipse([cx-r2*0.05,cy-r*0.75,cx+r2*1.05+r2*0.05,cy-r*0.75+2*r2],fill=c)
-        d.polygon([(cx-r*0.97,cy-r*0.2),(cx+r*0.97,cy-r*0.2),(cx,cy+r*0.9)],fill=c)
+        ts=np.linspace(0,2*math.pi,80); pts=[(cx+r*0.058*16*math.sin(t_)**3, cy-r*0.058*(13*math.cos(t_)-5*math.cos(2*t_)-2*math.cos(3*t_)-math.cos(4*t_))+r*0.05) for t_ in ts]
+        d.polygon(pts,fill=c)
     elif kind=='circle': d.ellipse([cx-r*0.6,cy-r*0.6,cx+r*0.6,cy+r*0.6],fill=c)
     elif kind=='ring': d.ellipse([cx-r*0.8,cy-r*0.8,cx+r*0.8,cy+r*0.8],outline=c,width=int(size*0.14))
     elif kind=='tri': d.polygon([(cx,cy-r*0.8),(cx+r*0.8,cy+r*0.65),(cx-r*0.8,cy+r*0.65)],fill=c)
