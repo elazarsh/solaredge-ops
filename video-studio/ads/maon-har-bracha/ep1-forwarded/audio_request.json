@@ -1,0 +1,12 @@
+{
+  "provider": "gemini",
+  "tts_model": "gemini-3.8-flash-tts",
+  "voice": "Leda",
+  "lang": "he",
+  "style": "Israeli prime-time TV commercial announcer, young woman, confident, energetic, smiling, punchy delivery with a short pause between sentences.",
+  "lines": [
+    { "id": "vo-end-1", "text": "הַשְּׁמוּעָה לֹא הִתְעַדְּכְנָה. הַשָּׂכָר כֵּן." },
+    { "id": "vo-end-2", "text": "מְעוֹנוֹת הַר בְּרָכָה. חִנּוּךְ בַּמָּקוֹם הָרִאשׁוֹן.", "style": "Warm, proud, confident brand sign-off, slightly slower." }
+  ],
+  "bgm": { "mode": "none" }
+}
