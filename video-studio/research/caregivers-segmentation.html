@@ -1,0 +1,235 @@
+<title>מפת קהלים: מטפלות בגיל הרך</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap">
+<style>
+  /* Layout: one reading column for argument, full-width matrices for the segment map; a neutral sage-ink palette, deliberately not the client's brand (this map is client-independent). */
+  :root {
+    --bg: #F5F7F4; --paper: #FFFFFF; --ink: #1F2522; --muted: #616A65; --line: #D9E0DB;
+    --head: #20463A; --accent: #3E7F69; --soft: #E4EFEA; --warm: #F7EEDC; --warm-ink: #8A4E12; --pain: #A2402F; --gain: #2F7A55;
+    --display: "Frank Ruhl Libre", "David Libre", Georgia, serif;
+    --body: "Assistant", "Heebo", "Segoe UI", Arial, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121614; --paper: #1A201D; --ink: #E7ECE9; --muted: #A2ABA6; --line: #2C3531;
+      --head: #A8D8C4; --accent: #73C2A5; --soft: #1C3029; --warm: #352C1D; --warm-ink: #F0BE84; --pain: #F09A88; --gain: #8ED3AE; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121614; --paper: #1A201D; --ink: #E7ECE9; --muted: #A2ABA6; --line: #2C3531;
+    --head: #A8D8C4; --accent: #73C2A5; --soft: #1C3029; --warm: #352C1D; --warm-ink: #F0BE84; --pain: #F09A88; --gain: #8ED3AE; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.7; }
+  .wrap { direction: rtl; text-align: right; max-width: 1040px; margin: 0 auto; padding-inline: 20px; padding-block: 36px 80px; }
+  .col { max-width: 70ch; }
+  header { border-bottom: 2px solid var(--head); padding-bottom: 20px; margin-bottom: 28px; }
+  .kicker { font-weight: 700; color: var(--accent); font-size: 15px; }
+  h1 { font-family: var(--display); font-weight: 900; font-size: clamp(32px, 5vw, 46px); line-height: 1.15; margin: 6px 0 10px; color: var(--head); text-wrap: balance; }
+  h2 { font-family: var(--display); font-weight: 700; font-size: 28px; color: var(--head); margin: 52px 0 10px; text-wrap: balance; }
+  h3 { font-size: 19px; font-weight: 800; margin: 24px 0 6px; }
+  p, li { margin: 0 0 10px; }
+  ul, ol { padding-inline-start: 22px; margin: 0 0 14px; }
+  a { color: var(--accent); }
+  sup a { text-decoration: none; font-size: 12px; }
+  .num { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; display: inline-block; }
+  .meta { color: var(--muted); font-size: 15px; }
+  .summary { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 20px 24px; }
+  .key { background: var(--soft); border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+  .key b { color: var(--head); }
+  .tbl { overflow-x: auto; margin: 14px 0 8px; }
+  table { border-collapse: collapse; width: 100%; min-width: 760px; background: var(--paper); font-size: 15px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 10px 12px; vertical-align: top; text-align: right; line-height: 1.5; }
+  thead th { font-weight: 800; color: var(--head); background: var(--soft); position: sticky; top: 0; }
+  tbody th { font-weight: 800; color: var(--ink); width: 15%; }
+  td.p { color: var(--pain); }
+  td.g { color: var(--gain); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .box { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; min-width: 0; }
+  .box h3 { margin-top: 0; }
+  .box.pain h3 { color: var(--pain); }
+  .box.gain h3 { color: var(--gain); }
+  .box li { font-size: 16px; }
+  .layer { display: inline-block; font-size: 13px; font-weight: 800; padding: 1px 10px; border-radius: 99px; background: var(--warm); color: var(--warm-ink); margin-inline-end: 6px; }
+  .check li { margin-bottom: 8px; }
+  .src { font-size: 14.5px; color: var(--muted); }
+  .src li { margin-bottom: 6px; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">מחקר רקע · אוקטובר 2026 · לא תלוי בלקוח או בקמפיין מסוים</div>
+    <h1>מי עובדת כמטפלת בגיל הרך, ואיך מפלחים את הקהל</h1>
+    <p class="meta col">מחקר מאפס על כל האוכלוסיות שעובדות או יכולות לעבוד כמטפלות במעונות יום ובמשפחתונים בישראל. לכל קבוצה: מה מניע אותה, מה כואב לה בעבודה, מה מושך אותה, ואיזה מסר וערוץ מתאימים לה. בסוף יש רשימת בדיקה שאפשר להעביר עליה כל קמפיין.</p>
+  </header>
+
+  <section class="summary col">
+    <h3 style="margin-top:0">שלוש תובנות לפני הפילוח</h3>
+    <ol>
+      <li><b>הבעיה היא לא רק לגייס, אלא גם להשאיר.</b> במעונות הסמל מתחלפות בכל שנה 35%–48% מהעובדות, ויותר ממחצית עוזבות כבר בשנה הראשונה<sup><a href="#r1">1</a></sup>. לכן גם מטפלות לשעבר הן קהל גדול, וכזה שכבר מכיר את העבודה.</li>
+      <li><b>"אוהבת ילדים" זו סיבה טובה להתחיל, אבל לא מספיקה כדי להישאר.</b> במחקר כוח האדם הלאומי באוסטרליה, מי שנכנסה לתחום בעיקר כי היא "אוהבת ילדים", בלי להבין כמה העבודה מורכבת, עזבה יותר<sup><a href="#r2">2</a></sup>. פרסום שמציג את העבודה בכנות, עם הקושי, מוריד עזיבה. המנגנון הוא תחושה שהמעסיק הוגן<sup><a href="#r3">3</a></sup>.</li>
+      <li><b>הפילוח הנכון בנוי משתי שכבות.</b> השכבה הראשונה היא <b>שלב החיים והמניע</b>: למה דווקא עכשיו. היא קובעת את המסר. השכבה השנייה היא <b>הקהילה והתרבות</b>: חילונית, דתית-לאומית, חרדית, ערבית או עולה. היא קובעת את השפה, הערוץ ומה מקובל. אותה "אמא לפעוטות" צריכה מסר דומה, בשפה ובערוץ שונים.</li>
+    </ol>
+  </section>
+
+  <h2>1. התמונה הכללית בישראל</h2>
+  <div class="col">
+    <ul>
+      <li><b>היקף:</b> כ-16,000 מטפלות במעונות המפוקחים<sup><a href="#r4">4</a></sup>, וכ-50,000 אנשי צוות בכלל מסגרות הגיל הרך. כדי לעמוד ביחס הרצוי בין מטפלות לפעוטות צריך כ-100,000<sup><a href="#r5">5</a></sup>. בכל הארץ חסרות כ-3,000 מטפלות, ו-518 מעונות נסגרו בשנה אחת<sup><a href="#r4">4</a></sup>.</li>
+      <li><b>מי הן היום:</b> בממוצע בנות 40.6. 23.7% בלי הכשרה מקצועית, ו-19.7% בוגרות מכללה לחינוך<sup><a href="#r6">6</a></sup>. ליותר ממחצית אין הכשרה רשמית<sup><a href="#r1">1</a></sup>. כמעט כולן נשים: גברים הם כ-0.2% מהמטפלות<sup><a href="#r7">7</a></sup>.</li>
+      <li><b>הכשרה לפי קהילה:</b> בעשור האחרון כמעט 60% מהמשתתפות בקורסי מטפלות היו ערביות, ופחות מ-5% חרדיות<sup><a href="#r8">8</a></sup>. בחברה הערבית יש מאגר מוכשר וגדול. בחברה החרדית יש ביקוש גדול ומעט הכשרה.</li>
+      <li><b>תנאים:</b> שכר התחלתי של כ-5,900 ₪ (2025). מטפלת עובדת 269 ימים בשנה, לעומת 219 של סייעת בגן שמשתכרת 7,000–8,000 ₪<sup><a href="#r4">4</a></sup>. במעונות פרטיים השכר בדרך כלל גבוה יותר מאשר במעונות הסמל<sup><a href="#r5">5</a></sup>.</li>
+      <li><b>למה עוזבות:</b> כ-80% ציינו שכר נמוך, ואחריו עבודה קשה מדי ויותר מדי ילדים בקבוצה<sup><a href="#r5">5</a></sup>. במחקר איכותני על 40 מטפלות נמצאו גם חוסר תמיכה, יחס שלילי מהורים, ותחושה של "אני כבר לא אני"<sup><a href="#r9">9</a></sup>.</li>
+      <li><b>מעמד:</b> מאז 2022 התחום שייך למשרד החינוך, והתואר הרשמי הוא "מחנכת-מטפלת"<sup><a href="#r10">10</a></sup>. ובכל זאת, רק 46% מאנשי הצוות בגיל הרך מרגישים שהחברה מעריכה אותם<sup><a href="#r11">11</a></sup>.</li>
+    </ul>
+  </div>
+
+  <h2>2. מה כואב ומה מושך, לכל המטפלות</h2>
+  <div class="two">
+    <div class="box pain">
+      <h3>הכאבים</h3>
+      <ul>
+        <li>שכר נמוך ביחס לאחריות ולעבודות דומות</li>
+        <li>מאמץ פיזי: הרמות, ישיבה על הרצפה, רעש</li>
+        <li>שחיקה רגשית ויותר מדי ילדים לכל מטפלת</li>
+        <li>מחלות חוזרות, בעיקר בשנה הראשונה</li>
+        <li>שעות ארוכות ומעט חופשות (269 ימי עבודה בשנה)</li>
+        <li>מעמד נמוך: "בייביסיטר"</li>
+        <li>ביקורת והאשמה מצד הורים</li>
+        <li>חוסר גיבוי, מעט הדרכה, אחריות כבדה ופחד מטעות</li>
+        <li>אין לאן להתקדם</li>
+        <li>חובת הכשרה בלי זמן או מימון</li>
+      </ul>
+    </div>
+    <div class="box gain">
+      <h3>מה מושך</h3>
+      <ul>
+        <li>משמעות: השנים הכי מעצבות בחיים של אדם</li>
+        <li>שמחה יומיומית וקשר עם ילדים</li>
+        <li>ביטחון תעסוקתי: יש מחסור, אז תמיד יש עבודה</li>
+        <li>יש מעונות בכל מקום, כך שאפשר לעבוד קרוב לבית</li>
+        <li>שעות בוקר, בלי ערבים ובלי סופי שבוע</li>
+        <li>צוות ותחושת שייכות</li>
+        <li>לאמהות: הילד במעון, ולוח זמנים משותף</li>
+        <li>ניסיון של אמא שווה משהו בעבודה</li>
+        <li>מקצוע מוסדר במשרד החינוך, עם מסלול לגננת, למנהלת או לתואר</li>
+        <li>מענקי התמדה ושכר שעולה עם הוותק, אצל המעסיקים שנותנים אותם</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>3. שכבה א': שלב החיים והמניע (קובע את המסר)</h2>
+  <p class="col">אלה תשעה קהלים. בכל שורה: מה הקבוצה מחפשת, מה הכי כואב לה, ואיזה מסר וערוץ מתאימים לה.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>קהל</th><th>מה היא מחפשת</th><th>הכאב או החשש הכי גדול</th><th>מה ישכנע (הוכחה)</th><th>מסר לדוגמה</th><th>האם נשארת</th></tr></thead>
+      <tbody>
+        <tr><th>1. אמא לפעוטות (25–40)</th><td class="g">קרוב לבית, שעות שמתאימות לגן ולבית הספר, הילד שלה איתה במעון, זכויות</td><td class="p">"אני גם ככה עם ילדים כל היום", שכר שהולך כולו על המעון של הילד שלה, מחלות</td><td>שעות מדויקות, הנחה או מקום לילד, זכויות לידה ופנסיה</td><td>"עבודה בחינוך ליד הבית, בשעות של הילדים שלך, והילד שלך איתך"</td><td>בינונית. תלוי בגב שהיא מקבלת</td></tr>
+        <tr><th>2. חוזרת לעבוד (40–55)</th><td class="g">משמעות, מקום שמעריך ניסיון, צוות, יציבות</td><td class="p">"מחפשים צעירות", מאמץ פיזי, חזרה ללמוד</td><td>שילוב של ותיקות בצוות, הכשרה בתשלום, יחס שמכבד אותה</td><td>"עשרים שנה של ניסיון. עכשיו גם משלמים עליהן"</td><td>גבוהה. מבוגרות וותיקות נשארות יותר<sup><a href="#r12">12</a></sup></td></tr>
+        <tr><th>3. לפני פרישה (55+)</th><td class="g">חום, היקף משרה חלקי, משמעות, ולצאת מהבית</td><td class="p">כושר פיזי, שעות ארוכות</td><td>משרות חלקיות ומשמרות קצרות</td><td>"בוקר עם תינוקות במקום בוקר מול הטלוויזיה"</td><td>גבוהה, אם יש גמישות<sup><a href="#r13">13</a></sup></td></tr>
+        <tr><th>4. צעירה בתחילת הדרך (18–25)</th><td class="g">עבודה עכשיו, ניסיון, חברה</td><td class="p">"זו לא קריירה", שכר נמוך, מעמד מול חברות</td><td>מסלול, הכשרה ממומנת, אופק לגננת או למנהלת</td><td>"לא בייביסיטר. מחנכת, והתחלה של מקצוע"</td><td>נמוכה. היא לומדת כדי לצאת<sup><a href="#r2">2</a></sup></td></tr>
+        <tr><th>5. סטודנטית לחינוך או לגיל הרך</th><td class="g">ניסיון רלוונטי, משמרות שמתאימות ללימודים</td><td class="p">שעות קבועות שמתנגשות עם לימודים</td><td>גמישות, הכרה בניסיון, מסלול לגננת</td><td>"התואר שלך מתחיל פה"</td><td>נמוכה עד בינונית. יש לבנות לה מסלול כדי להשאיר אותה</td></tr>
+        <tr><th>6. מסבת מקצוע (30–50)</th><td class="g">משמעות אחרי עבודה במשרד או במסחר, לפעמים אחרי שחיקה</td><td class="p">ירידה בשכר וחשש לזהות ("נפלתי?")</td><td>מספרים מדויקים, מסלול, מעמד מקצועי</td><td>"מהמשרד לעבודה שיש בה משמעות, בלי להתנצל"</td><td>בינונית עד גבוהה, כשהציפיות מותאמות</td></tr>
+        <tr><th>7. מטפלת מנוסה במקום אחר</th><td class="g">תנאים טובים יותר, הערכה, צוות טוב יותר</td><td class="p">"בכל מקום זה אותו דבר"</td><td><b>מספרים</b>, יחס מטפלות לילדים, הדרכה, מנהלת</td><td>"השוי בעצמך: שכר, יחס, גב"</td><td>גבוהה. היא כבר מכירה את העבודה</td></tr>
+        <tr><th>8. מטפלת לשעבר (עזבה)</th><td class="g">שמשהו השתנה</td><td class="p">"עזבתי בגלל השכר והעומס"</td><td>מה בדיוק השתנה, עם תאריך</td><td>"עזבת בגלל השכר? זה כבר לא אותו שכר"</td><td>גבוהה, אם הסיבה שבגללה עזבה טופלה</td></tr>
+        <tr><th>9. משפחתונית (עצמאית מהבית)</th><td class="g">לעבוד מהבית עם הילד שלה, עצמאות</td><td class="p">בדידות, בפועל מרוויחה פחות משכר מינימום, מעט חופשות<sup><a href="#r14">14</a></sup></td><td>ביטחון של שכירה, צוות, חופשות</td><td>"כל היתרונות, בלי לעבוד לבד"</td><td>בינונית</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key col"><b>גברים</b> הם קהל קטן מאוד: כ-0.2% מהמטפלות. החסמים שלהם הם סטיגמה ובדידות, הם לבד בין עשרות נשים<sup><a href="#r7">7</a></sup>. אין צורך בקמפיין נפרד, אבל כל מודעה פונה לשני המינים, כפי שהחוק מחייב.</div>
+
+  <h2>4. שכבה ב': הקהילה (קובעת שפה, ערוץ ומה מקובל)</h2>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>קהילה</th><th>מאפיינים רלוונטיים</th><th>ערכים ושפה</th><th>ערוצים</th><th>רגישויות</th></tr></thead>
+      <tbody>
+        <tr><th>יהודית לא-חרדית (חילונית ומסורתית)</th><td>שוק עבודה פתוח עם הרבה חלופות שמשלמות יותר, כמו מסחר ומשרדים</td><td>מקצועיות, איזון בית-עבודה, כסף</td><td>פייסבוק, אינסטגרם, קבוצות שכונה, אתרי דרושים</td><td>להשוות למשרות חלופיות בגלוי</td></tr>
+        <tr><th>דתית-לאומית</th><td>בוגרי החמ"ד עובדים בחינוך פי 2.15 יותר<sup><a href="#r15">15</a></sup>. הרבה יישובים קהילתיים, ונסיעות ארוכות לעבודה מחוץ ליישוב</td><td>חינוך כייעוד, קהילה, שליחות</td><td>וואטסאפ קהילתי, אתרי המגזר, מדרשות, שירות לאומי</td><td>צניעות, ניסוח מכבד, לא להיתפס כ"מפעל"</td></tr>
+        <tr><th>חרדית</th><td>אוכלוסייה צעירה ומשפחות גדולות. עודף של בוגרות סמינר שהוכשרו להוראה<sup><a href="#r16">16</a></sup>, ומשפחתונים רבים<sup><a href="#r14">14</a></sup></td><td>פרנסה לבית של אברך, שעות שמתאימות לבית, סביבה של נשים בלבד</td><td>מקומונים, וואטסאפ קהילתי, סמינרים, מודעות רחוב</td><td>דמויות נשיות בלבד או בלי דמויות, אישורים קהילתיים. זכויות לידה חשובות מאוד</td></tr>
+        <tr><th>ערבית</th><td>כמעט 60% מבוגרות קורסי המטפלות<sup><a href="#r8">8</a></sup>. חסמים בתחבורה ובקרבה למקום עבודה</td><td>עבודה יציבה וחוקית עם זכויות, כבוד</td><td>פייסבוק בערבית, ארגוני תעסוקה, מכללות</td><td>שפה, הסעות, שכר הוגן ושקוף. בענף היו מקרים של ניצול</td></tr>
+        <tr><th>עולות</th><td>לחלקן ניסיון והשכלה בחינוך מחו"ל</td><td>הכרה בניסיון, קליטה, עברית</td><td>ארגוני עולים וקבוצות בשפת המקור</td><td>הכרה בתעודות, וליווי בשפה</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>5. מה כל קהל צריך לשמוע: ההתאמה בין כאב למסר</h2>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>הכאב או המחסום</th><th>אצל מי הוא הכי חזק</th><th>מה עונה עליו (אם קיים אצל המעסיק)</th><th>איך מראים אותו</th></tr></thead>
+      <tbody>
+        <tr><th>"משלמים מעט"</th><td>כולן, ובמיוחד 6, 7 ו-8</td><td>שכר מעל המקובל, מענקים, שכר שעולה עם הוותק</td><td>מספר מאומת ומתוארך, בתוך חבילה</td></tr>
+        <tr><th>"זה בייביסיטר, אין מעמד"</th><td>4, 5, 6 והסביבה הקרובה</td><td>התואר "מחנכת", הכשרה, תוכנית חינוכית</td><td>להראות את העבודה המקצועית: התפתחות, שפה וביטחון</td></tr>
+        <tr><th>"אין לאן להתקדם"</th><td>4, 5, 6 ו-7</td><td>מסלול למטפלת בכירה, לגננת או למנהלת, וקרן השתלמות</td><td>"מסלול" בשלבים ובשנים</td></tr>
+        <tr><th>"קשה פיזית ורגשית"</th><td>2, 3 ו-1</td><td>יחס טוב בין מטפלות לילדים, עזרה, הדרכה, מנהלת תומכת</td><td>להראות את הקושי בכנות, ולצידו את הגב שמקבלים</td></tr>
+        <tr><th>"השעות לא מתאימות לי"</th><td>1, 3 ו-5</td><td>משרה חלקית, משמרות, גמישות</td><td>שעות מדויקות במודעה</td></tr>
+        <tr><th>"הילד שלי"</th><td>1 ו-9</td><td>מקום או הנחה לילדי הצוות</td><td>"הילד שלך איתך"</td></tr>
+        <tr><th>"לבד מול הכול"</th><td>9, גברים, וחדשות בכלל</td><td>צוות, חונכת, קליטה מסודרת</td><td>להראות את הצוות</td></tr>
+        <tr><th>"מה יגידו"</th><td>4, 6 וגברים</td><td>מעמד מקצועי והכרה בקהילה</td><td>מטפלות אמיתיות שמספרות בגאווה</td></tr>
+        <tr><th>"עזבתי פעם, זה לא בשבילי"</th><td>8</td><td>מה השתנה מאז</td><td>"בדקו שוב" עם תאריך</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>6. האם צריך פרסום נפרד לכל קבוצה</h2>
+  <div class="col">
+    <p>ההמלצה היא מבנה של <b>מטריה אחת, ושערים לכל קהל</b>:</p>
+    <ul>
+      <li><b>מטריה (לכולם, ולסביבה הקרובה):</b> לתקן את התדמית. מטפלת היא אשת חינוך, והתנאים השתנו. המטריה נשענת על הסטיגמה המשותפת ועל הסביבה שמשפיעה: בני זוג, הורים וקהילה.</li>
+      <li><b>שערים (גרסאות קצרות או מודעות לכל קהל):</b> אותו עולם ואותה חתימה, אבל המסר המרכזי שונה לפי הכאב של הקהל. ארבעה שערים מכסים את רוב הקהלים:
+        <ul>
+          <li><b>"בית ושעות"</b> לקהלים 1, 3 ו-9.</li>
+          <li><b>"ניסיון ומשמעות"</b> לקהלים 2 ו-6.</li>
+          <li><b>"מקצוע ומסלול"</b> לקהלים 4 ו-5.</li>
+          <li><b>"השווי בעצמך"</b> לקהלים 7 ו-8. זה השער שבו המספרים חשובים יותר מכל דבר אחר.</li>
+        </ul>
+      </li>
+      <li><b>שכבת הקהילה</b> קובעת את השפה, את הערוץ ואת הדמויות בכל שער.</li>
+      <li><b>שימור:</b> מטפלות קיימות הן גם קהל וגם ערוץ. גיוס בהמלצה מוריד עזיבה ב-10–30%<sup><a href="#r17">17</a></sup>, ותשלומי התמדה מדורגים הורידו עזיבה מ-25% ל-14% בניסוי מבוקר<sup><a href="#r18">18</a></sup>.</li>
+      <li><b>כנות:</b> בכל שער צריך לראות רגע אחד אמיתי של קושי, למשל בכי, עייפות או בלגן, ואת הגב שמקבלים בו. פרסום כזה מושך מי שתישאר ומרחיק את מי שהייתה עוזבת אחרי חודש<sup><a href="#r3">3</a></sup>.</li>
+    </ul>
+  </div>
+
+  <h2>7. רשימת בדיקה לכל קמפיין גיוס</h2>
+  <div class="col">
+    <ol class="check">
+      <li>לאילו מתשעת הקהלים הקמפיין מדבר? מי נשארת בחוץ, והאם זו החלטה מודעת?</li>
+      <li>לכל קהל שבחרנו: האם יש מענה ל<b>כאב המרכזי</b> שלו מטבלה 3?</li>
+      <li>האם יש <b>הוכחה קונקרטית</b>, כמו מספר, שעות או מסלול, או רק תארים כמו "תנאים מעולים"?</li>
+      <li>האם המסר מתקן את <b>הסטיגמה</b> ("בייביסיטר", "גרושים"), או רק מודיע שיש משרה?</li>
+      <li>האם יש פנייה גם ל<b>מטפלות לשעבר</b> ("מה השתנה")?</li>
+      <li>האם השפה, הערוץ והדמויות מתאימים ל<b>קהילה</b> שאליה פונים?</li>
+      <li>האם מוצג <b>קושי אמיתי</b> לצד הגב שמקבלים, ולא רק "אהבה לילדים"?</li>
+      <li>האם המטפלות הקיימות <b>שותפות</b> לקמפיין, כשגרירות, ממליצות או קהל ראשון?</li>
+      <li>האם הפנייה היא <b>לשני המינים</b>, כפי שהחוק מחייב?</li>
+      <li>האם יש <b>מדידה</b>: מאיפה מגיעות הפניות, וכמה מהמצטרפות נשארות אחרי 3 ואחרי 12 חודשים?</li>
+    </ol>
+    <p class="meta">החולשה של המחקר: אין בישראל סקר מייצג ועדכני על המניעים של מטפלות לפי קהל. הפילוח בנוי משילוב של נתונים מישראל, מחקרים מהעולם וההיגיון של שוק העבודה. לפני שמשקיעים בקמפיין, כדאי לאמת אותו בכמה שיחות עם מטפלות מכל קהל רלוונטי.</p>
+  </div>
+
+  <hr>
+  <section class="src">
+    <h3 style="color:var(--ink)">מקורות</h3>
+    <ol>
+      <li id="r1">מבקר המדינה, "הטיפול בפעוטות וחינוכם במעונות יום ובמשפחתונים", דוח 2022. <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2022/2022.5/2022.5-103-Meonot-Yom-Taktzir.pdf">קישור</a></li>
+      <li id="r2">Irvine, Thorpe et al., "Money, Love and Identity: Initial findings from the National ECEC Workforce Study", QUT, 2016. <a href="https://childcarecanada.org/node/10101">קישור</a></li>
+      <li id="r3">Earnest, Allen &amp; Landis, "Mechanisms linking realistic job previews with turnover: a meta-analytic path analysis", Personnel Psychology 64(4), 2011. <a href="https://wrap.warwick.ac.uk/57084/">קישור</a></li>
+      <li id="r4">כלכליסט, "מחסור של 3,000 מטפלות מאיים על הפעלת מעונות וגנים", פברואר 2025. <a href="https://www.calcalist.co.il/local_news/article/byztxizc1l">קישור</a></li>
+      <li id="r5">Silverman &amp; Blank, "Early Childhood Education and Care in Israel: An Overview", Taub Center, State of the Nation 2023 (סקר של 663 מטפלות ו-387 מנהלות). <a href="https://www.taubcenter.org.il/wp-content/uploads/2023/12/Early-Childhood-2023-ENG-1.pdf">קישור</a></li>
+      <li id="r6">Special issue: Early Childhood Education in Israel, Early Child Development and Care, 2024. <a href="https://www.tandfonline.com/doi/full/10.1080/03004430.2024.2365451">קישור</a></li>
+      <li id="r7">Jerusalem Post, "Where are the men in Israel's early childhood education?"; ירדן קדר, בית ברל, על גברים בגיל הרך. <a href="https://www.jpost.com/Israel-News/Where-are-the-men-in-Israels-early-childhood-education-441061">קישור</a> · <a href="https://beitberl.ac.il/wp-content/uploads/2024/03/מוטיבציה-פנימית-כגורם-מכריע-בשילובם-ו_הישרדותם_-של-גברים-בתחום-החינוך-לגיל-הרך_ירדן-קדר.pdf">קישור</a></li>
+      <li id="r8">רועי מאור, "הכשרת והדרכת מחנכות-מטפלות לגילאי לידה עד שלוש", 121, 2021. <a href="https://www.120plus1.org.il/wp-content/uploads/2022/03/%D7%91%D7%99%D7%93%D7%99%D7%99%D7%9D-%D7%98%D7%95%D7%91%D7%95%D7%AA-%D7%9E%D7%97%D7%A7%D7%A8-%D7%9E%D7%93%D7%99%D7%A0%D7%99%D7%95%D7%AA-%D7%95%D7%94%D7%A6%D7%A2%D7%94-%D7%9C%D7%9E%D7%A1%D7%92%D7%A8%D7%AA-%D7%97%D7%93%D7%A9%D7%94-%D7%9C%D7%94%D7%9B%D7%A9%D7%A8%D7%95%D7%AA-%D7%95%D7%9C%D7%94%D7%93%D7%A8%D7%9B%D7%95%D7%AA-%D7%90%D7%95%D7%A7%D7%98%D7%95%D7%91%D7%A8-2021.pdf">קישור</a></li>
+      <li id="r9">Matattov Sekeles, Zadok, Zur &amp; Huss, "'I'm no longer myself anymore': burnout and coping of educators-caregivers in day-care centres in Israel", Early Child Development and Care 194, 2024. <a href="https://cris.huji.ac.il/en/publications/im-no-longer-myself-anymore-burnout-and-coping-of-educators-careg/">קישור</a></li>
+      <li id="r10">משרד החינוך, המלצות מדיניות לגיל הרך. <a href="https://meyda.education.gov.il/files/LishcatMadaan/TashtitYeda/early-childhood-policy-recommendations.pdf">קישור</a></li>
+      <li id="r11">OECD, Results from TALIS 2024 – Country note: Israel. <a href="https://www.oecd.org/en/publications/results-from-talis-2024-country-notes_e127f9e2-en/israel_c3ed0cb7-en.html">קישור</a></li>
+      <li id="r12">Totenhagen et al., "Retaining Early Childhood Education Workers: A Review of the Empirical Literature", 2016. <a href="https://eric.ed.gov/?id=EJ1115144">קישור</a></li>
+      <li id="r13">Timewise ו-Early Years Alliance (בריטניה), מחקר על גמישות בעבודה בגיל הרך, 2024. <a href="https://thesector.com.au/2024/11/28/uk-study-highlights-how-the-ecec-workforce-could-grow-if-flexibility-was-embraced">קישור</a></li>
+      <li id="r14">מעריב, תחקיר על המשפחתונים: מטפלות עצמאיות שמרוויחות פחות משכר מינימום. <a href="https://www.maariv.co.il/economy/israel/article-888778">קישור</a></li>
+      <li id="r15">אריאל פינקלשטיין, נאמני תורה ועבודה, מחקר על שוק העבודה של בוגרי החמ"ד, 2017. <a href="https://www.srugim.co.il/212486-מה-למדנו-מהמחקר-על-שוק-העבודה-הסרוג">קישור</a></li>
+      <li id="r16">כלכליסט, על עודף המורות בחינוך החרדי. <a href="https://www.calcalist.co.il/articles/0,7340,L-3761631,00.html">קישור</a></li>
+      <li id="r17">Burks, Cowgill, Hoffman &amp; Housman, "The Value of Hiring through Employee Referrals", QJE, 2015. <a href="https://newsroom.iza.org/en/archive/research/firms-can-rely-on-workers-referred-by-current-employees">קישור</a></li>
+      <li id="r18">Bassok et al., Virginia Teacher Recognition Program (ניסוי מבוקר). <a href="https://www.ednc.org/2021-10-04-turnover-retention-early-childhood-educators-better-pay-wage-study-supplement/">קישור</a></li>
+    </ol>
+  </section>
+</div>
