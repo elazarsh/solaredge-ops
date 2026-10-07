@@ -29,7 +29,7 @@
       /* story stickers */
       .stk { position: absolute; left: 0; right: 0; top: 1560px; text-align: center; direction: rtl; }
       .stk span { display: inline-block; background: #fff; color: #111; font-family: "Rubik", "Emoji", sans-serif; font-weight: 800; font-size: 56px; padding: 14px 34px 16px; border-radius: 22px; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
-      .stk.fact span { font-size: 66px; background: #FFF6C2; }
+      .stk.fact span { font-size: 66px; background: #FFF6C2; max-width: 960px; }
 
       /* VO1 over the dimmed footage */
       .l1 { position: absolute; left: 60px; right: 60px; top: 640px; text-align: center; direction: rtl; font-size: 76px; font-weight: 800; color: #fff; text-shadow: 0 3px 20px rgba(0,0,0,.35); }
@@ -79,11 +79,11 @@
         <div id="dim" class="h"></div>
         <div class="stk h" id="c4"><span>בודקת בקבוצת העדכונים 👀</span></div>
         <div class="stk h" id="c5"><span>מעבירה לנשות הברכה ⤻</span></div>
-        <div class="stk fact h" id="k1"><span>₪45 לשעה עם תעודה 💰</span></div>
-        <div class="stk fact h" id="k2"><span>קפיצות שכר · 3 · 9 · 12 📈</span></div>
-        <div class="stk fact h" id="k3"><span>הבונוס נכנס לבסיס 🧾</span></div>
-        <div class="stk fact h" id="k4"><span>קרן השתלמות משנה 5 🎓</span></div>
-        <div class="stk fact h" id="k5"><span>מהגבוהים בשומרון 🏆</span></div>
+        <div class="stk fact h" id="k1"><span>מהתנאים הגבוהים בשומרון 🏆</span></div>
+        <div class="stk fact h" id="k2"><span>₪45 לשעה עם תעודה 💰</span></div>
+        <div class="stk fact h" id="k3"><span>קפיצות שכר · 3 · 9 · 12 📈</span></div>
+        <div class="stk fact h" id="k4"><span>הבונוס נכנס לבסיס 🧾<br>יותר פנסיה, יותר דמי לידה</span></div>
+        <div class="stk fact h" id="k5"><span>קרן השתלמות משנה 5 🎓</span></div>
         <div class="l1 h" id="l1">השמועה לא התעדכנה.</div>
         <div class="l2 h" id="l2"><b>השכר</b> כן.</div>
       </div>
@@ -132,10 +132,10 @@
       };
       // stickers (same seconds as ui/index.html → T); they sit low, over the empty chat area, so the chat header stays readable
       stk("#c4", 17.9, 20.0);
-      const F = 20.5, S = 1.45;
+      const F = 20.5, AT = [0, 1.4, 2.7, 4.0, 5.9];   // = T.factAt in ui/index.html
       ["#k1", "#k2", "#k3", "#k4", "#k5"].forEach((id, i) => {
-        tl.fromTo(id, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, F + i * S);
-        tl.to(id, { opacity: 0, duration: 0.2 }, i < 4 ? F + (i + 1) * S - 0.05 : 27.9);
+        tl.fromTo(id, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, F + AT[i]);
+        tl.to(id, { opacity: 0, duration: 0.2 }, i < 4 ? F + AT[i + 1] - 0.05 : 27.9);
       });
       stk("#c5", 28.1, 30.0);
 
