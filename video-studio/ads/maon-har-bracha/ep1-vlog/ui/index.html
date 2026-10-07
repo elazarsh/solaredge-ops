@@ -132,6 +132,11 @@
       .notif .cnt { margin-inline-start: auto; background: #25D366; color: #fff; font-weight: 800; font-size: 50px; border-radius: 40px; padding: 4px 26px; direction: ltr; }
       .h { opacity: 0; }
           #mNew .t.wrap { white-space: normal; }
+      #mNew .head { font-size: 84px; font-weight: 800; line-height: 1.12; color: #0B4D2A; padding: 6px 10px 8px; margin: 6px -10px 4px; border-radius: 12px; }
+      #mNew .t.small { font-size: 46px; color: var(--sub); }
+      #mNew .t.sub { font-size: 48px; font-weight: 700; color: var(--sub); margin-top: 6px; }
+      #mNew .t.more { color: var(--sub); font-size: 52px; }
+      #mNew .rm { color: #027EB5; font-weight: 700; }
     </style>
   </head>
   <body>
@@ -173,7 +178,7 @@
               <div class="fwd">⤻ הועבר</div>
               <div class="who" style="color:#0E9447">מעונות הר ברכה</div>
               <div class="t"><b>📌 עדכון שכר</b></div>
-              <div class="t">🏆 מהתנאים הגבוהים בשומרון…</div>
+              <div class="t" style="font-size:72px;font-weight:800">🏆 מהתנאים הגבוהים בשומרון</div><div class="t" style="color:#667781">מה זה אומר בפועל? 💰📈🧾🏡 …קרא עוד</div>
               <div class="meta">09:02 <span class="tick">✓✓</span></div>
             </div></div>
             <div class="row in h" id="rOops" style="top:3460px"><div class="b"><div class="who" style="color:#E65100">רחלי</div><div class="t">אופס 🙈 צודקת!</div><div class="t">אז השמועה כבר לא נכונה</div><div class="rx h" id="rx2">😍🙌 <b>356</b></div></div></div>
@@ -217,12 +222,14 @@
               <div style="display:flex; gap:18px; align-items:flex-start; direction:rtl">
                 <div class="b" id="mNew" style="max-width:930px">
                   <div class="who" style="color:#0E9447">מעונות הר ברכה</div>
-                  <div class="t"><b>📌 עדכון שכר · אוגוסט 2026</b></div>
-                  <div class="t" id="f1">🏆 מהתנאים הגבוהים בשומרון</div>
+                  <div class="t small"><b>📌 עדכון שכר · אוגוסט 2026</b></div>
+                  <div class="head" id="f1">🏆 מהתנאים הגבוהים<br>בשומרון</div>
+                  <div class="t sub">מה זה אומר בפועל?</div>
                   <div class="t" id="f2">💰 45 ₪ לשעה עם תעודה</div>
                   <div class="t" id="f3">📈 קפיצות שכר בשנים 3, 9, 12</div>
                   <div class="t wrap" id="f4">🧾 הבונוס נכנס לבסיס:<br>גם הפנסיה ודמי הלידה גדלים</div>
-                  <div class="t" id="f5">🎓 קרן השתלמות משנה 5</div>
+                  <div class="t" id="f5">🏡 מטר מהבית · שעות גמישות</div>
+                  <div class="t more">🎓 קרן השתלמות, ועוד… <span class="rm">קרא עוד</span></div>
                   <div class="meta">07:30</div>
                 </div>
                 <div class="fwdbtn" id="fwdbtn">⤻</div>
@@ -268,7 +275,7 @@
         type0: 10.15, del0: 12.6, delStep: 0.05,  // typing; ⌫ press-and-hold while the right thumb covers ⌫ in clips/type3a (2.6–2.95 s)
         send: 17.45,
         back: 18.2, tapB: 19.4, chatB: 19.65,     // back arrow → chats list → updates group (RTL push transitions)
-        facts: 20.5, factStep: 1.45, factAt: [0, 1.4, 2.7, 4.0, 5.9],  // 5 facts; the 4th (two lines) reads longer
+        facts: 20.5, factStep: 1.45, factAt: [0, 1.6, 2.8, 4.0, 5.9],  // 5 facts; the 4th (two lines) reads longer
         fwd: 28.0, sheet: 28.15, pick: 29.0, fsend: 29.6, toA: 29.75, fwIn: 30.05, typingIn: 30.7, oops: 31.8, end: 34.3,
       };
       const tl = gsap.timeline({ paused: true });
@@ -361,7 +368,7 @@
         tl.fromTo(f, { backgroundColor: "rgba(255,225,77,0)" }, { backgroundColor: "rgba(255,225,77,0.65)", duration: 0.25, immediateRender: false }, at);
         if (next) tl.to(f, { backgroundColor: "rgba(255,225,77,0)", duration: 0.25 }, next - 0.1);
       });
-      tl.fromTo("#listB", { y: 0 }, { y: -160, duration: 5 * T.factStep, ease: "sine.inOut", immediateRender: false }, T.facts);
+      tl.fromTo("#listB", { y: 0 }, { y: -50, duration: 5 * T.factStep, ease: "sine.inOut", immediateRender: false }, T.facts);
       tl.to("#fwdbtn", { backgroundColor: "rgba(0,168,132,.85)", duration: 0.12 }, T.fwd);
 
       // ---- forward: sheet "העברה אל…" → tick נשות הברכה → send → that chat opens ----
