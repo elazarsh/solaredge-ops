@@ -1,0 +1,308 @@
+<title>מי תבוא לעבוד במעון</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap">
+<style>
+  /* Layout: one reading column (≈68ch) with full-width tables and a segment grid; brand inks from the daycare logo (root-brown) and its watercolor (teal). */
+  :root {
+    --bg: #F6F8F6;
+    --paper: #FFFFFF;
+    --ink: #24201D;
+    --muted: #6A6560;
+    --line: #DCE3DF;
+    --brown: #5A2614;
+    --teal: #2F8F7B;
+    --teal-soft: #E3F2EE;
+    --gold-soft: #FBF1DD;
+    --warn: #9A4B0F;
+    --display: "Frank Ruhl Libre", "David Libre", Georgia, serif;
+    --body: "Assistant", "Heebo", "Segoe UI", Arial, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141816; --paper: #1C211F; --ink: #ECE8E3; --muted: #A9A49D; --line: #2E3633;
+      --brown: #E7B79F; --teal: #6FD0BA; --teal-soft: #1E3530; --gold-soft: #3A3122; --warn: #F0B27A; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141816; --paper: #1C211F; --ink: #ECE8E3; --muted: #A9A49D; --line: #2E3633;
+    --brown: #E7B79F; --teal: #6FD0BA; --teal-soft: #1E3530; --gold-soft: #3A3122; --warn: #F0B27A; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.7; }
+  .wrap { direction: rtl; text-align: right; max-width: 980px; margin: 0 auto; padding-inline: 20px; padding-block: 36px 80px; }
+  .col { max-width: 68ch; }
+  header { border-bottom: 2px solid var(--brown); padding-bottom: 22px; margin-bottom: 30px; }
+  .kicker { font-weight: 700; color: var(--teal); letter-spacing: .02em; font-size: 15px; }
+  h1 { font-family: var(--display); font-weight: 900; font-size: clamp(32px, 5vw, 48px); line-height: 1.15; margin: 6px 0 10px; color: var(--brown); text-wrap: balance; }
+  h2 { font-family: var(--display); font-weight: 700; font-size: 28px; color: var(--brown); margin: 54px 0 12px; text-wrap: balance; }
+  h3 { font-size: 19px; font-weight: 800; margin: 26px 0 6px; }
+  p, li { margin: 0 0 10px; }
+  ul, ol { padding-inline-start: 22px; margin: 0 0 14px; }
+  .meta { color: var(--muted); font-size: 15px; }
+  .num { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; display: inline-block; }
+  a { color: var(--teal); }
+  sup a { text-decoration: none; font-size: 12px; }
+  .summary { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 20px 24px; }
+  .summary li { margin-bottom: 8px; }
+  .verdict { background: var(--teal-soft); border-radius: 10px; padding: 18px 22px; margin: 18px 0; }
+  .verdict b { color: var(--teal); }
+  .note { background: var(--gold-soft); border-radius: 10px; padding: 14px 18px; margin: 14px 0; font-size: 16px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 18px 0 8px; }
+  .stat { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .stat .v { font-family: var(--display); font-size: 30px; font-weight: 900; color: var(--brown); line-height: 1.1; }
+  .stat .l { font-size: 15px; color: var(--muted); line-height: 1.45; margin-top: 4px; }
+  .tbl { overflow-x: auto; margin: 14px 0 6px; }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; background: var(--paper); font-size: 15.5px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 10px 12px; vertical-align: top; text-align: right; }
+  th { font-weight: 800; color: var(--brown); background: var(--teal-soft); }
+  .segs { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; margin-top: 16px; }
+  .seg { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; min-width: 0; }
+  .seg h3 { margin-top: 0; color: var(--brown); font-family: var(--display); font-size: 22px; }
+  .seg .who { color: var(--muted); font-size: 15px; margin-bottom: 8px; }
+  .seg dl { margin: 0; display: grid; gap: 8px; }
+  .seg dt { font-weight: 800; font-size: 14px; color: var(--teal); }
+  .seg dd { margin: 0; font-size: 15.5px; line-height: 1.55; }
+  .quote { font-family: var(--display); font-weight: 700; color: var(--ink); }
+  .tag { display: inline-block; font-size: 13px; font-weight: 700; padding: 1px 9px; border-radius: 99px; background: var(--gold-soft); color: var(--warn); }
+  .src { font-size: 14.5px; color: var(--muted); }
+  .src li { margin-bottom: 6px; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">מחקר לקמפיין מעונות הר ברכה · אוקטובר 2026</div>
+    <h1>מי תבוא לעבוד במעון, מה תשאיר אותה, והאם לחשוף את השכר</h1>
+    <p class="meta col">סקירה של מחקרים מישראל ומהעולם על מטפלות בגיל הרך, פילוח קהלים, מסרים לכל קהל, והמלצה מנומקת על הצגת השכר. המחקר מבוסס על ספרות ונתונים קיימים. הוא עדיין לא בודק את הקהל בהר ברכה עצמה, ולכן בסוף יש תוכנית קצרה לבדיקה מקומית.</p>
+  </header>
+
+  <section class="summary col">
+    <h3 style="margin-top:0">בקצרה</h3>
+    <ul>
+      <li><b>הסטיגמה לא באה משום מקום.</b> בארץ כולה מטפלות באמת מרוויחות מעט: שכר התחלתי של כ-<span class="num">5,900</span> ₪, ו-44% עוזבות כבר בשנה הראשונה. לכן "כולם יודעים" שהשכר נמוך. בהר ברכה המצב שונה, וזה המסר: <b>מה שנכון בארץ לא נכון כאן.</b></li>
+      <li><b>מי שבוחרת בעבודה הזו עושה זאת קודם כול בשביל המשמעות,</b> ואחר כך בשביל ההתאמה לחיים: קרוב לבית, בשעות שמתאימות למשפחה. השכר הוא בעיקר מה שגורם לעזוב, או מה שמונע מלהגיע בכלל.</li>
+      <li><b>מה שמשאיר מטפלות:</b> שכר שהן מרוצות ממנו, תחושה שמעריכים אותן, שייכות לצוות, מנהלת תומכת ומקום להתפתח. מענק התמדה הוריד עזיבה ב-11 נקודות אחוז בניסוי מבוקר, ועובדות שהגיעו בהמלצה עוזבות פחות ב-10–30%. מבצע "המלצת? הרווחת!" כבר בנוי נכון.</li>
+      <li><b>שישה קהלים, ולכל אחד שער כניסה אחר:</b> אמהות צעירות ביישוב, נשים בגילי 45–60, צעירות (בנות שירות וסטודנטיות), נשים ממקצועות חינוך קרובים, גברים, והמטפלות הקיימות.</li>
+    </ul>
+    <div class="verdict"><b>על השכר:</b> כן להציג מספר. מספר אחד, מאומת ומתוארך, בתוך חבילה ואופק, ולא כמספר בודד. הכותרת היא המיקום היחסי ("מהתנאים הגבוהים בשומרון"), והמספר הוא ההוכחה. את הפירוט המלא נותנים בשלב "בדקו שוב", אצל אירית. בקהילה קטנה אפשר גם לבדוק את זה בפועל, בשתי גרסאות.</div>
+  </section>
+
+  <h2>1. התמונה הארצית: למה כולם "יודעים" שבמעון מרוויחים מעט</h2>
+  <div class="stats">
+    <div class="stat"><div class="v num">16,000</div><div class="l">מטפלות במעונות המפוקחים, שמטפלות בכ-120 אלף פעוטות<sup><a href="#s1">1</a></sup></div></div>
+    <div class="stat"><div class="v num">3,000</div><div class="l">מטפלות חסרות. 518 מעונות נסגרו בשנה אחת<sup><a href="#s1">1</a></sup></div></div>
+    <div class="stat"><div class="v num">44%</div><div class="l">עוזבות בשנה הראשונה. תחלופה שנתית של 52% לפי ויצו<sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup></div></div>
+    <div class="stat"><div class="v">כ-<span class="num">5,900</span> ₪</div><div class="l">שכר התחלתי של מטפלת בארץ (2025), לעומת <span class="num">7,000–8,000</span> ₪ לסייעת בגן<sup><a href="#s1">1</a></sup></div></div>
+    <div class="stat"><div class="v num">37%</div><div class="l">מאנשי הצוות בגיל הרך בישראל מרוצים מהשכר. רק 46% מרגישים שהחברה מעריכה אותם<sup><a href="#s5">5</a></sup></div></div>
+    <div class="stat"><div class="v num">60%</div><div class="l">מהמטפלות במעונות המסובסדים חושבות לעתים קרובות לעזוב. הסיבה הראשונה היא השכר<sup><a href="#s4">4</a></sup></div></div>
+  </div>
+  <div class="col">
+    <p><b>מי הן המטפלות בארץ:</b> בממוצע בנות 40.6, עם 13.1 שנות לימוד. כרבע (23.7%) בלי הכשרה מקצועית, 56.6% עם קורס מטפלות, ו-19.7% בוגרות מכללה לחינוך. הן עובדות בממוצע 42.5 שעות בשבוע<sup><a href="#s4">4</a></sup>. בדוח מדיניות מ-2021 המרואיינים תיארו אותן כנשים "שקופות", שאיש לא רואה את הצרכים ואת ההתפתחות שלהן<sup><a href="#s3">3</a></sup>.</p>
+    <p><b>מה זה אומר לקמפיין:</b> הסטיגמה בהר ברכה היא לא סתם שמועה. היא תיאור נכון של הענף בארץ, שהודבק למקום שבו הוא כבר לא נכון. לכן לא מספיק לומר "השכר טוב". צריך להסביר למה כאן זה אחרת: היישוב השקיע, והשכר עודכן באוגוסט 2026. ההכרה בכך שהשמועה הגיעה ממקום אמיתי ("נכון, ברוב הארץ…") מוסיפה אמינות למסר ולא מחלישה אותו.</p>
+    <div class="note">מאז 2022 מעונות היום נמצאים באחריות <b>משרד החינוך</b>, והתואר הרשמי הוא "מחנכת-מטפלת"<sup><a href="#s6">6</a></sup>. זו הוכחה רשמית למסר "מטפלת היא אשת חינוך", ואפשר להשתמש בה בפרק שעוסק בתפיסה הזו.</div>
+  </div>
+
+  <h2>2. למה בוחרים לעבוד במעון</h2>
+  <div class="col">
+    <ul>
+      <li><b>משמעות:</b> בסקר כוח האדם בגיל הרך בוויילס (2025), 30.9% מהעובדים בחרו בעבודה כדי לעשות משהו משמעותי, ו-30.4% כי היא מתאימה לכישורים שלהם. 13.8% בחרו בה כי השעות מתאימות לאורח החיים שלהם<sup><a href="#s7">7</a></sup>. גם סקירות מחקר אחרות מתארות את העובדים בתחום כבעלי מוטיבציה פנימית גבוהה<sup><a href="#s8">8</a></sup>.</li>
+      <li><b>חינוך כערך בקהילה הדתית-לאומית:</b> בוגרי החינוך הממלכתי-דתי עובדים בענף החינוך פי 2.15 יותר מבוגרי החינוך הממלכתי (19.3% לעומת 9%)<sup><a href="#s9">9</a></sup>. בקהל של הר ברכה, "חינוך" הוא ייעוד מכובד ולא רק מקצוע. זו הסיבה שהחתימה "חינוך במקום הראשון" מדויקת לקהל.</li>
+      <li><b>קרוב לבית:</b> נשים בישראל עובדות קרוב יותר לבית מגברים, בעיקר בגלל האחריות לילדים<sup><a href="#s10">10</a></sup>. ביישוב בשומרון, שבו עבודה מחוץ ליישוב פירושה נסיעה ארוכה, עבודה בתוך היישוב היא יתרון גדול. סביר שזה אחד המניעים החזקים ביותר אצל האמהות, ויש לבדוק זאת מקומית.</li>
+      <li><b>שייכות:</b> צוות של נשים מהיישוב, קשר עם המשפחות, ותחושה של "אני חלק מהקהילה". מחקר ישראלי מצא שתחושת שייכות למעון מפחיתה עזיבה גם כשהתנאים קשים<sup><a href="#s4">4</a></sup>.</li>
+    </ul>
+  </div>
+
+  <h2>3. למה עוזבות, ומה משאיר</h2>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>מה גורם לעזוב</th><th>מה משאיר</th><th>מה זה אומר להר ברכה</th></tr></thead>
+      <tbody>
+        <tr><td>שכר נמוך, הסיבה הראשונה בכל המחקרים<sup><a href="#s4">4</a></sup><sup><a href="#s11">11</a></sup></td><td>שביעות רצון מהשכר והטבות. ותיקות ומבוגרות נשארות יותר<sup><a href="#s8">8</a></sup></td><td>היתרון הגדול של הר ברכה. צריך לוודא שהמטפלות הקיימות <b>יודעות ומרגישות</b> אותו, ולא רק המועמדות</td></tr>
+        <tr><td>שחיקה רגשית, עומס, קבוצות גדולות<sup><a href="#s11">11</a></sup></td><td>מנהלת תומכת, יחס שמכבד את המטפלת<sup><a href="#s12">12</a></sup></td><td>מסר לשימור: "יש פה גב". כדאי לבדוק מה קיים בפועל, כמו הדרכה, תגבור בימים עמוסים או יחס מטפלות לילדים</td></tr>
+        <tr><td>תחושה שלא מעריכים אותן<sup><a href="#s11">11</a></sup><sup><a href="#s5">5</a></sup></td><td>הכרה, מעמד, להיקרא "מחנכת"</td><td>הקמפיין עצמו הוא כלי שימור: הוא מראה לקהילה שהמטפלות הן אנשי חינוך</td></tr>
+        <tr><td>אין אופק, אין התקדמות</td><td>התפתחות מקצועית ומסלול<sup><a href="#s8">8</a></sup></td><td>קפיצות שכר בשנים 3, 9 ו-12, וקרן השתלמות משנה 5. זה אופק מוחשי, וכדאי להציג אותו כ"מסלול"</td></tr>
+        <tr><td>חודשים ראשונים קשים, נשירה מוקדמת<sup><a href="#s3">3</a></sup></td><td>תשלומי התמדה מדורגים: בניסוי מבוקר בווירג'יניה העזיבה ירדה מ-25% ל-14%<sup><a href="#s13">13</a></sup></td><td>הבונוס שנכנס לבסיס וההמלצה שמשולמת אחרי 3 חודשים כבר פועלים לפי העיקרון הזה</td></tr>
+        <tr><td>התאמה לא טובה בין העובדת לתפקיד</td><td>גיוס בהמלצה: עובדים שהגיעו בהמלצה עוזבים פחות ב-10–30%<sup><a href="#s14">14</a></sup></td><td>"המלצת? הרווחת!" מגייס וגם משמר. כדאי להגביר אותו, והמטפלות הקיימות הן השגרירות הכי אמינות</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>4. פילוח קהלים: מי, למה, ואיזה מסר</h2>
+  <p class="col">הפילוח בנוי על המחקר. אלה השערות סבירות ולא נתונים מהר ברכה, ולכן כל כרטיס מציין גם מה צריך לבדוק מקומית. המסרים כתובים בשפה של הקהל, והעובדות לקוחות מ-<code>facts.md</code>.</p>
+  <div class="segs">
+    <article class="seg">
+      <h3>אמהות צעירות ביישוב</h3>
+      <div class="who">גילי 25–38, עם ילדים קטנים, בתוך היישוב</div>
+      <dl>
+        <dt>מה הן רוצות</dt><dd>עבודה קרובה לבית, בשעות שמתאימות למשפחה, יציבה ועם זכויות</dd>
+        <dt>מה עוצר אותן</dt><dd>"זה לא שווה את הכסף", עייפות, ההרגשה ש"זה רק עד שאמצא משהו אמיתי"</dd>
+        <dt>המסר</dt><dd class="quote">"עבודה בחינוך, דקות מהבית. והבונוס נכנס לבסיס, אז גם דמי הלידה והפנסיה גדלים."</dd>
+        <dt>הוכחות</dt><dd>F2 (בונוס לבסיס ← לידה, פנסיה, מחלה), F1, F9</dd>
+        <dt>לבדוק</dt><dd>שעות העבודה בפועל, אפשרות למשרה חלקית, והנחה או עדיפות לילדי הצוות במעון</dd>
+      </dl>
+    </article>
+    <article class="seg">
+      <h3>נשים בגילי 45–60</h3>
+      <div class="who">אחרי שגידלו ילדים, אחרי עבודה אחרת, או בחיפוש אחר משמעות</div>
+      <dl>
+        <dt>מה הן רוצות</dt><dd>מקום שמעריך ניסיון חיים, יציבות, משמעות, ולהיות חלק מצוות</dd>
+        <dt>מה עוצר אותן</dt><dd>מאמץ פיזי, החשש ש"מחפשים צעירות", מעמד נמוך</dd>
+        <dt>המסר</dt><dd class="quote">"הניסיון שלך הוא בדיוק מה שהפעוטות צריכים. ופה גם משלמים עליו."</dd>
+        <dt>הוכחות</dt><dd>F4 (ותק), F5 (קרן השתלמות), F9</dd>
+        <dt>לבדוק</dt><dd>כמה מהצוות הנוכחי בגיל הזה, ולכמה זמן הן נשארות. במחקר, מבוגרות וותיקות נשארות יותר</dd>
+      </dl>
+    </article>
+    <article class="seg">
+      <h3>צעירות: בנות שירות וסטודנטיות</h3>
+      <div class="who">גילי 18–25: שירות לאומי, מכללות לחינוך באזור</div>
+      <dl>
+        <dt>מה הן רוצות</dt><dd>ניסיון מקצועי, התחלה של קריירה בחינוך, שעות שמתאימות ללימודים</dd>
+        <dt>מה עוצר אותן</dt><dd>"זה לא קריירה", דימוי של בייביסיטר</dd>
+        <dt>המסר</dt><dd class="quote">"לא בייביסיטר. מחנכת. השנים הכי משמעותיות בהתפתחות, והתחלה של קריירה."</dd>
+        <dt>הוכחות</dt><dd>התואר הרשמי "מחנכת-מטפלת", F3 (תוספת לתואר, עדיין לא מאומת), הכשרה</dd>
+        <dt>לבדוק</dt><dd>האם המעון מממן קורס מטפלות, ואם יש התאמה למשמרות של סטודנטיות</dd>
+      </dl>
+    </article>
+    <article class="seg">
+      <h3>נשים ממקצועות חינוך קרובים</h3>
+      <div class="who">סייעות בגן ובבית ספר, מורות וגננות לשעבר</div>
+      <dl>
+        <dt>מה הן רוצות</dt><dd>תנאים טובים יותר ממה שיש להן היום, ואופק</dd>
+        <dt>מה עוצר אותן</dt><dd>ההנחה שבמעון מרוויחים פחות מסייעת</dd>
+        <dt>המסר</dt><dd class="quote">"השוו בעצמכן."</dd>
+        <dt>הוכחות</dt><dd>F1 מול 7,000–8,000 ₪ של סייעת, F4, F5</dd>
+        <dt>לבדוק</dt><dd>שווה ערך חודשי מאומת. בלי מספר כזה אי אפשר לומר "השוו"</dd>
+      </dl>
+    </article>
+    <article class="seg">
+      <h3>גברים</h3>
+      <div class="who">קהל קטן, אבל הפנייה אליהם היא חובה חוקית ומעידה על מקצועיות</div>
+      <dl>
+        <dt>מה הם רוצים</dt><dd>משרה רצינית עם אופק</dd>
+        <dt>מה עוצר אותם</dt><dd>"זו עבודה של נשים"</dd>
+        <dt>המסר</dt><dd>ניסוח כוללני בכל מודעה ("מטפלות ומטפלים"). אין צורך בסרטון נפרד</dd>
+        <dt>לבדוק</dt><dd>מה מדיניות המעון ומה מקובל בקהילה</dd>
+      </dl>
+    </article>
+    <article class="seg">
+      <h3>המטפלות הקיימות</h3>
+      <div class="who">שימור, ושגרירות של הקמפיין</div>
+      <dl>
+        <dt>מה הן רוצות</dt><dd>הכרה, גב, אופק, ושהקהילה תראה אותן כאנשי חינוך</dd>
+        <dt>מה הסיכון</dt><dd>שיגלו את פרטי השכר מהקמפיין ולא מההנהלה, או שישוו בינן לבין עצמן</dd>
+        <dt>המסר</dt><dd class="quote">"אתן הסיבה שהשמועה התעדכנה."</dd>
+        <dt>מה לעשות</dt><dd>להציג להן את הסרטון לפני כולם, להסביר להן את מבנה השכר, ולהזמין אותן להמליץ. ההמלצה משמרת גם את מי שממליצה</dd>
+      </dl>
+    </article>
+  </div>
+  <p class="col" style="margin-top:16px"><b>הסביבה שמשפיעה:</b> בני זוג, הורים לפעוטות, וקבוצת "נשות הברכה". דרכם הסטיגמה עוברת, ודרכם גם התיקון יעבור. לכן הפורמט של פרק 1, שמתקן את השמועה בתוך הקבוצה עצמה, נכון. לקהל הזה המסר הוא קהילתי: "ככה יישוב שמכבד חינוך מתייחס לצוות שלו".</p>
+
+  <h2>5. האם לחשוף את סכום השכר</h2>
+  <div class="col">
+    <h3>מה המחקר אומר בעד</h3>
+    <ul>
+      <li><b>שכר במודעה מביא יותר פניות:</b> בניסוי שדה שבו הוקצו שכר שונים באקראי למשרות דומות, שכר גבוה יותר משך הרבה יותר מתעניינים<sup><a href="#s15">15</a></sup>. בסקר SHRM, 70% מהארגונים שפרסמו טווחי שכר דיווחו על יותר מועמדים, ו-66% על מועמדים טובים יותר<sup><a href="#s16">16</a></sup>.</li>
+      <li><b>תיקון של אמונה שגויה צריך עובדה קונקרטית:</b> על פי ספר ההדרכה לתיקון מידע שגוי (2020), תיקון עובד כשהוא מחליף את המיתוס בעובדה ברורה וזכירה, ולא רק שולל אותו<sup><a href="#s17">17</a></sup>. "השכר טוב" לא יגבר על "כולם יודעים". מספר כן.</li>
+      <li><b>שקיפות שכר בין מעסיקים</b> מעודדת עובדים לחפש מעסיקים שמשלמים יותר<sup><a href="#s18">18</a></sup>. כשאתם המעסיק שמשלם יותר, השקיפות עובדת לטובתכם.</li>
+    </ul>
+    <h3>מה המחקר אומר נגד, ומה הסיכונים כאן</h3>
+    <ul>
+      <li><b>המספר נמדד מול נקודת השוואה:</b> "45 ₪ לשעה" נמדד מול שכר המינימום, 35.40 ₪ לשעה מאז אפריל 2026<sup><a href="#s19">19</a></sup>. ההפרש של 27% הוא אמיתי, אבל מי שעושה את החשבון לבד יכולה לחשוב "רק עשרה שקלים יותר". מספר בלי הקשר עלול להחליש את המסר.</li>
+      <li><b>השוואות בתוך הצוות:</b> שקיפות בין עובדים מצמצמת פערים, אבל עלולה ליצור השוואות לא נעימות<sup><a href="#s18">18</a></sup>. למשל, מטפלת בלי תעודה שמרוויחה פחות מ-45 ₪.</li>
+      <li><b>גם המספר יתיישן:</b> המספר של היום יהיה "השמועה" של מחר. לכן צריך לציין את התאריך ("מעודכן לאוגוסט 2026"). זה מתאים בדיוק למסר "בדקו שוב".</li>
+    </ul>
+    <div class="verdict">
+      <b>ההמלצה:</b> להציג מספר, בכללים האלה:
+      <ol style="margin:8px 0 0">
+        <li><b>כותרת יחסית, מספר כהוכחה.</b> "מהתנאים הגבוהים בשומרון" (מאושר) הוא המסר. "45 ₪ לשעה עם תעודה" הוא הראיה.</li>
+        <li><b>חבילה ומסלול, לא מספר בודד.</b> 45 ₪ לשעה, קפיצות בשנים 3, 9 ו-12, קרן השתלמות, והבונוס שנכנס לבסיס. ביחד זה נשמע כמו קריירה, ולא כמו תעריף.</li>
+        <li><b>הקשר שמגדיל את המספר.</b> אם ההנהלה תאשר שווה ערך חודשי (45 ₪ × 182 שעות ≈ <span class="num">8,190</span> ₪ ברוטו למשרה מלאה), אפשר להשתמש בו בשיחה עם אירית ובחומר הכתוב. הוא גבוה משכר ההתחלה הארצי של מטפלת, וקרוב לשכר של סייעת. סכום חודשי נתפס כגדול יותר מתעריף שעתי, אבל רק אם הוא מדויק ולא מטעה מי שעובדת במשרה חלקית.</li>
+        <li><b>תמיד עם תאריך,</b> ותמיד עם הזמנה לבדוק: "מעודכן לאוגוסט 2026 · בדקו שוב ↻".</li>
+        <li><b>הצוות שומע ראשון.</b> לפני שהסרטון יוצא, ההנהלה מסבירה למטפלות את מבנה השכר, כולל ההבדל בין עם תעודה לבלי תעודה ומה הדרך להגיע לתעודה.</li>
+        <li><b>בלי:</b> "השכר לא רע", טווחים כמו "עד…", או השוואה למעון בשם.</li>
+      </ol>
+    </div>
+    <h3>לבדוק במקום לנחש: ניסוי קטן</h3>
+    <p>מפיצים שתי גרסאות של אותו סרטון, באותן שעות, לשתי קבוצות דומות. <b>גרסה א'</b> עם "45 ₪ לשעה", ו<b>גרסה ב'</b> עם "מהתנאים הגבוהים בשומרון · בדקו שוב" בלי מספר. לכל גרסה קישור וואטסאפ אחר עם טקסט מוכן ("ראיתי את הסרטון – א'"). אחרי שבועיים משווים את מספר הפניות לאירית ואת השאלות שנשאלו. הקהל קטן, ולכן התוצאה תהיה כיוון ולא הוכחה. כדאי גם לשאול כל פונה מה גרם לה לפנות.</p>
+  </div>
+
+  <h2>6. מה זה אומר לסרטון הקיים ולקמפיין</h2>
+  <div class="col">
+    <h3>שיפורים קטנים לפרק 1, בלי לשנות את הסיפור</h3>
+    <ul>
+      <li><b>לנסח את העובדה כתועלת:</b> במקום "חצי מבונוס ההתמדה נכנס לבסיס", לכתוב "הבונוס נכנס לבסיס, אז גם הפנסיה ודמי הלידה גדלים". זה מדבר ישירות לאמהות הצעירות.</li>
+      <li><b>לשתול צורך בפטפוט של הקבוצה:</b> שורה כמו "מישהי מכירה עבודה קרובה לבית שמתאימה לשעות של הגן? 🙏" היא שורה טבעית בקבוצה, והטוויסט בסוף עונה עליה.</li>
+      <li><b>תאריך על העדכון:</b> להוסיף לכרטיס הסיום או להודעת העדכון "מעודכן לאוגוסט 2026".</li>
+      <li><b>גרסאות סיום לפי קהל:</b> אותו סרטון, עם שורה אחת אחרת מעל אירית. "דקות מהבית, בשעות של המשפחה" לאמהות, "הניסיון שלך שווה כאן" לגילי 45–60, ו"התחלה של קריירה בחינוך" לצעירות. זה זול לייצר, ומאפשר לשלוח לכל קבוצה את הגרסה שלה.</li>
+    </ul>
+    <h3>מבנה העונה לפי קהלים</h3>
+  </div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>פרק</th><th>התפיסה שמתקנים</th><th>הקהל העיקרי</th><th>ההוכחה</th></tr></thead>
+      <tbody>
+        <tr><td>1. הועבר פעמים רבות ✅</td><td>"במעון מרוויחים גרושים"</td><td>כולם, וקבוצת נשות הברכה</td><td>F1, F4, F2, F5, F9</td></tr>
+        <tr><td>2</td><td>"מטפלת = בייביסיטר"</td><td>צעירות ונשים ממקצועות חינוך</td><td>התואר "מחנכת-מטפלת", ההכשרה, מה קורה בשנים הראשונות</td></tr>
+        <tr><td>3</td><td>"אין לאן להתקדם"</td><td>אמהות צעירות וגילי 45–60</td><td>F4, F5, F2 (הבסיס, הפנסיה, דמי הלידה)</td></tr>
+        <tr><td>4</td><td>"מה יגידו" / גאווה</td><td>המטפלות הקיימות והקהילה</td><td>מטפלות ותיקות מהצוות, בהסכמה</td></tr>
+        <tr><td>שוטף</td><td>המלצת? הרווחת!</td><td>המטפלות הקיימות</td><td>מבצע ההמלצה (גיוס ושימור)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>7. בדיקה מקומית: שבועיים, בלי תקציב</h2>
+  <div class="col">
+    <ol>
+      <li><b>סקר תפיסה לפני הקמפיין</b> בקבוצת נשות הברכה (Google Forms, אנונימי, 4 שאלות):
+        <ul>
+          <li>"כמה לדעתך מרוויחה מטפלת במעון בהר ברכה לשעה?"</li>
+          <li>"האם שקלת פעם לעבוד במעון? למה כן או למה לא?"</li>
+          <li>"מה היה גורם לך לשקול?"</li>
+          <li>גיל ומצב משפחתי.</li>
+        </ul>
+        חוזרים על אותו סקר חודש אחרי הקמפיין. <b>ההפרש בתשובה לשאלה הראשונה הוא המדד הכי טוב לשינוי התפיסה.</b></li>
+      <li><b>שיחות עם 6–8 מטפלות מהצוות,</b> ותיקות וחדשות: למה הגעת? למה את נשארת? מה כמעט גרם לך לעזוב? מה היית אומרת לחברה ששוקלת?</li>
+      <li><b>2–3 שיחות עם מטפלות שעזבו:</b> מה גרם לעזיבה, ומה היה משאיר אותן.</li>
+      <li><b>מדדים להמשך:</b> פניות לאירית לפי מקור, המלצות שהתקבלו, מטפלות שהצטרפו, וכמה מהן נשארות אחרי 3 ו-12 חודשים.</li>
+    </ol>
+  </div>
+
+  <h2>8. שאלות להנהלה, לפני שממשיכים</h2>
+  <div class="col">
+    <ul>
+      <li>שעות העבודה בפועל והאפשרות למשרה חלקית. זה המסר המרכזי לאמהות.</li>
+      <li>שווה ערך חודשי מאומת לשכר של 45 ₪ לשעה, במשרה מלאה ובמשרה של 80%.</li>
+      <li>מה השכר בלי תעודה, והאם המעון מממן קורס מטפלות.</li>
+      <li>האם יש הנחה או עדיפות לילדי הצוות במעון.</li>
+      <li>אישור לעובדות שעדיין לא אומתו: תוספת לתואר (F3), שישי (F6 ו-F7), הנחה לתרבות (F8).</li>
+      <li>נתונים על הצוות: כמה מטפלות יש, ומה הוותק הממוצע. אם הוא גבוה, זו הוכחה חברתית חזקה ("אצלנו נשארות").</li>
+    </ul>
+  </div>
+
+  <hr>
+  <section class="src">
+    <h3 style="color:var(--ink)">מקורות</h3>
+    <ol>
+      <li id="s1">כלכליסט / ynet, "מחסור של 3,000 מטפלות מאיים על הפעלת מעונות וגנים", פברואר 2025. <a href="https://www.calcalist.co.il/local_news/article/byztxizc1l">קישור</a></li>
+      <li id="s2">כלכליסט, "המדינה מזניחה את ילדי הגיל הרך". <a href="https://www.calcalist.co.il/local_news/article/rjziosvpfg">קישור</a></li>
+      <li id="s3">רועי מאור, "הכשרת והדרכת מחנכות-מטפלות לגילאי לידה עד שלוש", 121 – מנוע לשינוי חברתי, אוקטובר 2021. <a href="https://www.120plus1.org.il/wp-content/uploads/2022/03/%D7%91%D7%99%D7%93%D7%99%D7%99%D7%9D-%D7%98%D7%95%D7%91%D7%95%D7%AA-%D7%9E%D7%97%D7%A7%D7%A8-%D7%9E%D7%93%D7%99%D7%A0%D7%99%D7%95%D7%AA-%D7%95%D7%94%D7%A6%D7%A2%D7%94-%D7%9C%D7%9E%D7%A1%D7%92%D7%A8%D7%AA-%D7%97%D7%93%D7%A9%D7%94-%D7%9C%D7%94%D7%9B%D7%A9%D7%A8%D7%95%D7%AA-%D7%95%D7%9C%D7%94%D7%93%D7%A8%D7%9B%D7%95%D7%AA-%D7%90%D7%95%D7%A7%D7%98%D7%95%D7%91%D7%A8-2021.pdf">קישור</a></li>
+      <li id="s4">Taub Center, Early Childhood Education and Care in Israel (2023), and the 2024 special issue on early childhood education in Israel (Early Child Development and Care). <a href="https://www.taubcenter.org.il/en/research/early-childhood-education-verview/">Taub</a> · <a href="https://www.tandfonline.com/doi/full/10.1080/03004430.2024.2365451">Special issue</a></li>
+      <li id="s5">OECD, Results from TALIS 2024 – Country note: Israel; TALIS Starting Strong. <a href="https://www.oecd.org/en/publications/results-from-talis-2024-country-notes_e127f9e2-en/israel_c3ed0cb7-en.html">קישור</a></li>
+      <li id="s6">משרד החינוך, המלצות מדיניות לגיל הרך; ynet על העברת המעונות למשרד החינוך. <a href="https://meyda.education.gov.il/files/LishcatMadaan/TashtitYeda/early-childhood-policy-recommendations.pdf">קישור</a></li>
+      <li id="s7">Social Care Wales, Early years and childcare workforce survey 2025 – highlight report. <a href="https://socialcare.wales/resources-guidance/early-years-and-childcare/early-years-and-childcare-workforce-survey-2025-highlight-report">קישור</a></li>
+      <li id="s8">Totenhagen et al., "Retaining Early Childhood Education Workers: A Review of the Empirical Literature", Journal of Research in Childhood Education, 2016. <a href="https://eric.ed.gov/?id=EJ1115144">קישור</a></li>
+      <li id="s9">אריאל פינקלשטיין עבור נאמני תורה ועבודה, מחקר על שוק העבודה של בוגרי החמ"ד (סרוגים, 2017). <a href="https://www.srugim.co.il/212486-מה-למדנו-מהמחקר-על-שוק-העבודה-הסרוג">קישור</a></li>
+      <li id="s10">Taub Center, "Back and Forth: Commuting for Work in Israel". <a href="https://www.taubcenter.org.il/en/research/back-and-forth-commuting-for-work-in-israel/">קישור</a></li>
+      <li id="s11">Bull, McFarland, Cumming &amp; Wong, "The impact of work-related wellbeing and workplace culture and climate on intention to leave in the early childhood sector", Early Childhood Research Quarterly 69 (2024). <a href="https://www.sciencedirect.com/science/article/pii/S0885200624000942">קישור</a></li>
+      <li id="s12">"The childcare director's role in preventing burnout: a positive-psychological examination of the caregivers' lived experience", Journal of Early Childhood Teacher Education, 2024. <a href="https://www.tandfonline.com/doi/full/10.1080/10901027.2024.2385324">קישור</a></li>
+      <li id="s13">Bassok et al., Virginia Teacher Recognition Program – ניסוי מבוקר על תשלומי התמדה. <a href="https://www.ednc.org/2021-10-04-turnover-retention-early-childhood-educators-better-pay-wage-study-supplement/">קישור</a></li>
+      <li id="s14">Burks, Cowgill, Hoffman &amp; Housman, "The Value of Hiring through Employee Referrals", Quarterly Journal of Economics, 2015. <a href="https://newsroom.iza.org/en/archive/research/firms-can-rely-on-workers-referred-by-current-employees">קישור</a></li>
+      <li id="s15">Belot, Kircher &amp; Muller, "How Wage Announcements Affect Job Search – A Field Experiment", AEJ: Macroeconomics, 2022. <a href="https://research.vu.nl/en/publications/how-wage-announcements-affect-job-searcha-field-experiment/">קישור</a></li>
+      <li id="s16">SHRM, מחקר על שקיפות שכר ומועמדים. <a href="https://www.shrm.org/about/press-room/new-shrm-research-shows-pay-transparency-makes-organizations-competitive-leads-to-increase-qualified-applicants">קישור</a></li>
+      <li id="s17">Lewandowsky et al., The Debunking Handbook 2020. <a href="https://www.bu.edu/com/research/the-debunking-handbook-2020">קישור</a></li>
+      <li id="s18">Zoë Cullen, "Is Pay Transparency Good?", Journal of Economic Perspectives 38(1), 2024. <a href="https://ideas.repec.org/a/aea/jecper/v38y2024i1p153-80.html">קישור</a></li>
+      <li id="s19">כל זכות, שכר מינימום (עדכון אפריל 2026). <a href="https://www.kolzchut.org.il/he/שכר_מינימום">קישור</a></li>
+    </ol>
+  </section>
+</div>
