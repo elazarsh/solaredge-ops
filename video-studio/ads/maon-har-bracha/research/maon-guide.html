@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מדריך גיוס ושימור מטפלות · מעונות הר ברכה</title>
+<style>
+  /* Offline file: system fonts only, no external requests. Palette from the daycare logo: root-brown ink + watercolor teal. */
+  :root {
+    --bg: #F4F7F5; --paper: #FFFFFF; --ink: #22201D; --muted: #67625C; --line: #DCE3DF;
+    --brown: #5A2614; --teal: #2C8673; --teal-soft: #E2F1EC; --gold: #FBF0DA; --gold-ink: #8A4E12;
+    --pain: #A23E2C; --gain: #2B7550; --focus: #1B6FB8;
+    --side: 270px;
+    --font: "Segoe UI", "Noto Sans Hebrew", "Arial Hebrew", Arial, "Helvetica Neue", sans-serif;
+    --serif: "David", "Frank Ruehl", "Noto Serif Hebrew", "Times New Roman", serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #131715; --paper: #1B201E; --ink: #EAE6E1; --muted: #A7A29B; --line: #2D3532;
+      --brown: #E6B49C; --teal: #6CCDB6; --teal-soft: #1D332D; --gold: #36301F; --gold-ink: #F0BF86;
+      --pain: #F0998A; --gain: #8DD2AC; --focus: #7DB8F0; color-scheme: dark; }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 17px; line-height: 1.7; }
+  a { color: var(--teal); }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  /* layout */
+  .side { position: fixed; top: 0; right: 0; width: var(--side); height: 100vh; overflow-y: auto; background: var(--paper); border-left: 1px solid var(--line); padding: 22px 18px 40px; }
+  .side .brand { font-family: var(--serif); font-weight: 700; font-size: 21px; color: var(--brown); line-height: 1.25; margin-bottom: 4px; }
+  .side .sub { color: var(--muted); font-size: 13.5px; margin-bottom: 16px; }
+  .side nav a { display: block; padding: 6px 10px; border-radius: 8px; color: var(--ink); text-decoration: none; font-size: 15px; line-height: 1.35; }
+  .side nav a:hover { background: var(--teal-soft); }
+  .side nav a.on { background: var(--teal-soft); color: var(--teal); font-weight: 700; }
+  .side nav .part { margin: 14px 0 4px; padding: 0 10px; font-size: 12.5px; font-weight: 800; color: var(--muted); letter-spacing: .03em; }
+  .side .tools { margin-top: 18px; display: grid; gap: 8px; }
+  .btn { font: inherit; font-size: 14.5px; font-weight: 700; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 8px; padding: 7px 12px; cursor: pointer; }
+  .btn:hover { border-color: var(--teal); color: var(--teal); }
+  .btn.on { background: var(--teal); border-color: var(--teal); color: #fff; }
+  main { margin-right: var(--side); padding: 34px 40px 120px; max-width: calc(1040px + var(--side)); }
+  .menu-toggle { display: none; }
+  @media (max-width: 900px) {
+    .side { transform: translateX(100%); transition: transform .2s; z-index: 20; box-shadow: -8px 0 24px rgba(0,0,0,.15); }
+    .side.open { transform: none; }
+    main { margin-right: 0; padding: 70px 16px 100px; }
+    .menu-toggle { display: block; position: fixed; top: 12px; right: 12px; z-index: 30; }
+  }
+
+  /* type */
+  header.cover { border-bottom: 3px solid var(--brown); padding-bottom: 22px; margin-bottom: 8px; }
+  .kicker { color: var(--teal); font-weight: 800; font-size: 14.5px; }
+  h1 { font-family: var(--serif); font-size: clamp(32px, 4.6vw, 48px); line-height: 1.12; color: var(--brown); margin: 6px 0 12px; font-weight: 700; }
+  h2 { font-family: var(--serif); font-size: 30px; color: var(--brown); margin: 0 0 6px; font-weight: 700; line-height: 1.2; }
+  h3 { font-size: 19px; margin: 24px 0 6px; font-weight: 800; }
+  section.ch { padding-top: 46px; scroll-margin-top: 10px; }
+  .chnum { color: var(--teal); font-weight: 800; font-size: 14px; }
+  .lead { color: var(--muted); max-width: 72ch; margin: 0 0 14px; }
+  .col { max-width: 74ch; }
+  p, li { margin: 0 0 9px; }
+  ul, ol { padding-inline-start: 22px; margin: 0 0 12px; }
+  .num { direction: ltr; unicode-bidi: isolate; display: inline-block; font-variant-numeric: tabular-nums; }
+  sup a { text-decoration: none; font-size: 12px; font-weight: 700; }
+
+  /* blocks */
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
+  .note { background: var(--gold); color: var(--ink); border-radius: 10px; padding: 12px 16px; margin: 12px 0; }
+  .note b { color: var(--gold-ink); }
+  .key { background: var(--teal-soft); border-radius: 10px; padding: 14px 18px; margin: 14px 0; }
+  .key b { color: var(--teal); }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .stats { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: 14px 0; }
+  .stat { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .stat .v { font-family: var(--serif); font-weight: 700; font-size: 30px; color: var(--brown); line-height: 1.1; }
+  .stat .l { color: var(--muted); font-size: 14.5px; line-height: 1.45; margin-top: 4px; }
+  .pain h3 { color: var(--pain); margin-top: 0; }
+  .gain h3 { color: var(--gain); margin-top: 0; }
+  .tag { display: inline-block; font-size: 12.5px; font-weight: 800; border-radius: 99px; padding: 1px 9px; margin-inline-end: 4px; }
+  .t-hi { background: var(--teal); color: #fff; }
+  .t-mid { background: var(--teal-soft); color: var(--teal); }
+  .t-lo { background: var(--line); color: var(--muted); }
+  .t-check { background: var(--gold); color: var(--gold-ink); }
+  .tbl { overflow-x: auto; margin: 12px 0; }
+  table { border-collapse: collapse; width: 100%; min-width: 720px; background: var(--paper); font-size: 15px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 9px 11px; vertical-align: top; text-align: right; line-height: 1.5; }
+  thead th { background: var(--teal-soft); color: var(--brown); font-weight: 800; }
+  tbody th { font-weight: 800; }
+  details { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 0 16px; margin: 10px 0; }
+  details > summary { cursor: pointer; padding: 12px 0; font-weight: 800; list-style-position: inside; }
+  details[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 10px; }
+  details > div { padding-bottom: 12px; }
+
+  /* segment explorer */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+  .seg-panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .seg-panel h3 { margin-top: 0; color: var(--brown); font-family: var(--serif); font-size: 24px; }
+  .seg-panel dl { display: grid; grid-template-columns: 150px 1fr; gap: 6px 16px; margin: 0; }
+  .seg-panel dt { font-weight: 800; color: var(--teal); }
+  .seg-panel dd { margin: 0; }
+  @media (max-width: 600px) { .seg-panel dl { grid-template-columns: 1fr; } }
+  .quote { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--brown); }
+
+  /* checklists */
+  .cl { list-style: none; padding: 0; margin: 8px 0 14px; }
+  .cl li { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+  .cl input { margin-top: 6px; width: 18px; height: 18px; flex: none; accent-color: var(--teal); }
+  .cl label { cursor: pointer; }
+  .cl .who { color: var(--muted); font-size: 13.5px; }
+  .progress { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; margin: 6px 0 2px; }
+  .progress i { display: block; height: 100%; width: 0; background: var(--teal); transition: width .2s; }
+  .ptext { font-size: 13.5px; color: var(--muted); }
+
+  /* kpi */
+  .kpi input { font: inherit; width: 100%; min-width: 90px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+
+  /* script table */
+  .script td:first-child { white-space: nowrap; font-weight: 700; color: var(--teal); }
+  .chg { background: var(--gold); border-radius: 4px; padding: 0 4px; }
+
+  .src { font-size: 14px; color: var(--muted); }
+  .src li { margin-bottom: 5px; }
+  footer { margin-top: 60px; color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 16px; }
+
+  @media print {
+    .side, .menu-toggle, .no-print { display: none !important; }
+    main { margin: 0; padding: 0; max-width: none; }
+    details { border: 0; }
+    details > summary { list-style: none; }
+    section.ch { page-break-before: always; }
+    body { font-size: 12pt; background: #fff; color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<button class="btn menu-toggle" id="menuBtn" aria-controls="side" aria-expanded="false">☰ תוכן</button>
+
+<aside class="side" id="side">
+  <div class="brand">מדריך גיוס ושימור מטפלות</div>
+  <div class="sub">מעונות הר ברכה · אוקטובר 2026</div>
+  <nav id="toc">
+    <a href="#exec">תקציר למנכ״ל ולאירית</a>
+    <div class="part">חלק א׳ · להבין את הקהל</div>
+    <a href="#ch1">1. המצב בארץ</a>
+    <a href="#ch2">2. מה כואב ומה מושך</a>
+    <a href="#ch3">3. תשעה קהלים</a>
+    <a href="#ch4">4. שכבת הקהילה</a>
+    <div class="part">חלק ב׳ · הר ברכה</div>
+    <a href="#ch5">5. הקהל שלנו</a>
+    <a href="#ch6">6. אסטרטגיית הקמפיין</a>
+    <a href="#ch7">7. האם לציין את השכר</a>
+    <a href="#ch8">8. התסריטים: שיפורים והצעות</a>
+    <div class="part">חלק ג׳ · מה עושים בפועל</div>
+    <a href="#ch9">9. גיוס: שגרות</a>
+    <a href="#ch10">10. שימור: 90 הימים ואחריהם</a>
+    <a href="#ch11">11. מעמד וערך עצמי</a>
+    <a href="#ch12">12. הקהילה וההורים</a>
+    <a href="#ch13">13. מדדים</a>
+    <a href="#ch14">14. תוכנית עבודה</a>
+    <a href="#ch15">15. החלטות פתוחות</a>
+    <a href="#src">מקורות</a>
+  </nav>
+  <div class="tools no-print">
+    <button class="btn" id="printBtn">הדפסה / PDF</button>
+    <button class="btn" id="resetBtn">איפוס הסימונים</button>
+  </div>
+</aside>
+
+<main>
+  <header class="cover" id="top">
+    <div class="kicker">חומר ללמידה ולקבלת החלטות · לאירית ולמנכ״ל היישוב</div>
+    <h1>איך מגייסים מטפלות, איך שומרים עליהן, ואיך הקהילה רואה אותן כאנשי חינוך</h1>
+    <p class="lead">המדריך מסכם מחקרים מישראל ומהעולם, ומתרגם אותם לצעדים למעונות הר ברכה: הקמפיין, השכר, שגרות גיוס ושימור, מעמד המטפלות ושיתוף הקהילה וההורים. הקובץ עובד בלי אינטרנט. הסימונים ברשימות ובטבלת המדדים נשמרים בדפדפן שבו פותחים אותו.</p>
+    <p class="note"><b>חשוב:</b> טענות על הר ברכה שעדיין לא אומתו מסומנות כך: <span class="tag t-check">לאמת</span>. עובדות שאומתו מול ההנהלה: 45 ₪ לשעה עם תעודה · קפיצות שכר בשנים 3, 9 ו-12 · חצי מבונוס ההתמדה נכנס לבסיס, ולכן גדלים גם הפנסיה, דמי הלידה וימי המחלה והחופשה · קרן השתלמות משנה 5 · "מהתנאים הגבוהים בשומרון" · מבצע "המלצת? הרווחת!".</p>
+  </header>
+
+  <!-- ===== EXEC ===== -->
+  <section class="ch" id="exec">
+    <h2>תקציר למנכ״ל ולאירית</h2>
+    <div class="grid">
+      <div class="card"><h3 style="margin-top:0">הבעיה</h3><p>בכל הארץ חסרות כ-3,000 מטפלות, ו-35%–48% מהעובדות במעונות הסמל מתחלפות בכל שנה<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup>. הדימוי של המקצוע, "בייביסיטר" ו"גרושים", נכון ברוב הארץ. בהר ברכה הוא כבר לא נכון, ולכן אפשר לנצל את זה.</p></div>
+      <div class="card"><h3 style="margin-top:0">הכיוון</h3><p>קודם כול <b>משמעות</b>: חינוך הוא ייעוד, בעיקר בקהילה דתית-לאומית. אחר כך <b>חיים</b>: קרוב לבית ובשעות של המשפחה. ובסוף <b>הוגנות</b>: השכר כהוכחה שמכבדים את המטפלות, ולא כפיתיון. קמפיין אחד לכולם, ולצידו גרסאות קצרות לכל קהל.</p></div>
+      <div class="card"><h3 style="margin-top:0">על השכר</h3><p><b>כן להציג מספר, אבל לא לכל קהל באותו אופן.</b> למטפלות מנוסות ולמטפלות לשעבר המספר מופיע בהתחלה. לאמהות ולמי שמחפשת משמעות, המספר בא אחרי המשמעות, כחלק מחבילה. תמיד עם תאריך. והצוות שומע ראשון (פרק 7).</p></div>
+      <div class="card"><h3 style="margin-top:0">מה עושים מחר בבוקר</h3><p>מפעילים את המטפלות כשגרירות (המלצת? הרווחת!), בונים קליטה מסודרת ל-90 הימים הראשונים, ויוצרים טקסי הוקרה בקהילה. לפני שהקמפיין יוצא מודדים את התדמית, וחודש אחריו מודדים שוב (פרק 13).</p></div>
+    </div>
+  </section>
+
+  <!-- ===== PART A ===== -->
+  <section class="ch" id="ch1">
+    <div class="chnum">חלק א׳ · פרק 1</div>
+    <h2>המצב בארץ</h2>
+    <p class="lead">התמונה הכללית, בלי קשר להר ברכה. היא מסבירה למה הסטיגמה כל כך חזקה.</p>
+    <div class="stats">
+      <div class="stat"><div class="v num">16,000</div><div class="l">מטפלות במעונות המפוקחים<sup><a href="#s1">1</a></sup></div></div>
+      <div class="stat"><div class="v num">3,000</div><div class="l">מטפלות חסרות. 518 מעונות נסגרו בשנה אחת<sup><a href="#s1">1</a></sup></div></div>
+      <div class="stat"><div class="v">35%–48%</div><div class="l">תחלופה שנתית. יותר ממחצית עוזבות בשנה הראשונה<sup><a href="#s2">2</a></sup></div></div>
+      <div class="stat"><div class="v">≈5,900 ₪</div><div class="l">שכר התחלתי בארץ (2025), לעומת 7,000–8,000 ₪ לסייעת בגן<sup><a href="#s1">1</a></sup></div></div>
+      <div class="stat"><div class="v">80%</div><div class="l">מהמטפלות ששקלו לעזוב ציינו שכר נמוך. אחריו: עבודה קשה ויותר מדי ילדים<sup><a href="#s3">3</a></sup></div></div>
+      <div class="stat"><div class="v">46%</div><div class="l">מאנשי הצוות בגיל הרך מרגישים שהחברה מעריכה אותם. 37% מרוצים מהשכר<sup><a href="#s4">4</a></sup></div></div>
+    </div>
+    <div class="col">
+      <ul>
+        <li><b>מי הן:</b> בממוצע בנות 40.6. רבע בלי הכשרה, ופחות מחמישית בוגרות מכללה<sup><a href="#s5">5</a></sup>. כמעט כולן נשים: גברים הם כ-0.2%<sup><a href="#s6">6</a></sup>.</li>
+        <li><b>מעמד רשמי:</b> מאז 2022 התחום שייך למשרד החינוך, והתואר הרשמי הוא "מחנכת-מטפלת"<sup><a href="#s7">7</a></sup>.</li>
+        <li><b>שחיקה:</b> במחקר על 40 מטפלות בישראל נמצאו כמקורות לשחיקה: יותר מדי ילדים לכל מטפלת, מעט תמיכה, יחס שלילי מהורים ואובדן תחושת העצמי. מה שמחזיק אותן הוא המשמעות של העבודה<sup><a href="#s8">8</a></sup>.</li>
+      </ul>
+      <div class="key"><b>מה זה אומר לנו:</b> "כולם יודעים שבמעון מרוויחים מעט" נכון ברוב הארץ. לכן תיקון התדמית יעבוד רק אם נסביר <b>למה כאן זה אחרת</b>: היישוב השקיע, והשכר עודכן. ההודאה שהשמועה הגיעה ממקום אמיתי מחזקת את האמינות.</div>
+    </div>
+  </section>
+
+  <section class="ch" id="ch2">
+    <div class="chnum">פרק 2</div>
+    <h2>מה כואב ומה מושך בעבודה</h2>
+    <div class="grid">
+      <div class="card pain"><h3>כאבים</h3><ul>
+        <li>שכר נמוך ביחס לאחריות</li><li>מאמץ פיזי: הרמות, רצפה, רעש</li><li>שחיקה רגשית ויותר מדי ילדים</li><li>מחלות חוזרות בשנה הראשונה</li>
+        <li>שעות ארוכות ומעט חופשות</li><li>מעמד של "בייביסיטר"</li><li>ביקורת מצד הורים</li><li>חוסר גיבוי ואחריות כבדה</li><li>אין לאן להתקדם</li></ul></div>
+      <div class="card gain"><h3>מה מושך</h3><ul>
+        <li>משמעות: השנים הכי מעצבות בחיים</li><li>שמחה יומיומית</li><li>ביטחון תעסוקתי, כי יש מחסור</li><li>קרוב לבית</li><li>שעות בוקר, בלי ערבים ובלי סופי שבוע</li>
+        <li>צוות ושייכות</li><li>לאמהות: הילד במעון, ולוח זמנים משותף</li><li>ניסיון של אמא שווה משהו בעבודה</li><li>מקצוע מוסדר עם מסלול</li></ul></div>
+    </div>
+    <div class="note"><b>תובנה חשובה:</b> במחקר כוח האדם הלאומי באוסטרליה, מי שנכנסה לעבודה רק כי היא "אוהבת ילדים", בלי להבין כמה העבודה מורכבת, עזבה יותר<sup><a href="#s9">9</a></sup>. פרסום שמראה גם את הקושי, וגם את הגב שמקבלים, מוריד עזיבה. המנגנון הוא תחושה שהמעסיק הוגן<sup><a href="#s10">10</a></sup>.</div>
+  </section>
+
+  <section class="ch" id="ch3">
+    <div class="chnum">פרק 3</div>
+    <h2>תשעה קהלים לפי שלב חיים</h2>
+    <p class="lead">לחצו על קהל כדי לראות מה הוא מחפש, מה מפחיד אותו ומה ישכנע אותו. הפילוח הזה כללי, ולא תלוי בהר ברכה.</p>
+    <div class="chips no-print" id="segChips" role="tablist"></div>
+    <div class="seg-panel" id="segPanel" aria-live="polite"></div>
+    <details><summary>כל תשעת הקהלים בטבלה אחת</summary><div class="tbl"><table id="segTable"><thead><tr><th>קהל</th><th>מחפשת</th><th>חוסם</th><th>מה ישכנע</th><th>נשארת?</th></tr></thead><tbody></tbody></table></div></details>
+    <p class="col"><b>גברים:</b> כ-0.2% מהמטפלות. החסמים שלהם הם סטיגמה ובדידות, כי הם לבד בין עשרות נשים<sup><a href="#s6">6</a></sup>. לא צריך קמפיין נפרד, אבל כל מודעה פונה לשני המינים, כפי שהחוק מחייב.</p>
+  </section>
+
+  <section class="ch" id="ch4">
+    <div class="chnum">פרק 4</div>
+    <h2>שכבת הקהילה: שפה, ערוץ ומה מקובל</h2>
+    <p class="lead">שלב החיים קובע <b>מה</b> אומרים. הקהילה קובעת <b>איך</b> ו<b>איפה</b>.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>קהילה</th><th>מאפיינים</th><th>ערכים ושפה</th><th>ערוצים</th><th>רגישויות</th></tr></thead>
+      <tbody>
+        <tr><th>דתית-לאומית</th><td>בוגרי החמ"ד עובדים בחינוך פי 2.15 יותר<sup><a href="#s11">11</a></sup>. יישובים קהילתיים ונסיעות ארוכות לעבודה</td><td>חינוך כייעוד, שליחות, קהילה</td><td>וואטסאפ קהילתי, אתרי המגזר, שירות לאומי, מכללות דתיות</td><td>צניעות, כבוד, לא "מפעל"</td></tr>
+        <tr><th>יהודית לא-חרדית</th><td>הרבה עבודות חלופיות שמשלמות יותר</td><td>מקצועיות, איזון, כסף</td><td>פייסבוק, אינסטגרם, אתרי דרושים</td><td>השוואה גלויה למשרות אחרות</td></tr>
+        <tr><th>חרדית</th><td>עודף של בוגרות סמינר, ומשפחתונים רבים<sup><a href="#s12">12</a></sup></td><td>פרנסה, שעות שמתאימות לבית</td><td>מקומונים, סמינרים</td><td>סביבה של נשים בלבד, אישורים קהילתיים</td></tr>
+        <tr><th>ערבית</th><td>כ-60% מבוגרות קורסי המטפלות<sup><a href="#s13">13</a></sup></td><td>עבודה יציבה עם זכויות</td><td>פייסבוק בערבית, ארגוני תעסוקה</td><td>תחבורה, שכר הוגן</td></tr>
+        <tr><th>עולות</th><td>חלקן עם ניסיון בחינוך מחו"ל</td><td>הכרה בניסיון</td><td>ארגוני עולים</td><td>שפה, הכרה בתעודות</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <!-- ===== PART B ===== -->
+  <section class="ch" id="ch5">
+    <div class="chnum">חלק ב׳ · פרק 5</div>
+    <h2>הקהל שלנו: יישוב דתי-לאומי בשומרון</h2>
+    <div class="col">
+      <h3>מה ייחודי לקהל של הר ברכה</h3>
+      <ul>
+        <li><b>חינוך כייעוד:</b> בקהילה הזו "חינוך" הוא ערך מרכזי, ולכן החתימה "חינוך במקום הראשון" מדויקת. בחירה במקצוע חינוכי נתפסת כמכובדת, אבל רק כשמבינים שזה באמת חינוך, ולא "שמירה על ילדים".</li>
+        <li><b>מרחק:</b> עבודה מחוץ ליישוב פירושה נסיעה ארוכה. עבודה בתוך היישוב היא יתרון גדול לאמהות.</li>
+        <li><b>משפחות גדולות:</b> לידות חוזרות, ולכן זכויות לידה ופנסיה הן נושא מרכזי. העובדה שחצי מהבונוס נכנס לבסיס, וכך גדלים גם דמי הלידה, היא <b>מסר חזק במיוחד</b> לקהל הזה.</li>
+        <li><b>קהילה צפופה:</b> מידע עובר בוואטסאפ ובפה לאוזן. שמועה מתפשטת מהר, וגם תיקון שלה. ההמלצה האישית היא הערוץ החזק ביותר.</li>
+        <li><b>נורמות:</b> צניעות, שפה מכבדת והומור עדין. לחיזוק המעמד אפשר לבקש מהרב או מהמנכ"ל להביע תמיכה. אין להציג פנים של ילדים.</li>
+        <li><b>ערוצים טבעיים:</b> קבוצות היישוב, שירות לאומי, מכללות דתיות לחינוך באזור, ויישובי הסביבה.</li>
+      </ul>
+      <h3>איזה קהל הכי חשוב לנו</h3>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>קהל</th><th>עדיפות</th><th>למה</th></tr></thead>
+      <tbody>
+        <tr><th>1. אמהות לפעוטות ביישוב</th><td><span class="tag t-hi">גבוהה</span></td><td>קהל גדול שגר ליד המעון, והזכויות שלנו (לידה, פנסיה) מתאימות לו בדיוק</td></tr>
+        <tr><th>2. חוזרות לעבוד (40–55)</th><td><span class="tag t-hi">גבוהה</span></td><td>נשארות הכי הרבה זמן. הניסיון שלהן כאמהות הוא נכס</td></tr>
+        <tr><th>8. מטפלות לשעבר (ביישוב ובסביבה)</th><td><span class="tag t-hi">גבוהה</span></td><td>מכירות את העבודה. אם עזבו בגלל השכר, השכר כבר השתנה</td></tr>
+        <tr><th>7. מטפלות מנוסות ביישובי הסביבה</th><td><span class="tag t-mid">בינונית-גבוהה</span></td><td>"מהתנאים הגבוהים בשומרון" מדבר אליהן ישירות</td></tr>
+        <tr><th>4–5. בנות שירות וסטודנטיות</th><td><span class="tag t-mid">בינונית</span></td><td>צינור לעתיד. נשארות פחות זמן אם אין להן מסלול</td></tr>
+        <tr><th>3. לפני פרישה (55+)</th><td><span class="tag t-mid">בינונית</span></td><td>מתאימות למשרות חלקיות ולתגבור</td></tr>
+        <tr><th>6. מסבות מקצוע</th><td><span class="tag t-mid">בינונית</span></td><td>קיימות ביישוב. צריך מספרים ומעמד</td></tr>
+        <tr><th>9. משפחתוניות</th><td><span class="tag t-lo">נמוכה</span></td><td>כדאי לבדוק אם יש כאלה בסביבה</td></tr>
+        <tr><th>גברים</th><td><span class="tag t-lo">נמוכה</span></td><td>ניסוח כוללני בלבד</td></tr>
+      </tbody></table></div>
+    <p class="col"><span class="tag t-check">לאמת</span> הסדרי הפרטיות בקהילה, ומה מקובל לגבי הצגת מטפלות אמיתיות בסרטונים.</p>
+  </section>
+
+  <section class="ch" id="ch6">
+    <div class="chnum">פרק 6</div>
+    <h2>אסטרטגיית הקמפיין: מטריה ושערים</h2>
+    <div class="col">
+      <div class="key"><b>מטריה (לכולם, ובעיקר לסביבה שמשפיעה):</b> מתקנים את התדמית. "השמועה לא התעדכנה. השכר כן." וגם: "מטפלת היא מחנכת." המטריה מדברת גם לבני זוג, להורים ולקהילה, כי שם הסטיגמה חיה.</div>
+      <h3>ארבעה שערים לקהלים</h3>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>שער</th><th>קהלים</th><th>המסר המרכזי</th><th>הוכחה מאומתת</th><th>איך מציגים את השכר</th></tr></thead>
+      <tbody>
+        <tr><th>"בית ושעות"</th><td>אמהות, 55+</td><td>"עבודה בחינוך, דקות מהבית, בשעות של המשפחה"</td><td>חצי מהבונוס בבסיס, ולכן גם דמי הלידה והפנסיה גדלים · <span class="tag t-check">לאמת</span> שעות והנחה לילדי הצוות</td><td>כחבילה: "יותר בבסיס, יותר בלידה"</td></tr>
+        <tr><th>"ניסיון ומשמעות"</th><td>חוזרות לעבוד, מסבות מקצוע</td><td>"הניסיון שלך הוא בדיוק מה שהפעוטות צריכים"</td><td>קפיצות שכר לפי ותק, קרן השתלמות</td><td>אחרי המשמעות, כהוגנות: "ומשלמים כמו שמגיע למחנכת"</td></tr>
+        <tr><th>"מקצוע ומסלול"</th><td>בנות שירות, סטודנטיות</td><td>"לא בייביסיטר. מחנכת"</td><td>הכשרה, מסלול · <span class="tag t-check">לאמת</span> מימון הקורס ותוספת לתואר</td><td>שכר עם תעודה ("45 עם תעודה"), כמוטיבציה להשלים אותה</td></tr>
+        <tr><th>"השוו בעצמכן"</th><td>מטפלות מנוסות, מטפלות לשעבר</td><td>"עזבת בגלל השכר? הוא כבר לא אותו שכר"</td><td>45 ₪ לשעה, מהגבוהים בשומרון, מעודכן לאוגוסט 2026</td><td><b>המספר בהתחלה</b></td></tr>
+      </tbody></table></div>
+    <div class="col">
+      <h3>עונה ותזמון</h3>
+      <ul>
+        <li><b>חלונות גיוס:</b> אחרי החגים בתשרי, אחרי פסח (לקראת ספטמבר), וסוף יולי. אז נשים מתכננות את השנה <span class="tag t-check">לאמת</span> מול הניסיון שלכם.</li>
+        <li><b>קצב:</b> פרק מטריה פעם ב-3–4 שבועות, וגרסה קצרה לכל שער בין הפרקים. אל תשלחו יותר מפריט אחד בשבוע לאותה קבוצה.</li>
+        <li><b>ערוצים:</b> קבוצות היישוב וסטטוסים. המטפלות משתפות בסטטוס שלהן, וזה הערוץ הכי אמין. רכזות שירות לאומי. קבוצות של יישובי הסביבה. מודעה מודפסת בכולבו ובבית הכנסת, עם קוד QR.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ch" id="ch7">
+    <div class="chnum">פרק 7</div>
+    <h2>האם לציין את השכר (45 ₪ לשעה)</h2>
+    <div class="col">
+      <h3>מה המחקר אומר</h3>
+      <ul>
+        <li><b>בעד: שכר מפורסם מביא יותר פניות.</b> בניסוי שדה עם שכר שהוקצה באקראי, שכר גבוה יותר משך הרבה יותר מתעניינים<sup><a href="#s14">14</a></sup>. בשירות הציבורי במקסיקו, שכר גבוה יותר משך מועמדים טובים יותר, <b>בלי לפגוע</b> במוטיבציה לשרת את הציבור. אצל מי שקיבל הצעה גבוהה, שיעור הקבלה עלה ב-35%<sup><a href="#s15">15</a></sup>. בזמביה, הדגשת קריירה משכה מועמדים חזקים יותר בלי לדחוק את מי שרוצה לעשות טוב<sup><a href="#s16">16</a></sup>.</li>
+        <li><b>אזהרה: שכר יכול להעביר מסר על אופי העבודה.</b> כשלא מכירים את התפקיד, שכר גבוה יכול להיתפס כסימן לכך שזו "עבודה בשביל כסף" ולא שליחות. בניסוי באוגנדה, שכר גבוה יותר הביא 36% יותר מועמדים, אבל הרחיק את בעלי המוטיבציה החברתית. דווקא הם נשארו 13 נקודות אחוז יותר זמן, ועבדו טוב יותר ב-17%<sup><a href="#s17">17</a></sup>.</li>
+        <li><b>תיקון סטיגמה דורש עובדה קונקרטית.</b> "השכר טוב" לא מחליף את "כולם יודעים". מספר כן<sup><a href="#s18">18</a></sup>.</li>
+        <li><b>מספר בלי הקשר מושווה למשהו אחר.</b> 45 ₪ לשעה מול שכר מינימום של 35.40 ₪<sup><a href="#s19">19</a></sup> זה 27% יותר. אבל מי שמחשבת לבד עלולה לחשוב "רק עשרה שקלים יותר".</li>
+        <li><b>שקיפות בתוך הצוות</b> יכולה ליצור השוואות לא נעימות. למשל, מטפלת בלי תעודה שמרוויחה פחות<sup><a href="#s20">20</a></sup>.</li>
+      </ul>
+      <div class="key"><b>המסקנה:</b> בקהל שבו חינוך הוא ייעוד, השכר צריך להופיע <b>כהוכחה שמכבדים את המטפלת</b>, ולא כסיבה לבוא. משמעות קודם, ואחריה מספר. הסדר והמסגור משתנים לפי הקהל.</div>
+      <h3>כלי לבחירה: איך להציג את השכר לכל קהל</h3>
+    </div>
+    <div class="chips no-print" id="payChips"></div>
+    <div class="seg-panel" id="payPanel" aria-live="polite"></div>
+    <div class="col">
+      <h3>כללים לכל הקהלים</h3>
+      <ol>
+        <li><b>תאריך:</b> "מעודכן לאוגוסט 2026 · בדקו שוב ↻". זה מונע מהמספר להפוך לשמועה הבאה.</li>
+        <li><b>חבילה:</b> המספר תמיד מופיע יחד עם האופק (3, 9, 12), קרן ההשתלמות והבסיס.</li>
+        <li><b>הצוות שומע ראשון:</b> לפני שהסרטון יוצא, הנהלה מציגה למטפלות את מבנה השכר, כולל ההבדל בין עם תעודה לבלי, ואת הדרך לקבל תעודה.</li>
+        <li><b>שווה ערך חודשי</b> (45 × 182 ≈ 8,190 ₪ ברוטו במשרה מלאה) <span class="tag t-check">לאמת</span> מתאים לשיחה אישית ולחומר כתוב, אבל לא לסרטון, כי היקף המשרה משתנה.</li>
+        <li><b>לא כותבים:</b> "השכר לא רע", "עד…", ולא משווים למעון אחר בשמו.</li>
+      </ol>
+      <h3>לבדוק במקום לנחש</h3>
+      <p>מפיצים שתי גרסאות של אותו סרטון: עם המספר ובלי, ולכל אחת קישור וואטסאפ עם טקסט מוכן אחר. אחרי שבועיים סופרים את הפניות לאירית. הקהל קטן, ולכן התוצאה תיתן כיוון ולא הוכחה. כדאי גם לשאול כל פונה מה גרם לה לפנות.</p>
+    </div>
+  </section>
+
+  <section class="ch" id="ch8">
+    <div class="chnum">פרק 8</div>
+    <h2>התסריטים: שיפורים לקיימים והצעות לחדשים</h2>
+    <h3>פרק 1 "הועבר פעמים רבות" (וולוג, v9.3): שיפורים מוצעים</h3>
+    <div class="tbl"><table class="script">
+      <thead><tr><th>איפה</th><th>היום</th><th>הצעה</th><th>למה</th></tr></thead>
+      <tbody>
+        <tr><td>הפטפוט (3–7 ש׳)</td><td>שאלות יומיומיות: דואר, כובע, עוגה</td><td><span class="chg">להוסיף שורה:</span> "מישהי מכירה עבודה ליד הבית שמתאימה לשעות של הגן? 🙏"</td><td>שותלת את הצורך של קהל 1, והסוף עונה עליו</td></tr>
+        <tr><td>השמועה (7–10 ש׳)</td><td>"שמעתן כמה מרוויחים במעון? 😬"</td><td>להשאיר. אפשר להוסיף תגובה: "נכון, בכל הארץ זה ככה…"</td><td>ההודאה שהשמועה הגיעה ממקום אמיתי מחזקת את האמינות</td></tr>
+        <tr><td>הודעת העדכון (20–27 ש׳)</td><td>"חצי מבונוס ההתמדה נכנס לבסיס"</td><td><span class="chg">לנסח כתועלת:</span> "הבונוס נכנס לבסיס, אז גם הפנסיה ודמי הלידה גדלים"</td><td>הקהל הוא משפחות צעירות, ותועלת מובנת יותר מסעיף בתלוש</td></tr>
+        <tr><td>הודעת העדכון</td><td>בלי תאריך</td><td><span class="chg">להוסיף:</span> "מעודכן לאוגוסט 2026"</td><td>אחרת המספר עצמו יתיישן ויהפוך לשמועה</td></tr>
+        <tr><td>סדר העובדות</td><td>שכר, קפיצות, בונוס, קרן, "מהגבוהים"</td><td>לפתוח ב"מהתנאים הגבוהים בשומרון", ואחריו 45 ₪ כהוכחה</td><td>מיקום יחסי קודם, ומספר כראיה (פרק 7)</td></tr>
+        <tr><td>הסיום</td><td>שורה אחת לכולם</td><td><span class="chg">ארבע גרסאות סיום</span> לפי השערים בפרק 6 (שורה אחת שמשתנה מעל אירית)</td><td>זול לייצר, ומאפשר לשלוח לכל קבוצה את הגרסה שלה</td></tr>
+      </tbody></table></div>
+
+    <h3>פרק 2 "היומן" (בעבודה): הערות</h3>
+    <ul class="col">
+      <li><b>חזק:</b> המשמעות מגיעה לפני השכר. "ומי עוקב אחרי העתיד שלה?" מציג את השכר כהוגנות, ולא כפיתיון. זה בדיוק מה שהמחקר ממליץ לקהל שרואה בחינוך ייעוד.</li>
+      <li><b>שיפור:</b> לשים את השורה "מהתנאים הגבוהים בשומרון" ראשונה ברשימת המעקב, להוסיף "מעודכן לאוגוסט 2026", ולנסח את הבונוס כתועלת (פנסיה, דמי לידה).</li>
+      <li><b>מחקר:</b> הטענה על "יותר ממיליון קשרים עצביים בשנייה" מופיעה בפרסומי המרכז להתפתחות הילד בהרווארד. כדאי לשמור על הניסוח המקורי.</li>
+      <li><b>קהל:</b> הפרק מדבר בעיקר לשער "מקצוע ומסלול" ולמטריה. כדאי להכין גרסה קצרה של 15 שניות לבנות שירות ולסטודנטיות.</li>
+    </ul>
+
+    <h3>הצעות לתסריטים חדשים, אחד לכל שער</h3>
+    <details open><summary>"השוו בעצמכן": למטפלות לשעבר ולמטפלות מנוסות</summary><div>
+      <p><b>הרעיון:</b> תלוש משכורת ישן מגיע כהודעה בקבוצה של "בוגרות המעון". מישהי מתייגת: "בנות, ראיתן את העדכון?" ומשווים את התלוש הישן לתלוש החדש. הטוויסט: המטפלת שעזבה בגלל השכר מגלה שהסיבה כבר לא קיימת.</p>
+      <p><b>מבנה:</b> 0–4 ש׳ הודעה מבוגרת לשעבר ("זוכרות למה עזבתי? 😅") · 4–15 ש׳ התלוש הישן מול החדש, שורה אחרי שורה (45 ₪, הבסיס, הוותק) · 15–22 ש׳ "אז… אפשר לחזור?" ← אירית עונה · סיום "בדקו שוב ↻" עם תאריך. <b>השכר בהתחלה.</b></p>
+      <p><span class="tag t-check">לאמת</span> שימוש בתלוש להמחשה בלבד, בלי פרטים אישיים.</p></div></details>
+    <details><summary>"בית ושעות": לאמהות</summary><div>
+      <p><b>הרעיון: "היום של נעמה"</b> מצולם כהקלטת מסך של אפליקציית ניווט. הבית, המעון, הגן והבית שוב, וכל הדרך היא 4 דקות הליכה. מעליה ציר זמן של היום. הטוויסט: את רוב היום הילדה שלה בילתה במעון שבו היא עצמה עובדת.</p>
+      <p><b>הוכחה:</b> שעות העבודה, והבסיס שמגדיל את דמי הלידה והפנסיה. <b>השכר כחבילה,</b> בשורה אחת. <span class="tag t-check">לאמת</span> שעות, משרה חלקית, הנחה לילדי הצוות.</p></div></details>
+    <details><summary>"ניסיון ומשמעות": לנשים בגילי 40–60</summary><div>
+      <p><b>הרעיון: "קורות חיים שלא כתבתי"</b>. מסמך קורות חיים ריק מתמלא בכישורים שנרכשו בבית: "ניהול 6 ילדים במקביל", "הרגעה של בכי לילי", "מאות שעות של פעילות יצירה". הטוויסט: אלה בדיוק דרישות התפקיד של מחנכת-מטפלת.</p>
+      <p><b>השכר</b> מופיע בסוף, כהוגנות: "ופה גם משלמים על הניסיון הזה". קפיצות הוותק וקרן ההשתלמות.</p></div></details>
+    <details><summary>פרק גאווה: לקהילה ולמטפלות הקיימות</summary><div>
+      <p><b>הרעיון:</b> הודעות תודה אמיתיות מהורים (בהסכמה, בלי שמות ילדים) נאספות לקיר דיגיטלי. בסוף מתגלה שהן לא נשלחו לגננת ולא למורה, אלא למטפלת. זו "השמועה" החדשה שמועברת פעמים רבות.</p>
+      <p>הפרק משמש גם לשימור: המטפלות רואות שמעריכים אותן, וזה מגביר מחויבות (פרק 11).</p></div></details>
+  </section>
+
+  <!-- ===== PART C ===== -->
+  <section class="ch" id="ch9">
+    <div class="chnum">חלק ג׳ · פרק 9</div>
+    <h2>גיוס: שגרות של אירית</h2>
+    <p class="lead">מה לעשות בכל יום, בכל שבוע ובכל עונה. סמנו מה כבר קורה. הסימונים נשמרים.</p>
+    <h3>שוטף (כל יום וכל שבוע)</h3>
+    <div class="progress"><i data-for="rec1"></i></div><div class="ptext" data-for="rec1"></div>
+    <ul class="cl" data-list="rec1">
+      <li><input type="checkbox" id="r1a"><label for="r1a">עונים לכל פנייה תוך 24 שעות, עדיף באותו יום. מועמדת שמחכה מוצאת עבודה אחרת. <span class="who">אירית</span></label></li>
+      <li><input type="checkbox" id="r1b"><label for="r1b">מתעדים בגיליון אחד כל פנייה: מאיפה הגיעה (סרטון, המלצה, מודעה), מה שאלה ומה קרה. <span class="who">אירית</span></label></li>
+      <li><input type="checkbox" id="r1c"><label for="r1c">משתפים בסטטוס פעם בשבוע: רגע אמיתי מהמעון, בלי פנים של ילדים. <span class="who">מטפלות מתנדבות</span></label></li>
+      <li><input type="checkbox" id="r1d"><label for="r1d">מזכירים במפגש הצוות השבועי את "המלצת? הרווחת!", ושואלים: את מי אתן מכירות? <span class="who">מנהלת המעון</span></label></li>
+    </ul>
+    <h3>תקופתי (כל חודש וכל עונה)</h3>
+    <div class="progress"><i data-for="rec2"></i></div><div class="ptext" data-for="rec2"></div>
+    <ul class="cl" data-list="rec2">
+      <li><input type="checkbox" id="r2a"><label for="r2a"><b>רשימת בוגרות:</b> בונים רשימה של מטפלות לשעבר ביישוב ובסביבה, ושולחים להן פנייה אישית: "השתנה משהו, רוצה לשמוע?" <span class="who">אירית</span></label></li>
+      <li><input type="checkbox" id="r2b"><label for="r2b"><b>בוקר פתוח:</b> פעם בעונה, "בואי לראות בוקר במעון" למתעניינות, עם קפה, בלי התחייבות. <span class="who">מנהלת</span></label></li>
+      <li><input type="checkbox" id="r2c"><label for="r2c"><b>יום ניסיון בתשלום</b> לפני קבלה לעבודה. התמונה המציאותית מורידה עזיבה מוקדמת<sup><a href="#s10">10</a></sup>. <span class="who">מנהלת</span></label></li>
+      <li><input type="checkbox" id="r2d"><label for="r2d"><b>קשר עם רכזות שירות לאומי</b> ועם מכללות דתיות לחינוך באזור, כולל התנסויות של סטודנטיות. <span class="who">אירית</span></label></li>
+      <li><input type="checkbox" id="r2e"><label for="r2e"><b>יישובי הסביבה:</b> מודעה בקבוצות שלהם, עם הסעה משותפת אם צריך <span class="tag t-check">לאמת</span>. <span class="who">אירית</span></label></li>
+      <li><input type="checkbox" id="r2f"><label for="r2f"><b>חלונות גיוס:</b> אחרי החגים, אחרי פסח וסוף יולי. בשבועיים שלפני כל חלון מגבירים את הפרסום. <span class="who">אירית</span></label></li>
+    </ul>
+    <div class="note"><b>למה ההמלצות חשובות כל כך:</b> עובדות שהגיעו בהמלצה עוזבות פחות ב-10–30%<sup><a href="#s21">21</a></sup>. הן מגיעות עם תמונה אמיתית של העבודה ועם חברה בצוות. מבצע "המלצת? הרווחת!" משלם אחרי 3 חודשים, כך שהוא מתגמל גם גיוס וגם שימור.</div>
+  </section>
+
+  <section class="ch" id="ch10">
+    <div class="chnum">פרק 10</div>
+    <h2>שימור: 90 הימים הראשונים, ומה שבא אחריהם</h2>
+    <p class="lead">רוב העזיבות קורות בשנה הראשונה, ובעיקר בחודשים הראשונים<sup><a href="#s2">2</a></sup>. כאן נמצאת ההשפעה הכי גדולה.</p>
+    <h3>קליטה: 90 הימים</h3>
+    <div class="progress"><i data-for="ret1"></i></div><div class="ptext" data-for="ret1"></div>
+    <ul class="cl" data-list="ret1">
+      <li><input type="checkbox" id="t1a"><label for="t1a"><b>חונכת:</b> מטפלת ותיקה, לא המנהלת, שאפשר לשאול אותה הכול. כדאי לתת לה תגמול קטן על התפקיד. <span class="who">מנהלת</span></label></li>
+      <li><input type="checkbox" id="t1b"><label for="t1b"><b>שבוע ראשון:</b> לא לבד עם קבוצה. היכרות עם השגרה, עם ההורים ועם נהלי הבטיחות. <span class="who">מנהלת</span></label></li>
+      <li><input type="checkbox" id="t1c"><label for="t1c"><b>שיחות אחרי 30, 60 ו-90 יום:</b> מה קשה? מה עוזר? מה היית משנה? <span class="who">מנהלת ואירית</span></label></li>
+      <li><input type="checkbox" id="t1d"><label for="t1d"><b>מחלות בשנה הראשונה:</b> להכין את המטפלת מראש ("זה קורה לכולן, וזה עובר"), ולהבטיח גב בימים שהיא חסרה. <span class="who">מנהלת</span></label></li>
+      <li><input type="checkbox" id="t1e"><label for="t1e"><b>הכשרה:</b> מסלול ברור לתעודה (שמגדילה את השכר), עם לוח זמנים <span class="tag t-check">לאמת</span> מימון. <span class="who">אירית</span></label></li>
+    </ul>
+    <h3>לאורך כל השנה</h3>
+    <div class="progress"><i data-for="ret2"></i></div><div class="ptext" data-for="ret2"></div>
+    <ul class="cl" data-list="ret2">
+      <li><input type="checkbox" id="t2a"><label for="t2a"><b>תודה אישית ומפורשת,</b> בעל פה, במשפט שמתאר מה בדיוק היא עשתה. בניסוי שדה, תודה אחת מהמנהל הגדילה את המאמץ של העובדים ביותר מ-50%<sup><a href="#s22">22</a></sup>. <span class="who">מנהלת ואירית</span></label></li>
+      <li><input type="checkbox" id="t2b"><label for="t2b"><b>להזכיר את המשמעות:</b> הודעות תודה מהורים, ותמונות של ילדים שגדלו וסיימו את המעון. מפגש קצר עם מי שהעבודה עוזרת לו הגדיל התמדה ותפוקה פי שניים בניסוי שדה<sup><a href="#s23">23</a></sup>. <span class="who">מנהלת</span></label></li>
+      <li><input type="checkbox" id="t2c"><label for="t2c"><b>יחס בין מטפלות לילדים וגב בימים קשים:</b> להחליט מראש מי מחליפה במקרה של חוסר. העומס הוא הסיבה השנייה לעזיבה. <span class="who">מנהלת</span></label></li>
+      <li><input type="checkbox" id="t2d"><label for="t2d"><b>שיחות שימור</b> פעם בשנה עם כל מטפלת: מה מחזיק אותך כאן? מה עלול לגרום לך לעזוב? <span class="who">אירית</span></label></li>
+      <li><input type="checkbox" id="t2e"><label for="t2e"><b>מסלול התקדמות:</b> מטפלת בכירה, חונכת או אחראית תחום (שפה, תנועה), עם תוספת קטנה ותואר. <span class="who">אירית והנהלת היישוב</span></label></li>
+      <li><input type="checkbox" id="t2f"><label for="t2f"><b>קול לצוות:</b> פעם בחודש, רעיון אחד מהצוות שמיושם ומקבל קרדיט. <span class="who">מנהלת</span></label></li>
+      <li><input type="checkbox" id="t2g"><label for="t2g"><b>שיחת עזיבה</b> עם כל מטפלת שעוזבת: למה, ומה היה משאיר אותה. מתעדים ולומדים. <span class="who">אירית</span></label></li>
+    </ul>
+    <p class="col">מענק התמדה מדורג, שמשולם בשלבים במהלך השנה, הוריד עזיבה מ-25% ל-14% בניסוי מבוקר<sup><a href="#s24">24</a></sup>. הבונוס שנכנס לבסיס אצלכם עובד בכיוון דומה, ולכן חשוב שהמטפלות <b>יבינו</b> אותו.</p>
+  </section>
+
+  <section class="ch" id="ch11">
+    <div class="chnum">פרק 11</div>
+    <h2>מעמד וערך עצמי: ביישוב ובתוך הצוות</h2>
+    <div class="grid">
+      <div class="card"><h3 style="margin-top:0">מול תושבי היישוב</h3><ul>
+        <li><b>שפה:</b> "המחנכות במעון" בכל מסמך, הודעה ונאום. מנכ"ל היישוב והרב משתמשים במונח בפומבי.</li>
+        <li><b>הוקרה קהילתית:</b> אירוע או שבת הוקרה למחנכות הגיל הרך פעם בשנה, עם דברי תורה על חינוך בגיל הרך <span class="tag t-check">לאמת</span> מול הקהילה.</li>
+        <li><b>במה קבועה:</b> מדור "מהמעון" בעלון היישוב. מה למדו הפעוטות החודש, בעיניים מקצועיות ובלי פרטים מזהים.</li>
+        <li><b>קרדיט בטקסים:</b> בסיום שנה ובמעבר לגן, המטפלות מוזכרות בשמן כמי שליוו את הילדים.</li>
+        <li><b>דמויות אמיתיות:</b> מטפלות ותיקות שמסכימות מספרות בקמפיין (פרק הגאווה).</li>
+      </ul></div>
+      <div class="card"><h3 style="margin-top:0">בתוך הצוות: ערך עצמי</h3><ul>
+        <li><b>שפה מקצועית:</b> לדבר על התפתחות, שפה, רגש ותנועה. כך הן לומדות לראות את העבודה שלהן כמקצוע.</li>
+        <li><b>תיעוד הצלחות:</b> "רגעי התפתחות" שבועיים (מילה ראשונה, צעד ראשון) שהמטפלת משתפת עם ההורים.</li>
+        <li><b>טקס תעודות</b> למי שמסיימת הכשרה, מול הצוות והנהלת היישוב.</li>
+        <li><b>מעגלי למידה:</b> פעם בחודש, מטפלת מלמדת את חברותיה משהו שהיא טובה בו.</li>
+        <li><b>תארים:</b> "חונכת", "אחראית שפה". כל תפקיד מקצועי מעלה את הערך העצמי.</li>
+      </ul></div>
+    </div>
+    <div class="note"><b>למה זה עובד:</b> רק 46% מאנשי הצוות בגיל הרך בישראל מרגישים שהחברה מעריכה אותם<sup><a href="#s4">4</a></sup>, ותחושה שלא מעריכים אותן היא אחת הסיבות לעזיבה<sup><a href="#s25">25</a></sup>. הכרה היא לא "נחמד שיש", אלא כלי לשימור.</div>
+  </section>
+
+  <section class="ch" id="ch12">
+    <div class="chnum">פרק 12</div>
+    <h2>הקהילה וההורים: איך משתפים אותם נכון</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>מי</th><th>מה מבקשים</th><th>איך</th><th>ממה להיזהר</th></tr></thead>
+      <tbody>
+        <tr><th>הורים</th><td>תודה מפורשת למטפלת</td><td>כרטיס תודה חודשי, או "מילה טובה" בקבוצת ההורים. מזכירים להם פעם בחודש</td><td>לא לבקש מההורים לפרסם. זה צריך להיות אמיתי</td></tr>
+        <tr><th>הורים</th><td>שגרירות</td><td>לשתף את הסרטון בסטטוס, ולהמליץ על מטפלת ("המלצת? הרווחת!" פתוח גם להם <span class="tag t-check">לאמת</span>)</td><td>לא ללחוץ</td></tr>
+        <tr><th>הורים</th><td>כבוד לגבולות</td><td>אמנה פשוטה לתקשורת: שעות לפנות, ערוץ קבוע, איך מעבירים ביקורת (למנהלת, לא בקבוצה)</td><td>ביקורת מהורים היא מקור מרכזי לשחיקה<sup><a href="#s8">8</a></sup></td></tr>
+        <tr><th>ועד היישוב והמנכ"ל</th><td>מעמד ומשאבים</td><td>תקציב קטן להוקרה, נוכחות בטקסים, ושימוש במונח "מחנכות" בפומבי</td><td>להבטיח רק מה שבאמת אפשר לקיים</td></tr>
+        <tr><th>רב היישוב ומוסדות</th><td>לגיטימציה</td><td>דברים בשבת או בעלון על חשיבות החינוך בגיל הרך</td><td>בתיאום עם הקהילה</td></tr>
+        <tr><th>סבים וסבתות ומתנדבים</th><td>תגבור וקשר בין דורות</td><td>שעת סיפור שבועית. וזה גם צינור לקהל 55+</td><td>בדיקות רקע ונהלים</td></tr>
+        <tr><th>קבוצת "נשות הברכה"</th><td>תיקון השמועה</td><td>הסרטונים, ועדכון קבוע בקבוצת העדכונים</td><td>לא להציף, ולא לשלוח יותר מפריט אחד בשבוע</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="ch" id="ch13">
+    <div class="chnum">פרק 13</div>
+    <h2>מדדים: איך יודעים שזה עובד</h2>
+    <p class="lead">מלאו את הטבלה. הערכים נשמרים בדפדפן הזה. הנתונים כרגע ריקים, ומחכים לנתוני המעון.</p>
+    <div class="tbl kpi"><table>
+      <thead><tr><th>מדד</th><th>איך מודדים</th><th>היום</th><th>יעד</th><th>בעוד 6 חודשים</th></tr></thead>
+      <tbody id="kpiBody"></tbody></table></div>
+    <details><summary>סקר תדמית לפני הקמפיין (ושוב חודש אחריו)</summary><div>
+      <ol>
+        <li>"כמה לדעתך מרוויחה מטפלת במעון בהר ברכה לשעה?" (שאלה פתוחה). <b>זה המדד הכי ישיר לשינוי התדמית.</b></li>
+        <li>"האם שקלת פעם לעבוד במעון? למה כן או למה לא?"</li>
+        <li>"מה היה גורם לך לשקול?"</li>
+        <li>"איך היית מתארת את העבודה של מטפלת במילה אחת?" (בייביסיטר, מחנכת, אחר)</li>
+        <li>גיל ומצב משפחתי (טווחים).</li>
+      </ol>
+      <p>Google Forms, אנונימי, בקבוצות היישוב. סקר קצר מקבל יותר תשובות.</p></div></details>
+  </section>
+
+  <section class="ch" id="ch14">
+    <div class="chnum">פרק 14</div>
+    <h2>תוכנית עבודה: טווח קצר וטווח ארוך</h2>
+    <h3>0–3 חודשים</h3>
+    <div class="progress"><i data-for="p1"></i></div><div class="ptext" data-for="p1"></div>
+    <ul class="cl" data-list="p1">
+      <li><input type="checkbox" id="p1a"><label for="p1a">לאמת את העובדות הפתוחות (פרק 15)</label></li>
+      <li><input type="checkbox" id="p1b"><label for="p1b">להציג לצוות את מבנה השכר ואת הסרטונים לפני כולם</label></li>
+      <li><input type="checkbox" id="p1c"><label for="p1c">סקר תדמית לפני הקמפיין</label></li>
+      <li><input type="checkbox" id="p1d"><label for="p1d">להפיץ את פרק 1, כולל בדיקה של גרסה עם המספר מול גרסה בלי</label></li>
+      <li><input type="checkbox" id="p1e"><label for="p1e">להפעיל את המטפלות כשגרירות ואת "המלצת? הרווחת!"</label></li>
+      <li><input type="checkbox" id="p1f"><label for="p1f">רשימת מטפלות לשעבר ופנייה אישית אליהן</label></li>
+      <li><input type="checkbox" id="p1g"><label for="p1g">נוהל קליטה ל-90 יום וחונכת לכל חדשה</label></li>
+    </ul>
+    <h3>3–12 חודשים</h3>
+    <div class="progress"><i data-for="p2"></i></div><div class="ptext" data-for="p2"></div>
+    <ul class="cl" data-list="p2">
+      <li><input type="checkbox" id="p2a"><label for="p2a">פרקים 2–4 של הסדרה, וגרסאות קצרות לכל שער</label></li>
+      <li><input type="checkbox" id="p2b"><label for="p2b">אירוע הוקרה קהילתי שנתי, ומדור "מהמעון" בעלון</label></li>
+      <li><input type="checkbox" id="p2c"><label for="p2c">מסלול התקדמות: מטפלת בכירה וחונכת</label></li>
+      <li><input type="checkbox" id="p2d"><label for="p2d">שיתוף פעולה עם רכזות שירות לאומי ועם מכללה לחינוך</label></li>
+      <li><input type="checkbox" id="p2e"><label for="p2e">סקר תדמית חוזר, והשוואה לסקר הראשון</label></li>
+    </ul>
+    <h3>1–3 שנים</h3>
+    <div class="progress"><i data-for="p3"></i></div><div class="ptext" data-for="p3"></div>
+    <ul class="cl" data-list="p3">
+      <li><input type="checkbox" id="p3a"><label for="p3a">צינור קבוע: בנות שירות שממשיכות לעבוד במעון, וסטודנטיות שמתקדמות לגננות או למנהלות</label></li>
+      <li><input type="checkbox" id="p3b"><label for="p3b">לשמור על מעמד "מהתנאים הגבוהים בשומרון", ולבדוק אותו פעם בשנה מול השוק</label></li>
+      <li><input type="checkbox" id="p3c"><label for="p3c">מעקב שנתי אחרי תחלופה ומשך העבודה, והחלטות לפי הנתונים</label></li>
+      <li><input type="checkbox" id="p3d"><label for="p3d">תדמית חדשה בקהילה: "המחנכות שלנו" כחלק מהזהות של היישוב</label></li>
+    </ul>
+  </section>
+
+  <section class="ch" id="ch15">
+    <div class="chnum">פרק 15</div>
+    <h2>החלטות ושאלות פתוחות</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>נושא</th><th>אפשרויות</th><th>ההמלצה</th><th>מי מחליט</th></tr></thead>
+      <tbody>
+        <tr><th>השכר בסרטונים</th><td>מספר לכולם / בלי מספר / לפי קהל</td><td><b>לפי קהל</b> (פרק 7), ולבדוק בשתי גרסאות</td><td>אירית ומנכ"ל</td></tr>
+        <tr><th>שווה ערך חודשי</th><td>לפרסם / רק בשיחה אישית</td><td>רק בשיחה ובחומר כתוב, אחרי שמאמתים אותו</td><td>הנהלת חשבונות</td></tr>
+        <tr><th>הנחה לילדי הצוות</th><td>יש / אין / אפשר להוסיף</td><td>אם אפשר, זה מסר מצוין לאמהות</td><td>מנכ"ל</td></tr>
+        <tr><th>מימון קורס מטפלות</th><td>מלא / חלקי / אין</td><td>מימון עם התחייבות קלה להישאר</td><td>מנכ"ל</td></tr>
+        <tr><th>מטפלות אמיתיות בסרטונים</th><td>כן בהסכמה / לא</td><td>כן, בפרק הגאווה, בהסכמה כתובה</td><td>אירית והמטפלות</td></tr>
+        <tr><th>"המלצת? הרווחת!" גם להורים</th><td>כן / לא</td><td>כן, ומרחיבים את מעגל השגרירות</td><td>אירית</td></tr>
+        <tr><th>תוספת לחונכת או לבכירה</th><td>תגמול / תואר בלבד</td><td>תגמול קטן ותואר</td><td>מנכ"ל</td></tr>
+      </tbody></table></div>
+    <h3>עובדות שצריך לאמת</h3>
+    <ul class="col">
+      <li>שעות העבודה בפועל ואפשרות למשרה חלקית</li>
+      <li>השכר בלי תעודה, ומה נדרש כדי לקבל תעודה</li>
+      <li>שווה ערך חודשי במשרה מלאה ובמשרה של 80%</li>
+      <li>תוספת לתואר (F3), תעריף שישי (F6 ו-F7), הנחה לאירועי תרבות (F8)</li>
+      <li>נתוני הצוות: כמה מטפלות יש, מה הוותק הממוצע, ומה התחלופה בשנתיים האחרונות</li>
+    </ul>
+  </section>
+
+  <section class="ch src" id="src">
+    <h2>מקורות</h2>
+    <ol>
+      <li id="s1">כלכליסט, "מחסור של 3,000 מטפלות מאיים על הפעלת מעונות וגנים", פברואר 2025. https://www.calcalist.co.il/local_news/article/byztxizc1l</li>
+      <li id="s2">מבקר המדינה, "הטיפול בפעוטות וחינוכם במעונות יום ובמשפחתונים", מאי 2022.</li>
+      <li id="s3">Silverman &amp; Blank, Early Childhood Education and Care in Israel, Taub Center, State of the Nation 2023.</li>
+      <li id="s4">OECD, Results from TALIS 2024 – Country note: Israel.</li>
+      <li id="s5">Special issue: Early Childhood Education in Israel, Early Child Development and Care, 2024.</li>
+      <li id="s6">Jerusalem Post, "Where are the men in Israel's early childhood education?"; ירדן קדר, בית ברל, 2024.</li>
+      <li id="s7">משרד החינוך, המלצות מדיניות לגיל הרך; העברת המעונות למשרד החינוך (2022).</li>
+      <li id="s8">Matattov Sekeles et al., "'I'm no longer myself anymore': burnout and coping of educators-caregivers in day-care centres in Israel", ECDC 194, 2024.</li>
+      <li id="s9">Irvine, Thorpe et al., "Money, Love and Identity", National ECEC Workforce Study, QUT, 2016.</li>
+      <li id="s10">Earnest, Allen &amp; Landis, "Mechanisms linking realistic job previews with turnover", Personnel Psychology, 2011.</li>
+      <li id="s11">פינקלשטיין, נאמני תורה ועבודה, שוק העבודה של בוגרי החמ"ד, 2017.</li>
+      <li id="s12">כלכליסט, על עודף המורות בחינוך החרדי; מעריב, תחקיר על המשפחתונים.</li>
+      <li id="s13">רועי מאור, "הכשרת והדרכת מחנכות-מטפלות לגילאי לידה עד שלוש", 121, 2021.</li>
+      <li id="s14">Belot, Kircher &amp; Muller, "How Wage Announcements Affect Job Search – A Field Experiment", AEJ: Macro, 2022.</li>
+      <li id="s15">Dal Bó, Finan &amp; Rossi, "Strengthening State Capabilities: The Role of Financial Incentives in the Call to Public Service", QJE, 2013.</li>
+      <li id="s16">Ashraf, Bandiera &amp; Lee, "Do-gooders and go-getters: career incentives, selection, and performance in public service delivery", 2020.</li>
+      <li id="s17">Deserranno, "Financial Incentives as Signals: Experimental Evidence from the Recruitment of Village Promoters in Uganda", AEJ: Applied, 2019.</li>
+      <li id="s18">Lewandowsky et al., The Debunking Handbook 2020.</li>
+      <li id="s19">כל זכות, שכר מינימום (עדכון אפריל 2026).</li>
+      <li id="s20">Cullen, "Is Pay Transparency Good?", Journal of Economic Perspectives 38(1), 2024.</li>
+      <li id="s21">Burks, Cowgill, Hoffman &amp; Housman, "The Value of Hiring through Employee Referrals", QJE, 2015.</li>
+      <li id="s22">Grant &amp; Gino, "A little thanks goes a long way", Journal of Personality and Social Psychology, 2010.</li>
+      <li id="s23">Grant, "The significance of task significance", Journal of Applied Psychology, 2008.</li>
+      <li id="s24">Bassok et al., Virginia Teacher Recognition Program (ניסוי מבוקר).</li>
+      <li id="s25">Bull, McFarland, Cumming &amp; Wong, Early Childhood Research Quarterly 69, 2024.</li>
+    </ol>
+    <footer>הוכן עבור מעונות הר ברכה · אוקטובר 2026. הממצאים הכלליים מבוססים על מחקר שפורסם. ההמלצות לגבי הר ברכה הן השערות מבוססות, ויש לאמת אותן מול נתוני המעון והקהילה.</footer>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var store = {
+    get: function (k) { try { return JSON.parse(localStorage.getItem("maonGuide:" + k)); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem("maonGuide:" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  /* ---- segments ---- */
+  var SEGS = [
+    { n: "אמא לפעוטות", age: "25–40", seek: "קרוב לבית, שעות שמתאימות לגן ולבית הספר, הילד שלה איתה, זכויות", fear: "\"אני גם ככה עם ילדים כל היום\", השכר הולך על המעון של הילד שלה, מחלות", proof: "שעות מדויקות, מקום או הנחה לילד, הבסיס שמגדיל את דמי הלידה והפנסיה", msg: "עבודה בחינוך ליד הבית, בשעות של הילדים שלך", stay: "בינונית. תלוי בגב שהיא מקבלת" },
+    { n: "חוזרת לעבוד", age: "40–55", seek: "משמעות, מקום שמעריך ניסיון, צוות, יציבות", fear: "\"מחפשים צעירות\", מאמץ פיזי, חזרה ללמוד", proof: "ותיקות בצוות, הכשרה בתשלום, קפיצות שכר לפי ותק", msg: "עשרים שנה של ניסיון. עכשיו גם משלמים עליהן", stay: "גבוהה. מבוגרות וותיקות נשארות יותר" },
+    { n: "לפני פרישה", age: "55+", seek: "חום, משרה חלקית, לצאת מהבית", fear: "כושר פיזי, שעות ארוכות", proof: "משרות חלקיות ומשמרות קצרות", msg: "בוקר עם תינוקות במקום בוקר מול הטלוויזיה", stay: "גבוהה, אם יש גמישות" },
+    { n: "צעירה בתחילת הדרך", age: "18–25", seek: "עבודה עכשיו, ניסיון, חברה", fear: "\"זו לא קריירה\", מעמד מול חברות", proof: "מסלול, הכשרה ממומנת, אופק לגננת או למנהלת", msg: "לא בייביסיטר. מחנכת, והתחלה של מקצוע", stay: "נמוכה. היא לומדת כדי לצאת" },
+    { n: "סטודנטית לחינוך", age: "19–28", seek: "ניסיון רלוונטי, משמרות שמתאימות ללימודים", fear: "התנגשות עם הלימודים", proof: "גמישות, הכרה בניסיון, מסלול", msg: "התואר שלך מתחיל פה", stay: "נמוכה עד בינונית" },
+    { n: "מסבת מקצוע", age: "30–50", seek: "משמעות אחרי עבודה במשרד או במסחר", fear: "ירידה בשכר, \"נפלתי?\"", proof: "מספרים, מסלול, מעמד מקצועי", msg: "מהמשרד לעבודה שיש בה משמעות, בלי להתנצל", stay: "בינונית עד גבוהה" },
+    { n: "מטפלת מנוסה במקום אחר", age: "כל גיל", seek: "תנאים טובים יותר, הערכה, צוות", fear: "\"בכל מקום זה אותו דבר\"", proof: "מספרים, יחס מטפלות לילדים, הדרכה, מנהלת", msg: "השוי בעצמך: שכר, יחס, גב", stay: "גבוהה" },
+    { n: "מטפלת לשעבר", age: "כל גיל", seek: "שמשהו השתנה", fear: "\"עזבתי בגלל השכר והעומס\"", proof: "מה בדיוק השתנה, עם תאריך", msg: "עזבת בגלל השכר? זה כבר לא אותו שכר", stay: "גבוהה, אם הסיבה שבגללה עזבה טופלה" },
+    { n: "משפחתונית", age: "25–50", seek: "לעבוד מהבית עם הילד שלה", fear: "בדידות, בפועל פחות משכר מינימום", proof: "ביטחון של שכירה, צוות, חופשות", msg: "כל היתרונות, בלי לעבוד לבד", stay: "בינונית" }
+  ];
+  function el(tag, attrs, html) { var e = document.createElement(tag); for (var k in (attrs || {})) e.setAttribute(k, attrs[k]); if (html != null) e.innerHTML = html; return e; }
+  var chips = document.getElementById("segChips"), panel = document.getElementById("segPanel");
+  function showSeg(i) {
+    var s = SEGS[i];
+    panel.innerHTML = "<h3>" + (i + 1) + ". " + s.n + " <span style='font-size:15px;color:var(--muted)'>(" + s.age + ")</span></h3>" +
+      "<dl><dt>מה היא מחפשת</dt><dd>" + s.seek + "</dd><dt>מה עוצר אותה</dt><dd>" + s.fear + "</dd><dt>מה ישכנע</dt><dd>" + s.proof + "</dd>" +
+      "<dt>מסר לדוגמה</dt><dd class='quote'>\"" + s.msg + "\"</dd><dt>האם נשארת</dt><dd>" + s.stay + "</dd></dl>";
+    Array.prototype.forEach.call(chips.children, function (c, j) { c.classList.toggle("on", j === i); c.setAttribute("aria-selected", j === i); });
+    store.set("seg", i);
+  }
+  SEGS.forEach(function (s, i) {
+    var b = el("button", { "class": "btn", type: "button", role: "tab" }, (i + 1) + ". " + s.n);
+    b.addEventListener("click", function () { showSeg(i); });
+    chips.appendChild(b);
+    var tr = el("tr", null, "<th>" + (i + 1) + ". " + s.n + " (" + s.age + ")</th><td>" + s.seek + "</td><td>" + s.fear + "</td><td>" + s.proof + "</td><td>" + s.stay + "</td>");
+    document.querySelector("#segTable tbody").appendChild(tr);
+  });
+  showSeg(store.get("seg") || 0);
+
+  /* ---- pay tool ---- */
+  var PAY = [
+    { n: "הקהילה כולה (מטריה)", show: "כן, כהוכחה", order: "מיקום יחסי קודם, ואחריו המספר", line: "מהתנאים הגבוהים בשומרון · 45 ₪ לשעה עם תעודה · מעודכן לאוגוסט 2026", why: "תיקון סטיגמה צריך עובדה קונקרטית. המיקום היחסי מאומת, והמספר מוכיח אותו" },
+    { n: "אמהות לפעוטות", show: "כן, בתוך חבילה", order: "בית ושעות קודם, אחר כך זכויות, והמספר בסוף", line: "הבונוס נכנס לבסיס, אז גם דמי הלידה והפנסיה גדלים · מ-45 ₪ לשעה", why: "מה שמכריע אצלן הוא שעות וקרבה לבית. הזכויות מתאימות לשלב החיים שלהן" },
+    { n: "חוזרות לעבוד ומסבות מקצוע", show: "כן, אחרי המשמעות", order: "משמעות קודם, ואחריה השכר כהוגנות", line: "ומשלמים כמו שמגיע למחנכת: 45 ₪ לשעה, קפיצות בשנים 3, 9 ו-12, קרן השתלמות", why: "בקהל שמונע ממשמעות, שכר שמוצג ראשון עלול להיתפס כ'עבודה בשביל כסף' (אוגנדה). כשהוא מוצג כהוגנות, הוא לא מרחיק (מקסיקו, זמביה)" },
+    { n: "בנות שירות וסטודנטיות", show: "כן, עם התעודה", order: "מסלול ומקצוע קודם, והשכר כמוטיבציה להשלים את התעודה", line: "עם תעודה: 45 ₪ לשעה. ואנחנו מלוות אותך עד התעודה", why: "מראה להן התקדמות. ⚠ לאמת מימון הכשרה" },
+    { n: "מטפלות מנוסות ולשעבר", show: "כן, ובהתחלה", order: "המספר ראשון, ואחריו החבילה", line: "45 ₪ לשעה · הבסיס גדל · קפיצות לפי ותק · מעודכן לאוגוסט 2026. השוו בעצמכן", why: "הן מכירות את העבודה ומשוות הצעות. אצלן המספר הוא המסר" },
+    { n: "הצוות הקיים", show: "כן, ראשונות ובפירוט", order: "מפגש עם ההנהלה לפני הקמפיין", line: "מבנה השכר המלא, כולל הדרך לתעודה, וזמן לשאלות", why: "מונע הפתעות והשוואות פוגעות, ומגייס אותן כשגרירות" }
+  ];
+  var pc = document.getElementById("payChips"), pp = document.getElementById("payPanel");
+  function showPay(i) {
+    var p = PAY[i];
+    pp.innerHTML = "<h3>" + p.n + "</h3><dl><dt>לציין שכר?</dt><dd><b>" + p.show + "</b></dd><dt>סדר</dt><dd>" + p.order + "</dd>" +
+      "<dt>שורה לדוגמה</dt><dd class='quote'>" + p.line + "</dd><dt>למה</dt><dd>" + p.why + "</dd></dl>";
+    Array.prototype.forEach.call(pc.children, function (c, j) { c.classList.toggle("on", j === i); });
+    store.set("pay", i);
+  }
+  PAY.forEach(function (p, i) { var b = el("button", { "class": "btn", type: "button" }, p.n); b.addEventListener("click", function () { showPay(i); }); pc.appendChild(b); });
+  showPay(store.get("pay") || 0);
+
+  /* ---- checklists ---- */
+  var checks = store.get("checks") || {};
+  function updateProgress() {
+    document.querySelectorAll("ul.cl").forEach(function (ul) {
+      var key = ul.getAttribute("data-list"), boxes = ul.querySelectorAll("input"), done = 0;
+      boxes.forEach(function (b) { if (b.checked) done++; });
+      var bar = document.querySelector(".progress i[data-for='" + key + "']"), txt = document.querySelector(".ptext[data-for='" + key + "']");
+      if (bar) bar.style.width = (boxes.length ? 100 * done / boxes.length : 0) + "%";
+      if (txt) txt.textContent = done + " מתוך " + boxes.length + " בוצעו";
+    });
+  }
+  document.querySelectorAll("ul.cl input").forEach(function (b) {
+    b.checked = !!checks[b.id];
+    b.addEventListener("change", function () { checks[b.id] = b.checked; store.set("checks", checks); updateProgress(); });
+  });
+  updateProgress();
+
+  /* ---- KPIs ---- */
+  var KPIS = [
+    ["פניות חדשות בחודש", "גיליון הפניות, לפי מקור"],
+    ["פניות מהמלצה (%)", "שדה \"מקור\" בגיליון"],
+    ["זמן ממוצע מפנייה לקבלה (ימים)", "תאריך פנייה מול תאריך קבלה"],
+    ["מטפלות שנקלטו ונשארו 90 יום (%)", "רשימת עובדות"],
+    ["תחלופה שנתית (%)", "עזיבות בשנה ÷ ממוצע מטפלות"],
+    ["ותק ממוצע (שנים)", "רשימת עובדות"],
+    ["\"כמה מרוויחה מטפלת לשעה?\" (תשובה ממוצעת בסקר)", "סקר תדמית"],
+    ["\"מחנכת\" כתיאור התפקיד (% מהמשיבות)", "סקר תדמית"],
+    ["שביעות רצון הצוות (1–5)", "שאלון קצר פעם בחצי שנה"]
+  ];
+  var kv = store.get("kpi") || {}, kb = document.getElementById("kpiBody");
+  KPIS.forEach(function (k, i) {
+    var tr = el("tr", null, "<th>" + k[0] + "</th><td>" + k[1] + "</td>");
+    ["now", "goal", "m6"].forEach(function (c) {
+      var id = "kpi-" + i + "-" + c, td = el("td"), inp = el("input", { id: id, type: "text", "aria-label": k[0] + " " + c, inputmode: "decimal" });
+      inp.value = kv[id] || "";
+      inp.addEventListener("input", function () { kv[id] = inp.value; store.set("kpi", kv); });
+      td.appendChild(inp); tr.appendChild(td);
+    });
+    kb.appendChild(tr);
+  });
+
+  /* ---- nav ---- */
+  var links = document.querySelectorAll("#toc a"), secs = [];
+  links.forEach(function (a) { var s = document.querySelector(a.getAttribute("href")); if (s) secs.push([s, a]); });
+  function onScroll() {
+    var y = window.scrollY + 120, cur = secs[0];
+    secs.forEach(function (p) { if (p[0].offsetTop <= y) cur = p; });
+    links.forEach(function (a) { a.classList.toggle("on", cur && a === cur[1]); });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  var side = document.getElementById("side"), mb = document.getElementById("menuBtn");
+  mb.addEventListener("click", function () { var o = side.classList.toggle("open"); mb.setAttribute("aria-expanded", o); });
+  links.forEach(function (a) { a.addEventListener("click", function () { side.classList.remove("open"); mb.setAttribute("aria-expanded", "false"); }); });
+  document.getElementById("printBtn").addEventListener("click", function () {
+    document.querySelectorAll("details").forEach(function (d) { d.setAttribute("open", ""); });
+    window.print();
+  });
+  var resetArmed = false, rb = document.getElementById("resetBtn");
+  rb.addEventListener("click", function () {
+    if (!resetArmed) { resetArmed = true; rb.textContent = "ללחוץ שוב לאישור"; setTimeout(function () { resetArmed = false; rb.textContent = "איפוס הסימונים"; }, 3000); return; }
+    checks = {}; kv = {}; store.set("checks", checks); store.set("kpi", kv);
+    document.querySelectorAll("ul.cl input").forEach(function (b) { b.checked = false; });
+    document.querySelectorAll("#kpiBody input").forEach(function (i) { i.value = ""; });
+    updateProgress(); resetArmed = false; rb.textContent = "איפוס הסימונים";
+  });
+})();
+</script>
+</body>
+</html>
