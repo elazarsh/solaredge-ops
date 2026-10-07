@@ -47,29 +47,35 @@
       /* end card */
       #end { position: absolute; left: 60px; right: 124px; top: 272px; opacity: 0; }
       #end-card { position: relative; background: #fffaf2; border-radius: 44px; box-shadow: 0 30px 80px rgba(40, 20, 5, 0.45);
-                  display: flex; flex-direction: column; align-items: center; padding: 26px 26px 20px; gap: 8px; direction: rtl; unicode-bidi: isolate; text-align: center; }
-      #end .name { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 70px; line-height: 1; color: #1d2a5c; }
-      #end .role { font-family: "Heebo", sans-serif; font-weight: 800; font-size: 50px; color: #1d2a5c; }
-      #end .perks { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 34px; color: #4a4a58; }
+                  display: flex; flex-direction: column; align-items: center; padding: 18px 24px 14px; gap: 6px; direction: rtl; unicode-bidi: isolate; text-align: center; }
+      #end .name { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 62px; line-height: 1; color: #1d2a5c; }
+      #end .role { font-family: "Heebo", sans-serif; font-weight: 800; font-size: 44px; color: #1d2a5c; }
+      #end .perks { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 32px; color: #4a4a58; }
       #offer { width: 100%; margin-top: 4px; padding: 14px 14px 12px; border-radius: 28px; background: #fde8ee;
                display: flex; flex-direction: column; align-items: center; gap: 8px; }
-      #offer .oh { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 54px; color: #d6336c; line-height: 1.05; }
+      #offer .oh { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 50px; color: #d6336c; line-height: 1.05; }
       #offer .os { font-family: "Heebo", sans-serif; font-weight: 700; font-size: 32px; color: #5a2a3e; }
       #prizes { display: flex; gap: 20px; width: 100%; justify-content: center; }
       .prize { width: 410px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-      .prize img { width: 410px; height: 200px; object-fit: cover; border-radius: 22px; border: 6px solid #fff; box-shadow: 0 10px 24px rgba(90, 40, 60, 0.25); }
+      .prize img { width: 410px; height: 150px; object-fit: cover; border-radius: 22px; border: 6px solid #fff; box-shadow: 0 10px 24px rgba(90, 40, 60, 0.25); }
       .prize div { font-family: "Heebo", sans-serif; font-weight: 700; font-size: 31px; color: #3a2230; line-height: 1.15; }
       #offer .terms { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 24px; color: #6a5560; line-height: 1.3; }
       #phone { margin-top: 6px; background: #d9482c; color: #fff; border-radius: 999px; padding: 10px 44px 16px; font-family: "Heebo", sans-serif; font-weight: 800; font-size: 54px;
                box-shadow: 0 12px 30px rgba(217, 72, 44, 0.4); }
       #end .legal { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 25px; color: #6d6d78; }
-      #end1 { position: absolute; left: 60px; right: 124px; top: 560px; opacity: 0; }
+      #end1 { position: absolute; left: 60px; right: 124px; top: 420px; opacity: 0; }
       #end1 .c { background: #fffaf2; border-radius: 44px; box-shadow: 0 30px 80px rgba(40, 20, 5, 0.45); padding: 46px 30px 40px;
                  display: flex; flex-direction: column; align-items: center; gap: 16px; direction: rtl; unicode-bidi: isolate; text-align: center; }
       #end1 .name { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 84px; line-height: 1; color: #1d2a5c; }
       #end1 .role { font-family: "Heebo", sans-serif; font-weight: 800; font-size: 60px; color: #1d2a5c; }
       #end1 .perks { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 40px; color: #4a4a58; }
       #end1 .bar { width: 220px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #f7c948, #f48fb1, #7fd8c9); }
+      .logos { display: flex; align-items: center; justify-content: center; gap: 44px; direction: ltr; }
+      .logos img { display: block; object-fit: contain; }
+      .logos .lm { mix-blend-mode: multiply; }
+      #end1 .logos img { height: 230px; }
+      #end-card .logos img { height: 104px; }
+      #end-card .logos { gap: 34px; margin-bottom: 2px; }
     </style>
   </head>
   <body>
@@ -86,7 +92,6 @@
       </div>
       <div id="flash"></div>
 
-      <div id="tag"><span>פרק 12 · מה יש לי בתיק</span></div>
       <div class="sub" id="s1">היי! עוד פרק של ״מה יש לי בתיק״</div>
       <div class="sub" id="s2">הפעם… לפני ואחרי.</div>
       <div class="sub" id="s3">המחשב, שחזר איתי הביתה כל ערב.</div>
@@ -103,9 +108,10 @@
       <div id="punch"><div class="p1">היום?</div><div class="p2">רק נצנצים ✨</div></div>
       <div id="later"><div class="t1">חצי שנה אחרי</div><div class="t2"><span class="ltr">16:05</span></div></div>
 
-      <div id="end1"><div class="c"><div class="name">מעונות הר ברכה</div><div class="role">מחפשים מטפלות</div><div class="bar"></div><div class="perks">משרות מגוונות · ימים ושעות גמישים</div></div></div>
+      <div id="end1"><div class="c"><div class="logos"><img class="lm" src="assets/img/logo-maon.jpg" alt="" /><img src="assets/img/logo-harbracha.png" alt="" /></div><div class="name">מעונות הר ברכה</div><div class="role">מחפשים מטפלות</div><div class="bar"></div><div class="perks">משרות מגוונות · ימים ושעות גמישים</div></div></div>
       <div id="end">
         <div id="end-card">
+          <div class="logos"><img class="lm" src="assets/img/logo-maon.jpg" alt="" /><img src="assets/img/logo-harbracha.png" alt="" /></div>
           <div class="name">מעונות הר ברכה</div>
           <div class="role">מחפשים מטפלות</div>
           <div class="perks">משרות מגוונות · ימים ושעות גמישים</div>
@@ -153,7 +159,6 @@
         tl.to(sel, { opacity: 0, duration: 0.2, ease: "power1.in" }, b - 0.2);
       }
       // vlog subtitles (timed to the voice)
-      show("#tag", 0.0, 2.9, 10);
       show("#s1", 0.2, 2.9); show("#s2", 2.9, 6.1);
       show("#s3", 6.3, 9.1);
       show("#s4", 9.3, 11.9);
