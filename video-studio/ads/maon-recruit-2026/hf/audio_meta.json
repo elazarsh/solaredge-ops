@@ -1,0 +1,41 @@
+{
+  "tts_provider": "gemini",
+  "voice_id": "Sulafat",
+  "bgm": null,
+  "bgm_pending": false,
+  "bgm_provider": null,
+  "bgm_pid": null,
+  "bgm_log": null,
+  "bgm_mode": null,
+  "bgm_target_duration_s": null,
+  "bgm_seed_duration_s": null,
+  "bgm_loop_count": null,
+  "voices": [
+    {
+      "id": "01-open",
+      "path": "assets/voice/01-open.wav",
+      "duration_s": 2.96,
+      "words": []
+    },
+    {
+      "id": "02-evening",
+      "path": "assets/voice/02-evening.wav",
+      "duration_s": 3,
+      "words": []
+    },
+    {
+      "id": "03-punch",
+      "path": "assets/voice/03-punch.wav",
+      "duration_s": 5.56,
+      "words": []
+    },
+    {
+      "id": "04-cta",
+      "path": "assets/voice/04-cta.wav",
+      "duration_s": 5.24,
+      "words": []
+    }
+  ],
+  "sfx": [],
+  "total_duration_s": 16.76
+}

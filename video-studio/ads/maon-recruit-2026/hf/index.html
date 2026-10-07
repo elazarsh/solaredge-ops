@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="he">
+  <!-- Never put dir="rtl" on <html>: it renders a blank video. Scope direction: rtl to text elements. -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/Heebo-VF.ttf"); font-weight: 100 900; }
+      @font-face { font-family: "Rubik"; src: url("assets/fonts/Rubik-VF.ttf"); font-weight: 300 900; }
+      @font-face { font-family: "GveretLevin"; src: url("assets/fonts/gveret-levin-hebrew-400-normal.woff2"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #d8b58c; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      /* table + camera */
+      #world { position: absolute; inset: 0; transform-origin: 50% 45%; }
+      #table { position: absolute; inset: 0; width: 1080px; height: 1920px; }
+      .obj { position: absolute; display: block; }
+      .obj img { display: block; width: 100%; height: auto; filter: drop-shadow(0 16px 18px rgba(40, 25, 10, 0.38)); }
+      #p2 .obj { opacity: 0; }
+      #glitter { position: absolute; inset: 0; width: 1080px; height: 1920px; }
+
+      /* lighting */
+      .light { position: absolute; inset: 0; pointer-events: none; }
+      #light-cool { background:
+          radial-gradient(ellipse 90% 60% at 50% 42%, rgba(0,0,0,0) 0%, rgba(10,16,40,0.45) 100%),
+          linear-gradient(rgba(40, 70, 130, 0.13), rgba(40, 70, 130, 0.13)); }
+      #light-warm { opacity: 0; background:
+          radial-gradient(ellipse 80% 55% at 85% 12%, rgba(255, 214, 150, 0.42) 0%, rgba(255, 190, 120, 0) 70%),
+          radial-gradient(ellipse 100% 70% at 50% 45%, rgba(0,0,0,0) 55%, rgba(70, 35, 10, 0.28) 100%),
+          linear-gradient(rgba(255, 170, 90, 0.10), rgba(255, 170, 90, 0.10)); }
+
+      /* handwriting on paper */
+      .hand { position: absolute; font-family: "GveretLevin", sans-serif; direction: rtl; unicode-bidi: isolate; text-align: center; }
+      #sticky-text { left: 9%; right: 9%; top: 17%; color: #1b2660; font-size: 60px; line-height: 1.18; white-space: pre-line; }
+      #drawing-text { left: 8%; right: 8%; top: 3.5%; color: #c2185b; font-size: 70px; line-height: 1; }
+
+      /* instagram-story style captions */
+      .cap { position: absolute; left: 60px; right: 60px; display: flex; justify-content: center; direction: rtl; unicode-bidi: isolate; opacity: 0; }
+      .cap > span { background: #fff; color: #141414; font-family: "Heebo", sans-serif; font-weight: 700; font-size: 62px; line-height: 1.25;
+                  padding: 14px 34px 18px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.22); text-align: center; }
+      .cap.hook > span { font-size: 96px; font-weight: 800; padding: 16px 44px 24px; }
+      .ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+      #c0 { top: 300px; } #c1, #c2, #c3, #c4, #c5, #c6 { top: 320px; }
+      #c7 { top: 300px; } #c8 { top: 420px; }
+      #c8 > span { background: #ffe066; }
+
+      /* "half a year later" card */
+      #later { position: absolute; left: 0; right: 0; top: 700px; text-align: center; direction: rtl; unicode-bidi: isolate; opacity: 0; }
+      #later .t1 { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 120px; color: #fff; text-shadow: 0 6px 30px rgba(60, 25, 0, 0.45); }
+      #later .t2 { margin-top: 18px; font-family: "Heebo", sans-serif; font-weight: 600; font-size: 64px; color: #fff; text-shadow: 0 4px 20px rgba(60, 25, 0, 0.5); }
+
+      /* end card */
+      #cta { position: absolute; left: 60px; right: 140px; top: 300px; height: 940px; opacity: 0; }
+      #cta-card { position: absolute; inset: 0; background: #fffaf2; border-radius: 48px; box-shadow: 0 30px 80px rgba(60, 30, 5, 0.35);
+                  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; direction: rtl; unicode-bidi: isolate; text-align: center; padding: 0 50px; }
+      #cta .kicker { font-family: "Heebo", sans-serif; font-weight: 600; font-size: 46px; color: #b0476e; }
+      #cta .name { font-family: "Rubik", sans-serif; font-weight: 800; font-size: 96px; line-height: 1.02; color: #1d2a5c; }
+      #cta .role { font-family: "Heebo", sans-serif; font-weight: 800; font-size: 64px; color: #1d2a5c; }
+      #cta .perks { font-family: "Heebo", sans-serif; font-weight: 500; font-size: 46px; color: #4a4a58; }
+      #cta .phone { margin-top: 18px; background: #d9482c; color: #fff; border-radius: 999px; padding: 18px 50px 24px;
+                    font-family: "Heebo", sans-serif; font-weight: 800; font-size: 62px; box-shadow: 0 12px 30px rgba(217, 72, 44, 0.4); }
+      #cta .sparkline { width: 220px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #f7c948, #f48fb1, #7fd8c9); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="40.8" data-width="1080" data-height="1920">
+      <div id="world">
+        <img id="table" src="assets/gen/table.jpg" alt="" />
+
+        <!-- part 1: the heavy bag -->
+        <div id="p1">
+          <div class="obj" id="bag" style="left:300px; top:460px; width:520px;"><img src="assets/gen/bag.png" alt="" /></div>
+          <div class="obj" id="laptop" style="left:50px; top:1090px; width:520px;"><img src="assets/gen/laptop.png" alt="" /></div>
+          <div class="obj" id="chargers" style="left:600px; top:1060px; width:420px;"><img src="assets/gen/chargers.png" alt="" /></div>
+          <div class="obj" id="sandwich" style="left:660px; top:1470px; width:320px;"><img src="assets/gen/sandwich.png" alt="" /></div>
+          <div class="obj" id="sticky" style="left:300px; top:1150px; width:460px;">
+            <img src="assets/gen/sticky.png" alt="" />
+            <div class="hand" id="sticky-text" data-layout-allow-occlusion data-layout-allow-overlap>לחזור ללקוח
+אחרי שהילדים
+נרדמים</div>
+          </div>
+        </div>
+
+        <!-- part 2: the light bag -->
+        <div id="p2">
+          <div class="obj" id="keys" style="left:80px; top:600px; width:230px;"><img src="assets/gen/keys.png" alt="" /></div>
+          <div class="obj" id="bag2" style="left:310px; top:470px; width:490px;"><img src="assets/gen/bag_light.png" alt="" /></div>
+          <div class="obj" id="drawing" style="left:230px; top:1040px; width:500px;">
+            <img src="assets/gen/drawing.png" alt="" />
+            <div class="hand" id="drawing-text" data-layout-allow-occlusion data-layout-allow-overlap>לנועה ♥</div>
+          </div>
+          <div class="obj" id="sock" style="left:770px; top:1170px; width:200px;"><img src="assets/gen/sock.png" alt="" /></div>
+        </div>
+
+        <canvas id="glitter" width="1080" height="1920"></canvas>
+      </div>
+
+      <div class="light" id="light-cool"></div>
+      <div class="light" id="light-warm"></div>
+
+      <!-- captions -->
+      <div class="cap hook" id="c0"><span>מה יש לי בתיק?</span></div>
+      <div class="cap" id="c1"><span>מחשב. שוקל כמו תינוק.</span></div>
+      <div class="cap" id="c2"><span>שני מטענים. אחד תמיד נגמר.</span></div>
+      <div class="cap" id="c3"><span>וזה… בשביל הערב.</span></div>
+      <div class="cap" id="c4"><span>ארוחת צהריים. של אתמול.</span></div>
+      <div class="cap" id="c5"><span>ציור. הוקדש לי אישית.</span></div>
+      <div class="cap" id="c6"><span>גרב. לא שלי. אחזיר מחר.</span></div>
+      <div class="cap" id="c7"><span>העבודה נגמרת ב-<span class="ltr">16:00</span>.</span></div>
+      <div class="cap" id="c8"><span>הנצנצים — אף פעם.</span></div>
+
+      <div id="later"><div class="t1">חצי שנה אחרי</div><div class="t2"><span class="ltr">16:05</span></div></div>
+
+      <div id="cta">
+        <div id="cta-card">
+          <div class="kicker">רוצים תיק כזה?</div>
+          <div class="name">מעונות הר ברכה</div>
+          <div class="role">מחפשים מטפלות ומטפלים</div>
+          <div class="sparkline"></div>
+          <div class="perks">משרות מגוונות · ימים ושעות גמישים</div>
+          <div class="phone">אירית · <span class="ltr">054-7889019</span></div>
+        </div>
+      </div>
+
+      <!-- voiceover -->
+      <audio id="vo1" src="assets/voice/01-open.wav" data-start="0.5" data-duration="2.96" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo2" src="assets/voice/02-evening.wav" data-start="11.4" data-duration="3" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo3" src="assets/voice/03-punch.wav" data-start="27.3" data-duration="5.56" data-track-index="20" data-volume="1"></audio>
+      <audio id="vo4" src="assets/voice/04-cta.wav" data-start="34.8" data-duration="5.24" data-track-index="20" data-volume="1"></audio>
+
+      <!-- music: weary evening → warm afternoon -->
+      <audio id="music-a" src="assets/music/A2.mp3" data-start="0" data-duration="19.2" data-track-index="21" data-volume="0.55"
+        data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0.8},{"t":0.4,"v":0.5},{"t":3.4,"v":0.5},{"t":3.9,"v":1},{"t":11.1,"v":1},{"t":11.5,"v":0.5},{"t":14.4,"v":0.5},{"t":14.9,"v":1},{"t":17.8,"v":1},{"t":19.2,"v":0}]}]}'></audio>
+      <audio id="music-b" src="assets/music/B1.mp3" data-start="19" data-media-start="6.9" data-duration="21.8" data-track-index="22" data-volume="0.55"
+        data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":0.7,"v":1},{"t":8.1,"v":1},{"t":8.4,"v":0.5},{"t":13.9,"v":0.5},{"t":14.6,"v":0.85},{"t":15.6,"v":0.85},{"t":15.9,"v":0.62},{"t":21.8,"v":0.62}]}]}'></audio>
+
+      <!-- sfx -->
+      <audio id="sfx-thud" src="assets/sfx/impact-bass-1.mp3" data-start="0.35" data-duration="1.2" data-track-index="23" data-volume="0.3"></audio>
+      <audio id="sfx-laptop" src="assets/sfx/whoosh-short.mp3" data-start="3.6" data-duration="0.57" data-track-index="24" data-volume="0.25"></audio>
+      <audio id="sfx-chargers" src="assets/sfx/click-soft.mp3" data-start="7.0" data-duration="0.37" data-track-index="23" data-volume="0.45"></audio>
+      <audio id="sfx-sticky" src="assets/sfx/whoosh-short.mp3" data-start="10.0" data-duration="0.57" data-track-index="24" data-volume="0.2"></audio>
+      <audio id="sfx-sandwich" src="assets/sfx/click-soft.mp3" data-start="15.2" data-duration="0.37" data-track-index="23" data-volume="0.35"></audio>
+      <audio id="sfx-later" src="assets/sfx/whoosh-cinematic.mp3" data-start="18.0" data-duration="2" data-track-index="24" data-volume="0.3"></audio>
+      <audio id="sfx-bag2" src="assets/sfx/pop.mp3" data-start="20.2" data-duration="0.6" data-track-index="23" data-volume="0.25"></audio>
+      <audio id="sfx-drawing" src="assets/sfx/whoosh-short.mp3" data-start="20.8" data-duration="0.57" data-track-index="24" data-volume="0.2"></audio>
+      <audio id="sfx-sock" src="assets/sfx/pop.mp3" data-start="23.8" data-duration="0.6" data-track-index="23" data-volume="0.3"></audio>
+      <audio id="sfx-glitter" src="assets/sfx/sparkle.mp3" data-start="27.2" data-duration="2.5" data-track-index="24" data-volume="0.5"></audio>
+      <audio id="sfx-cta" src="assets/sfx/chime.mp3" data-start="33.3" data-duration="2" data-track-index="23" data-volume="0.3"></audio>
+    </div>
+
+    <script>
+      const DUR = 40.8;
+      const tl = gsap.timeline({ paused: true });
+      const out = "power2.out", inout = "power2.inOut";
+      const MOUTH = { x: 560, y: 990 };           // where things leave the bag (table coords)
+
+      // Item comes out of the bag's mouth and settles in place (calm: slide + fade, no bounce).
+      function fromBag(sel, at, rot, dur = 0.8) {
+        const el = document.querySelector(sel);
+        const r = { x: parseFloat(el.style.left) + el.offsetWidth / 2, y: parseFloat(el.style.top) + el.offsetHeight / 2 };
+        tl.fromTo(sel, { x: MOUTH.x - r.x, y: MOUTH.y - r.y, scale: 0.55, rotation: rot - 18, opacity: 0 },
+                       { x: 0, y: 0, scale: 1, rotation: rot, opacity: 1, duration: dur, ease: out }, at);
+      }
+      function cap(sel, a, b) {
+        tl.fromTo(sel, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: out }, a);
+        tl.to(sel, { opacity: 0, y: -10, duration: 0.35, ease: "power1.in" }, b - 0.35);
+      }
+
+
+      // ---- PART 1: the heavy bag (cool evening light) ----
+      tl.fromTo("#world", { scale: 1.0 }, { scale: 1.045, duration: 18, ease: "none" }, 0);
+      tl.fromTo("#bag", { y: -70, scale: 1.08, opacity: 0, rotation: -4 }, { y: 0, scale: 1, opacity: 1, rotation: -2, duration: 0.55, ease: "power3.out" }, 0.1);
+      cap("#c0", 0.1, 3.5);
+      fromBag("#laptop", 3.6, -6);           cap("#c1", 3.9, 6.8);
+      fromBag("#chargers", 6.8, 8);          cap("#c2", 7.1, 10.0);
+      fromBag("#sticky", 10.0, -4, 0.9);
+      tl.to("#sticky", { scale: 1.12, duration: 4.1, ease: inout }, 10.9);
+      cap("#c3", 11.4, 15.0);
+      tl.to("#sticky", { scale: 1, duration: 0.6, ease: inout }, 15.0);
+      fromBag("#sandwich", 15.0, 10);        cap("#c4", 15.3, 18.0);
+
+      // ---- TRANSITION: half a year later ----
+      tl.to("#p1 .obj", { opacity: 0, y: 40, duration: 0.7, ease: "power1.in", stagger: 0.05 }, 17.9);
+      tl.to("#light-cool", { opacity: 0, duration: 1.4, ease: inout }, 18.1);
+      tl.to("#light-warm", { opacity: 1, duration: 1.4, ease: inout }, 18.1);
+      tl.to("#world", { scale: 1.0, duration: 1.4, ease: inout }, 18.1);
+      tl.fromTo("#later", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6, ease: out }, 18.3);
+      tl.to("#later", { opacity: 0, y: -16, duration: 0.45, ease: "power1.in" }, 19.75);
+
+      // ---- PART 2: the light bag (warm afternoon light) ----
+      tl.to("#world", { scale: 1.035, duration: 12.9, ease: "none" }, 20.2);
+      tl.fromTo("#bag2", { y: -40, scale: 1.04, opacity: 0, rotation: 3 }, { y: 0, scale: 1, opacity: 1, rotation: 2, duration: 0.6, ease: out }, 20.1);
+      tl.fromTo("#keys", { y: -30, opacity: 0, rotation: -30 }, { y: 0, opacity: 1, rotation: -20, duration: 0.6, ease: out }, 20.3);
+      fromBag("#drawing", 20.8, 3, 0.9);     cap("#c5", 21.1, 23.8);
+      fromBag("#sock", 23.8, 18);            cap("#c6", 24.1, 27.0);
+
+      // the pour: lift, tilt, three gentle shakes, set down
+      tl.to("#bag2", { y: -60, rotation: -24, scale: 1.05, duration: 0.6, ease: inout }, 27.0);
+      tl.to("#bag2", { rotation: -32, duration: 0.3, ease: "sine.inOut", yoyo: true, repeat: 5 }, 27.6);
+      tl.to("#bag2", { y: 0, rotation: 2, scale: 1, duration: 0.7, ease: inout }, 29.6);
+      cap("#c7", 27.3, 33.0);
+      cap("#c8", 29.8, 33.0);
+
+      // ---- END CARD ----
+      tl.to("#world", { scale: 1.0, duration: 0.8, ease: inout }, 33.1);
+      tl.fromTo("#cta", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.8, ease: out }, 33.2);
+
+      // ---- glitter: deterministic particles, a pure function of time ----
+      const cv = document.getElementById("glitter"), ctx = cv.getContext("2d");
+      function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+      const R = rng(20260930), COLORS = ["#f7c948", "#ffd86b", "#f48fb1", "#ff6fa3", "#7fd8c9", "#c9d6ff", "#ffffff", "#b58cff"];
+      const P = [];
+      for (let i = 0; i < 2600; i++) {
+        P.push({ t0: 27.4 + R() * 2.3, x0: MOUTH.x - 170 + R() * 200, y0: MOUTH.y - 40 + R() * 30,
+                 vx: -420 + R() * 760, vy: 20 + R() * 320, land: 980 + R() * 760,
+                 s: 6 + R() * 10, rot: R() * 6.28, spin: -8 + R() * 16, c: COLORS[(R() * COLORS.length) | 0],
+                 tw: 3 + R() * 6, ph: R() * 6.28 });
+      }
+      const G = 1500;
+      function drawGlitter(t) {
+        ctx.clearRect(0, 0, 1080, 1920);
+        for (const p of P) {
+          const dt = t - p.t0; if (dt < 0) continue;
+          // time to reach the landing line: y0 + vy*dt + G/2*dt^2 = land
+          const a = G / 2, b = p.vy, c = p.y0 - p.land, tl_ = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a);
+          const d = Math.min(dt, tl_), landed = dt >= tl_;
+          const x = p.x0 + p.vx * d, y = p.y0 + p.vy * d + a * d * d;
+          const r = p.rot + p.spin * d;
+          const tw = landed ? 0.55 + 0.45 * Math.sin(t * p.tw + p.ph) : 1;
+          ctx.save(); ctx.translate(x, y); ctx.rotate(r); ctx.globalAlpha = Math.max(0.15, tw);
+          ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * 0.66);
+          if (tw > 0.93) { ctx.globalAlpha = (tw - 0.93) * 12; ctx.fillStyle = '#fff'; ctx.fillRect(-p.s, -1, p.s * 2, 2); ctx.fillRect(-1, -p.s, 2, p.s * 2); }
+          ctx.restore();
+        }
+      }
+      const clock = { t: 0 };
+      tl.fromTo(clock, { t: 0 }, { t: DUR, duration: DUR, ease: "none", onUpdate: () => drawGlitter(clock.t) }, 0);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

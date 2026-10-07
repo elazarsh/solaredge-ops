@@ -1,0 +1,94 @@
+{
+  "_doc": "Question definitions for judge.py. Score levels are ordered low->high and each stands alone. {AGE} is replaced by the age band's profile line from SKILL.md.",
+  "script_level": {
+    "hook_gap": {
+      "type": "score",
+      "instructions": "How strong is the curiosity gap in the first 3 seconds of this ad script? Judge only `hook`.",
+      "criteria": [
+        "States the offer or product directly; nothing left to wonder about",
+        "Names the topic, so the viewer knows what this is about but has no reason to keep watching",
+        "Raises a question or an odd situation, but it is generic or easy to ignore",
+        "A specific, surprising situation the viewer wants resolved; the product is not revealed"
+      ]
+    },
+    "twist_strength": {
+      "type": "score",
+      "instructions": "How strong is the twist (setup -> misdirection -> reveal) in this ad script?",
+      "criteria": [
+        "No twist; the message is stated in order from start to end",
+        "A reveal exists but is predictable from the setup",
+        "A real surprise, but the link back to the product or message is weak",
+        "A surprising reveal that dramatizes a true product fact and makes the message unmistakable"
+      ]
+    },
+    "audience_fit": {
+      "type": "score",
+      "instructions": ["Audience profile: `{AGE}`", "How well do the language, pace of ideas, humor and references of this script fit that audience?"],
+      "criteria": [
+        "Clearly written for a different audience; would feel foreign or patronizing",
+        "Understandable but generic; no sign of knowing this audience",
+        "Mostly fits; one or two lines feel off",
+        "Sounds like it was written by someone from this audience"
+      ]
+    },
+    "clarity_after_reveal": {
+      "type": "score",
+      "instructions": "After the reveal, how clear is the single message and the single action asked of the viewer?",
+      "criteria": [
+        "No clear message or action",
+        "Message is clear but the action is missing or several actions compete",
+        "Message and one action are clear, but brand or contact is easy to miss",
+        "One message, one action, brand and contact unmistakable"
+      ]
+    },
+    "warmth": {
+      "type": "score",
+      "instructions": "Is the humor warm (laughing with the audience) or biting (laughing at someone)?",
+      "criteria": [
+        "Mocks or embarrasses a person or group",
+        "Sarcastic or edgy; some viewers could feel targeted",
+        "Neutral; little humor",
+        "Warm, affectionate humor that includes the viewer"
+      ]
+    },
+    "offer_in_first_3s": {
+      "type": "noul",
+      "instructions": "Does `hook` state the offer, the product benefit or the call to action?",
+      "criteria": {"true": "The offer, benefit or CTA appears in the hook", "false": "The hook does not state the offer"}
+    },
+    "needs_sound": {
+      "type": "noul",
+      "instructions": "Is any beat of this script impossible to understand from on-screen text and visuals alone, without sound?",
+      "criteria": {"true": "At least one beat depends on voice-over or sound", "false": "Every beat is clear on mute"}
+    },
+    "unverified_claim": {
+      "type": "noul",
+      "instructions": "Does the script contain a number, superlative or comparative claim (e.g. 'the best', 'only') that is not listed in `facts`?",
+      "criteria": {"true": "A claim appears that is not in facts", "false": "All claims are backed by facts"}
+    }
+  },
+  "line_level": {
+    "line_role": {
+      "type": "choice",
+      "instructions": "What is the role of this line inside an ad script?",
+      "criteria": {
+        "setup": "Establishes the situation before the twist",
+        "misdirection": "Pushes the viewer toward a wrong expectation",
+        "reveal": "The surprising turn",
+        "link": "Connects the reveal to the message and brand",
+        "cta": "Asks the viewer to do one thing",
+        "filler": "Adds nothing the viewer needs"
+      }
+    },
+    "line_clarity": {
+      "type": "score",
+      "instructions": "How easy is this line to understand on first read at phone size, in a few seconds?",
+      "criteria": ["Confusing or overloaded", "Needs a second read", "Clear", "Instantly clear and short"]
+    },
+    "line_gendered": {
+      "type": "noul",
+      "instructions": "Does this line address the viewer in a single grammatical gender (Hebrew verb or adjective form)?",
+      "criteria": {"true": "Single-gender address", "false": "Neutral or both genders addressed"}
+    }
+  }
+}
