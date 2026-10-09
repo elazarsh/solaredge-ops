@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>claude-kb promo</title>
+<style>
+  :root{--bg:#0a0f24;--card:#141b3a;--line:rgba(255,255,255,.14);--acc:#ff8a1f;--teal:#2ee6c5;--txt:#fff;--mut:#aab3d6}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+  body{font-family:'DejaVu Sans','Liberation Sans','FreeSans',sans-serif;color:var(--txt);position:relative}
+  .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55}
+  #o1{width:760px;height:760px;background:radial-gradient(circle,#ff8a1f 0%,transparent 70%)}
+  #o2{width:820px;height:820px;background:radial-gradient(circle,#2ee6c5 0%,transparent 70%);opacity:.35}
+  #grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:90px 90px}
+  #brand{position:absolute;top:64px;left:70px;direction:ltr;font-weight:700;font-size:36px;letter-spacing:1px;color:var(--mut)}
+  #brand b{color:var(--acc)}
+  #bar{position:absolute;bottom:0;right:0;height:10px;background:linear-gradient(90deg,var(--teal),var(--acc));width:0}
+  .scene{position:absolute;inset:0;padding:170px 90px 130px;display:none;flex-direction:column;justify-content:center;gap:34px}
+  .big{font-size:112px;font-weight:800;line-height:1.12}
+  .h2{font-size:92px;font-weight:800;line-height:1.15}
+  .sub{font-size:50px;color:var(--mut);line-height:1.35}
+  .acc{color:var(--acc)} .teal{color:var(--teal)}
+  .card{background:var(--card);border:2px solid var(--line);border-radius:36px;padding:34px 44px}
+  .stat{display:flex;align-items:center;justify-content:space-between;gap:30px}
+  .stat .n{font-size:150px;font-weight:800;color:var(--acc);direction:ltr;min-width:330px;text-align:left;line-height:1}
+  .stat .l{font-size:58px;font-weight:700;line-height:1.25}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .dom{min-height:300px;display:flex;flex-direction:column;justify-content:space-between}
+  .dom .t{font-size:54px;font-weight:800;line-height:1.2}
+  .dom .s{font-size:30px;color:var(--teal);direction:ltr;text-align:right;line-height:1.35}
+  .dot{width:26px;height:26px;border-radius:8px;background:var(--acc);margin-bottom:18px}
+  .bubble{background:#1e2850;border:2px solid var(--line);border-radius:44px 44px 44px 10px;padding:40px 48px;font-size:64px;font-weight:700;min-height:150px}
+  .chip{display:inline-block;direction:ltr;background:rgba(46,230,197,.14);border:2px solid var(--teal);color:var(--teal);border-radius:999px;padding:14px 34px;font-size:46px;font-weight:700;margin:8px 0 8px 14px}
+  .row{display:flex;align-items:center;gap:26px;font-size:58px;font-weight:700}
+  .tick{width:70px;height:70px;border-radius:50%;background:var(--teal);color:#06231e;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;flex:none}
+  .tip{display:flex;align-items:center;gap:30px}
+  .tip .num{width:96px;height:96px;border-radius:28px;background:var(--acc);color:#1a0d00;font-size:60px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+  .tip .tx{font-size:54px;font-weight:700;line-height:1.3}
+  .tip .tx small{display:block;font-size:36px;color:var(--mut);font-weight:400;margin-top:6px}
+  .logo{font-size:150px;font-weight:800;direction:ltr;text-align:center;line-height:1}
+  .term{direction:ltr;text-align:left;background:#05081a;border:2px solid var(--line);border-radius:30px;padding:44px 50px;font-family:'DejaVu Sans Mono','Liberation Mono',monospace;font-size:58px;color:var(--teal)}
+  .term i{color:var(--mut);font-style:normal}
+  .center{text-align:center}
+</style>
+</head>
+<body>
+<div class="orb" id="o1"></div><div class="orb" id="o2"></div><div id="grid"></div>
+<div id="brand">claude<b>-kb</b></div>
+
+<!-- 1 HOOK -->
+<section class="scene" id="s1" data-a="0" data-b="3.6">
+  <div class="big" data-anim="rise" data-d="0.1">עוד פרומפט.</div>
+  <div class="big" data-anim="rise" data-d="0.7">עוד תוצאה גנרית?</div>
+  <div class="big acc" data-anim="pop" data-d="1.7">מספיק.</div>
+</section>
+
+<!-- 2 PROOF -->
+<section class="scene" id="s2" data-a="3.6" data-b="8.6">
+  <div class="h2" data-anim="rise" data-d="0.05">סרקנו. למדנו. <span class="teal">ארזנו.</span></div>
+  <div class="card stat" data-anim="slide" data-d="0.5"><div class="n" data-anim="count" data-d="0.5" data-to="60" data-suf="+">0</div><div class="l">עמודי ידע נסרקו<br>ממקור מקצועי</div></div>
+  <div class="card stat" data-anim="slide" data-d="1.1"><div class="n" data-anim="count" data-d="1.1" data-to="27">0</div><div class="l">סקילים מוכנים<br>לעבודה</div></div>
+  <div class="card stat" data-anim="slide" data-d="1.7"><div class="n" data-anim="count" data-d="1.7" data-to="5">0</div><div class="l">הוקים אוטומטיים<br>שומרים עליך</div></div>
+</section>
+
+<!-- 3 WHAT -->
+<section class="scene" id="s3" data-a="8.6" data-b="14.6">
+  <div class="h2" data-anim="rise" data-d="0.05">27 סקילים.<br><span class="acc">6 תחומים.</span></div>
+  <div class="grid2">
+    <div class="card dom" data-anim="pop" data-d="0.5"><div><div class="dot"></div><div class="t">עיצוב ותמונות</div></div><div class="s">visual-codes<br>design-system-first</div></div>
+    <div class="card dom" data-anim="pop" data-d="0.8"><div><div class="dot"></div><div class="t">וידאו וסרטונים</div></div><div class="s">code-driven-video<br>ai-influencer-ugc</div></div>
+    <div class="card dom" data-anim="pop" data-d="1.1"><div><div class="dot"></div><div class="t">מסמכים ומחקר</div></div><div class="s">grounded-research<br>deck-and-doc-craft</div></div>
+    <div class="card dom" data-anim="pop" data-d="1.4"><div><div class="dot"></div><div class="t">אתרים ואפליקציות</div></div><div class="s">web-build-harden<br>agentic-build</div></div>
+    <div class="card dom" data-anim="pop" data-d="1.7"><div><div class="dot"></div><div class="t">אוטומציה ושיווק</div></div><div class="s">automation-recipes<br>ad-creative-workflow</div></div>
+    <div class="card dom" data-anim="pop" data-d="2.0"><div><div class="dot"></div><div class="t">אימות ובטיחות</div></div><div class="s">verify-and-safety<br>hebrew-rtl-output</div></div>
+  </div>
+</section>
+
+<!-- 4 HOW -->
+<section class="scene" id="s4" data-a="14.6" data-b="20.6">
+  <div class="h2" data-anim="rise" data-d="0.05">כותבים רגיל.<br><span class="teal">Claude כבר יודע.</span></div>
+  <div class="bubble" data-anim="rise" data-d="0.5"><span data-anim="type" data-d="0.6" data-dur="1.5" data-text="תכין לי דף נחיתה לעסק שלי"></span></div>
+  <div data-anim="rise" data-d="2.3"><span class="chip">web-build-harden</span><span class="chip">design-system-first</span><span class="chip">hebrew-rtl-output</span></div>
+  <div class="row" data-anim="slide" data-d="3.0"><div class="tick">&#10003;</div><div>נבנה לפי שיטה</div></div>
+  <div class="row" data-anim="slide" data-d="3.5"><div class="tick">&#10003;</div><div>נבדק לפני שמסיימים</div></div>
+</section>
+
+<!-- 5 TIPS -->
+<section class="scene" id="s5" data-a="20.6" data-b="26.2">
+  <div class="h2" data-anim="rise" data-d="0.05">4 דרכים להפיק<br><span class="acc">מזה הכי הרבה</span></div>
+  <div class="tip" data-anim="slide" data-d="0.5"><div class="num">1</div><div class="tx">מתחילים ממשימה אחת<small>והקטנה ביותר שעובדת</small></div></div>
+  <div class="tip" data-anim="slide" data-d="1.2"><div class="num">2</div><div class="tx">מבקשים תוכנית לפני ביצוע<small>מאשרים, ואז בונים</small></div></div>
+  <div class="tip" data-anim="slide" data-d="1.9"><div class="num">3</div><div class="tx">משרשרים סקילים<small>מחקר &#8592; עיצוב &#8592; וידאו</small></div></div>
+  <div class="tip" data-anim="slide" data-d="2.6"><div class="num">4</div><div class="tx">לא מסיימים בלי אימות<small>נבדק / לא נבדק / חסר</small></div></div>
+</section>
+
+<!-- 6 CTA -->
+<section class="scene center" id="s6" data-a="26.2" data-b="30">
+  <div class="logo" data-anim="pop" data-d="0.1">claude<span class="acc">-kb</span></div>
+  <div class="h2" data-anim="rise" data-d="0.7">התקנה אחת.<br><span class="teal">כל הפרויקטים.</span></div>
+  <div class="term" data-anim="rise" data-d="1.3"><i>$</i> <span data-anim="type" data-d="1.4" data-dur="1.0" data-text="./install.sh"></span></div>
+</section>
+
+<div id="bar"></div>
+
+<script>
+const TOTAL = 30;
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const eOut=x=>1-Math.pow(1-x,3);
+const eBack=x=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const scenes=[...document.querySelectorAll('.scene')];
+const o1=document.getElementById('o1'),o2=document.getElementById('o2'),bar=document.getElementById('bar');
+
+function applyAnim(el,local){
+  const d=parseFloat(el.dataset.d||0), dur=parseFloat(el.dataset.dur||0.7);
+  const p=clamp((local-d)/dur), e=eOut(p);
+  switch(el.dataset.anim){
+    case 'rise': el.style.opacity=e; el.style.transform=`translateY(${(1-e)*70}px)`; break;
+    case 'slide': el.style.opacity=e; el.style.transform=`translateX(${(1-e)*260}px)`; break;
+    case 'pop': { const b=eBack(p); el.style.opacity=clamp(p*3); el.style.transform=`scale(${0.55+0.45*b})`; break; }
+    case 'count': { const v=Math.round(parseFloat(el.dataset.to)*eOut(clamp((local-d)/1.3))); el.textContent=v+(el.dataset.suf||''); el.style.opacity=clamp((local-d)*4); break; }
+    case 'type': { const s=el.dataset.text; const n=Math.floor(clamp((local-d)/dur)*s.length); el.textContent=s.slice(0,n)+(p>0&&p<1?'▌':''); break; }
+  }
+}
+
+window.render=function(t){
+  o1.style.transform=`translate(${300+Math.sin(t*0.7)*220}px,${200+Math.cos(t*0.5)*260}px)`;
+  o2.style.transform=`translate(${-100+Math.cos(t*0.6)*240}px,${1100+Math.sin(t*0.45)*240}px)`;
+  bar.style.width=(t/TOTAL*100)+'%';
+  for(const s of scenes){
+    const a=+s.dataset.a,b=+s.dataset.b;
+    if(t<a||t>=b){s.style.display='none';continue;}
+    s.style.display='flex';
+    const local=t-a;
+    const fin=clamp(local/0.3), fout=(s.id==='s6')?clamp((b-t)/0.6):clamp((b-t)/0.3);
+    s.style.opacity=Math.min(fin,fout);
+    s.querySelectorAll('[data-anim]').forEach(el=>applyAnim(el,local));
+  }
+};
+window.render(0);
+</script>
+</body>
+</html>
