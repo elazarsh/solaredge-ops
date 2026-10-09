@@ -438,6 +438,27 @@
         "skills.sh",
         "npx skills"
       ]
+    },
+    {
+      "skills": [
+        "delegation-model-routing"
+      ],
+      "keywords": [
+        "sub-agent",
+        "subagent",
+        "delegate",
+        "usage limit",
+        "usage limits",
+        "tokens",
+        "cost",
+        "סוכן משנה",
+        "האצלה",
+        "מגבלות שימוש",
+        "חיסכון",
+        "opus",
+        "fable",
+        "model routing"
+      ]
     }
   ]
 }

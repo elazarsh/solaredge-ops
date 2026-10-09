@@ -1,6 +1,6 @@
 ---
 name: kb-router
-description: Index and routing guide for the personal knowledge base of skills - which skill to load for which kind of request (design, video, images, documents, research, writing, web/app building, automation, marketing, SEO, AI adoption, tool selection, Claude setup, hooks), plus combos for multi-step projects. Use at the start of any broad or multi-domain request, when unsure which skill applies, or when the user asks what the knowledge base contains (איזה סקיל, מה יש במאגר, תכנון פרויקט רב-שלבי).
+description: Index and routing guide for the personal knowledge base of skills - which skill to load for which kind of request (design, video, images, documents, research, writing, web/app building, automation, marketing, SEO, AI adoption, tool selection, Claude setup, hooks, sub-agent delegation and model routing), plus combos for multi-step projects. Use at the start of any broad or multi-domain request, when unsure which skill applies, or when the user asks what the knowledge base contains (איזה סקיל, מה יש במאגר, תכנון פרויקט רב-שלבי).
 ---
 
 # KB router
@@ -34,6 +34,7 @@ description: Index and routing guide for the personal knowledge base of skills -
 | CLAUDE.md, skills, memory, Codex vs Claude Code | `claude-setup-architecture` |
 | Hooks, guards, automatic behaviours | `claude-hooks-playbook` |
 | Thinking/writing modifiers like /redteam | `prompt-modifiers` |
+| Any non-trivial task / sub-agents / which model / usage limits / cost | `delegation-model-routing` |
 | ALWAYS before finishing / irreversible actions / sensitive data | `verify-and-safety-gates` |
 | Any Hebrew deliverable | `hebrew-rtl-output` |
 
@@ -50,3 +51,4 @@ description: Index and routing guide for the personal knowledge base of skills -
 3. Source material was a single author's blog; claims about prices, features, laws and availability are **unverified snapshots** - check current sources before relying on them.
 4. When you learn something new that should persist (a correction, a better prompt, a new workflow), propose adding it to the right skill in `claude-kb/skills/` and re-running `install.sh`.
 5. Don't recite skill text at the user; apply it.
+6. The orchestrating session delegates execution to sub-agents and routes each to the cheapest capable model (`fable` only for hard reasoning), per `delegation-model-routing`; a sub-agent executes its own brief directly.

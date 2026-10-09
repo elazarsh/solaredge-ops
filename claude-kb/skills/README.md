@@ -1,4 +1,4 @@
-# Skills index (33)
+# Skills index (34)
 
 Router and combos: `kb-router`. Cross-cutting (apply to everything): `verify-and-safety-gates`, `hebrew-rtl-output`.
 
@@ -10,7 +10,7 @@ Router and combos: `kb-router`. Cross-cutting (apply to everything): `verify-and
 | Research | `grounded-research` (+ `references/search-tools.md`), `seo-geo-playbook` |
 | Apps / automation | `web-build-harden`, `agentic-build-discipline` (+ messaging-agents), `automation-scoping`, `automation-recipes`, `blender-unity-pipeline` |
 | Business / marketing | `ad-creative-workflow`, `marketing-analytics-workflow`, `ai-adoption-playbook` |
-| Setup / meta | `claude-setup-architecture` (+ codex-and-claude-code), `claude-hooks-playbook`, `custom-assistant-builder`, `ai-tools-landscape`, `community-skills-guide`, `kb-router` |
+| Setup / meta | `claude-setup-architecture` (+ codex-and-claude-code), `claude-hooks-playbook`, `custom-assistant-builder`, `ai-tools-landscape`, `community-skills-guide`, `delegation-model-routing`, `kb-router` |
 | Safety | `verify-and-safety-gates`, `hebrew-rtl-output` |
 
 Install to all projects: `../install.sh`.
