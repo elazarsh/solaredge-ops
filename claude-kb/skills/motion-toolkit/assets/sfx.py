@@ -124,7 +124,8 @@ def place(buf, mono, t0, p0=0.0, p1=None, gain=1.0, lead=0.0):
     t0 - duration and PEAK at t0 (cue.t = peak/landing time, see module docstring)."""
     st = pan(mono * gain, p0, p1); s = int((t0 - lead) * SR)
     if s < 0: st = st[-s:]; s = 0
-    e = min(len(buf), s + len(st)); buf[s:e] += st[: e - s]
+    e = min(len(buf), s + len(st))
+    if e > s: buf[s:e] += st[: e - s]          # cues past the end of the timeline are dropped
 
 # ---------------- music ----------------
 NOTE = {'A': 57, 'C': 60, 'D': 62, 'E': 64, 'F': 53, 'G': 55}
@@ -257,7 +258,7 @@ def master(sfx, mus, duration, lufs=-15.0, ceiling=-2.0, info=None):
         y, g = tp_limit(mix * db2lin(gain), ceiling); l1 = loudness(y)
         if l0 <= -60 or abs(l1 - lufs) < 0.05: break
         gain += lufs - l1
-    tp = true_peak_db(y); max_gr = float(-lin2db(g.min()))
+    tp = true_peak_db(y); max_gr = max(0.0, float(-lin2db(g.min())))
     if tp > ceiling: y = y * db2lin(ceiling - tp); g = g * db2lin(ceiling - tp); l1 += ceiling - tp; tp = ceiling   # overshoot safety
     if info is not None:
         info.update(fade=fade, trim=trim, gain_db=gain, final_gain=g, pre_peak=float(lin2db(pk)), pre_lufs=l0, lufs=l1, tp=tp, max_gr=max_gr)
