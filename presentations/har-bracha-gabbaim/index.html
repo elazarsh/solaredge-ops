@@ -91,32 +91,43 @@ p{margin:0}
 .card.cur::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:2.5px;background:conic-gradient(from var(--ang),transparent 0 62%,var(--c) 90%,#fff 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 3.2s linear infinite;pointer-events:none}
 @keyframes spin{to{--ang:360deg}}
 
-/* ---------- 1 intro ---------- */
+/* ---------- 1 intro (film title sequence) ---------- */
 .s-intro{padding:0}
+#daylight{position:absolute;inset:0;opacity:0;background:radial-gradient(1100px 780px at 28% 56%,rgba(255,247,224,.95),rgba(255,247,224,0) 68%),radial-gradient(900px 520px at 88% 8%,rgba(255,255,255,.75),transparent 70%),linear-gradient(180deg,#9ccdee 0%,#d8edf7 44%,#fff3d9 100%)}
+#daylight::before{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 190deg at 28% 56%,rgba(255,255,255,.26) 0 2.5deg,transparent 2.5deg 9deg);-webkit-mask:radial-gradient(circle at 28% 56%,#000,transparent 72%);mask:radial-gradient(circle at 28% 56%,#000,transparent 72%);opacity:.6;animation:breathe 7s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.35}50%{opacity:.7}}
 #logoPar{position:absolute;inset:0}
 #logoBox{position:absolute;left:494px;top:74px;width:932px;height:933px;direction:ltr;will-change:transform}
 #cam{position:absolute;inset:0;transform-origin:466px 466px;will-change:transform}
-#disc{position:absolute;left:-72px;top:-52px;width:1076px;height:1040px;border-radius:250px;background:radial-gradient(circle at 50% 38%,#fffef6 0%,#f4f9ea 52%,#dcebcf 100%);box-shadow:0 0 150px 50px rgba(255,201,120,.38),inset 0 -40px 90px rgba(120,170,100,.28);opacity:0}
-#disc i{position:absolute;inset:-26px;border-radius:276px;border:2px solid transparent;background:conic-gradient(from var(--ang),transparent 0 55%,rgba(255,214,140,.95) 85%,transparent 100%) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 9s linear infinite}
+#shineWrap{position:absolute;inset:0;overflow:hidden;pointer-events:none;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+#shine{position:absolute;top:-10%;bottom:-10%;width:240px;left:0;transform:translateX(-400px) skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);filter:blur(8px);opacity:0}
 .pc{position:absolute;display:block;max-width:none;will-change:transform,opacity;user-select:none;-webkit-user-drag:none}
 #pieces{position:absolute;inset:0}
 .glow{position:absolute;inset:0;animation:pulse 3.4s ease-in-out infinite;pointer-events:none}
 .glow canvas{position:absolute;left:0;top:0;opacity:0}
-#star{position:absolute;left:0;top:0;width:932px;height:933px;opacity:0;pointer-events:none;filter:drop-shadow(0 0 10px rgba(255,255,255,.9))}
+#star{position:absolute;left:0;top:0;width:932px;height:933px;opacity:0;pointer-events:none;filter:drop-shadow(0 0 10px rgba(255,255,255,.95))}
 @keyframes pulse{0%,100%{opacity:.82}50%{opacity:1}}
-#interior{position:absolute;inset:0;width:1920px;height:1080px;transform-origin:50% 50%;will-change:transform,opacity;pointer-events:none}
+#interior{position:absolute;inset:0;width:1920px;height:1080px;transform-origin:50% 50%;will-change:transform,opacity;pointer-events:none;opacity:0}
 .flame{animation:flick 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
 @keyframes flick{0%,100%{transform:scale(1,1)}40%{transform:scale(.92,1.08)}70%{transform:scale(1.06,.95)}}
+#dustCv{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none;opacity:0}
+#bloom{position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,#fff 0%,#fff5da 38%,rgba(255,240,200,0) 78%);opacity:0;pointer-events:none}
+.bar{position:absolute;left:0;right:0;height:138px;background:#000;z-index:5}
+#barT{top:0}#barB{bottom:0}
+.vo{position:absolute;left:0;right:0;bottom:190px;text-align:center;font-family:var(--serif);font-weight:400;font-size:62px;letter-spacing:.03em;color:#f6e7c4;text-shadow:0 2px 34px rgba(0,0,0,.85);opacity:0;z-index:4}
 .intro-text{position:absolute;right:130px;top:150px;width:690px;opacity:0}
-.chip{display:inline-flex;align-items:center;gap:12px;padding:10px 28px;border-radius:999px;font-weight:700;font-size:28px;letter-spacing:.06em;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(14px)}
-.chip b{width:12px;height:12px;border-radius:50%;background:var(--lime);box-shadow:0 0 14px var(--lime)}
-.intro-text h1{font-size:140px;line-height:1.04;font-weight:900;margin-top:26px;color:#fff;letter-spacing:-.03em}
-.intro-text h1 em{font-style:normal;color:var(--lime)}
-.intro-text .sub{font-size:42px;font-weight:500;color:#dcebe0;margin-top:26px;line-height:1.25}
+.chip{display:inline-flex;align-items:center;gap:12px;padding:10px 28px;border-radius:999px;font-weight:700;font-size:28px;letter-spacing:.06em}
+.s-intro .chip{background:rgba(255,255,255,.62);border:1px solid rgba(10,58,30,.16);color:#0a3a1e;backdrop-filter:blur(14px)}
+.chip b{width:12px;height:12px;border-radius:50%;background:#0b9444;box-shadow:0 0 12px rgba(11,148,68,.7)}
+.intro-text h1{font-size:140px;line-height:1.04;font-weight:900;margin-top:26px;color:#0a3a1e;letter-spacing:-.03em}
+.intro-text h1 em{font-style:normal;color:#0b9444}
+.intro-text .sub{font-size:42px;font-weight:500;color:#2f5f45;margin-top:26px;line-height:1.25}
 .facts{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
 .fact{padding:16px 26px;border-radius:26px;display:flex;flex-direction:column}
-.fact b{font-weight:800;font-size:38px;line-height:1.1;color:#fff}
-.fact span{font-size:25px;color:var(--mute);font-weight:500;margin-top:2px}
+.s-intro .fact{background:rgba(255,255,255,.66);border:1px solid rgba(10,58,30,.12);box-shadow:0 22px 50px -26px rgba(10,58,30,.5);backdrop-filter:blur(14px)}
+.s-intro .fact::before{display:none}
+.fact b{font-weight:800;font-size:38px;line-height:1.1;color:#0a3a1e}
+.fact span{font-size:25px;color:#4a6a55;font-weight:500;margin-top:2px}
 
 /* ---------- 2 tribute ---------- */
 .s-tribute{display:flex;flex-direction:column;justify-content:center;gap:22px}
@@ -146,15 +157,15 @@ p{margin:0}
 
 /* ---------- 4 agenda ---------- */
 .s-agenda{padding-top:84px;padding-bottom:100px}
-.s-agenda h2{font-size:112px;font-weight:900;margin-top:10px;letter-spacing:-.03em}
+.s-agenda h2{font-size:104px;font-weight:900;margin-top:10px;letter-spacing:-.03em}
 .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:30px}
-.tcard{padding:36px 42px 42px;display:flex;flex-direction:column;gap:12px;transform-style:preserve-3d;will-change:transform}
+.tcard{padding:28px 38px 34px;display:flex;flex-direction:column;gap:8px;transform-style:preserve-3d;will-change:transform}
 .tcard::after{content:"";position:absolute;left:-20%;right:-20%;bottom:-120px;height:260px;background:radial-gradient(closest-side,var(--c),transparent);opacity:.55;filter:blur(30px);pointer-events:none}
-.tcard .ico{height:100px;display:flex;align-items:flex-end}
+.tcard .ico{height:84px;display:flex;align-items:flex-end}
 .tcard .ico svg{height:100%;width:auto;filter:drop-shadow(0 0 24px color-mix(in srgb,var(--c) 70%,transparent))}
 .tcard .k{font-weight:700;font-size:26px;color:var(--c);letter-spacing:.16em;margin-top:14px}
-.tcard h3{font-size:62px;line-height:1.04;font-weight:900;position:relative;z-index:1}
-.tcard ul{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:31px;font-weight:500;position:relative;z-index:1}
+.tcard h3{font-size:56px;line-height:1.04;font-weight:900;position:relative;z-index:1}
+.tcard ul{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;font-size:29px;font-weight:500;position:relative;z-index:1}
 .tcard li{display:flex;gap:16px;align-items:baseline}
 .tcard li::before{content:"";flex:none;width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:0 0 14px var(--c);translate:0 -3px}
 
@@ -190,7 +201,7 @@ p{margin:0}
 .s-topic .card:not(.vcard) h3{font-size:42px}
 .s-topic .card:not(.vcard) p{font-size:29px}
 .s-topic .tag{font-size:27px;padding:4px 22px}
-.spirit{font-size:31px;font-weight:500;color:#e3efe6;line-height:1.3;margin-top:4px;position:relative;z-index:1}
+.spirit{font-size:28px;font-weight:500;color:#e3efe6;line-height:1.3;margin-top:4px;position:relative;z-index:1}
 .sub-l{font-size:24px;font-weight:700;letter-spacing:.14em;color:var(--mute);margin-top:10px;position:relative;z-index:1}
 
 
@@ -207,6 +218,23 @@ p{margin:0}
 #blank.on{opacity:.97;visibility:visible;transition:opacity .6s ease}
 #tm{float:left;font-variant-numeric:tabular-nums;direction:ltr;color:var(--mute);font-weight:600;letter-spacing:.06em}
 #notes b{color:var(--gold)}
+
+
+.s-purpose{display:grid;grid-template-columns:1fr 780px;gap:60px;align-items:center}
+.s-purpose h2{font-size:104px;line-height:1.05;font-weight:900;margin-top:22px;letter-spacing:-.03em}
+.s-purpose .lead{font-size:42px;color:#d6e8dc;font-weight:400;margin-top:28px;line-height:1.32;max-width:840px}
+.s-purpose .lead em{font-style:normal;color:var(--gold);font-weight:700}
+.rings{position:relative;width:780px;height:780px}
+.ring{position:absolute;left:50%;top:50%;translate:-50% -50%;border-radius:50%;border:2px solid rgba(255,255,255,.3)}
+.ring span{position:absolute;top:30px;left:50%;translate:-50% 0;font-weight:700;font-size:32px;white-space:nowrap;letter-spacing:.04em}
+.r3{width:760px;height:760px;background:radial-gradient(circle,rgba(255,154,69,.05),rgba(255,154,69,.13));box-shadow:0 0 90px -20px rgba(255,154,69,.5)}
+.r3 span{color:var(--orange)}
+.r2{width:520px;height:520px;background:radial-gradient(circle,rgba(46,204,113,.06),rgba(46,204,113,.16));box-shadow:0 0 90px -20px rgba(46,204,113,.55);border-color:rgba(46,204,113,.5)}
+.r2 span{color:var(--green)}
+.core{position:absolute;left:50%;top:50%;translate:-50% -50%;width:250px;height:250px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 40% 35%,#fff4c4,var(--gold) 55%,#e89a2c);box-shadow:0 0 90px 20px rgba(255,210,122,.5)}
+.core b{font-weight:900;font-size:50px;color:#2a1a04}
+.core::after{content:"";position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,210,122,.7);animation:ripple 3.6s ease-out infinite}
+@keyframes ripple{from{transform:scale(1);opacity:.8}to{transform:scale(3);opacity:0}}
 
 /* ---------- asks ---------- */
 .s-asks h2{font-size:136px;font-weight:900;margin-top:10px;letter-spacing:-.03em}
@@ -232,6 +260,8 @@ p{margin:0}
 .hud .brand{display:flex;align-items:center;gap:14px}
 .hud .brand img{height:40px;width:auto;border-radius:10px;background:#f4f9ea;padding:3px 6px}
 #stage[data-hide-hud="1"] .hud{opacity:0}
+#stage[data-tone="light"] .dots button{background:rgba(10,58,30,.28)}
+#stage[data-tone="light"] .dots button.on{background:#0b9444;box-shadow:0 0 12px rgba(11,148,68,.5)}
 .dots{position:absolute;left:50%;bottom:26px;translate:-50% 0;display:flex;gap:14px;direction:ltr;z-index:6}
 .dots button{width:16px;height:16px;border-radius:50%;border:0;background:rgba(255,255,255,.28);cursor:pointer;padding:0;transition:transform .3s,background .3s,box-shadow .3s}
 .dots button.on{background:var(--lime);transform:scale(1.4);box-shadow:0 0 16px var(--lime)}
@@ -255,8 +285,9 @@ p{margin:0}
 <div id="spot"></div>
 
 <!-- 1 · opening -->
-<section class="slide s-intro" data-pal="#0a2850,#2f7fd0,#ff9a4d" data-fx="dust" data-say="הלוגו נבנה מתוך בית הכנסת: המצלמה יוצאת מבפנים אל היישוב. אפשר להשאיר על המסך בזמן שמתכנסים." data-ask="אין" data-min="2">
-  <div id="logoPar"><div id="logoBox"><div id="cam"><div id="disc"><i></i></div></div></div></div>
+<section class="slide s-intro" data-tone="light" data-pal="#05080c,#14202e,#3a2a14" data-fx="dust" data-say="הפתיחה יוצאת מבית הכנסת אל היישוב, ואפשר להשאיר אותה על המסך בזמן שמתכנסים. רווח מדלג על האנימציה, ומקש R מפעיל אותה מחדש." data-ask="אין" data-min="2">
+  <div id="daylight"></div>
+  <div id="logoPar"><div id="logoBox"><div id="cam"></div><div id="shineWrap"><div id="shine"></div></div></div></div>
   <svg id="interior" viewBox="0 0 1920 1080" aria-hidden="true">
     <defs>
       <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a2e17"/><stop offset="1" stop-color="#21120a"/></linearGradient>
@@ -316,10 +347,15 @@ p{margin:0}
     </g>
     <rect width="1920" height="1080" fill="url(#vig)"/>
   </svg>
+  <canvas id="dustCv" width="1920" height="1080"></canvas>
+  <div id="bloom"></div>
+  <div class="vo" id="vo1">בכל בוקר, מישהו כבר שם.</div>
+  <div class="vo" id="vo2">פותח את הדלת, ובית שלם מתעורר.</div>
+  <div class="bar" id="barT"></div><div class="bar" id="barB"></div>
   <div class="intro-text">
     <span class="chip" data-i><b></b>פורום יישובי</span>
-    <h1 data-split data-i>הגבאים של <em>הר ברכה</em></h1>
-    <p class="sub" data-i>צוות חשיבה לקראת התרחבות היישוב</p>
+    <h1 data-split>הגבאים של <em>הר ברכה</em></h1>
+    <p class="sub" data-i>צוות חשיבה: לשמוע, להבין, ולתת כלים</p>
     <div class="facts">
       <div class="fact glass" data-i><b>אור לד' חשוון</b><span>יום חמישי, 15.10</span></div>
       <div class="fact glass" data-i><b>20:00</b><span>תחילת המפגש</span></div>
@@ -329,7 +365,7 @@ p{margin:0}
 </section>
 
 <!-- 2 · tribute -->
-<section class="slide s-tribute" data-pal="#0a0f0a,#8a5a14,#0d3b22" data-fx="embers" data-say="תודה לגבאים על כל השנים הרבות של עיסוק בצורכי ציבור, באמונה ובהתנדבות, יום אחרי יום. לעצור רגע ולתת מקום למחיאות כפיים." data-ask="אין" data-min="2">
+<section class="slide s-tribute" data-pal="#0a0f0a,#8a5a14,#0d3b22" data-fx="embers" data-say="רגע של הכרת תודה לפני שנכנסים לנושאים: על כל השנים הרבות של עיסוק בצורכי ציבור, באמונה ובהתנדבות, יום אחרי יום. לעצור ולתת מקום למחיאות כפיים." data-ask="אין" data-min="2">
   <div class="rays"></div>
   <span class="eyebrow" data-i>לפני שמתחילים</span>
   <div class="big" data-i>תודה.</div>
@@ -341,98 +377,85 @@ p{margin:0}
   </div>
 </section>
 
-<!-- 3 · why -->
-<section class="slide s-why" data-steps="3" data-pal="#041a1a,#0b9a55,#1170c0" data-fx="calm" data-say="הצורך: היישוב גדל וגדלים הצרכים. החלום: מקום לכל תושב וכבוד וכלים לגבאים. הערב נעסוק בצרכים ובחלום, והצוות יעבוד על פתרונות." data-ask="מה גרם לכם לבוא הערב?" data-min="4">
-  <div>
-    <span class="eyebrow" data-i>למה התכנסנו</span>
-    <h2 data-split>היישוב גדל. נרצה שבית הכנסת יגדל איתו ויישאר <em>בית.</em></h2>
-    <p class="lead" data-i>ככל שהיישוב גדל, גדלים גם הצרכים של הגבאים והתושבים. החלום שלנו: שכל תושב ימצא בו את מקומו, ושהגבאים יקבלו כבוד וכלים לעשות את עבודתם.</p>
+<!-- 3 · purpose -->
+<section class="slide s-purpose" data-steps="2" data-pal="#041a1a,#0b9a55,#1170c0" data-fx="calm" data-say="מטרת הערב: ללמוד לשמוע ולהבין סוגיות פתוחות, כדי לתת כלים טובים לגבאים לתכנון טוב של כל נושא, ולהרחיב את יכולת בית הכנסת להיות בית שני לעוד תושבים ואוכלוסיות ביישוב. מתחילים בהקשבה, ולא בפתרונות." data-ask="מה הכי חשוב לכם שנבין הערב?" data-min="4">
+  <div class="pl">
+    <span class="eyebrow" data-i>מטרת הערב</span>
+    <h2 data-split>ללמוד לשמוע ולהבין סוגיות פתוחות</h2>
+    <p class="lead" data-step="1">כדי לתת כלים טובים לגבאים לתכנון טוב של כל נושא,</p>
+    <p class="lead" data-step="2">ולהרחיב את יכולתו של בית הכנסת להיות <em>בית שני</em> לעוד תושבים ואוכלוסיות ביישוב.</p>
   </div>
-  <div class="path" id="path">
-    <div class="stop glass" data-step="1"><div class="n">1</div><div><h3>הערב: צרכים וחלום</h3><p>מה חסר היום, ומה אנחנו רוצים שיהיה.</p></div></div>
-    <div class="stop glass" data-step="2"><div class="n">2</div><div><h3>צוות חשיבה: פתרונות</h3><p>מי שרוצה מצטרף וחושב על דרכים להגשים.</p></div></div>
-    <div class="stop glass" data-step="3"><div class="n">3</div><div><h3>בשנה הבאה: מיישמים</h3><p>החלטות ברורות לקראת היישוב הגדול יותר.</p></div></div>
-  </div>
-</section>
-
-<!-- 4 · how we work -->
-<section class="slide s-rules" data-steps="4" data-pal="#06121f,#2a62b5,#1fa86a" data-fx="calm" data-say="שלושה כללים: כל רעיון מתקבל, מקשיבים עד הסוף, וקודם הרוח. הסדר בכל נושא: צורך, חלום, רעיונות לפתרון, צעד הבא." data-ask="אין, מבקשים הסכמה להתחיל" data-min="3">
-  <span class="eyebrow" data-i>איך נעבוד הערב</span>
-  <h2 data-split>שלושה כללים וסדר אחד</h2>
-  <div class="rules">
-    <div class="rule glass" data-step="1" style="--c:var(--green)"><div class="n">1</div><h3>כל רעיון מתקבל</h3><p>לא שופטים באמצע.</p></div>
-    <div class="rule glass" data-step="2" style="--c:var(--blue)"><div class="n">2</div><h3>מקשיבים עד הסוף</h3><p>כל אחד מסיים את דבריו.</p></div>
-    <div class="rule glass" data-step="3" style="--c:var(--orange)"><div class="n">3</div><h3>קודם הרוח</h3><p>צרכים וחלום, ורק אחר כך פתרונות.</p></div>
-  </div>
-  <div class="flow" data-step="4">
-    <span class="pill" style="--c:var(--blue)">הצורך</span><i>←</i><span class="pill" style="--c:var(--green)">החלום</span><i>←</i><span class="pill" style="--c:var(--orange)">רעיונות לפתרון</span><i>←</i><span class="pill" style="--c:var(--magenta)">הצעד הבא</span>
+  <div class="rings" aria-hidden="true">
+    <div class="ring r3" data-step="2"><span>אוכלוסיות נוספות</span></div>
+    <div class="ring r2" data-step="1"><span>תושבי היישוב</span></div>
+    <div class="core"><b>הגבאים</b></div>
   </div>
 </section>
 
-<!-- 5 · agenda -->
-<section class="slide s-agenda" data-steps="3" data-pal="#05130f,#1a8a55,#9b2d6e" data-fx="calm" data-say="מפת הערב. לא נכנסים לפרטים, רק מראים ששלושת הנושאים בנויים באותו סדר: קודם הרוח." data-ask="איזה נושא קרוב אליכם יותר?" data-min="2">
+<!-- 4 · agenda -->
+<section class="slide s-agenda" data-steps="3" data-pal="#05130f,#1a8a55,#9b2d6e" data-fx="calm" data-say="מפת הערב. כל נושא בנוי באותו סדר: קודם הרוח (צורך וחלום), אחר כך סוגיות לדיון. הכוונה המרכזית: להעצים את הגבאים הקיימים, לתת להם תפקיד ברור, סמכות וחופש לעסוק בצורכי הציבור." data-ask="איזה נושא קרוב אליכם יותר?" data-min="2">
   <span class="eyebrow" data-i>על הפרק</span>
-  <h2 data-split>שלושה נושאים, ובכל אחד מתחילים מהרוח</h2>
+  <h2 data-split>שלושה נושאים ראשונים</h2>
   <div class="tri">
-    <div class="tcard glass tilt" data-step="1" style="--c:var(--blue)"><div class="ico"><svg viewBox="0 0 100 220" aria-hidden="true"><polygon points="0,26 100,0 100,220 0,220" fill="#3aa0ff"/><g fill="#fff"><rect x="46" y="44" width="30" height="26"/><rect x="46" y="84" width="30" height="26"/><rect x="46" y="124" width="30" height="26"/><rect x="46" y="164" width="30" height="26"/></g></svg></div><span class="k">נושא 1</span><h3>העצמת הגבאי</h3><p class="spirit">הרוח: להעריך, לחזק ולהקל.</p><span class="sub-l">סוגיות לדיון</span>
+    <div class="tcard glass tilt" data-step="1" style="--c:var(--blue)"><div class="ico"><svg viewBox="0 0 100 220" aria-hidden="true"><polygon points="0,26 100,0 100,220 0,220" fill="#3aa0ff"/><g fill="#fff"><rect x="46" y="44" width="30" height="26"/><rect x="46" y="84" width="30" height="26"/><rect x="46" y="124" width="30" height="26"/><rect x="46" y="164" width="30" height="26"/></g></svg></div><span class="k">נושא 1</span><h3>העצמת הגבאי</h3><p class="spirit">הרוח: לחזק את הגבאים ולהרחיב את חופש הפעולה שלהם.</p><span class="sub-l">סוגיות לדיון</span>
       <ul><li>כבוד והערכה</li><li>סמכויות ותחומי אחריות</li><li>האצלת סמכויות</li><li>נוהל בחירות</li></ul></div>
-    <div class="tcard glass tilt" data-step="2" style="--c:var(--green)"><div class="ico"><svg viewBox="0 0 170 150" aria-hidden="true"><polygon points="85,0 170,72 170,150 0,150 0,72" fill="#2ecc71"/><g fill="#fff"><rect x="34" y="88" width="42" height="32"/><rect x="94" y="88" width="42" height="32"/></g></svg></div><span class="k">נושא 2</span><h3>ביתיות</h3><p class="spirit">הרוח: כל אחד מרגיש בבית.</p><span class="sub-l">סוגיות לדיון</span>
+    <div class="tcard glass tilt" data-step="2" style="--c:var(--green)"><div class="ico"><svg viewBox="0 0 170 150" aria-hidden="true"><polygon points="85,0 170,72 170,150 0,150 0,72" fill="#2ecc71"/><g fill="#fff"><rect x="34" y="88" width="42" height="32"/><rect x="94" y="88" width="42" height="32"/></g></svg></div><span class="k">נושא 2</span><h3>ביתיות</h3><p class="spirit">הרוח: כל אחד מרגיש בבית, והגבאי מארח.</p><span class="sub-l">סוגיות לדיון</span>
       <ul><li>אפליקציית הגבאי</li><li>תושבים חדשים</li><li>ילדים</li><li>משוב מהקהילה</li></ul></div>
-    <div class="tcard glass tilt" data-step="3" style="--c:var(--orange)"><div class="ico"><svg viewBox="0 0 270 118" aria-hidden="true"><g fill="#ffb26b"><circle cx="48" cy="26" r="21"/><circle cx="135" cy="26" r="21"/><circle cx="222" cy="26" r="21"/></g><path d="M6 62Q48 40 90 62T174 62T264 62M48 54V104M135 54V104M222 54V104" fill="none" stroke="#ffb26b" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="k">נושא 3</span><h3>קהילה של קהילות</h3><p class="spirit">הרוח: יחד, כל אחד בדרכו.</p><span class="sub-l">סוגיות לדיון</span>
+    <div class="tcard glass tilt" data-step="3" style="--c:var(--orange)"><div class="ico"><svg viewBox="0 0 270 118" aria-hidden="true"><g fill="#ffb26b"><circle cx="48" cy="26" r="21"/><circle cx="135" cy="26" r="21"/><circle cx="222" cy="26" r="21"/></g><path d="M6 62Q48 40 90 62T174 62T264 62M48 54V104M135 54V104M222 54V104" fill="none" stroke="#ffb26b" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="k">נושא 3</span><h3>קהילה של קהילות</h3><p class="spirit">הרוח: יחד, והגבאים מובילים.</p><span class="sub-l">סוגיות לדיון</span>
       <ul><li>תפילות יישוביות בימים מיוחדים</li><li>מדיניות פרסומים</li><li>דיון שנתי</li></ul></div>
   </div>
 </section>
 
 <!-- 5 · topic 1 -->
-<section class="slide s-topic" data-steps="7" data-pal="#030e1c,#0f6fc0,#19b4d8" data-fx="calm" style="--c:var(--blue)" data-say="לפתוח בצורך, אחר כך בחלום. רק כשהרוח ברורה עוברים לרעיונות. בכל כרטיס לרשום תשובות קצרות על הלוח." data-ask="בסוף: מה הגבאים צריכים מאיתנו כדי להמשיך להצליח?" data-min="15">
+<section class="slide s-topic" data-steps="7" data-pal="#030e1c,#0f6fc0,#19b4d8" data-fx="calm" style="--c:var(--blue)" data-say="הכוונה: להעצים את הגבאים. גם כשמדברים על האצלה או נוהל בחירות, המטרה היא לתת להם יותר גיבוי, ביטחון וחופש, לא לקחת מהם סמכות. לפתוח בצורך ובחלום, ורק אחר כך סוגיות. לרשום תשובות קצרות." data-ask="בסוף: מה יאפשר לגבאים לפעול ביותר חופש וביטחון?" data-min="15">
   <div class="ghost" aria-hidden="true">01</div>
   <div class="side">
     <span class="num" data-i>נושא 1 מתוך 3</span>
     <h2 data-split>העצמת הגבאי</h2>
     <div class="ico" data-i><svg viewBox="0 0 100 220" aria-hidden="true"><polygon points="0,26 100,0 100,220 0,220" fill="#3aa0ff"/><g fill="#fff"><rect x="46" y="44" width="30" height="26"/><rect x="46" y="84" width="30" height="26"/><rect x="46" y="124" width="30" height="26"/><rect x="46" y="164" width="30" height="26"/></g></svg></div>
-    <div class="ask" data-step="7"><small>שאלה לשולחן</small><p>מה הגבאים צריכים מאיתנו כדי להמשיך להצליח כשהיישוב גדל?</p></div>
+    <div class="ask" data-step="7"><small>שאלה לשולחן</small><p>מה יאפשר לגבאים לפעול ביותר חופש וביטחון כשהיישוב גדל?</p></div>
   </div>
   <div class="right">
     <div class="vision">
-      <div class="card glass vcard" data-step="1"><h3>הצורך</h3><p>היישוב גדל והעומס עליהם גדל. הם צריכים הכרה, תפקיד מוגדר והקלה בעבודה.</p></div>
-      <div class="card glass vcard" data-step="2"><h3>החלום</h3><p>גבאים שמרגישים מוערכים, יודעים מה בסמכותם, ומקבלים כוח ושותפים להמשיך בשמחה.</p></div>
+      <div class="card glass vcard" data-step="1"><h3>הצורך</h3><p>היישוב גדל והעומס עליהם גדל. הם צריכים גיבוי, תפקיד ברור וחופש לפעול.</p></div>
+      <div class="card glass vcard" data-step="2"><h3>החלום</h3><p>גבאים עם תפקיד ברור, סמכות מלאה וחופש לפעול בצורכי הציבור, ועם זמן לאנשים.</p></div>
     </div>
     <div class="sect" data-step="2">ומה אפשר לעשות? סוגיות לדיון</div>
     <div class="grid">
-    <div class="card glass" data-step="3"><h3>כבוד והערכה</h3><p>איך מבטאים הערכה בפועל, לאורך כל השנה?</p></div>
-    <div class="card glass" data-step="4"><h3>סמכויות ותחומי אחריות</h3><p>מה באחריות הגבאי, ובמה הוא מחליט בעצמו?</p></div>
-    <div class="card glass" data-step="5"><h3>האצלת סמכויות</h3><p>מה אפשר להוריד מהגבאים או להקל עליהם?</p><div class="tags"><span class="tag">למשל: לו״ז בעזרת AI</span></div></div>
-    <div class="card glass" data-step="6"><h3>נוהל בחירות</h3><p>מי בוחר, לכמה זמן, ואיך נכנסים ויוצאים בכבוד?</p></div>
+    <div class="card glass" data-step="3"><h3>כבוד והערכה</h3><p>איך מחזקים את מעמדם בעיני הקהילה, לאורך כל השנה?</p></div>
+    <div class="card glass" data-step="4"><h3>סמכויות ותחומי אחריות</h3><p>תפקיד ברור: במה הגבאי מחליט בעצמו, בלי לבקש אישור?</p></div>
+    <div class="card glass" data-step="5"><h3>האצלת סמכויות</h3><p>הגבאי מאציל וממשיך להחליט: משימות טכניות עוברות לכלים ולעוזרים.</p><div class="tags"><span class="tag">למשל: לו״ז בעזרת AI</span></div></div>
+    <div class="card glass" data-step="6"><h3>נוהל בחירות</h3><p>נוהל ברור שנותן לגבאי גיבוי ויציבות, ולקהילה אמון.</p></div>
   </div>
   </div>
 </section>
 
 <!-- 6 · topic 2 -->
-<section class="slide s-topic" data-steps="7" data-pal="#04140a,#0b9a48,#8fd13f" data-fx="calm" style="--c:var(--green)" data-say="כאן הדגש על תחושת בית. כדאי לתת לתושבים חדשים ולהורים לדבר ראשונים." data-ask="בסוף: מה גורם למתפלל להרגיש שזה הבית שלו?" data-min="15">
+<section class="slide s-topic" data-steps="7" data-pal="#04140a,#0b9a48,#8fd13f" data-fx="calm" style="--c:var(--green)" data-say="הגבאי הוא המארח והמוביל של תחושת הבית. כלי כמו אפליקציה או משוב נועדו לעזור לו, לא לפקח עליו. כדאי לתת לתושבים חדשים ולהורים לדבר ראשונים." data-ask="בסוף: מה גורם לכל מתפלל להרגיש שזה הבית שלו, ואיך הגבאי מוביל את זה?" data-min="15">
   <div class="ghost" aria-hidden="true">02</div>
   <div class="side">
     <span class="num" data-i>נושא 2 מתוך 3</span>
     <h2 data-split>ביתיות</h2>
     <div class="ico" data-i><svg viewBox="0 0 170 150" aria-hidden="true"><polygon points="85,0 170,72 170,150 0,150 0,72" fill="#2ecc71"/><g fill="#fff"><rect x="34" y="88" width="42" height="32"/><rect x="94" y="88" width="42" height="32"/></g></svg></div>
-    <div class="ask" data-step="7"><small>שאלה לשולחן</small><p>מה גורם למתפלל, ותיק או חדש, מבוגר או ילד, להרגיש שזה הבית שלו?</p></div>
+    <div class="ask" data-step="7"><small>שאלה לשולחן</small><p>מה גורם לכל מתפלל להרגיש שזה הבית שלו, ואיך הגבאי מוביל את זה?</p></div>
   </div>
   <div class="right">
     <div class="vision">
-      <div class="card glass vcard" data-step="1"><h3>הצורך</h3><p>כשהקהילה גדלה קל לפספס מישהו. צריך דרך לחבר, לקבל פנים ולשמוע את הציבור.</p></div>
-      <div class="card glass vcard" data-step="2"><h3>החלום</h3><p>בית כנסת שבו כל אחד מרגיש בבית: ותיקים, תושבים חדשים וילדים.</p></div>
+      <div class="card glass vcard" data-step="1"><h3>הצורך</h3><p>כשהקהילה גדלה קל לפספס מישהו. הגבאים צריכים כלים שיעזרו להם לחבר ולקבל פנים.</p></div>
+      <div class="card glass vcard" data-step="2"><h3>החלום</h3><p>בית כנסת שבו כל אחד מרגיש בבית: ותיקים, תושבים חדשים וילדים, והגבאי הוא המארח.</p></div>
     </div>
     <div class="sect" data-step="2">ומה אפשר לעשות? סוגיות לדיון</div>
     <div class="grid">
-    <div class="card glass" data-step="3"><h3>אפליקציית הגבאי</h3><p>כלי אחד לגבאי ולמתפללים: זמנים, הודעות ובקשות במקום אחד.</p></div>
-    <div class="card glass" data-step="4"><h3>תושבים חדשים</h3><p>קבלת פנים, היכרות ומקום קבוע מהשבת הראשונה.</p></div>
-    <div class="card glass" data-step="5"><h3>ילדים</h3><p>מקום לילדים בלי לפגוע באווירת התפילה.</p></div>
-    <div class="card glass" data-step="6"><h3>משוב מהקהילה</h3><p>דרך קבועה ומכבדת לשמוע הצעות, בלי להעמיס על הגבאי.</p></div>
+    <div class="card glass" data-step="3"><h3>אפליקציית הגבאי</h3><p>כלי בידי הגבאי: זמנים, הודעות ובקשות במקום אחד.</p></div>
+    <div class="card glass" data-step="4"><h3>תושבים חדשים</h3><p>הגבאי כמארח: קבלת פנים, היכרות ומקום קבוע.</p></div>
+    <div class="card glass" data-step="5"><h3>ילדים</h3><p>מקום לילדים, בהובלת הגבאי ובלי לפגוע באווירת התפילה.</p></div>
+    <div class="card glass" data-step="6"><h3>משוב מהקהילה</h3><p>דרך קבועה שעוזרת לגבאי לשמוע מה הציבור צריך.</p></div>
   </div>
   </div>
 </section>
 
 <!-- 7 · topic 3 -->
-<section class="slide s-topic" data-steps="6" data-pal="#150803,#e57822,#b02a76" data-fx="calm" style="--c:var(--orange)" data-say="שלוש סוגיות. בתפילות יישוביות לעבור על הימים אחד אחד ולראות איפה יש הסכמה." data-ask="בסוף: איך שומרים על האופי של כל בית כנסת ועדיין מרגישים יישוב אחד?" data-min="15">
+<section class="slide s-topic" data-steps="6" data-pal="#150803,#e57822,#b02a76" data-fx="calm" style="--c:var(--orange)" data-say="הגבאים מובילים, והיישוב תומך. בתפילות יישוביות לעבור על הימים אחד אחד ולראות איפה יש הסכמה. כללי פרסום נועדו לעזור לגבאי, לא להגביל אותו." data-ask="בסוף: איך הגבאים מובילים יישוב אחד שיש בו בתי כנסת שונים?" data-min="15">
   <div class="ghost" aria-hidden="true">03</div>
   <div class="side">
     <span class="num" data-i>נושא 3 מתוך 3</span>
@@ -442,14 +465,14 @@ p{margin:0}
   </div>
   <div class="right">
     <div class="vision">
-      <div class="card glass vcard" data-step="1"><h3>הצורך</h3><p>ככל שיש יותר בתי כנסת ויותר מידע, צריך תיאום, רגעים משותפים ופרסום שמיידע בלי להציף.</p></div>
-      <div class="card glass vcard" data-step="2"><h3>החלום</h3><p>יישוב אחד גדול, שבו לכל בית כנסת אופי משלו ובכל זאת מתפללים וחוגגים יחד.</p></div>
+      <div class="card glass vcard" data-step="1"><h3>הצורך</h3><p>ככל שיש יותר בתי כנסת ויותר מידע, צריך תיאום שנותן לכל גבאי מרחב להוביל.</p></div>
+      <div class="card glass vcard" data-step="2"><h3>החלום</h3><p>יישוב אחד גדול, שבו לכל בית כנסת אופי משלו, והגבאים מובילים רגעים משותפים.</p></div>
     </div>
     <div class="sect" data-step="2">ומה אפשר לעשות? סוגיות לדיון</div>
     <div class="grid">
-    <div class="card glass wide" data-step="3"><h3>תפילות יישוביות בימים מיוחדים</h3><p>באילו ימים כולם מתפללים יחד, איפה, ומי מארגן?</p><div class="tags"><span class="tag">פורים</span><span class="tag">יום העצמאות</span><span class="tag">יום ירושלים</span><span class="tag">ט' באב</span></div></div>
-    <div class="card glass" data-step="4"><h3>מדיניות פרסומים</h3><p>באיזה אופן ובאיזה מינון מפרסמים תפילות ושיעורים.</p></div>
-    <div class="card glass" data-step="5"><h3>דיון שנתי</h3><p>מפגש קבוע פעם בשנה: מה עבד ומה לשנות.</p></div>
+    <div class="card glass wide" data-step="3"><h3>תפילות יישוביות בימים מיוחדים</h3><p>באילו ימים כולם מתפללים יחד, איפה, ואילו גבאים מובילים?</p><div class="tags"><span class="tag">פורים</span><span class="tag">יום העצמאות</span><span class="tag">יום ירושלים</span><span class="tag">ט' באב</span></div></div>
+    <div class="card glass" data-step="4"><h3>מדיניות פרסומים</h3><p>הגבאי מחליט מה ומתי לפרסם, עם כללים שעוזרים ליידע בלי להציף.</p></div>
+    <div class="card glass" data-step="5"><h3>דיון שנתי</h3><p>מפגש קבוע פעם בשנה שבו הגבאים קובעים מה להמשיך ומה לשנות.</p></div>
   </div>
   </div>
 </section>
@@ -587,7 +610,7 @@ let t0=performance.now();
 function loop(now){
   if(!document.hidden){
     if(gl){gl.uniform1f(U.uT,(now-t0)/1000);gl.uniform3fv(U.uA,pal.cur[0]);gl.uniform3fv(U.uB,pal.cur[1]);gl.uniform3fv(U.uC,pal.cur[2]);gl.drawArrays(gl.TRIANGLE_STRIP,0,4)}
-    if(!reduce)drawFx(now);
+    if(!reduce){drawFx(now);drawDust(now)}
   }
   requestAnimationFrame(loop);
 }
@@ -615,50 +638,76 @@ star.innerHTML='<g fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="r
 cam.appendChild(star);
 $$('[data-mark]').forEach(im=>{im.src=LOGO.mark.src});
 
-/* ---------- intro choreography ---------- */
-let introAnims=[],introText=null;
-const bounce='cubic-bezier(.3,1.35,.5,1)',soft='cubic-bezier(.2,.85,.25,1)';
-const fly={
-  hill_lime:[0,1200,0,420,0,.9,soft],hill_green:[120,1200,0,380,0,.92,soft],hill_dark:[220,1200,0,340,0,.92,soft],
-  backorange:[520,1000,0,560,0,1,soft],tower:[640,1200,0,760,0,1,soft],shul:[980,1300,0,640,0,1,soft],
-  magtree:[900,1000,-420,120,-45,.7,bounce],ltree_dark:[1100,1000,-520,60,-40,.7,bounce],ltree_lime:[1200,1000,-460,220,-40,.6,bounce],
-  house:[1500,1100,0,-620,0,1,bounce],rtree_dark:[1300,1000,520,40,40,.7,bounce],rtree_blue:[1400,1000,560,180,40,.6,bounce],
-  book:[1750,1100,0,-520,14,.8,bounce],people:[2050,1100,0,60,0,.15,bounce]
-};
-['L0','L1','L2','L3','L4','L5'].forEach((id,i)=>fly[id]=[2350+i*130,850,(i%2?-1:1)*40,520,(i%2?-1:1)*24,1,bounce]);
-['T0','T1','T2','T3'].forEach((id,i)=>fly[id]=[3350+i*170,800,70,36,0,1,soft]);
-function stopIntro(){introAnims.forEach(a=>a.cancel());introAnims=[];if(introText){introText.kill();introText=null}}
+/* ---------- intro: a film title sequence ---------- */
+let introTl=null;const dustObj={a:0};
+const dustCv=$('#dustCv'),dctx=dustCv.getContext('2d');
+const motes=Array.from({length:90},()=>({x:420+Math.random()*1100,y:240+Math.random()*740,vx:(Math.random()-.35)*.28,vy:-(.04+Math.random()*.22),s:.05+Math.random()*.17,tw:Math.random()*6}));
+function drawDust(t){
+  if(idx!==0||dustObj.a<.01){if(dustCv.style.opacity!=='0'){dustCv.style.opacity=0;dctx.clearRect(0,0,1920,1080)}return}
+  dustCv.style.opacity=1;dctx.clearRect(0,0,1920,1080);dctx.globalCompositeOperation='lighter';
+  for(const m of motes){m.x+=m.vx;m.y+=m.vy;if(m.y<200){m.y=980;m.x=420+Math.random()*1100}if(m.x>1560)m.x=420;if(m.x<400)m.x=1540;
+    dctx.globalAlpha=dustObj.a*(.25+.55*Math.abs(Math.sin(t*.0014+m.tw)))*.9;const z=64*m.s*2;dctx.drawImage(sprite,m.x-z/2,m.y-z/2,z,z)}
+  dctx.globalAlpha=1;
+}
+function stopIntro(){if(introTl){introTl.kill();introTl=null}}
 function playIntro(fast){
   stopIntro();
-  const s=slides[0],T0=500;
-  const add=(el,kf,o)=>{const a=el.animate(kf,{fill:'both',...o});introAnims.push(a);return a};
-  const S0=2.3,N=48,kf=[];
-  for(let i=0;i<=N;i++){const t=i/N,e=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;kf.push({offset:t,transform:`scale(${Math.pow(S0,1-e)})`})}
-  add(cam,kf,{duration:3600,delay:T0,easing:'linear'});
-  add($('#interior'),[{transform:'scale(1)',opacity:1,offset:0},{transform:'scale(2.4)',opacity:1,offset:.5},{transform:'scale(7.5)',opacity:0,offset:1}],{duration:2900,delay:T0+250,easing:'cubic-bezier(.55,0,.75,1)'});
-  add($('#disc'),[{opacity:0,transform:'scale(.55)'},{opacity:1,transform:'scale(1)'}],{duration:1700,delay:T0+900,easing:soft});
-  for(const id in fly){const [d,dur,dx,dy,r,sc,ez]=fly[id];
-    add(els[id],[{transform:`translate(${dx}px,${dy}px) rotate(${r}deg) scale(${sc})`,opacity:0},{opacity:1,offset:.35},{transform:'none',opacity:1}],{duration:dur,delay:T0+d,easing:ez})}
-  add(pcs,[{visibility:'visible'},{visibility:'hidden'}],{duration:10,delay:T0+5400,easing:'steps(1,end)'});
-  add(full,[{opacity:0},{opacity:1}],{duration:10,delay:T0+5400,easing:'steps(1,end)'});
-  add(gcv,[{opacity:0},{opacity:.95}],{duration:1100,delay:T0+4300,easing:'ease-out'});
-  add(star,[{opacity:0,transform:'scale(.6)',transformOrigin:'640px 246px'},{opacity:1,transform:'scale(1)',transformOrigin:'640px 246px'}],{duration:900,delay:T0+4700,easing:soft});
-  add(logoBox,[{transform:'none'},{transform:'translate(-400px,0) scale(.9)'}],{duration:1400,delay:T0+5700,easing:'cubic-bezier(.6,0,.2,1)'});
-  /* text */
-  const txt=$('.intro-text',s);
-  if(hasG){
-    gsap.set(txt,{opacity:1});
-    const sp=splits.get($('h1',txt));
-    introText=gsap.timeline({delay:(T0+6300)/1000});
-    introText.from($('.chip',txt),{y:40,opacity:0,filter:'blur(12px)',duration:.8,ease:'power3.out'})
-      .from(sp?sp.words:$('h1',txt),{yPercent:115,duration:1.1,ease:'expo.out',stagger:.12},'<.1')
-      .from($('.sub',txt),{y:40,opacity:0,filter:'blur(12px)',duration:.9,ease:'power3.out'},'<.35')
-      .from($$('.fact',txt),{y:50,opacity:0,scale:.92,filter:'blur(10px)',duration:.9,ease:'back.out(1.6)',stagger:.12,clearProps:'filter,transform,opacity'},'<.25');
-  }else{txt.style.opacity=1}
-  if(fast||reduce){introAnims.forEach(a=>a.finish());if(introText)introText.progress(1)}
+  const s=slides[0],txt=$('.intro-text',s),$int=$('#interior'),$day=$('#daylight'),$bloom=$('#bloom'),bars=[$('#barT'),$('#barB')],vo1=$('#vo1'),vo2=$('#vo2'),shine=$('#shine');
+  if(!hasG){$day.style.opacity=1;$int.style.display='none';bars.forEach(b=>b.style.display='none');pcs.style.visibility='hidden';full.style.opacity=1;gcv.style.opacity=.95;star.style.opacity=1;logoBox.style.transform='translateX(-400px) scale(.9)';txt.style.opacity=1;$$('.intro-text>*',s).forEach(e=>e.style.opacity=1);return}
+  gsap.killTweensOf([cam,logoBox,$int,$day,$bloom,vo1,vo2,shine,gcv,star,full,pcs,dustObj,...bars,...Object.values(els)]);
+  const CP='opacity,visibility,transform,filter,clipPath,x,y,scale,rotation,height';
+  gsap.set([cam,logoBox,$int,$day,$bloom,vo1,vo2,shine,gcv,star,full,pcs,...bars,...Object.values(els)],{clearProps:CP});
+  gsap.set($$('.intro-text > *, .intro-text .fact',s),{clearProps:'opacity,transform,filter'});
+  dustObj.a=0;gsap.set(cam,{scale:1.7});gsap.set(full,{opacity:0});gsap.set(txt,{opacity:0});
+  const tl=gsap.timeline({defaults:{ease:'power3.out'}});introTl=tl;
+  const T0=.3;$('#shineWrap').style.webkitMaskImage=$('#shineWrap').style.maskImage='url('+LOGO.full+')';$('#shineWrap').style.webkitMaskSize=$('#shineWrap').style.maskSize='100% 100%';
+  /* act 1: inside the synagogue, a slow push toward the light */
+  tl.fromTo($int,{filter:'brightness(.15)'},{opacity:1,filter:'brightness(1)',duration:2.4,ease:'power2.out'},T0)
+    .to($int,{scale:1.14,duration:4.5,ease:'sine.inOut'},T0)
+    .to($int,{x:10,rotation:.22,duration:3.4,yoyo:true,repeat:1,ease:'sine.inOut'},T0)
+    .fromTo($day,{opacity:0},{opacity:.32,duration:4.2,ease:'sine.inOut'},T0)
+    .to(dustObj,{a:1,duration:1.8,ease:'none'},T0+.6)
+    .fromTo(vo1,{opacity:0,y:26,filter:'blur(14px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.5},1.1)
+    .to(vo1,{opacity:0,y:-16,filter:'blur(10px)',duration:1,ease:'power2.in'},3.3)
+    .fromTo(vo2,{opacity:0,y:26,filter:'blur(14px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.5},3.2)
+    .to(vo2,{opacity:0,y:-16,filter:'blur(10px)',duration:.9,ease:'power2.in'},5.0);
+  /* act 2: the light breaks through the windows */
+  tl.to($bloom,{opacity:1,duration:1.1,ease:'power2.in'},4.7)
+    .to($int,{scale:3.8,duration:1.7,ease:'power3.in'},4.8)
+    .to($int,{opacity:0,duration:.8,ease:'power1.in'},5.5)
+    .to($day,{opacity:1,duration:1.1,ease:'power1.inOut'},4.9)
+    .to(dustObj,{a:0,duration:.8,ease:'none'},4.9)
+    .to(bars,{height:0,duration:1.1,ease:'power3.inOut'},5.9)
+    .to($bloom,{opacity:0,duration:1.5,ease:'power2.out'},5.8)
+    .to(cam,{scale:1,duration:4.6,ease:'power2.out'},5.3);
+  /* act 3: the village builds itself from the ground up */
+  const rise=(id,at,d,y)=>tl.fromTo(els[id],{opacity:0,y:y,filter:'blur(16px)'},{opacity:1,y:0,filter:'blur(0px)',duration:d,ease:'power3.out',clearProps:'filter'},at);
+  const grow=(id,at,d)=>tl.fromTo(els[id],{opacity:1,clipPath:'inset(100% 0% 0% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:d,ease:'power3.inOut'},at);
+  rise('hill_lime',5.7,2.2,120);rise('hill_green',5.8,2.2,120);rise('hill_dark',5.9,2.2,120);
+  grow('backorange',6.5,1.4);grow('tower',6.7,1.8);grow('shul',7.1,1.8);
+  grow('magtree',7.5,1.3);grow('ltree_dark',7.7,1.1);grow('ltree_lime',7.9,1.0);grow('house',7.8,1.3);
+  grow('rtree_dark',8.0,1.1);grow('rtree_blue',8.2,1.0);
+  tl.fromTo(els.people,{opacity:0,y:24,filter:'blur(10px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.3,clearProps:'filter'},8.5);
+  tl.fromTo(els.book,{opacity:1,clipPath:'inset(0% 50% 0% 50%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:1.4,ease:'power2.inOut'},8.8);
+  ['L0','L1','L2','L3','L4','L5'].forEach((id,i)=>tl.fromTo(els[id],{opacity:0,y:42,filter:'blur(12px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.1,clearProps:'filter'},9.1+i*.09));
+  ['T0','T1','T2','T3'].forEach((id,i)=>tl.fromTo(els[id],{opacity:0,x:34,filter:'blur(8px)'},{opacity:1,x:0,filter:'blur(0px)',duration:.9,clearProps:'filter'},9.6+i*.14));
+  /* act 4: seamless image, golden windows, one sweep of light, title */
+  tl.set(pcs,{visibility:'hidden'},10.9).set(full,{opacity:1},10.9)
+    .to(gcv,{opacity:.95,duration:1.3,ease:'power1.out'},10.6)
+    .fromTo(star,{opacity:0,scale:.4,rotation:-25,transformOrigin:'640px 246px'},{opacity:1,scale:1,rotation:0,duration:1.2,ease:'back.out(2)'},11.0)
+    .fromTo(shine,{x:-400,opacity:.9},{x:1300,duration:1.5,ease:'power2.inOut'},10.9)
+    .to(logoBox,{x:-400,scale:.9,duration:1.5,ease:'power3.inOut'},11.9);
+  const sp=splits.get($('h1',txt));
+  tl.set(txt,{opacity:1},12.7)
+    .from($('.chip',txt),{y:40,opacity:0,filter:'blur(12px)',duration:.9,clearProps:'filter'},12.8)
+    .from(sp?sp.words:$('h1',txt),{yPercent:115,duration:1.2,ease:'expo.out',stagger:.12},12.9)
+    .from($('.sub',txt),{y:40,opacity:0,filter:'blur(12px)',duration:.9,clearProps:'filter'},13.3)
+    .from($$('.fact',txt),{y:50,opacity:0,scale:.94,filter:'blur(10px)',duration:.9,ease:'back.out(1.5)',stagger:.12,clearProps:'filter'},13.5);
+  if(fast||reduce)tl.progress(1);
 }
-function finishIntro(){introAnims.forEach(a=>{try{a.finish()}catch(e){}});if(introText)introText.progress(1)}
-function introRunning(){return introAnims.some(a=>a.playState==='running')||(introText&&introText.progress()<1)}
+function finishIntro(){if(introTl)introTl.progress(1)}
+window.__dbg=()=>introTl?{t:introTl.time(),d:introTl.duration(),r:reduce}:null;window.__seek=t=>{if(introTl){introTl.pause();introTl.time(t)}};
+function introRunning(){return !!introTl&&introTl.progress()<1}
 
 /* ---------- slides ---------- */
 const slides=$$('.slide');
@@ -694,7 +743,7 @@ function render(prevIdx){
   const s=slides[idx];
   slides.forEach((x,i)=>{if(i!==idx&&i!==prevIdx){x.style.visibility='hidden';x.style.opacity=0}});
   if(hasG){
-    if(prevIdx!=null&&prevIdx!==idx){const o=slides[prevIdx];gsap.to(o,{opacity:0,duration:.45,ease:'power2.in',onComplete(){if(o!==slides[idx])o.style.visibility='hidden'}})}
+    if(prevIdx!=null&&prevIdx!==idx){const o=slides[prevIdx];gsap.to(o,{opacity:0,duration:prevIdx===0?1:.45,ease:'power2.in',onComplete(){if(o!==slides[idx])o.style.visibility='hidden'}})}
     gsap.set(s,{visibility:'visible'});gsap.to(s,{opacity:1,duration:.7,delay:prevIdx!=null&&prevIdx!==idx?.25:0,ease:'power2.out'});
   }else{s.style.visibility='visible';s.style.opacity=1}
   const prevStep=s._step||0;
@@ -703,7 +752,7 @@ function render(prevIdx){
   s._step=step;
   $$('.dots button').forEach((b,i)=>b.classList.toggle('on',i===idx));
   count.textContent=(idx+1)+' / '+slides.length;
-  stage.dataset.hideHud=idx===0?'1':'0';
+  stage.dataset.hideHud=idx===0?'1':'0';stage.dataset.tone=s.dataset.tone||'dark';
   notes.innerHTML='<small>הערות למנחה<span id="tm"></span></small><b>לומר:</b> '+(s.dataset.say||'')+'<br><b>לשאול:</b> '+(s.dataset.ask||'')+'<br><b>זמן מוצע:</b> '+(s.dataset.min||'')+' דקות';slideT=Date.now();
   if(hasG)gsap.to(prog,{scaleX:(idx+1)/slides.length,duration:.9,ease:'power3.out'});else prog.style.transform=`scaleX(${(idx+1)/slides.length})`;
   try{history.replaceState(null,'','#s'+(idx+1))}catch(e){}
@@ -720,7 +769,7 @@ function go(i,st,initial){
   if(changed||initial){
     const s=slides[i];setPal(s.dataset.pal,initial);setMode(s.dataset.fx||'dust');
     if(!initial)transitionFx();
-    if(i===0)playIntro(false);else{if(prev===0&&introAnims.length)stopIntro();enter(s,i)}
+    if(i===0)playIntro(false);else{if(prev===0)stopIntro();enter(s,i)}
   }
 }
 function next(){
