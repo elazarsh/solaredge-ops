@@ -13,6 +13,9 @@ description: Index and routing guide for the personal knowledge base of skills -
 | Brand look, design system, deck/landing visuals | `design-system-first` |
 | AI video from image / camera moves | `video-camera-codes` |
 | UGC / AI influencer / viral short, editing footage with AI | `ai-influencer-ugc-video` |
+| **Stunning / wow / cinematic / premium video, ad, intro, reel, animated slide** | `motion-design-wow` -> `motion-toolkit` (+ `kinetic-typography-hebrew`, `sound-design-procedural`) -> `video-wow-review` |
+| Review a rendered video / "not wow enough" | `video-wow-review` |
+| Which community skills to install (HyperFrames, Remotion, GSAP, Three.js) | `community-skills-guide` |
 | Explainer, motion graphics, captions, ad variants as code | `code-driven-video` |
 | Ads, campaign creative | `ad-creative-workflow` |
 | Campaign data analysis, reports | `marketing-analytics-workflow` |
@@ -35,7 +38,7 @@ description: Index and routing guide for the personal knowledge base of skills -
 | Any Hebrew deliverable | `hebrew-rtl-output` |
 
 ## Multi-step project combos
-- **Product launch video:** `grounded-research` (facts) -> `design-system-first` -> `image-generation-playbook` (key frames) -> `video-camera-codes` or `ai-influencer-ugc-video` -> `code-driven-video` (captions/edit) -> `ad-creative-workflow` (variants) -> `verify-and-safety-gates`.
+- **Product launch video:** `grounded-research` (facts) -> `design-system-first` -> `motion-design-wow` (concept, style, beats) -> `motion-toolkit` (+ `kinetic-typography-hebrew`, `sound-design-procedural`) -> `video-wow-review` -> `ad-creative-workflow` (variants) -> `verify-and-safety-gates`. For AI-generated footage instead: `image-generation-playbook` -> `video-camera-codes` / `ai-influencer-ugc-video` -> `code-driven-video` (captions/edit).
 - **Website for a business:** `design-system-first` -> `web-build-harden` -> `seo-geo-playbook` -> `hebrew-rtl-output` -> `verify-and-safety-gates`.
 - **Research report + deck:** `grounded-research` -> `deck-and-doc-craft` -> `visual-codes` -> `human-writing-hebrew`.
 - **Back-office automation:** `automation-scoping` -> `automation-recipes` -> `agentic-build-discipline` -> `verify-and-safety-gates`.

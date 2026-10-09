@@ -1,24 +1,443 @@
 {
-  "always": ["verify-and-safety-gates"],
+  "always": [
+    "verify-and-safety-gates"
+  ],
   "rules": [
-    {"skills": ["visual-codes", "image-generation-playbook"], "keywords": ["infographic", "אינפוגרפיקה", "xray", "exploded", "blueprint", "mind map", "mindmap", "מפת חשיבה", "carousel", "קרוסלה", "packshot", "mockup", "מוקאפ", "storyboard", "סטוריבורד", "תמונה", "image prompt", "nano banana", "midjourney", "דיאגרמה", "diagram"]},
-    {"skills": ["video-camera-codes", "ai-influencer-ugc-video"], "keywords": ["camera movement", "תנועת מצלמה", "dolly", "orbit", "image to video", "image-to-video", "veo", "kling", "seedance", "higgsfield", "סרטון מתמונה", "ugc", "משפיען", "influencer", "רילס", "reel", "tiktok", "טיקטוק"]},
-    {"skills": ["code-driven-video"], "keywords": ["explainer", "סרטון הסבר", "hyperframes", "remotion", "motion graphics", "b-roll", "broll", "כתוביות", "subtitles", "captions", "gsap", "ffmpeg", "render video", "עריכת וידאו", "video edit"]},
-    {"skills": ["design-system-first", "web-build-harden"], "keywords": ["design system", "מערכת עיצוב", "מיתוג", "branding", "brand guide", "figma", "landing page", "דף נחיתה", "prototype", "פרוטוטייפ", "claude design", "canva"]},
-    {"skills": ["web-build-harden", "hebrew-rtl-output"], "keywords": ["website", "אתר", "build a site", "בניית אתר", "vercel", "supabase", "accessibility", "נגישות", "responsive", "mobile layout", "rtl", "seo", "domain", "דומיין"]},
-    {"skills": ["agentic-build-discipline", "claude-setup-architecture"], "keywords": ["build an app", "אפליקציה", "פיתוח", "webhook", "whatsapp", "וואטסאפ", "bot", "בוט", "pipeline", "api key", "mcp", "agent", "סוכן", "claude.md", "agents.md", "handoff", "codex"]},
-    {"skills": ["grounded-research"], "keywords": ["research", "מחקר", "deep research", "literature", "compare sources", "notebooklm", "perplexity", "market analysis", "competitor", "מתחרים", "סקירה", "summarize the document", "סכם את המסמך"]},
-    {"skills": ["human-writing-hebrew", "hebrew-rtl-output", "prompt-modifiers"], "keywords": ["humanize", "ai-sounding", "נשמע כמו ai", "proofread", "הגהה", "copywriting", "ניסוח", "sharpen", "rewrite", "תכתוב מחדש", "פוסט", "מייל", "email draft"]},
-    {"skills": ["deck-and-doc-craft"], "keywords": ["presentation", "מצגת", "slides", "deck", "report", "דוח", "memo", "מסמך", "meeting summary", "סיכום פגישה", "minutes", "sop", "נוהל", "one-pager", "pptx", "docx"]},
-    {"skills": ["automation-scoping", "automation-recipes"], "keywords": ["automation", "אוטומציה", "make.com", "zapier", "n8n", "apps script", "workflow", "תהליך חוזר", "backup", "גיבוי", "invoice", "חשבונית", "onboarding", "refund", "החזר"]},
-    {"skills": ["ai-adoption-playbook"], "keywords": ["ai policy", "מדיניות ai", "adoption", "הטמעה", "pilot", "פיילוט", "roi", "shadow ai", "ארגון"]},
-    {"skills": ["ad-creative-workflow", "marketing-analytics-workflow"], "keywords": ["ad creative", "מודעה", "campaign", "קמפיין", "meta ads", "facebook ads", "roas", "cpl", "cpc", "ctr", "ad performance", "ביצועי קמפיין"]},
-    {"skills": ["content-engine", "prompt-modifiers"], "keywords": ["content calendar", "קלנדר תוכן", "hooks", "הוקים", "linkedin", "לינקדין", "newsletter", "ניוזלטר", "brand voice", "repurpose", "viral", "ויראלי"]},
-    {"skills": ["seo-geo-playbook"], "keywords": ["seo", "geo", "keyword", "מילות מפתח", "search console", "google business", "גוגל ביזנס", "קידום", "ai visibility"]},
-    {"skills": ["custom-assistant-builder"], "keywords": ["gem", "ג'ם", "custom gpt", "system prompt", "פרומפט מערכת", "assistant instructions", "הנחיות לעוזר"]},
-    {"skills": ["ai-tools-landscape"], "keywords": ["which tool", "איזה כלי", "alternatives to", "חלופה ל", "pricing", "credits", "קרדיטים", "best tool", "tool comparison", "השוואת כלים"]},
-    {"skills": ["blender-unity-pipeline"], "keywords": ["blender", "בלנדר", "unity", "יוניטי", "3d model", "תלת מימד", "game", "משחק"]},
-    {"skills": ["claude-hooks-playbook", "claude-setup-architecture"], "keywords": ["hook", "הוק", "settings.json", "permission", "הרשאות", "skill creation", "create a skill", "סקיל"]},
-    {"skills": ["verify-and-safety-gates"], "keywords": ["privacy", "פרטיות", "copyright", "זכויות יוצרים", "gdpr", "confidential", "חסוי", "legal", "משפטי", "delete all", "force push"]}
+    {
+      "skills": [
+        "visual-codes",
+        "image-generation-playbook"
+      ],
+      "keywords": [
+        "infographic",
+        "אינפוגרפיקה",
+        "xray",
+        "exploded",
+        "blueprint",
+        "mind map",
+        "mindmap",
+        "מפת חשיבה",
+        "carousel",
+        "קרוסלה",
+        "packshot",
+        "mockup",
+        "מוקאפ",
+        "storyboard",
+        "סטוריבורד",
+        "תמונה",
+        "image prompt",
+        "nano banana",
+        "midjourney",
+        "דיאגרמה",
+        "diagram"
+      ]
+    },
+    {
+      "skills": [
+        "video-camera-codes",
+        "ai-influencer-ugc-video"
+      ],
+      "keywords": [
+        "camera movement",
+        "תנועת מצלמה",
+        "dolly",
+        "orbit",
+        "image to video",
+        "image-to-video",
+        "veo",
+        "kling",
+        "seedance",
+        "higgsfield",
+        "סרטון מתמונה",
+        "ugc",
+        "משפיען",
+        "influencer",
+        "רילס",
+        "reel",
+        "tiktok",
+        "טיקטוק"
+      ]
+    },
+    {
+      "skills": [
+        "motion-design-wow",
+        "motion-toolkit",
+        "kinetic-typography-hebrew",
+        "sound-design-procedural",
+        "video-wow-review"
+      ],
+      "keywords": [
+        "וואו",
+        "wow",
+        "stunning",
+        "cinematic",
+        "מרשים",
+        "פרסומת",
+        "promo",
+        "launch video",
+        "סרטון השקה",
+        "אנימציה",
+        "animation",
+        "motion graphics",
+        "מוטיון",
+        "kinetic",
+        "טיפוגרפיה",
+        "reel",
+        "רילס",
+        "intro",
+        "אינטרו",
+        "סרטון קצר",
+        "סרטון הסבר",
+        "explainer",
+        "עיצוב סרטון",
+        "סרטון"
+      ]
+    },
+    {
+      "skills": [
+        "code-driven-video"
+      ],
+      "keywords": [
+        "explainer",
+        "סרטון הסבר",
+        "hyperframes",
+        "remotion",
+        "motion graphics",
+        "b-roll",
+        "broll",
+        "כתוביות",
+        "subtitles",
+        "captions",
+        "gsap",
+        "ffmpeg",
+        "render video",
+        "עריכת וידאו",
+        "video edit"
+      ]
+    },
+    {
+      "skills": [
+        "design-system-first",
+        "web-build-harden"
+      ],
+      "keywords": [
+        "design system",
+        "מערכת עיצוב",
+        "מיתוג",
+        "branding",
+        "brand guide",
+        "figma",
+        "landing page",
+        "דף נחיתה",
+        "prototype",
+        "פרוטוטייפ",
+        "claude design",
+        "canva"
+      ]
+    },
+    {
+      "skills": [
+        "web-build-harden",
+        "hebrew-rtl-output"
+      ],
+      "keywords": [
+        "website",
+        "אתר",
+        "build a site",
+        "בניית אתר",
+        "vercel",
+        "supabase",
+        "accessibility",
+        "נגישות",
+        "responsive",
+        "mobile layout",
+        "rtl",
+        "seo",
+        "domain",
+        "דומיין"
+      ]
+    },
+    {
+      "skills": [
+        "agentic-build-discipline",
+        "claude-setup-architecture"
+      ],
+      "keywords": [
+        "build an app",
+        "אפליקציה",
+        "פיתוח",
+        "webhook",
+        "whatsapp",
+        "וואטסאפ",
+        "bot",
+        "בוט",
+        "pipeline",
+        "api key",
+        "mcp",
+        "agent",
+        "סוכן",
+        "claude.md",
+        "agents.md",
+        "handoff",
+        "codex"
+      ]
+    },
+    {
+      "skills": [
+        "grounded-research"
+      ],
+      "keywords": [
+        "research",
+        "מחקר",
+        "deep research",
+        "literature",
+        "compare sources",
+        "notebooklm",
+        "perplexity",
+        "market analysis",
+        "competitor",
+        "מתחרים",
+        "סקירה",
+        "summarize the document",
+        "סכם את המסמך"
+      ]
+    },
+    {
+      "skills": [
+        "human-writing-hebrew",
+        "hebrew-rtl-output",
+        "prompt-modifiers"
+      ],
+      "keywords": [
+        "humanize",
+        "ai-sounding",
+        "נשמע כמו ai",
+        "proofread",
+        "הגהה",
+        "copywriting",
+        "ניסוח",
+        "sharpen",
+        "rewrite",
+        "תכתוב מחדש",
+        "פוסט",
+        "מייל",
+        "email draft"
+      ]
+    },
+    {
+      "skills": [
+        "deck-and-doc-craft"
+      ],
+      "keywords": [
+        "presentation",
+        "מצגת",
+        "slides",
+        "deck",
+        "report",
+        "דוח",
+        "memo",
+        "מסמך",
+        "meeting summary",
+        "סיכום פגישה",
+        "minutes",
+        "sop",
+        "נוהל",
+        "one-pager",
+        "pptx",
+        "docx"
+      ]
+    },
+    {
+      "skills": [
+        "automation-scoping",
+        "automation-recipes"
+      ],
+      "keywords": [
+        "automation",
+        "אוטומציה",
+        "make.com",
+        "zapier",
+        "n8n",
+        "apps script",
+        "workflow",
+        "תהליך חוזר",
+        "backup",
+        "גיבוי",
+        "invoice",
+        "חשבונית",
+        "onboarding",
+        "refund",
+        "החזר"
+      ]
+    },
+    {
+      "skills": [
+        "ai-adoption-playbook"
+      ],
+      "keywords": [
+        "ai policy",
+        "מדיניות ai",
+        "adoption",
+        "הטמעה",
+        "pilot",
+        "פיילוט",
+        "roi",
+        "shadow ai",
+        "ארגון"
+      ]
+    },
+    {
+      "skills": [
+        "ad-creative-workflow",
+        "marketing-analytics-workflow"
+      ],
+      "keywords": [
+        "ad creative",
+        "מודעה",
+        "campaign",
+        "קמפיין",
+        "meta ads",
+        "facebook ads",
+        "roas",
+        "cpl",
+        "cpc",
+        "ctr",
+        "ad performance",
+        "ביצועי קמפיין"
+      ]
+    },
+    {
+      "skills": [
+        "content-engine",
+        "prompt-modifiers"
+      ],
+      "keywords": [
+        "content calendar",
+        "קלנדר תוכן",
+        "hooks",
+        "הוקים",
+        "linkedin",
+        "לינקדין",
+        "newsletter",
+        "ניוזלטר",
+        "brand voice",
+        "repurpose",
+        "viral",
+        "ויראלי"
+      ]
+    },
+    {
+      "skills": [
+        "seo-geo-playbook"
+      ],
+      "keywords": [
+        "seo",
+        "geo",
+        "keyword",
+        "מילות מפתח",
+        "search console",
+        "google business",
+        "גוגל ביזנס",
+        "קידום",
+        "ai visibility"
+      ]
+    },
+    {
+      "skills": [
+        "custom-assistant-builder"
+      ],
+      "keywords": [
+        "gem",
+        "ג'ם",
+        "custom gpt",
+        "system prompt",
+        "פרומפט מערכת",
+        "assistant instructions",
+        "הנחיות לעוזר"
+      ]
+    },
+    {
+      "skills": [
+        "ai-tools-landscape"
+      ],
+      "keywords": [
+        "which tool",
+        "איזה כלי",
+        "alternatives to",
+        "חלופה ל",
+        "pricing",
+        "credits",
+        "קרדיטים",
+        "best tool",
+        "tool comparison",
+        "השוואת כלים"
+      ]
+    },
+    {
+      "skills": [
+        "blender-unity-pipeline"
+      ],
+      "keywords": [
+        "blender",
+        "בלנדר",
+        "unity",
+        "יוניטי",
+        "3d model",
+        "תלת מימד",
+        "game",
+        "משחק"
+      ]
+    },
+    {
+      "skills": [
+        "claude-hooks-playbook",
+        "claude-setup-architecture"
+      ],
+      "keywords": [
+        "hook",
+        "הוק",
+        "settings.json",
+        "permission",
+        "הרשאות",
+        "skill creation",
+        "create a skill",
+        "סקיל"
+      ]
+    },
+    {
+      "skills": [
+        "verify-and-safety-gates"
+      ],
+      "keywords": [
+        "privacy",
+        "פרטיות",
+        "copyright",
+        "זכויות יוצרים",
+        "gdpr",
+        "confidential",
+        "חסוי",
+        "legal",
+        "משפטי",
+        "delete all",
+        "force push"
+      ]
+    },
+    {
+      "skills": [
+        "community-skills-guide"
+      ],
+      "keywords": [
+        "hyperframes",
+        "remotion",
+        "gsap",
+        "three.js",
+        "threejs",
+        "community skill",
+        "סקילים להתקין",
+        "איזה סקילים",
+        "skills.sh",
+        "npx skills"
+      ]
+    }
   ]
 }

@@ -1,0 +1,17 @@
+{
+  "name": "motion-toolkit-deps",
+  "private": true,
+  "description": "Runtime deps for the motion toolkit. Installed by setup.sh (not committed).",
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "playwright": "1.56.1",
+    "@fontsource/heebo": "*",
+    "@fontsource/rubik": "*",
+    "@fontsource/secular-one": "*",
+    "@fontsource/frank-ruhl-libre": "*",
+    "@fontsource/assistant": "*",
+    "@fontsource/karantina": "*",
+    "@fontsource/space-grotesk": "*",
+    "@fontsource/jetbrains-mono": "*"
+  }
+}

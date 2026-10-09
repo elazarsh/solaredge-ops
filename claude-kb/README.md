@@ -1,10 +1,10 @@
 # claude-kb - personal Claude knowledge base
 
-Portable bundle of **27 skills + 5 hooks + a managed global CLAUDE.md block**, built from a research pass over amichai-ai.co.il plus Claude Code best practice. It installs into the **user-level** Claude config (`~/.claude`), so it applies to every project - not just the repo it lives in.
+Portable bundle of **33 skills + 5 hooks + a managed global CLAUDE.md block**, built from a research pass over amichai-ai.co.il plus Claude Code best practice. It installs into the **user-level** Claude config (`~/.claude`), so it applies to every project - not just the repo it lives in.
 
 ```
 claude-kb/
-  skills/            27 skill folders (SKILL.md + references/) + README index
+  skills/            33 skill folders (SKILL.md + references/) + README index
   hooks/             guard-destructive.sh, guard-files-secrets.py, session-context.sh,
                      skill-router.py (+ router-rules.json), post-edit-check.sh
   settings.hooks.json  hook wiring merged into ~/.claude/settings.json

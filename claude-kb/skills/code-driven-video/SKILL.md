@@ -5,6 +5,8 @@ description: Produce explainer videos, motion-graphics b-roll, captioned/edited 
 
 # Code-driven video
 
+> **Want it to look stunning, not just correct?** Load `motion-design-wow` first (8-layer system), build with `motion-toolkit` (3D camera, real motion blur, procedural sound, Hebrew fonts), type with `kinetic-typography-hebrew`, and score the render with `video-wow-review`. This skill remains the reference for narrated/captioned pipelines (TTS, transcription, HyperFrames/Remotion).
+
 The model writes the *description* of the video (script JSON, HTML, animation code); a renderer produces the MP4. Plan before building, verify the exported file, not the preview.
 
 ## Pipeline (explainer, ~1 min)

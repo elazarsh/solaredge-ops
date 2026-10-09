@@ -1,0 +1,5 @@
+vendor/
+.deps/
+.frames/
+*.mp4
+!final/*.mp4

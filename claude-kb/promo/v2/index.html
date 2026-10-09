@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>claude-kb promo v2</title>
+<link rel="stylesheet" href="vendor/fonts.css">
+<style>
+  :root{--bg:#070a1a;--ink:#f1f3ff;--mut:#9aa3c7;--acc:#ff7a1a;--teal:#2ee6c5;--vio:#7c5cff;--pink:#ff5c8a;--yel:#ffd166;--blue:#4cc9f0;--glass:rgba(255,255,255,.055);--line:rgba(255,255,255,.15)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+  body{font-family:'Heebo','Rubik',sans-serif;color:var(--ink);position:relative}
+  #stage{position:absolute;inset:0;perspective:1700px;overflow:hidden}
+  #bg{position:absolute;inset:-60px;will-change:transform}
+  #world{position:absolute;inset:0;will-change:transform}
+  .scene{position:absolute;inset:0}
+  .abs{position:absolute}
+  .d{font-family:'Rubik',sans-serif;font-weight:900;letter-spacing:-.035em;line-height:1.02}
+  .mono{font-family:'JetBrains Mono',monospace;direction:ltr}
+  .acc{color:var(--acc)} .teal{color:var(--teal)}
+  #l3{text-shadow:0 0 90px rgba(255,122,26,.6)}
+  .ghost{font-family:'Rubik';font-weight:900;font-size:900px;line-height:.8;color:#fff;opacity:.045;direction:ltr;white-space:nowrap}
+  .glass{background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border:2px solid var(--line);border-radius:44px;box-shadow:0 40px 90px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.18)}
+  #brand{position:absolute;top:70px;left:74px;z-index:5000;font-family:'Space Grotesk';font-weight:700;font-size:34px;letter-spacing:.5px;color:var(--mut);direction:ltr}
+  #brand b{color:var(--acc)}
+  #prog{position:absolute;bottom:0;right:0;height:8px;width:0;z-index:5000;background:linear-gradient(90deg,var(--teal),var(--acc))}
+  /* S1 */
+  #s1 .line{position:absolute;right:90px;font-size:146px;white-space:nowrap}
+  /* S2 */
+  .stat{position:absolute;right:80px;left:80px;height:336px;display:flex;align-items:center;justify-content:space-between;padding:0 58px 0 40px}
+  .stat .lbl{font-weight:800;font-size:60px;line-height:1.22}
+  .stat .lbl small{display:block;font-weight:300;font-size:42px;color:var(--mut);margin-top:6px;font-family:'Assistant'}
+  .ringwrap{position:relative;width:310px;height:310px;flex:none}
+  .ringwrap svg{position:absolute;inset:0;transform:rotate(-90deg)}
+  .ringwrap .n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Rubik';font-weight:900;font-size:130px;letter-spacing:-.04em;direction:ltr;font-variant-numeric:tabular-nums}
+  /* S3 */
+  .node{position:absolute;left:0;top:0;width:380px;height:196px;padding:28px 32px;will-change:transform,filter}
+  .node .t{font-family:'Rubik';font-weight:800;font-size:46px;line-height:1.15}
+  .node .s{font-size:23px;color:var(--mut);margin-top:12px;direction:ltr;text-align:right;line-height:1.35}
+  .node i{position:absolute;top:0;right:0;width:100%;height:8px;border-radius:44px 44px 0 0}
+  #hub{position:absolute;left:540px;top:1130px;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column}
+  #hub .n{font-family:'Rubik';font-weight:900;font-size:168px;line-height:1;letter-spacing:-.05em;direction:ltr}
+  #hub small{font-size:38px;color:var(--mut);font-weight:700;margin-top:-6px}
+  /* S4 */
+  .bubble{position:absolute;right:80px;left:80px;top:610px;min-height:230px;padding:50px 56px;border-radius:56px 56px 56px 12px;font-size:64px;font-weight:700;line-height:1.3}
+  .chip{position:absolute;right:80px;height:128px;padding:0 44px;display:flex;align-items:center;justify-content:space-between;border-radius:999px;border:2px solid;width:880px}
+  .chip .m{font-family:'JetBrains Mono';font-weight:700;font-size:46px;direction:ltr}
+  .chip .h{font-size:38px;font-weight:700;color:var(--ink)}
+  .chk{position:absolute;right:80px;display:flex;align-items:center;gap:30px;font-size:60px;font-weight:800}
+  .chk svg{width:84px;height:84px;flex:none}
+  /* S5 */
+  .tip{position:absolute;right:80px;left:80px;height:250px;display:flex;align-items:center;gap:40px}
+  .badge{width:132px;height:132px;border-radius:38px;background:var(--acc);color:#1a0b00;font-family:'Rubik';font-weight:900;font-size:84px;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 20px 60px rgba(255,122,26,.45)}
+  .tip .tx{font-family:'Rubik';font-weight:800;font-size:66px;line-height:1.12}
+  .tip .tx small{display:block;font-family:'Assistant';font-weight:300;font-size:42px;color:var(--mut);margin-top:10px}
+  /* S6 */
+  #logo{position:absolute;left:0;right:0;top:560px;text-align:center;font-family:'Space Grotesk';font-weight:700;font-size:206px;letter-spacing:-.045em;direction:ltr;line-height:1}
+  #logo span{display:inline-block}
+  .term{position:absolute;right:120px;left:120px;top:1230px;padding:46px 54px;border-radius:34px;background:#04061a;border:2px solid var(--line);font-family:'JetBrains Mono';font-size:62px;color:var(--teal);direction:ltr;text-align:left}
+  .term i{color:var(--mut);font-style:normal;margin-right:22px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="world">
+
+    <!-- S1 HOOK -->
+    <section class="scene" id="s1">
+      <div class="abs ghost" id="g1" style="right:-120px;top:520px">?</div>
+      <div class="abs mono" id="k1" style="right:90px;top:300px;font-size:34px;color:var(--mut);letter-spacing:6px">// CLAUDE · SKILLS · HOOKS</div>
+      <div class="line d" id="l1" style="top:470px">עוד פרומפט.</div>
+      <div class="line d" id="l2" style="top:640px;color:var(--mut)">עוד תוצאה<br>גנרית?</div>
+      <div class="line d acc" id="l3" style="top:1010px;font-size:250px">מספיק.</div>
+    </section>
+
+    <!-- S2 PROOF -->
+    <section class="scene" id="s2">
+      <div class="abs ghost" id="g2" style="left:-60px;top:760px;font-size:1100px">60</div>
+      <h2 class="abs d" id="h2" style="right:80px;top:190px;font-size:118px;white-space:nowrap">סרקנו. למדנו.<br><span class="teal">ארזנו.</span></h2>
+      <div class="stat glass" id="c1" style="top:540px"><div class="lbl">עמודי ידע נסרקו<small>ממקור מקצועי</small></div><div class="ringwrap"><svg viewBox="0 0 310 310"><circle cx="155" cy="155" r="140" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="14"/><circle id="r1" cx="155" cy="155" r="140" fill="none" stroke="#ff7a1a" stroke-width="14" stroke-linecap="round"/></svg><div class="n" id="n1">0</div></div></div>
+      <div class="stat glass" id="c2" style="top:906px"><div class="lbl">סקילים מוכנים<small>לעבודה בכל פרויקט</small></div><div class="ringwrap"><svg viewBox="0 0 310 310"><circle cx="155" cy="155" r="140" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="14"/><circle id="r2" cx="155" cy="155" r="140" fill="none" stroke="#2ee6c5" stroke-width="14" stroke-linecap="round"/></svg><div class="n" id="n2">0</div></div></div>
+      <div class="stat glass" id="c3" style="top:1272px"><div class="lbl">הוקים אוטומטיים<small>שומרים עליך</small></div><div class="ringwrap"><svg viewBox="0 0 310 310"><circle cx="155" cy="155" r="140" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="14"/><circle id="r3" cx="155" cy="155" r="140" fill="none" stroke="#7c5cff" stroke-width="14" stroke-linecap="round"/></svg><div class="n" id="n3">0</div></div></div>
+    </section>
+
+    <!-- S3 WHAT -->
+    <section class="scene" id="s3">
+      <h2 class="abs d" id="h3" style="right:80px;top:210px;font-size:112px;white-space:nowrap"><span id="h3n">0</span> סקילים.<br><span class="acc">6 תחומים.</span></h2>
+      <div class="abs" id="orbit" style="left:0;top:0;width:1080px;height:1920px"></div>
+      <div id="hub" class="glass"><div class="n teal" id="hubn">0</div><small>סקילים</small></div>
+    </section>
+
+    <!-- S4 HOW -->
+    <section class="scene" id="s4">
+      <h2 class="abs d" id="h4" style="right:80px;top:200px;font-size:100px">כותבים רגיל.<br><span class="teal">Claude כבר יודע.</span></h2>
+      <div class="bubble glass" id="bub"><span id="bubt"></span></div>
+      <svg class="abs" id="wires" viewBox="0 0 1080 1920" style="left:0;top:0;width:1080px;height:1920px;pointer-events:none"></svg>
+      <div class="chip" id="ch1" style="top:1000px;border-color:#2ee6c5;background:rgba(46,230,197,.10)"><div class="h">אתר לפי שיטה</div><div class="m teal">web-build-harden</div></div>
+      <div class="chip" id="ch2" style="top:1156px;border-color:#ff7a1a;background:rgba(255,122,26,.10)"><div class="h">עיצוב עקבי</div><div class="m acc">design-system-first</div></div>
+      <div class="chip" id="ch3" style="top:1312px;border-color:#7c5cff;background:rgba(124,92,255,.12)"><div class="h">עברית בלי באגים</div><div class="m" style="color:#b3a2ff">hebrew-rtl-output</div></div>
+      <div class="chk" id="ck1" style="top:1500px"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="38" fill="none" stroke="#2ee6c5" stroke-width="6"/><path id="p1" d="M24 43 L37 56 L61 30" fill="none" stroke="#2ee6c5" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>נבנה לפי שיטה</span></div>
+      <div class="chk" id="ck2" style="top:1620px"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="38" fill="none" stroke="#2ee6c5" stroke-width="6"/><path id="p2" d="M24 43 L37 56 L61 30" fill="none" stroke="#2ee6c5" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>נבדק לפני שמסיימים</span></div>
+    </section>
+
+    <!-- S5 TIPS -->
+    <section class="scene" id="s5">
+      <h2 class="abs d" id="h5" style="right:80px;top:200px;font-size:112px">4 דרכים להפיק<br><span class="acc">מזה הכי הרבה</span></h2>
+      <svg class="abs" viewBox="0 0 1080 1920" style="left:0;top:0;width:1080px;height:1920px;pointer-events:none"><path id="spine" d="M934 685 L934 1495" stroke="rgba(255,255,255,.18)" stroke-width="4" fill="none" stroke-dasharray="3 14" stroke-linecap="round"/><path id="spine2" d="M934 685 L934 1495" stroke="#ff7a1a" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+      <div class="tip" id="t1" style="top:560px"><div class="badge">1</div><div class="tx">מתחילים ממשימה אחת<small>הקטנה ביותר שעובדת</small></div></div>
+      <div class="tip" id="t2" style="top:830px"><div class="badge">2</div><div class="tx">מבקשים תוכנית לפני ביצוע<small>מאשרים. ואז בונים</small></div></div>
+      <div class="tip" id="t3" style="top:1100px"><div class="badge">3</div><div class="tx">משרשרים סקילים<small>מחקר ← עיצוב ← וידאו</small></div></div>
+      <div class="tip" id="t4" style="top:1370px"><div class="badge">4</div><div class="tx">לא מסיימים בלי אימות<small>נבדק / לא נבדק / חסר</small></div></div>
+    </section>
+
+    <!-- S6 CTA -->
+    <section class="scene" id="s6">
+      <div class="abs" id="bloom" style="left:50%;top:700px;width:1300px;height:1300px;margin:-650px 0 0 -650px;border-radius:50%;background:radial-gradient(circle,rgba(255,122,26,.55) 0%,rgba(124,92,255,.22) 38%,transparent 68%);opacity:0;mix-blend-mode:screen"></div>
+      <div id="logo"><span>c</span><span>l</span><span>a</span><span>u</span><span>d</span><span>e</span><span class="acc" id="kb1">-</span><span class="acc">k</span><span class="acc">b</span></div>
+      <div id="burst" class="abs" style="left:540px;top:640px"></div>
+      <h2 class="abs d center" id="h6" style="left:80px;right:80px;top:850px;font-size:104px;text-align:center">התקנה אחת.<br><span class="teal">כל הפרויקטים.</span></h2>
+      <div class="term" id="term"><i>$</i><span id="termt"></span></div>
+    </section>
+  </div>
+</div>
+<div id="brand">claude<b>-kb</b></div><div id="prog"></div>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/engine.js"></script>
+<script>
+const N_SKILLS = 33, N_HOOKS = 5;
+HF.init({ fps: 30, duration: 32, bpm: 120 });
+const tl = HF.tl, B = HF.beat, BAR = HF.bar, $ = HF.$;
+const W = 1080, H = 1920;
+
+/* ---------- global atmosphere ---------- */
+HF.aurora('#bg', [
+  { c: '#ff7a1a', x: 860, y: 260, r: 620, sx: 140, sy: 200, a: .50, period: 16 },
+  { c: '#2ee6c5', x: 120, y: 1500, r: 700, sx: 160, sy: 180, a: .30, period: 19, ph: 2 },
+  { c: '#7c5cff', x: 560, y: 980, r: 760, sx: 200, sy: 260, a: .34, period: 23, ph: 4 },
+]);
+HF.dust('#bg', { n: 46, colors: ['#fff', '#ffd9a8', '#9ff3e4'], size: [3, 12], speed: [10, 46], alpha: [.12, .5], blur: 3 });
+HF.vignette(.62); HF.grain({ opacity: .10 });
+// beat pulse on the background (musical feel, from 2.5s)
+HF.post.push((t) => { const ph = (t % B(1)) / B(1), on = t > 2.5 ? 1 : 0; $('#bg').style.transform = `scale(${1 + on * .012 * Math.exp(-ph * 7)})`; $('#prog').style.width = (t / 32 * 100) + '%'; });
+
+/* ---------- scenes (display windows overlap for transitions) ---------- */
+HF.scene('#s1', -1, 4.6); HF.scene('#s2', 3.4, 10.6); HF.scene('#s3', 9.4, 16.6); HF.scene('#s4', 15.4, 22.6); HF.scene('#s5', 21.4, 28.6); HF.scene('#s6', 27.4, 33);
+
+/* ---------- camera ---------- */
+const cam = HF.camera('#world', { drift: { ax: 14, ay: 10, az: .3, period: 12 } });
+HF.camTo(cam, { s: 1.0 }, 0, 4, 'power2.out', { s: 1.12 });
+HF.camTo(cam, { s: 1.07 }, 4, 6, 'sine.inOut', { s: 1.0 });
+HF.camTo(cam, { s: 1.05 }, 10, 6, 'sine.inOut', { s: 1.0 });
+HF.camTo(cam, { s: 1.0 }, 16, 6, 'power1.inOut', { s: 1.06 });
+HF.camTo(cam, { s: 1.05 }, 22, 6, 'sine.inOut', { s: 1.0 });
+HF.camTo(cam, { s: 1.1 }, 28, 4, 'power2.inOut', { s: 1.0 });
+
+/* ================= S1 : hook on the beat ================= */
+{
+  tl.fromTo('#g1', { opacity: 0, x: 200 }, { opacity: .05, x: 0, duration: 2.4, ease: 'power2.out' }, 0);
+  tl.fromTo('#k1', { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: .8, ease: 'expo.out' }, .2);
+  HF.slam('#l1', B(1), 'scale', { dur: .6 });                    // 0.5 s
+  HF.slam('#l2', B(3), 'side', { dx: 520, dur: .55, power: .7 }); // 1.5 s
+  HF.slam('#l3', B(5), 'drop', { dur: .5, power: 1 });            // 2.5 s
+  HF.rgbSplit('#l3', B(5), .5, { max: 18 });
+  cam.shake(B(5), { amp: 26, dur: .6 }); cam.shake(B(1), { amp: 10, dur: .35 }); cam.shake(B(3), { amp: 12, dur: .35 });
+  HF.flash(B(5), { dur: .35, peak: .55, color: '#ffd9a8' });
+  tl.fromTo('#l3', { scale: 1 }, { scale: 1.035, duration: 1.0, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 2.8);
+  HF.cue(B(1) - .0, 'swell', { dur: .5 });
+  // scene exit into S2
+  HF.zoomThrough('#s1', '#s2', 3.65, { dur: .75 });
+  HF.cue(2.0 + 0, 'riser', { dur: 2.0 }); // builds into the bar-2 hit (t=4)
+}
+
+/* ================= S2 : proof ================= */
+{
+  const w = HF.splitWords('#h2'); HF.reveal(w, 4.2, { stagger: .22, dur: .9 });
+  HF.cue(4.2, 'pop', { power: .6 }); HF.cue(4.42, 'pop', { power: .6 }); HF.cue(4.64, 'shimmer');
+  tl.fromTo('#g2', { opacity: 0, x: -200 }, { opacity: .05, x: 0, duration: 2.4, ease: 'power2.out' }, 4.2);
+  const rows = [['#c1', '#n1', '#r1', 60, '+', 1.0, 5.5], ['#c2', '#n2', '#r2', N_SKILLS, '', .82, 6.5], ['#c3', '#n3', '#r3', N_HOOKS, '', .5, 7.5]];
+  rows.forEach(([c, n, r, to, suf, fill, at], i) => {
+    tl.fromTo(c, { x: 620, opacity: 0, rotationY: -26, transformPerspective: 1300 }, { x: 0, opacity: 1, rotationY: 0, duration: .85, ease: 'expo.out' }, at);
+    HF.counter(n, { to, at: at + .15, dur: 1.2, suffix: suf, ticks: 8 });
+    const R = $(r), L = 2 * Math.PI * 140; R.style.strokeDasharray = L;
+    HF.bind(at + .15, 1.3, 'expo.out', (e) => { R.style.strokeDashoffset = L * (1 - fill * e); });
+    HF.shine(n, at + 1.3, .9, { base: '#f1f3ff', hi: '#ff7a1a' });
+    HF.cue(at, 'slam', { power: .55 }); cam.shake(at, { amp: 9, dur: .4 });
+  });
+  HF.burst('#s2', { at: 8.9, n: 26, colors: ['#ff7a1a', '#2ee6c5', '#7c5cff', '#ffd166'], x: 540, y: 1000, angle: -Math.PI / 2, cone: Math.PI * 1.1, speed: [500, 1100], seed: 7 });
+  HF.whip('#s2', '#s3', 9.65, { dir: 1, dur: .7 });
+}
+
+/* ================= S3 : orbit of domains ================= */
+{
+  document.getElementById('h3n').textContent = N_SKILLS;
+  const w = HF.splitWords('#h3'); HF.reveal(w, 10.2, { stagger: .12, dur: .9 });
+  tl.fromTo('#hub', { scale: .2, opacity: 0 }, { scale: 1, opacity: 1, duration: .9, ease: 'expo.out' }, 10.4);
+  HF.counter('#hubn', { to: N_SKILLS, at: 10.5, dur: 1.1, ticks: 8 });
+  const doms = [
+    ['עיצוב ותמונות', 'visual-codes · design-system-first', '#ff7a1a'], ['וידאו ואנימציה', 'motion-design-wow · code-driven-video', '#2ee6c5'],
+    ['מסמכים ומחקר', 'grounded-research · deck-and-doc-craft', '#7c5cff'], ['אתרים ואפליקציות', 'web-build-harden · agentic-build', '#4cc9f0'],
+    ['אוטומציה ושיווק', 'automation-recipes · ad-creative', '#ff5c8a'], ['אימות ובטיחות', 'verify-and-safety · hooks', '#ffd166'],
+  ];
+  const holder = $('#orbit'), nodes = doms.map(([t, s, c], i) => {
+    const n = document.createElement('div'); n.className = 'node glass'; n.innerHTML = `<i style="background:${c}"></i><div class="t">${t}</div><div class="s">${s}</div>`; holder.appendChild(n); return n; });
+  const CX = 540, CY = 1130, RX = 330, RY = 400, T0 = 11.1;
+  HF.updaters.push((t) => {
+    const ex = HF.ease('expo.out')(HF.clamp((t - T0) / 1.5));          // center-outward expansion
+    const spin = (t - T0) * 0.42 + (t > 14.2 ? (t - 14.2) * (t - 14.2) * .25 : 0);     // speeds up into the exit
+    nodes.forEach((n, i) => {
+      const a = i * Math.PI * 2 / 6 + spin - Math.PI / 2, d = (Math.sin(a) + 1) / 2;   // d: 1 = front
+      const x = CX + Math.cos(a) * RX * ex, y = CY + Math.sin(a) * RY * ex, sc = (.74 + .3 * d) * (.4 + .6 * ex);
+      n.style.transform = `translate(${x - 190}px,${y - 98}px) scale(${sc})`;
+      n.style.opacity = t < T0 ? 0 : (.55 + .45 * d); n.style.zIndex = Math.round(d * 100);
+      n.style.filter = `blur(${((1 - d) * 5.5).toFixed(2)}px)`;
+    });
+  });
+  for (let i = 0; i < 6; i++) HF.cue(T0 + i * .09, 'tick', { pitch: .9 + i * .08 });
+  HF.cue(T0, 'slam', { power: .6 }); cam.shake(T0, { amp: 10, dur: .4 });
+  HF.camTo(cam, { rx: 6, ry: -5 }, 10.2, 3, 'sine.inOut', { rx: 0, ry: 0 });
+  HF.camTo(cam, { rx: 0, ry: 0 }, 13.4, 2.2, 'sine.inOut', { rx: 6, ry: -5 });
+  HF.risePush('#s3', '#s4', 15.65, { dur: .75 });
+}
+
+/* ================= S4 : how it works ================= */
+{
+  const w = HF.splitWords('#h4'); HF.reveal(w, 16.2, { stagger: .14, dur: .95 });
+  tl.fromTo('#bub', { y: 120, opacity: 0, scale: .94 }, { y: 0, opacity: 1, scale: 1, duration: .8, ease: 'expo.out' }, 17.0);
+  HF.type('#bubt', 'תכין לי דף נחיתה לעסק שלי', 17.3, 1.6, { cues: true });
+  // wires from bubble to chips
+  const svg = $('#wires'), mk = (d, c) => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', d); p.setAttribute('fill', 'none'); p.setAttribute('stroke', c); p.setAttribute('stroke-width', 5); p.setAttribute('stroke-linecap', 'round'); p.style.opacity = .9; svg.appendChild(p); return p; };
+  const wires = [mk('M 540 860 C 540 930, 860 930, 860 1000', '#2ee6c5'), mk('M 540 860 C 540 960, 540 1000, 540 1156', '#ff7a1a'), mk('M 540 860 C 540 960, 220 1020, 220 1312', '#7c5cff')];
+  wires.forEach((p, i) => HF.draw(p, 19.0 + i * .12, .6, 'power2.inOut'));
+  ['#ch1', '#ch2', '#ch3'].forEach((c, i) => { tl.fromTo(c, { x: 300 + i * 80, opacity: 0, scale: .8 }, { x: 0, opacity: 1, scale: 1, duration: .7, ease: 'back.out(1.6)' }, 19.2 + i * .18); HF.cue(19.2 + i * .18, 'pop', { power: .6 + i * .1 }); });
+  HF.updaters.push((t) => ['#ch1', '#ch2', '#ch3'].forEach((c, i) => { const g = Math.max(0, Math.sin((t - 20 - i * .15) * 3.2)) * (t > 20 ? 1 : 0); $(c).style.boxShadow = `0 0 ${40 * g}px ${6 * g}px ${['rgba(46,230,197,.45)', 'rgba(255,122,26,.45)', 'rgba(124,92,255,.5)'][i]}`; }));
+  HF.draw('#p1', 20.3, .4); HF.draw('#p2', 20.9, .4);
+  tl.fromTo('#ck1', { x: 200, opacity: 0 }, { x: 0, opacity: 1, duration: .6, ease: 'expo.out' }, 20.2); tl.fromTo('#ck2', { x: 200, opacity: 0 }, { x: 0, opacity: 1, duration: .6, ease: 'expo.out' }, 20.8);
+  HF.cue(20.4, 'click'); HF.cue(21.0, 'click'); HF.cue(21.0, 'shimmer');
+  HF.whip('#s4', '#s5', 21.65, { dir: -1, dur: .7 });
+}
+
+/* ================= S5 : tips ================= */
+{
+  const w = HF.splitWords('#h5'); HF.reveal(w, 22.2, { stagger: .12, dur: .95 });
+  HF.draw('#spine2', 22.8, 4.2, 'none');
+  ['#t1', '#t2', '#t3', '#t4'].forEach((t, i) => { const at = 22.5 + i * 1.5; const el = $(t);
+    tl.fromTo(el.querySelector('.badge'), { scale: 0, rotation: -35 }, { scale: 1, rotation: 0, duration: .6, ease: 'back.out(2)' }, at);
+    const tx = el.querySelector('.tx'); tl.fromTo(tx, { x: 220, opacity: 0, filter: 'blur(14px)' }, { x: 0, opacity: 1, filter: 'blur(0px)', duration: .8, ease: 'expo.out' }, at + .1);
+    HF.cue(at, 'slam', { power: .5 }); HF.cue(at + .1, 'whoosh', { dur: .4, dir: -1 }); cam.shake(at, { amp: 7, dur: .3 }); });
+  HF.burst('#s5', { at: 27.0, n: 18, colors: ['#ff7a1a', '#ffd166'], x: 200, y: 1480, angle: -Math.PI / 2, cone: Math.PI, speed: [300, 700], seed: 3, shape: 'dot', size: [5, 10] });
+  HF.zoomThrough('#s5', '#s6', 27.65, { dur: .75 });
+  HF.flash(28.0, { dur: .5, peak: .7, color: '#fff3e0' });
+  HF.cue(26.0, 'riser', { dur: 2.0 });
+}
+
+/* ================= S6 : CTA ================= */
+{
+  const L = Array.from(document.querySelectorAll('#logo span'));
+  L.forEach((s, i) => { const a = (HF.hash(i * 3 + 1) - .5) * 2, b = (HF.hash(i * 5 + 2) - .5) * 2;
+    tl.fromTo(s, { x: a * 700, y: b * 900, rotation: a * 220, opacity: 0, scale: 2.2 + HF.hash(i) }, { x: 0, y: 0, rotation: 0, opacity: 1, scale: 1, duration: .8, ease: 'expo.out' }, 28.2 + i * .045); });
+  tl.fromTo('#bloom', { opacity: 0, scale: .5 }, { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 28.8);
+  HF.cue(29.0, 'hit', { power: 1 }); cam.shake(29.0, { amp: 30, dur: .7 });
+  HF.burst('#burst', { at: 29.0, n: 40, colors: ['#ff7a1a', '#2ee6c5', '#7c5cff', '#ffd166', '#fff'], x: 0, y: 0, cone: Math.PI * 2, speed: [350, 1100], gravity: 900, seed: 11, dur: 1.5 });
+  const w = HF.splitWords('#h6'); HF.reveal(w, 29.5, { stagger: .15, dur: .9 });
+  tl.fromTo('#term', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: .8, ease: 'expo.out' }, 30.1);
+  HF.type('#termt', './install.sh', 30.5, 1.0, { cues: true });
+  tl.fromTo('#world', { opacity: 1 }, { opacity: 1, duration: 0.01 }, 0);
+  // end fade to ink
+  const end = document.createElement('div'); end.className = 'hf-fixed'; end.style.cssText += ';z-index:9800;background:#070a1a;opacity:0'; document.body.appendChild(end);
+  tl.fromTo(end, { opacity: 0 }, { opacity: 1, duration: .8, ease: 'power2.in' }, 31.2);
+  HF.cue(31.2, 'swell', { dur: .8 });
+}
+HF.ready();
+</script>
+</body>
+</html>
