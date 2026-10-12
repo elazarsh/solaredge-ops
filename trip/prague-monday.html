@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>פראג ביום שני — מסלול חי</title>
+<meta name="theme-color" content="#0b1020">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+/*
+  יום שני בפראג: דף טיול עם GPS חי, שמיים שמשתנים לפי השמש, מפה חיה ואפקטים.
+  כל תוכן היום נמצא במערך DAY בתחילת הסקריפט. GPS בדפדפן עובד רק מכתובת https://.
+*/
+:root{
+  --bg:#12161f; --surface:#1a202b; --surface2:#222a38; --line:#2c3443; --fg:#ece6d8; --muted:#9aa0aa;
+  --lamp:#e0b872; --lamp-soft:rgba(224,184,114,.15); --live:#47c9b8; --live-soft:rgba(71,201,184,.17);
+  --warn:#e59a6a; --done:#6f7682; --on-lamp:#12161f;
+  --c0:#e0b872; --c1:#47c9b8; --c2:#e59a6a; --c3:#7fb2ee; --c4:#c58ae0; --c5:#ee7f95; --c6:#9aa0aa;
+  --sky-top:#2a72cf; --sky-bot:#a6d4f4; --l1:#6a88aa; --l2:#4a6786; --l3:#2a3a50; --night:0;
+  --display:"Frank Ruhl Libre","David Libre",Georgia,serif;
+  --body:"Assistant","Segoe UI",Arial,sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#f5f2ec; --surface:#fffdf8; --surface2:#f0ebe0; --line:#ddd5c6; --fg:#1d2230; --muted:#5f6573;
+  --lamp:#8c6121; --lamp-soft:rgba(140,97,33,.10); --live:#18806f; --live-soft:rgba(24,128,111,.12);
+  --warn:#b4571f; --done:#9a9fa8; --on-lamp:#fffdf8;
+  --c0:#a8741f; --c1:#18806f; --c2:#b4571f; --c3:#2f6bb3; --c4:#8a4aa8; --c5:#b83a58; --c6:#6b7280; color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#f5f2ec; --surface:#fffdf8; --surface2:#f0ebe0; --line:#ddd5c6; --fg:#1d2230; --muted:#5f6573;
+  --lamp:#8c6121; --lamp-soft:rgba(140,97,33,.10); --live:#18806f; --live-soft:rgba(24,128,111,.12);
+  --warn:#b4571f; --done:#9a9fa8; --on-lamp:#fffdf8;
+  --c0:#a8741f; --c1:#18806f; --c2:#b4571f; --c3:#2f6bb3; --c4:#8a4aa8; --c5:#b83a58; --c6:#6b7280; color-scheme:light}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;direction:rtl;overflow-x:hidden}
+button{font-family:inherit}
+svg{display:block}
+.wrap{max-width:660px;margin:0 auto;padding-inline:18px;padding-block:8px 64px}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--lamp);outline-offset:2px}
+
+/* ================= HERO ================= */
+.hero{position:relative;min-height:min(86vh,640px);overflow:hidden;color:#fff;isolation:isolate;background:var(--sky-bot)}
+.sky{position:absolute;inset:0;background:linear-gradient(var(--sky-top),var(--sky-bot));z-index:-5}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.28),transparent 45%);z-index:-1;pointer-events:none}
+.stars{position:absolute;inset:0;z-index:-4;opacity:var(--night)}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:var(--o);animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.15}}
+.orb{position:absolute;z-index:-3;width:64px;height:64px;border-radius:50%;transform:translate(-50%,-50%);transition:left 1s ease,top 1s ease,background 1s,box-shadow 1s}
+.orb.sun{background:radial-gradient(circle,#fffbe8 0 38%,#ffd36b 62%,#ffb347 100%);box-shadow:0 0 60px 28px rgba(255,200,100,.55),0 0 160px 80px rgba(255,170,80,.25)}
+.orb.moon{width:44px;height:44px;background:#f3efe2;box-shadow:0 0 30px 10px rgba(220,230,255,.35),inset -10px -4px 0 0 rgba(150,160,190,.35)}
+.clouds{position:absolute;inset:0;z-index:-2;opacity:calc(.9 - var(--night)*.7);pointer-events:none}
+.cloud{position:absolute;height:46px;border-radius:50px;background:rgba(255,255,255,.55);filter:blur(10px);animation:drift linear infinite}
+.cloud:nth-child(1){top:14%;width:200px;animation-duration:110s}
+.cloud:nth-child(2){top:26%;width:300px;animation-duration:160s;animation-delay:-60s}
+.cloud:nth-child(3){top:8%;width:160px;animation-duration:90s;animation-delay:-30s}
+@keyframes drift{from{transform:translateX(-340px)}to{transform:translateX(calc(100vw + 340px))}}
+.layer{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto;aspect-ratio:850/300;will-change:transform}
+.layer.l1{fill:var(--l1)}.layer.l2{fill:var(--l2)}.layer.l3{fill:var(--l3)}
+.win{fill:#ffd37a;opacity:calc(var(--night) * var(--o))}
+.win.tw{animation:tw 4s ease-in-out infinite}
+.lamp{fill:#ffe2a0;opacity:var(--night);filter:drop-shadow(0 0 4px #ffcf70)}
+#rain{position:absolute;inset:0;z-index:2;pointer-events:none;width:100%;height:100%}
+.hero-in{position:relative;z-index:5;max-width:660px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 16px) 18px 40px}
+.eyebrow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;letter-spacing:.06em;font-weight:700;text-shadow:0 1px 8px rgba(0,0,0,.45)}
+.theme-toggle{font-size:13px;color:#fff;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 11px;cursor:pointer;backdrop-filter:blur(6px)}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(38px,11vw,60px);line-height:1.02;margin:.35em 0 .2em;text-shadow:0 2px 24px rgba(0,0,0,.45);text-wrap:balance}
+h1 span{display:block;opacity:0;transform:translateY(22px);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards}
+h1 span:nth-child(2){animation-delay:.15s}h1 span:nth-child(3){animation-delay:.3s}
+@keyframes rise{to{opacity:1;transform:none}}
+.sub{margin:0;font-size:17px;max-width:30em;text-shadow:0 1px 10px rgba(0,0,0,.5);opacity:0;animation:rise .9s .5s forwards}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;opacity:0;animation:rise .9s .7s forwards}
+.chip{border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.26);backdrop-filter:blur(8px);border-radius:999px;padding:3px 12px;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip b{font-weight:700}
+.scrub{margin-top:14px;display:flex;align-items:center;gap:12px;padding:9px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:13px}
+.scrub label{white-space:nowrap;font-weight:600}
+.scrub output{font-variant-numeric:tabular-nums;font-weight:800;min-width:42px;text-align:center;direction:ltr}
+.scrub input{flex:1;min-width:0;accent-color:var(--lamp);direction:ltr}
+.scrub button{all:unset;cursor:pointer;font-size:12px;font-weight:700;color:var(--lamp);border:1px solid var(--lamp);border-radius:999px;padding:2px 10px}
+.scrub button[hidden]{display:none}
+
+/* ================= CARDS ================= */
+.card{margin-top:18px;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:16px}
+.card h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0 0 4px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--lamp)}
+.card-note{font-size:13px;color:var(--muted);margin:2px 0 0}
+.axis-scroll{overflow-x:auto;margin-inline:-6px;padding:6px;scrollbar-width:thin}
+.axis{position:relative;min-width:640px;height:110px;margin-top:8px;padding-top:0}
+.ax-day{position:absolute;inset-inline:0;top:42px;height:34px;border-radius:10px;opacity:.55}
+.seg{position:absolute;top:42px;height:34px;border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:700;color:#10131a;white-space:nowrap;overflow:hidden;box-shadow:0 0 0 2px var(--surface);background:var(--cc)}
+.seg.c0{--cc:var(--c0)}.seg.c1{--cc:var(--c1)}.seg.c2{--cc:var(--c2)}.seg.c3{--cc:var(--c3)}.seg.c4{--cc:var(--c4)}.seg.c5{--cc:var(--c5)}.seg.c6{--cc:var(--c6)}
+.seg.dash{background:repeating-linear-gradient(135deg,var(--cc) 0 6px,transparent 6px 10px)}
+.tick{position:absolute;top:82px;font-size:11px;color:var(--muted);transform:translateX(50%);font-variant-numeric:tabular-nums}
+.tick::before{content:"";position:absolute;top:-6px;right:50%;width:1px;height:5px;background:var(--line)}
+.axmark{position:absolute;top:14px;transform:translateX(50%);font-size:11px;font-weight:700;white-space:nowrap}
+.axmark::after{content:"";position:absolute;top:18px;right:50%;width:2px;height:40px;background:currentColor;opacity:.8;border-radius:2px}
+.axmark.now{color:var(--live);top:10px}.axmark.sun{color:var(--warn)}
+.axmark.now::before{content:"";position:absolute;inset:-3px -8px;border-radius:999px;background:var(--live-soft);z-index:-1}
+
+.wx-now{display:flex;align-items:center;gap:14px;margin-top:6px}
+.wx-t{font-family:var(--display);font-weight:900;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.wx-l{font-size:15px}.wx-l small{display:block;color:var(--muted);font-size:13px}
+.wx-svg{width:100%;height:auto;margin-top:6px}
+.wx-svg text{font-family:var(--body);font-size:11px;fill:var(--muted)}
+
+/* ================= LIVE PANEL ================= */
+.live{padding:0;overflow:hidden}
+.live-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px 0}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--done)}
+.pill.searching i{background:var(--lamp);animation:blink 1s steps(2) infinite}
+.pill.live{border-color:var(--live);color:var(--live)}
+.pill.live i{background:var(--live);box-shadow:0 0 0 3px var(--live-soft)}
+.pill.weak{border-color:var(--warn);color:var(--warn)}.pill.weak i{background:var(--warn)}
+.pill.sim{border-color:var(--lamp);color:var(--lamp)}.pill.sim i{background:var(--lamp)}
+@keyframes blink{50%{opacity:.2}}
+.now{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;padding:12px 16px 4px}
+.now-label{font-size:13px;color:var(--muted);font-weight:600}
+.now-name{font-family:var(--display);font-weight:700;font-size:25px;line-height:1.2;margin:0;text-wrap:balance}
+.now-dist{font-variant-numeric:tabular-nums;font-weight:800;font-size:34px;line-height:1.1;color:var(--lamp);margin-top:2px}
+.now-dist small{font-size:14px;color:var(--muted);font-weight:600;margin-inline-start:6px}
+.compass{width:88px;height:88px;position:relative;border-radius:50%;background:radial-gradient(circle,var(--surface2),var(--surface));border:1px solid var(--line);box-shadow:inset 0 0 18px rgba(0,0,0,.25)}
+.compass::before{content:"";position:absolute;inset:7px;border-radius:50%;border:1px dashed var(--line)}
+.compass svg{position:absolute;inset:0;width:100%;height:100%;transition:transform .45s cubic-bezier(.3,1.4,.5,1);filter:drop-shadow(0 0 6px var(--lamp-soft))}
+.compass .n{position:absolute;top:1px;inset-inline:0;text-align:center;font-size:10px;color:var(--muted);font-weight:700;line-height:1}
+.compass-note{grid-column:1/-1;font-size:12px;color:var(--muted);margin:0}
+.msg{margin:8px 16px 0;padding:9px 12px;border-radius:10px;background:var(--bg);border-inline-start:3px solid var(--line);font-size:14px;line-height:1.55}
+.msg.warn{border-color:var(--warn)}.msg.ok{border-color:var(--live)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:12px 16px 0;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stat{background:var(--surface);padding:8px 6px;text-align:center;min-width:0}
+.stat b{display:block;font-variant-numeric:tabular-nums;font-size:17px;line-height:1.2}
+.stat span{font-size:11px;color:var(--muted)}
+.progress{height:6px;margin:12px 16px 0;border-radius:6px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--lamp),var(--live));transition:width .6s linear;background-size:200% 100%}
+.mapbox{position:relative;margin:12px 16px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface2)}
+#lmap{height:340px;direction:ltr}
+#map{display:none;width:100%;height:auto}
+.mapbox.fallback #lmap{display:none}.mapbox.fallback #map{display:block}
+.mapbtns{position:absolute;z-index:500;inset-inline-start:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.mapbtns button{font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:6px 10px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.mapbtns button[hidden]{display:none}
+.maplabel{font-size:11px;color:var(--muted);margin:5px 16px 0}
+.leaflet-container{font:inherit;background:var(--surface2)}
+.dark-tiles .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.75)}
+.leaflet-control-attribution{font-size:9px!important}
+.mk{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--muted);color:var(--fg);font:800 12px var(--body);box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer}
+.mk.passed,.mk.at{background:var(--live);border-color:var(--live);color:var(--on-lamp)}
+.mk.next{background:var(--lamp);border-color:var(--lamp);color:var(--on-lamp);animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px) scale(1.12)}}
+.mk-tip{display:none;background:var(--surface);color:var(--fg);border:1px solid var(--line);font:700 12px var(--body);box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.mk-tip.on{display:block}
+.mk-tip::before{display:none}
+.me{position:relative;width:24px;height:24px}
+.me i{position:absolute;inset:0;border-radius:50%;background:var(--live);border:3px solid #fff;animation:pulse 2s infinite;box-shadow:0 0 0 0 rgba(71,201,184,.7)}
+.me .cone{position:absolute;left:50%;top:50%;width:0;height:0;margin:-34px 0 0 -9px;border-inline:9px solid transparent;border-bottom:26px solid rgba(71,201,184,.5);transform-origin:9px 34px;transition:transform .4s}
+@keyframes pulse{70%{box-shadow:0 0 0 18px rgba(71,201,184,0)}100%{box-shadow:0 0 0 0 rgba(71,201,184,0)}}
+.controls{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px 16px}
+.btn-main{flex:1 1 200px;font-weight:800;font-size:17px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--lamp),var(--warn));color:var(--on-lamp);padding:13px 16px;cursor:pointer;box-shadow:0 6px 22px var(--lamp-soft);transition:transform .15s}
+.btn-main:active{transform:scale(.97)}
+.btn-main[data-on="true"]{background:transparent;color:var(--fg);border:1px solid var(--line);box-shadow:none}
+.toggle{font-size:14px;font-weight:600;border:1px solid var(--line);background:none;color:var(--muted);border-radius:12px;padding:10px 12px;cursor:pointer}
+.toggle[aria-pressed="true"]{border-color:var(--live);color:var(--live);background:var(--live-soft)}
+details.tools{border-top:1px solid var(--line);padding:10px 16px 14px;font-size:14px;color:var(--muted)}
+details.tools summary{cursor:pointer;font-weight:600}
+.tools-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.tools input[type=range]{flex:1 1 100%;accent-color:var(--lamp)}
+.diag{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.diag span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.diag .bad{color:var(--warn);border-color:var(--warn)}.diag .good{color:var(--live);border-color:var(--live)}
+.banner{margin-top:16px;padding:13px 15px;border:1px solid var(--warn);border-radius:12px;background:var(--surface);font-size:14px}
+.banner b{color:var(--warn)}.banner p{margin:0}.banner p+p{margin-top:6px}
+
+/* ================= NAV + INFO ================= */
+.maps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}
+.maps a{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 14px;min-width:0;transition:transform .15s,border-color .15s}
+.maps a:hover{border-color:var(--lamp);transform:translateY(-2px)}
+.maps .k{font-size:12px;color:var(--lamp);font-weight:700;letter-spacing:.05em}
+.maps .t{font-weight:700;font-size:15px;line-height:1.3}
+.maps .go{font-size:13px;color:var(--muted)}
+@media (max-width:420px){.maps{grid-template-columns:1fr}}
+.acc{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.acc summary{cursor:pointer;font-weight:700;padding:12px 16px;list-style:none;display:flex;align-items:center;justify-content:space-between}
+.acc summary::after{content:"＋";color:var(--lamp);font-weight:800}
+.acc[open] summary::after{content:"－"}
+.acc-b{padding:0 16px 14px;font-size:15px}
+.acc-b p{margin:8px 0 0}.acc-b strong{color:var(--lamp)}
+
+/* ================= TIMELINE ================= */
+.route{list-style:none;margin:6px 0 0;padding:0;position:relative;--rail-center:65px;--rail-start:18px;--rail-total:0px;--rail-progress:0px}
+.route::before{content:"";position:absolute;right:calc(var(--rail-center) - 1px);top:var(--rail-start);height:var(--rail-total);width:2px;background:var(--line)}
+.route-progress{position:absolute;right:calc(var(--rail-center) - 3px);top:var(--rail-start);height:var(--rail-progress);width:6px;border-radius:8px;background:linear-gradient(to bottom,var(--lamp),var(--live));background-size:100% 200%;box-shadow:0 0 12px var(--live);display:none;transition:height .6s linear;pointer-events:none;animation:flow 2.4s linear infinite}
+@keyframes flow{to{background-position:0 200%}}
+.walker{position:absolute;right:calc(var(--rail-center) - 13px);top:calc(var(--rail-start) + var(--rail-progress) - 13px);width:26px;height:26px;border-radius:50%;background:var(--live);border:4px solid var(--surface);box-shadow:0 0 0 3px var(--live-soft),0 0 16px var(--live);display:none;transition:top .6s linear;pointer-events:none;z-index:4}
+.walker::before,.walker::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--live);opacity:0;animation:ring 2.4s ease-out infinite}
+.walker::after{animation-delay:1.2s}
+@keyframes ring{0%{transform:scale(.6);opacity:.8}100%{transform:scale(2.4);opacity:0}}
+.route.tracked .route-progress,.route.tracked .walker{display:block}
+.sec-li{padding-top:18px;list-style:none}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.sec-head h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0;padding-inline-start:12px;border-inline-start:4px solid var(--cc,var(--lamp))}
+.sec-head small{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.fork{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.fork-opt{all:unset;box-sizing:border-box;cursor:pointer;border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:var(--surface);display:flex;flex-direction:column;gap:3px;transition:border-color .2s,background .2s,transform .2s}
+.fork-opt[aria-pressed="true"]{border-color:var(--lamp);background:var(--lamp-soft);transform:translateY(-2px)}
+.fork-opt b{font-size:15px}.fork-opt span{font-size:12px;color:var(--muted)}
+.meter{display:flex;gap:3px;margin-top:4px}
+.meter i{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.meter i.on{background:var(--warn)}
+.fork-opt[data-v="B"] .meter i.on{background:var(--live)}
+.auto-note{font-size:12px;color:var(--live);margin:6px 2px 0;min-height:1em}
+.stop{display:grid;grid-template-columns:50px 32px 1fr;gap:0 12px;padding-block:12px;scroll-margin-top:96px;transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.stop.pre{opacity:0;transform:translateY(26px)}
+.stop[hidden]{display:none}
+.time{font-variant-numeric:tabular-nums;font-weight:800;font-size:15px;color:var(--muted);padding-top:5px;text-align:left;direction:ltr}
+.dot{width:32px;height:32px;border-radius:50%;margin-top:0;background:var(--surface);border:2px solid var(--cc,var(--lamp));display:grid;place-items:center;position:relative;z-index:1;color:var(--cc,var(--lamp));transition:background .4s,color .4s,transform .4s}
+.dot svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.body{min-width:0}
+.name{font-weight:800;font-size:18px;line-height:1.35;margin:0;padding-top:3px}
+.latin{font-size:13px;color:var(--muted);direction:ltr;unicode-bidi:isolate;font-weight:400;display:inline-block}
+.desc{margin:4px 0 0;opacity:.92;font-size:16px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:12px;border-radius:999px;padding:1px 9px;border:1px solid var(--line);color:var(--muted)}
+.tag.meal{color:var(--live);border-color:var(--live)}.tag.guide{color:var(--lamp);border-color:var(--lamp)}.tag.view{color:var(--c3);border-color:var(--c3)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.btn{font:inherit;font-size:14px;font-weight:600;color:var(--lamp);background:var(--lamp-soft);border:0;border-radius:9px;padding:5px 11px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:none;color:var(--muted);border:1px solid var(--line)}
+.story{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-family:var(--display);font-size:17px;line-height:1.75;animation:open .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes open{from{opacity:0;transform:translateY(-8px) scale(.98)}}
+.story[hidden]{display:none}
+.story h3{font-family:var(--body);font-size:13px;letter-spacing:.06em;color:var(--live);margin:0 0 6px}.story p{margin:0}
+.stop.sched .dot{box-shadow:0 0 0 5px var(--lamp-soft)}
+.stop.sched .time{color:var(--lamp)}
+.stop.meal .name{color:var(--live)}
+.stop.passed .dot{background:var(--live);border-color:var(--live);color:var(--on-lamp)}
+.stop.passed .name,.stop.passed .desc{color:var(--done)}
+.stop.next .dot{background:var(--lamp);border-color:var(--lamp);color:var(--on-lamp);transform:scale(1.15);box-shadow:0 0 0 6px var(--lamp-soft),0 0 18px var(--lamp)}
+.stop.next .time{color:var(--lamp)}
+.stop.next .name::after,.stop.at .name::after{font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:8px;vertical-align:3px;white-space:nowrap}
+.stop.next .name::after{content:"הבא";background:var(--lamp);color:var(--on-lamp)}
+.stop.at .dot{background:var(--live);border-color:var(--live);color:var(--on-lamp);transform:scale(1.2);box-shadow:0 0 0 7px var(--live-soft),0 0 20px var(--live)}
+.stop.at .name::after{content:"אתם כאן";background:var(--live);color:var(--on-lamp)}
+.stop.flash .body{animation:flash 1.4s ease-out}
+@keyframes flash{0%{background:var(--lamp-soft)}100%{background:transparent}}
+.dot.ripple::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:3px solid var(--live);animation:rip 1.2s ease-out 2}
+@keyframes rip{from{transform:scale(1);opacity:1}to{transform:scale(3.2);opacity:0}}
+@media (prefers-reduced-motion:no-preference){.stop.next .dot,.stop.at .dot{animation:glow 2.4s ease-in-out infinite}}
+@keyframes glow{50%{box-shadow:0 0 0 11px var(--lamp-soft),0 0 28px var(--lamp)}}
+
+/* ================= BAR, TOAST, FINALE ================= */
+.livebar{position:fixed;inset-inline:0;top:0;z-index:20;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px;background:var(--surface);border-bottom:1px solid var(--live);box-shadow:0 6px 20px rgba(0,0,0,.3);transform:translateY(-110%);transition:transform .25s}
+.livebar.show{transform:none}
+.livebar button{all:unset;display:flex;align-items:center;gap:12px;width:100%;max-width:660px;margin:0 auto;cursor:pointer}
+.lb-arrow{width:34px;height:34px;flex:none}.lb-arrow svg{width:100%;height:100%;transition:transform .45s}
+.lb-text{min-width:0;flex:1}
+.lb-name{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-sub{font-size:12px;color:var(--muted)}
+.lb-dist{font-weight:800;font-size:20px;color:var(--lamp);font-variant-numeric:tabular-nums;white-space:nowrap}
+.toast{position:fixed;inset-inline:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);z-index:60;max-width:520px;margin-inline:auto;padding:12px 16px;border-radius:14px;background:var(--live);color:var(--on-lamp);font-weight:800;text-align:center;opacity:0;transform:translateY(20px) scale(.96);pointer-events:none;transition:.35s cubic-bezier(.2,.8,.2,1)}
+.toast.show{opacity:1;transform:none}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+.finale{position:fixed;inset:0;z-index:65;display:grid;place-items:center;padding:20px;background:rgba(5,8,18,.72);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .5s}
+.finale.show{opacity:1;pointer-events:auto}
+.finale-card{max-width:420px;width:100%;text-align:center;background:var(--surface);border:1px solid var(--lamp);border-radius:22px;padding:26px 22px;transform:scale(.9) translateY(20px);transition:transform .6s cubic-bezier(.2,1.3,.4,1);box-shadow:0 0 60px var(--lamp-soft)}
+.finale.show .finale-card{transform:none}
+.finale-card h2{font-family:var(--display);font-weight:900;font-size:34px;margin:0 0 6px}
+.finale-card p{margin:0 0 14px;color:var(--muted)}
+.fin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.fin-stats div{background:var(--bg);border-radius:12px;padding:10px 4px}
+.fin-stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums;color:var(--lamp)}
+.fin-stats span{font-size:12px;color:var(--muted)}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer p{margin:0 0 8px}
+@media (max-width:380px){.stats{grid-template-columns:repeat(2,1fr)}.now-name{font-size:22px}.now-dist{font-size:29px}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}h1 span,.sub,.chips{opacity:1;transform:none}.stop.pre{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero">
+  <div class="sky"></div>
+  <div class="stars" id="stars"></div>
+  <div class="orb sun" id="orb"></div>
+  <div class="clouds"><div class="cloud"></div><div class="cloud"></div><div class="cloud"></div></div>
+  <svg class="layer l1" id="l1" viewBox="130 0 850 300" preserveAspectRatio="xMidYMax meet" aria-hidden="true"></svg>
+  <svg class="layer l2" id="l2" viewBox="130 0 850 300" preserveAspectRatio="xMidYMax meet" aria-hidden="true"></svg>
+  <svg class="layer l3" id="l3" viewBox="130 0 850 300" preserveAspectRatio="xMidYMax meet" aria-hidden="true"></svg>
+  <canvas id="rain" aria-hidden="true"></canvas>
+  <div class="hero-in">
+    <div class="eyebrow"><span id="eyebrow"></span><button class="theme-toggle" id="theme-toggle" type="button">◐ מצב תצוגה</button></div>
+    <h1 id="h1"><span>יום שני</span><span>חורשים את ההיסטוריה</span><span>והמצודה</span></h1>
+    <p class="sub" id="sub"></p>
+    <div class="chips" id="chips"></div>
+  </div>
+</section>
+
+<div class="wrap">
+<div class="scrub"><label for="scrub">השמיים ב־</label><output id="scrub-out">17:30</output><input id="scrub" type="range" min="360" max="1290" step="5" value="1050" aria-label="תצוגה מקדימה של השמיים לפי שעה"><button id="scrub-reset" type="button" hidden>עכשיו</button></div>
+<div class="banner" id="banner" hidden></div>
+
+<section class="card" aria-label="ציר היום">
+  <div class="kicker">ציר היום</div>
+  <h2>מהבוקר ועד אחרי השקיעה</h2>
+  <p class="card-note" id="axis-note"></p><p class="card-note">גוררים הצידה כדי לראות את כל היום.</p>
+  <div class="axis-scroll"><div class="axis" id="axis"></div></div>
+</section>
+
+<section class="card" id="wx-card" aria-label="מזג אוויר" hidden>
+  <div class="kicker">מזג אוויר בפראג</div>
+  <div class="wx-now"><div class="wx-t" id="wx-t">--°</div><div class="wx-l" id="wx-l">—<small id="wx-s"></small></div></div>
+  <svg class="wx-svg" id="wx-svg" viewBox="0 0 600 130" role="img" aria-label="טמפרטורה והסתברות לגשם לאורך היום"></svg>
+</section>
+
+<section class="card live" id="live" aria-label="מעקב מיקום בזמן אמת">
+  <div class="live-head">
+    <div class="kicker">📍 מיקום חי</div>
+    <span class="pill" id="pill"><i></i><span id="pill-t">GPS כבוי</span></span>
+  </div>
+  <div class="now">
+    <div>
+      <div class="now-label" id="now-label">המסלול מתחיל</div>
+      <h2 class="now-name" id="now-name">—</h2>
+      <div class="now-dist" id="now-dist">—</div>
+    </div>
+    <div class="compass" id="compass" aria-hidden="true">
+      <span class="n">צפון</span>
+      <svg viewBox="0 0 100 100" id="compass-svg"><path d="M50 12 L69 72 L50 60 L31 72 Z" fill="var(--lamp)"/><circle cx="50" cy="50" r="3.5" fill="var(--surface)"/></svg>
+    </div>
+    <p class="compass-note" id="compass-note"></p>
+  </div>
+  <div class="msg" id="msg" role="status" aria-live="polite">לחצו על ״הפעל מיקום חי״ ואשרו גישה למיקום.</div>
+  <div class="stats">
+    <div class="stat"><b id="st-eta">—</b><span>הליכה</span></div>
+    <div class="stat"><b id="st-slack">—</b><span id="st-slack-l">מול הלו״ז</span></div>
+    <div class="stat"><b id="st-prog">0%</b><span>מהמסלול</span></div>
+    <div class="stat"><b id="st-acc">—</b><span>דיוק GPS</span></div>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="prog-bar"></i></div>
+  <div class="mapbox" id="mapbox">
+    <div id="lmap"></div>
+    <svg id="map" viewBox="0 0 640 360" role="img" aria-label="מפה סכמטית של המסלול והמיקום שלכם"></svg>
+    <div class="mapbtns"><button id="btn-center" type="button" hidden>📍 מרכז עליי</button><button id="btn-all" type="button">🗺 כל המסלול</button></div>
+  </div>
+  <p class="maplabel" id="map-label">המפה מתעדכנת בזמן אמת. לחצו על מספר כדי לקפוץ לתחנה.</p>
+  <div class="controls">
+    <button class="btn-main" id="btn-start" type="button" data-on="false">📍 הפעל מיקום חי</button>
+    <button class="toggle" id="btn-follow" type="button" aria-pressed="true">גלילה אוטומטית</button>
+    <button class="toggle" id="btn-wake" type="button" aria-pressed="true">מסך דלוק</button>
+  </div>
+  <details class="tools">
+    <summary>בדיקה והדגמה (בלי GPS אמיתי)</summary>
+    <div class="tools-row">
+      <button class="toggle" id="btn-sim" type="button" aria-pressed="false">▶ הליכה לדוגמה</button>
+      <button class="toggle" id="btn-open" type="button">המיקום שלי בגוגל מפות ↗</button>
+      <input id="sim-range" type="range" min="0" max="1000" step="1" value="0" aria-label="הזזת מיקום מדומה לאורך המסלול">
+    </div>
+    <div class="diag" id="diag"></div>
+  </details>
+</section>
+
+<nav class="maps" id="maps" aria-label="ניווט בגוגל מפות"></nav>
+
+<details class="acc"><summary>🚋 תחבורה ציבורית בפראג: איך משלמים?</summary><div class="acc-b" id="transit"></div></details>
+
+<ol class="route" id="route" aria-label="תחנות המסלול"><div class="route-progress" aria-hidden="true"></div><div class="walker" aria-hidden="true"></div></ol>
+
+<footer>
+  <p>הקואורדינטות של התחנות משוערות (כ־20–60 מ׳). קטעי הסיור המודרך משוערים, והמדריך הוא שמוביל בפועל.</p>
+  <p>המיקום נשאר במכשיר ולא נשלח לשום שרת. מזג האוויר מגיע מ־Open-Meteo, והמפה מ־OpenStreetMap.</p>
+</footer>
+</div>
+
+<div class="livebar" id="livebar"><button type="button" id="livebar-btn" aria-label="קפיצה לתחנה הבאה">
+  <span class="lb-arrow"><svg viewBox="0 0 100 100" id="lb-svg"><path d="M50 8 L74 78 L50 64 L26 78 Z" fill="var(--lamp)"/></svg></span>
+  <span class="lb-text"><div class="lb-name" id="lb-name">—</div><div class="lb-sub" id="lb-sub">—</div></span>
+  <span class="lb-dist" id="lb-dist">—</span>
+</button></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="finale" id="finale" role="dialog" aria-modal="true" aria-labelledby="fin-h"><div class="finale-card">
+  <h2 id="fin-h">יום מושלם!</h2><p>עברתם את פראג מהבוקר ועד אחרי השקיעה.</p>
+  <div class="fin-stats"><div><b id="fin-km">—</b><span>ק״מ ברגל</span></div><div><b id="fin-stops">—</b><span>תחנות</span></div><div><b id="fin-time">—</b><span>זמן במסלול</span></div></div>
+  <button class="btn-main" id="fin-close" type="button" style="width:100%">סגירה</button>
+</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){
+'use strict';
+document.documentElement.classList.add('js');
+
+/* =====================================================================
+   1. תוכן היום — החלק היחיד שמשנים בין ימי טיול
+   via / viaA / viaB = נקודות ביניים בדרך אל התחנה (הקו בלבד)
+   variant = 'A' | 'B' (תחנה שמוצגת רק בבחירה זו)
+   r = רדיוס הגעה במטרים · mode = walk | guide | ride
+   ===================================================================== */
+const TRIP_DATE = '2026-10-12';
+const END_FROM = '19:30';
+const CITY = {lat:50.0875, lon:14.42};
+const META = {
+  eyebrow: 'יום 3 בטיול · שני 12.10',
+  sub: 'סיור מודרך עם ״הסיירת של פראג״, ארוחה כשרה, קמפה וקיר לנון, ועלייה למצודה לקראת השקיעה.'
+};
+const NAV_LINKS = [
+  {k:'① בוקר', t:'מהמלון אל נקודת המפגש', go:'ישר אל קניון פלדיום ↗', u:'https://www.google.com/maps/dir/Hotel+King+David,+Prague/Palladium,+Prague/'},
+  {k:'② צהריים', t:'מגשר קארל אל Shelanu', go:'ארוחה כשרה ברובע היהודי ↗', u:'https://www.google.com/maps/dir/Karl%C5%AFv+most/Shelanu+Restaurant,+Prague/'},
+  {k:'③ אחר הצהריים', t:'העיר הקטנה וקמפה', go:'גשר קארל · קמפה · קיר לנון ↗', u:'https://www.google.com/maps/dir/Shelanu+Restaurant,+Prague/Karl%C5%AFv+most/Kampa,+Prague/Lennon+Wall,+Prague/Malostransk%C3%A9+n%C3%A1m%C4%9Bst%C3%AD/'},
+  {k:'④ אופציה א׳', t:'הטיפוס הרגלי למצודה', go:'דרך רחוב נרודובה ↗', u:'https://www.google.com/maps/dir/Malostransk%C3%A9+n%C3%A1m%C4%9Bst%C3%AD,+Prague/Nerudova,+Prague/Pra%C5%A1k%C3%BD+hrad,+Prague/'}
+];
+const TRANSIT = '<p><strong>חשמליות ואוטובוסים:</strong> אין צורך לקנות כרטיס מראש. בתוך הקרון יש מכונה כתומה או צהובה קטנה. בוחרים במסך את משך הנסיעה (למשל 30 דקות עולות 30 קרונות, כ־5 שקלים) ומצמידים כרטיס אשראי או טלפון (Apple Pay / Google Pay). הכרטיס מודפס במקום והוא כבר מתוקף.</p><p><strong>מטרו:</strong> קונים כרטיס באשראי במכונות לפני שיורדים לרציף. חובה להעביר אותו במכונת התיקוף (לקבלת חותמת זמן) רגע לפני שיורדים במדרגות הנעות.</p><p><strong>מוניות:</strong> אפליקציות Uber ו־Bolt פועלות נהדר, זולות מאוד, ומומלצות בחום בסוף היום כשהרגליים עייפות.</p>';
+
+const DAY = [
+ {id:'morning', title:'בוקר במלון', short:'בוקר', range:'08:30–10:00', from:'08:30', to:'10:00', stops:[
+  {id:'hotel0', t:'08:30', leave:'10:00', icon:'bed', name:'שחרית וארוחת בוקר', latin:'Hotel King David', lat:50.08655, lon:14.43680, r:60,
+   desc:'תפילת שחרית וארוחת בוקר מוקדמת בנחת במלון. ב־10:00 יוצאים להליכה ישרה ונוחה של כ־12 דקות אל קניון פלדיום.'}
+ ]},
+ {id:'tour', title:'סיור מודרך: ״הסיירת של פראג״', short:'סיור', range:'10:30–14:30', from:'10:30', to:'14:30', stops:[
+  {id:'palladium', t:'10:30', icon:'flag', tag:'guide', name:'נקודת המפגש: קניון פלדיום', latin:'Palladium · Foot Locker', lat:50.08925, lon:14.42920, r:70,
+   desc:'נפגשים מחוץ לכניסה הראשית לקניון, ליד חלון הראווה של Foot Locker. הסיור נמשך 4 שעות.'},
+  {id:'oldtown', t:'', icon:'tower', tag:'guide', name:'העיר העתיקה', latin:'Staroměstské náměstí', lat:50.08735, lon:14.42085, r:100,
+   desc:'בהובלת המדריך. תחנות הסיור משוערות לפי תיאור המסלול: העיר העתיקה, הרובע היהודי וסיום באזור גשר קארל.'},
+  {id:'josefov', t:'', icon:'star', tag:'guide', name:'הרובע היהודי', latin:'Josefov', lat:50.08970, lon:14.41840, r:100,
+   desc:'ממשיכים עם המדריך ברחובות הרובע היהודי.'},
+  {id:'bridge0', t:'14:30', icon:'bridge', tag:'guide', name:'סיום הסיור: אזור גשר קארל', latin:'Karlův most', lat:50.08645, lon:14.41220, r:100,
+   desc:'הסיור מסתיים באזור גשר קארל, אחרי 4 שעות.'}
+ ]},
+ {id:'lunch', title:'צהריים: אוכל כשר ומנוחה', short:'צהריים', range:'14:30–15:45', from:'14:30', to:'15:45', stops:[
+  {id:'shelanu', t:'14:30', icon:'food', tag:'meal', name:'ארוחת צהריים ברובע היהודי', latin:'Shelanu · Břehová 8', lat:50.09093, lon:14.41747, r:55,
+   desc:'בסיום הסיור אוכלים בקרבת מקום: Shelanu החלבית (פיצרייה) ב־Břehová 8, או Chabad Grill הבשרית. אין חזרה למלון היום, ממשיכים לתפור את העיר.'}
+ ]},
+ {id:'pm', title:'העיר הקטנה, קמפה וקיר לנון', short:'העיר הקטנה', range:'15:45–16:45', from:'15:45', to:'16:45', stops:[
+  {id:'bridge1', t:'15:45', icon:'bridge', name:'חוצים את גשר קארל', latin:'Karlův most → Malá Strana', lat:50.08665, lon:14.41060, r:70,
+   desc:'חוצים את גשר קארל אל העיר הקטנה (Malá Strana).'},
+  {id:'kampa', t:'', icon:'tree', tag:'view', name:'האי קמפה', latin:'Kampa · Čertovka', lat:50.08385, lon:14.40775, via:[[50.08705,14.40890]], r:70,
+   desc:'יורדים במדרגות אל האי הפסטורלי ורואים את תעלות המים.',
+   story:{h:'ונציה הקטנה',p:'אחרי שחוצים את גשר קארל, יורדים במדרגות לאי קטן וחמוד שנקרא קמפה. הוא מופרד מהעיר על ידי תעלה צרה שנקראת ״זרם השטן״ (Čertovka). בעבר, האי הזה היה מלא בטחנות מים שסיפקו קמח לעיר (עדיין אפשר לראות אחת מהן פועלת!), והיום זהו אחד האזורים הרומנטיים ביותר בפראג, שמכונה לעיתים קרובות ״ונציה הקטנה״.'}},
+  {id:'lennon', t:'', icon:'heart', name:'הקיר של ג׳ון לנון', latin:'Lennon Wall', lat:50.08624, lon:14.40681, r:55,
+   desc:'ממשיכים אל הקיר הצבעוני של ג׳ון לנון.',
+   story:{h:'קיר שלא מוכנעים לו',p:'מה שהיה קיר רגיל הפך בשנת 1980 לסמל של מחאה נגד המשטר הקומוניסטי הצ׳כי, לאחר הרצחו של ג׳ון לנון. סטודנטים התחילו לצייר עליו ציטוטים משירי ביטלס המדברים על חופש. המשטרה החשאית ניסתה לצבוע את הקיר בלבן שוב ושוב, אבל בכל פעם הציורים חזרו. עד היום הקיר מתעדכן ומשתנה ללא הפסקה!'}},
+  {id:'malo', t:'16:45', icon:'square', name:'כיכר העיר הקטנה', latin:'Malostranské náměstí', lat:50.08811, lon:14.40433, r:70,
+   desc:'מכאן מתחיל הטיפוס למצודה. בוחרים בזמן אמת: רגלית דרך נרודובה או חשמלית 22.'}
+ ]},
+ {id:'fork', title:'העלייה למצודה: לבחירתכם', short:'עלייה', range:'16:45–17:30', fork:true, from:'16:45', to:'17:30', stops:[
+  {id:'nerudova', variant:'A', t:'', icon:'stairs', name:'רחוב נרודובה (טיפוס רגלי)', latin:'Nerudova', lat:50.08855, lon:14.40000, via:[[50.08845,14.40220]], r:60,
+   desc:'עולים ברחוב ההיסטורי והיפהפה, המשובץ בארמונות ובחנויות. הדרך תלולה מאוד.',
+   story:{h:'שלטים במקום מספרים',p:'אם החלטתם לטפס ברגל, תעברו ברחוב התלול הזה. שימו לב שמעל דלתות הבתים העתיקים אין מספרים, אלא סמלים מעוצבים כמו ״שלושת הכינורות״, ״שמש הזהב״ או ״הנשר האדום״. לפני שהומצאו מספרי הבתים (בסוף המאה ה־18), כך אנשים זיהו היכן הם גרים ומה המקצוע שלהם!'}},
+  {id:'tram22', variant:'B', t:'', icon:'tram', mode:'ride', name:'חשמלית 22 עד תחנת Pražský hrad', latin:'Tram 22', lat:50.09333, lon:14.39810, via:[[50.09090,14.40900],[50.09220,14.40660],[50.09320,14.40120]], r:80,
+   desc:'בכיכר העיר הקטנה עולים על חשמלית 22 ומעבירים אשראי בקרון. היא מטפסת את ההר ומורידה אתכם ממש ליד הכניסה האחורית של המצודה. את הירידה עושים ברגל.'}
+ ]},
+ {id:'castle', title:'המצודה בשקיעה', short:'מצודה', range:'17:30–19:00', from:'17:30', to:'19:00', stops:[
+  {id:'castle', t:'17:30', icon:'castle', tag:'view', name:'מצודת פראג וקתדרלת ויטוס', latin:'Pražský hrad · Katedrála sv. Víta', lat:50.09086, lon:14.40057, viaA:[[50.08895,14.39775]], r:130,
+   desc:'שוטטות במתחם הענק אחרי שמרבית התיירים עזבו. מתבוננים בקתדרלת ויטוס הקדוש העצומה ומתצפתים על פראג המוארת מלמעלה.',
+   story:{h:'הטירה העתיקה הגדולה בעולם',p:'ברוכים הבאים לטירה העתיקה הגדולה בעולם! במשך אלף שנים ישבו כאן מלכי בוהמיה, קיסרי האימפריה הרומית הקדושה, והיום נשיא צ׳כיה. הכוכבת האמיתית כאן היא קתדרלת ויטוס הקדוש העצומה שבמרכז המתחם, שלקח כמעט 600 שנה לבנות אותה.'}}
+ ]},
+ {id:'down', title:'ירידה וחזרה למלון', short:'חזרה', range:'19:00–', from:'19:00', to:'20:00', dashed:true, stops:[
+  {id:'steps', t:'19:00', icon:'stairs', tag:'view', name:'מדרגות הטירה העתיקות', latin:'Zámecké schody', lat:50.09130, lon:14.40490, r:60,
+   desc:'יורדים ברגל במדרגות הטירה העתיקות, שמציעות נוף מרהיב על העיר.'},
+  {id:'klarov', t:'', icon:'tram', name:'למטה: Malostranská', latin:'Klárov', lat:50.09090, lon:14.40920, r:80,
+   desc:'כאן אפשר לעלות על חשמלית או להזמין Uber / Bolt.'},
+  {id:'hotel1', t:'', icon:'home', mode:'ride', name:'חזרה למלון King David', latin:'Hotel King David', lat:50.08655, lon:14.43680, r:60,
+   desc:'נסיעה חזרה למלון בחשמלית או ב־Uber. סוף היום.'}
+ ]}
+];
+
+const ICONS = {
+  bed:'M3 19v-8a2 2 0 012-2h14a2 2 0 012 2v8M3 15h18M7 9V6h5v3',
+  flag:'M6 21V4M6 5h11l-2.5 3.5L17 12H6',
+  tower:'M9 21V9l3-6 3 6v12M7 21h10M10 13h4',
+  star:'M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z',
+  bridge:'M2 18h20M4 18c0-5 3.5-8 8-8s8 3 8 8M7.5 18v-4M12 18v-8M16.5 18v-4M2 21h20',
+  food:'M7 3v7a2 2 0 002 2v9M7 3v5M11 3v5M17 3c-2 2-3 4-3 8h4v10',
+  tree:'M12 3l5 8h-3l4 6H6l4-6H7zM12 17v4',
+  heart:'M12 20s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 10-7 10z',
+  square:'M4 21V10l8-6 8 6v11M9 21v-6h6v6',
+  stairs:'M3 21h5v-5h5v-5h5V6h3',
+  tram:'M7 4h10a2 2 0 012 2v9a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2zM5 11h14M9 17l-2 4M15 17l2 4M9 7.5h6',
+  castle:'M3 21V8l3 2V6l3 2V4l3 2 3-2v4l3-2v4l3-2v13zM10 21v-5a2 2 0 014 0v5',
+  home:'M3 11l9-8 9 8M5 10v11h14V10M10 21v-6h4v6'
+};
+
+/* =====================================================================
+   2. כלים: גיאומטריה, זמן, שמש
+   ===================================================================== */
+const RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const R_EARTH = 6371000, WALK_MPM = 75, RIDE_MPM = 250;
+const rad = d => d*Math.PI/180, deg = r => r*180/Math.PI;
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const $ = id => document.getElementById(id);
+function off(a, ref){ const k = Math.cos(rad((a.lat+ref.lat)/2)); return {x:R_EARTH*rad(a.lon-ref.lon)*k, y:R_EARTH*rad(a.lat-ref.lat)}; }
+function dist(a,b){ const q = off(a,b); return Math.hypot(q.x,q.y); }
+function bearing(a,b){
+  const f1=rad(a.lat), f2=rad(b.lat), dl=rad(b.lon-a.lon);
+  return (deg(Math.atan2(Math.sin(dl)*Math.cos(f2), Math.cos(f1)*Math.sin(f2)-Math.sin(f1)*Math.cos(f2)*Math.cos(dl)))+360)%360;
+}
+const toMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(t||''); return m ? (+m[1])*60 + (+m[2]) : null; };
+const hhmm = m => { m = Math.round(m); return String(Math.floor(m/60)%24).padStart(2,'0') + ':' + String(m%60).padStart(2,'0'); };
+const store = {
+  get(k){ try{ return localStorage.getItem('prague-mon-'+k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem('prague-mon-'+k, v); }catch(e){} }
+};
+function pragueParts(d){
+  const p = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Prague',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(d);
+  const g = t => +p.find(x => x.type===t).value;
+  return {y:g('year'), mo:g('month'), d:g('day'), h:g('hour'), mi:g('minute'), s:g('second')};
+}
+function pragueNow(){
+  try{ const q = pragueParts(new Date()); return {date:q.y+'-'+String(q.mo).padStart(2,'0')+'-'+String(q.d).padStart(2,'0'), min:q.h*60+q.mi}; }
+  catch(e){ const d = new Date(); return {date:'', min:d.getHours()*60+d.getMinutes()}; }
+}
+const isTripDay = () => pragueNow().date === TRIP_DATE;
+function pragueDate(ds, min){
+  const a = ds.split('-').map(Number); const t = Date.UTC(a[0], a[1]-1, a[2], 0, min);
+  let off0 = 120; try{ const q = pragueParts(new Date(t)); off0 = (Date.UTC(q.y,q.mo-1,q.d,q.h,q.mi,q.s) - t)/60000; }catch(e){}
+  return new Date(t - off0*60000);
+}
+function sunPos(date, lat, lon){
+  const dayMs = 864e5, d = date.valueOf()/dayMs - 0.5 + 2440588 - 2451545;
+  const M = rad(357.5291 + 0.98560028*d), C = rad(1.9148*Math.sin(M) + 0.02*Math.sin(2*M) + 0.0003*Math.sin(3*M));
+  const L = M + C + rad(102.9372) + Math.PI, e = rad(23.4397);
+  const dec = Math.asin(Math.sin(e)*Math.sin(L)), ra = Math.atan2(Math.sin(L)*Math.cos(e), Math.cos(L));
+  const H = rad(280.16 + 360.9856235*d) - rad(-lon) - ra, phi = rad(lat);
+  return {alt: Math.asin(Math.sin(phi)*Math.sin(dec) + Math.cos(phi)*Math.cos(dec)*Math.cos(H))};
+}
+const altAt = min => deg(sunPos(pragueDate(TRIP_DATE, min), CITY.lat, CITY.lon).alt);
+const SUN = (function(){
+  let rise = 7*60, set = 18*60, prev = altAt(0);
+  for (let m=1; m<1440; m++){ const a = altAt(m); if (prev < -0.833 && a >= -0.833) rise = m; if (prev >= -0.833 && a < -0.833) set = m; prev = a; }
+  return {rise, set};
+})();
+
+/* =====================================================================
+   3. בניית המסלול (לפי בחירת אופציה א׳ / ב׳)
+   ===================================================================== */
+const ALL = []; DAY.forEach((sec, si) => sec.stops.forEach(s => { s.sec = si; ALL.push(s); }));
+let stops = [], nodes = [], cum = [0], stopNode = [], stopCum = [], TOTAL = 0, NS = 0;
+function buildRoute(v){
+  stops = []; nodes = [];
+  ALL.forEach(function(s){
+    if (s.variant && s.variant !== v){ s.i = -1; return; }
+    const mode = s.mode || (s.tag === 'guide' ? 'guide' : 'walk');
+    (s['via'+v] || s.via || []).forEach(p => nodes.push({lat:p[0], lon:p[1], stop:-1, mode}));
+    s.i = stops.length; stops.push(s);
+    nodes.push({lat:s.lat, lon:s.lon, stop:s.i, mode});
+  });
+  NS = stops.length;
+  stopNode = stops.map((s,i) => nodes.findIndex(n => n.stop === i));
+  cum = [0]; for (let k=1; k<nodes.length; k++) cum[k] = cum[k-1] + dist(nodes[k-1], nodes[k]);
+  TOTAL = cum[cum.length-1]; stopCum = stopNode.map(k => cum[k]);
+}
+function seg(p, k){
+  const A = off(nodes[k], p), B = off(nodes[k+1], p);
+  const dx = B.x-A.x, dy = B.y-A.y, L2 = dx*dx+dy*dy;
+  const t = L2 ? clamp(-(A.x*dx+A.y*dy)/L2, 0, 1) : 0;
+  return {k, t, d: Math.hypot(A.x+t*dx, A.y+t*dy)};
+}
+function snap(p, k0, k1){ let best = null; for (let k=k0; k<k1; k++){ const s = seg(p,k); if (!best || s.d < best.d) best = s; } return best; }
+const legLen = k => cum[k+1]-cum[k];
+const legLimit = k => { const m = nodes[k+1].mode; return m === 'ride' ? 320 : m === 'guide' ? 420 : 170; };
+const mpm = k => nodes[k] && nodes[k].mode === 'ride' ? RIDE_MPM : WALK_MPM;
+function posFromD(D){
+  for (let i=0; i<NS-1; i++){ if (D <= stopCum[i+1]){ const L = stopCum[i+1]-stopCum[i]; return i + (L ? clamp((D-stopCum[i])/L, 0, 1) : 0); } }
+  return NS-1;
+}
+function pointAt(D){
+  D = clamp(D, 0, TOTAL);
+  for (let k=0; k<nodes.length-1; k++){ if (D <= cum[k+1]){ const L = legLen(k), t = L ? (D-cum[k])/L : 0;
+    return {lat:nodes[k].lat+(nodes[k+1].lat-nodes[k].lat)*t, lon:nodes[k].lon+(nodes[k+1].lon-nodes[k].lon)*t}; } }
+  return nodes[nodes.length-1];
+}
+const idxOf = id => stops.findIndex(s => s.id === id);
+
+/* =====================================================================
+   4. מצב ועיבוד נקודות מיקום
+   ===================================================================== */
+const st = {status:'idle', src:null, fix:null, pos:0, D:0, off:false, offDist:0, atIdx:null, arrived:{}, hasLocated:false, jumpVotes:0,
+  watchId:null, lastFixAt:0, prev:null, speed:null, compass:null, compassAt:0, follow:true, wakeWanted:true, wake:null, lastNext:-1,
+  lastUserScroll:0, simTimer:null, simD:0, variant:'A', walked:0, startedAt:0, finale:false, mapFollow:true, userVariantAt:0};
+const live = () => st.status === 'live' || st.status === 'weak';
+const tracking = () => live() || st.hasLocated;
+const stopEl = {};
+const liOf = i => stops[i] ? stopEl[stops[i].id] : null;
+function fmtDist(m){ if (m < 100) return Math.round(m/5)*5 + ' מ׳'; if (m < 1000) return Math.round(m/10)*10 + ' מ׳'; return (m/1000).toFixed(1) + ' ק״מ'; }
+
+function firstFixLeg(p){
+  const all = []; let best = Infinity;
+  for (let k=0; k<nodes.length-1; k++){ const s = seg(p,k); all.push(s); if (s.d < best) best = s.d; }
+  const near = all.filter(s => s.d <= best+40);
+  const late = isTripDay() && pragueNow().min >= toMin(END_FROM);
+  return late ? near[near.length-1] : near[0];
+}
+function onFix(f){
+  const now = Date.now();
+  if (st.prev && f.acc <= 40){
+    const dt = (now - st.prev.at)/1000, d = dist(f, st.prev);
+    if (f.src === 'sim'){ if (d > 0 && d < 200) st.walked += d; }
+    else if (dt > 0.8 && dt < 40){ st.speed = d/dt; if (d > 4 && d < 120) st.walked += d; }
+  }
+  if (typeof f.speed === 'number' && f.speed >= 0) st.speed = f.speed;
+  if (f.acc <= 40 || !st.prev) st.prev = {lat:f.lat, lon:f.lon, at:now};
+  st.fix = f; st.lastFixAt = now; if (!st.startedAt) st.startedAt = now;
+  if (!(f.acc <= 150)){ st.status = 'weak'; render(); return; }
+  st.status = 'live';
+
+  const c = Math.floor(st.pos + 1e-6);
+  let pick;
+  if (!st.hasLocated) pick = firstFixLeg(f);
+  else {
+    const win = snap(f, stopNode[Math.max(0,c-1)], stopNode[Math.min(NS-1,c+3)]);
+    const glob = snap(f, 0, nodes.length-1);
+    if (win.d <= legLimit(win.k) || win.d <= glob.d + 60){ pick = win; st.jumpVotes = 0; }
+    else if (++st.jumpVotes >= 2){ pick = glob; st.jumpVotes = 0; }
+    else pick = win;
+  }
+  st.off = pick.d > legLimit(pick.k); st.offDist = pick.d;
+  if (!st.off){
+    const D = cum[pick.k] + pick.t*legLen(pick.k), np = posFromD(D);
+    if (!(np < st.pos && st.pos - np < 0.06)){ st.D = D; st.pos = np; }
+    st.hasLocated = true;
+  }
+  autoVariant(f);
+
+  st.atIdx = null;
+  const c2 = Math.floor(st.pos + 1e-6); let bestD = Infinity;
+  for (let j=Math.max(0,c2-1); j<=Math.min(NS-1,c2+3); j++){
+    const d = dist(f, stops[j]), r = Math.max(stops[j].r||45, Math.min(f.acc*0.9, 70));
+    if (d <= r && d < bestD){ bestD = d; st.atIdx = j; }
+  }
+  if (st.atIdx !== null){
+    const j = st.atIdx;
+    if (st.pos < j){ st.pos = j; st.D = stopCum[j]; st.hasLocated = true; }
+    if (!st.arrived[stops[j].id]){ st.arrived[stops[j].id] = true; onArrive(j); }
+  }
+  render();
+}
+function onArrive(j){
+  const s = stops[j];
+  toast(j === NS-1 ? 'הגעתם! יום מושלם' : 'הגעתם: ' + s.name);
+  try{ if (navigator.vibrate) navigator.vibrate([140,70,140]); }catch(e){}
+  const dot = liOf(j) && liOf(j).querySelector('.dot');
+  if (dot){ dot.classList.remove('ripple'); void dot.offsetWidth; dot.classList.add('ripple');
+    const r = dot.getBoundingClientRect(); if (r.top > 0 && r.top < innerHeight) burst(r.left + r.width/2, r.top + r.height/2, 50);
+    else burst(innerWidth/2, innerHeight*0.3, 40); }
+  if (j === NS-1) setTimeout(showFinale, 900);
+}
+const nextIdx = () => st.atIdx !== null ? Math.min(NS-1, st.atIdx+1) : Math.min(NS-1, Math.floor(st.pos + 1e-6) + 1);
+function setCursor(i){
+  st.pos = i; st.D = stopCum[i]; st.atIdx = null; st.hasLocated = true; st.off = false; store.set('cursor', stops[i].id);
+  toast('סומן: אתם ב״' + stops[i].name + '״'); render(); scrollToStop(i);
+}
+
+/* בחירת אופציה א׳ / ב׳ — ידנית או לפי GPS */
+function setVariant(v, auto){
+  if (v === st.variant) return;
+  const wasPos = st.pos, oldMalo = idxOf('malo'), oldCastle = idxOf('castle');
+  st.variant = v; store.set('variant', v); buildRoute(v);
+  if (wasPos > oldMalo && wasPos < oldCastle){ st.pos = idxOf('malo'); st.D = stopCum[st.pos]; }
+  else { const f0 = Math.floor(st.pos); st.D = stopCum[f0] + (st.pos - f0)*((stopCum[Math.min(NS-1, f0+1)]) - stopCum[f0]); }
+  st.atIdx = null; st.lastNext = -1;
+  applyVariantUI(); rebuildMapLayers();
+  if (auto){ $('auto-note').textContent = v === 'A' ? 'זיהינו שאתם עולים ברגל דרך נרודובה.' : 'זיהינו שאתם בחשמלית 22.'; toast($('auto-note').textContent); }
+  else $('auto-note').textContent = '';
+  render();
+}
+function polyDist(p, k0, k1){ let b = Infinity; for (let k=k0; k<k1; k++){ const s = seg(p,k); if (s.d < b) b = s.d; } return b; }
+const forkCache = {};
+function forkPoly(v){
+  if (forkCache[v]) return forkCache[v];
+  buildRoute(v); const out = {nodes:nodes.slice(stopNode[idxOf('malo')], stopNode[idxOf('castle')] + 1)};
+  buildRoute(st.variant); forkCache[v] = out; return out;
+}
+function autoVariant(f){
+  if (!live()) return;
+  const mi = idxOf('malo'), ci = idxOf('castle'); if (mi < 0 || ci < 0) return;
+  if (!(st.pos >= mi - 0.01 && st.pos <= mi + 1.6) && !(st.atIdx === mi)) return;
+  if (Date.now() - st.userVariantAt < 120000) return;
+  const polyD = v => { const nn = forkPoly(v).nodes; let b = Infinity;
+    for (let k=0; k<nn.length-1; k++){ const A = off(nn[k], f), B = off(nn[k+1], f), dx = B.x-A.x, dy = B.y-A.y, L2 = dx*dx+dy*dy;
+      const t = L2 ? clamp(-(A.x*dx+A.y*dy)/L2, 0, 1) : 0; b = Math.min(b, Math.hypot(A.x+t*dx, A.y+t*dy)); } return b; };
+  const dA = polyD('A'), dB = polyD('B');
+  if (dA < 45 && dB > 140 && st.variant !== 'A') setVariant('A', true);
+  else if (dB < 45 && dA > 140 && st.variant !== 'B') setVariant('B', true);
+}
+
+/* =====================================================================
+   5. GPS
+   ===================================================================== */
+function ok(p){ onFix({lat:p.coords.latitude, lon:p.coords.longitude, acc:p.coords.accuracy, speed:p.coords.speed, heading:p.coords.heading, src:'gps'}); }
+function fail(e){
+  if (e.code === 1){ stopWatch(); st.status = 'denied'; setMsg('הגישה למיקום נדחתה. אשרו מיקום לאתר זה בהגדרות הדפדפן (סמל המנעול ליד הכתובת) ונסו שוב.', 'warn'); }
+  else if (e.code === 2){ st.status = 'searching'; setMsg('לא ניתן לקבוע מיקום. בדקו ששירותי המיקום בטלפון פועלים.', 'warn'); }
+  else { st.status = 'searching'; setMsg('מחפש אות GPS… כדאי לעמוד במקום פתוח, רחוק מבניינים גבוהים.', 'warn'); }
+  render();
+}
+function stopWatch(){ if (st.watchId !== null){ try{ navigator.geolocation.clearWatch(st.watchId); }catch(e){} st.watchId = null; } }
+function watch(){ stopWatch(); st.watchId = navigator.geolocation.watchPosition(ok, fail, {enableHighAccuracy:true, maximumAge:0, timeout:30000}); }
+function startGps(){
+  if (!('geolocation' in navigator)){ setMsg('הדפדפן הזה לא תומך ב־GPS. נסו Chrome או Safari.', 'warn'); return; }
+  if (!window.isSecureContext){ renderBanner(); setMsg('האתר לא נפתח ב־https, ולכן הדפדפן חוסם את המיקום. ראו ההסבר למעלה.', 'warn'); return; }
+  stopSim(); requestCompass(); st.src = 'gps'; st.status = 'searching'; st.fix = null; st.mapFollow = true; $('btn-center').hidden = true;
+  setMsg('מבקש הרשאת מיקום… אשרו את הבקשה של הדפדפן.');
+  try{ watch(); }catch(e){ st.status = 'idle'; setMsg('לא הצלחתי להפעיל GPS.', 'warn'); }
+  if (st.wakeWanted) wakeOn();
+  render();
+}
+function stopGps(){
+  stopWatch(); stopSim(); wakeOff(); st.status = 'idle'; st.src = null; st.fix = null; st.atIdx = null; st.off = false;
+  setMsg('המעקב הופסק. לחצו על ״הפעל מיקום חי״ כדי לחדש.'); render();
+}
+setInterval(function(){
+  if (st.src !== 'gps' || !(st.status === 'live' || st.status === 'weak' || st.status === 'searching')) return;
+  const age = Date.now() - (st.lastFixAt || 0);
+  if (st.lastFixAt && age > 25000 && st.status !== 'searching'){ st.status = 'searching'; setMsg('אין עדכון מיקום כבר ' + Math.round(age/1000) + ' שניות. ממשיך לחפש…', 'warn'); render(); }
+  if (age > 60000 && st.lastFixAt){ try{ watch(); st.lastFixAt = Date.now(); }catch(e){} }
+}, 5000);
+document.addEventListener('visibilitychange', function(){
+  if (document.visibilityState !== 'visible') return;
+  if (st.src === 'gps' && st.status !== 'idle' && st.status !== 'denied'){ try{ watch(); }catch(e){} }
+  if (st.src && st.wakeWanted) wakeOn();
+});
+async function wakeOn(){ try{ if (!navigator.wakeLock || st.wake) return; st.wake = await navigator.wakeLock.request('screen'); st.wake.addEventListener('release', function(){ st.wake = null; }); }catch(e){ st.wake = null; } }
+function wakeOff(){ try{ if (st.wake) st.wake.release(); }catch(e){} st.wake = null; }
+function requestCompass(){
+  try{
+    const h = function(e){ let a = null;
+      if (typeof e.webkitCompassHeading === 'number') a = e.webkitCompassHeading; else if (e.absolute && typeof e.alpha === 'number') a = (360 - e.alpha) % 360;
+      if (a !== null){ st.compass = a; st.compassAt = Date.now(); paintArrow(); } };
+    const add = function(){ window.addEventListener('deviceorientationabsolute', h, true); window.addEventListener('deviceorientation', h, true); };
+    if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') DeviceOrientationEvent.requestPermission().then(function(r){ if (r === 'granted') add(); }).catch(function(){}); else add();
+  }catch(e){}
+}
+function simTo(D){ st.simD = clamp(D,0,TOTAL); const q = pointAt(st.simD); onFix({lat:q.lat, lon:q.lon, acc:9, speed:1.3, src:'sim'}); $('sim-range').value = String(Math.round(st.simD/TOTAL*1000)); }
+function enterSim(){ stopWatch(); wakeOff(); st.src = 'sim'; st.status = 'live'; st.lastFixAt = Date.now(); }
+function startSim(){
+  enterSim(); st.hasLocated = false; st.pos = 0; st.arrived = {}; st.simD = 0; st.finale = false; st.walked = 0; st.mapFollow = true;
+  if (st.simTimer) clearInterval(st.simTimer);
+  st.simTimer = setInterval(function(){
+    if (st.simD >= TOTAL){ stopSim(); return; }
+    const near = stops.findIndex(s => Math.abs(stopCum[s.i]-st.simD) < 12);
+    simTo(st.simD + (near >= 0 && !st.arrived[stops[near].id] ? 3 : 32));
+  }, 700);
+  $('btn-sim').setAttribute('aria-pressed','true'); $('btn-sim').textContent = '■ עצירת הדמיה'; simTo(0);
+}
+function stopSim(){ if (st.simTimer){ clearInterval(st.simTimer); st.simTimer = null; } $('btn-sim').setAttribute('aria-pressed','false'); $('btn-sim').textContent = '▶ הליכה לדוגמה'; }
+
+/* =====================================================================
+   6. אפקטים: שמיים, קו רקיע, כוכבים, גשם, קונפטי
+   ===================================================================== */
+function rngf(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function buildSkyline(){
+  const r = rngf(7), win = [];
+  // שכבה 1: גבעות ומגדל פטרין
+  $('l1').innerHTML = '<path d="M0 300V222C120 198 220 218 330 208C460 194 560 222 700 210C840 198 980 220 1200 202V300Z"/><path d="M146 214L150 112L154 214Z"/><rect x="146" y="150" width="8" height="5"/><path d="M149 112L150 98L151 112Z"/>';
+  // שכבה 2: בתים ונקודות ציון
+  const zones = [[150,440],[740,790],[870,970]]; let x = 0, top = 300 - 50, d = 'M0 300L0 ' + top;
+  while (x < 1200){
+    const w = 14 + r()*26, zone = zones.some(z => x > z[0] && x < z[1]), h = zone ? 26 + r()*14 : 36 + r()*40, y = 300 - h, gable = r() > .45, g = 6 + r()*10;
+    d += 'L' + x.toFixed(1) + ' ' + y.toFixed(1); if (gable) d += 'L' + (x+w/2).toFixed(1) + ' ' + (y-g).toFixed(1);
+    d += 'L' + (x+w).toFixed(1) + ' ' + y.toFixed(1);
+    for (let n=0; n<2; n++) if (r() > .55) win.push([x + 3 + r()*(w-8), y + 5 + r()*(h-14)]);
+    x += w;
+  }
+  d += 'L1200 300Z';
+  let lm = '<path d="' + d + '"/>';
+  lm += '<path d="M190 300V222L215 214V150L227 108L239 150V214L255 208V150L267 106L279 150V208L300 200V142L304 98L308 142V212L335 222V300Z"/>'; // קתדרלת ויטוס
+  lm += '<rect x="335" y="238" width="118" height="62"/><path d="M345 238V218L354 204L363 218V238ZM410 238V220L418 208L426 220V238Z"/>'; // ארמון
+  lm += '<path d="M428 300V234Q448 178 468 234V300Z"/><rect x="444" y="168" width="8" height="14"/><path d="M443 168L448 148L453 168Z"/><path d="M478 300V192L476 192L486 168L496 192L494 192V300Z"/>'; // סנט ניקולס
+  lm += '<path d="M750 300V162L746 162L762 116L778 162L774 162V300Z"/><rect x="756" y="190" width="12" height="9" style="opacity:0"/>'; // עיריית העיר העתיקה
+  lm += '<path d="M876 300V208L918 180L960 208V300Z"/><path d="M884 210V132L896 62L908 132V210Z"/><path d="M928 210V132L940 62L952 132V210Z"/><path d="M889 132h14v-6h-14zM933 132h14v-6h-14z"/>'; // כנסיית טין
+  const winSvg = [[210,252],[222,238],[270,238],[300,226],[360,262],[392,270],[420,252],[438,268],[760,230],[760,260],[905,240],[925,250],[945,235],[900,270]].concat(win)
+    .map(function(p, i){ return '<rect class="win' + (i % 5 === 0 ? ' tw' : '') + '" x="' + p[0].toFixed(1) + '" y="' + p[1].toFixed(1) + '" width="3" height="4.5" style="--o:' + (.45 + r()*.55).toFixed(2) + '"/>'; }).join('');
+  $('l2').innerHTML = lm + winSvg;
+  // שכבה 3: גשר קארל
+  let b = 'M380 281H1010V300H380Z'; for (let i=0; i<19; i++){ const ax = 388 + i*33; b += 'M' + (ax+3) + ' 300V294Q' + (ax+14) + ' 272 ' + (ax+25) + ' 294V300Z'; }
+  let l3 = '<path fill-rule="evenodd" d="' + b + '"/><path d="M364 281V242L372 224L380 242V281ZM384 281V232L396 212L408 232V281Z"/><path d="M996 281V206H1038V281Z"/><path d="M992 206L1017 168L1042 206Z"/>';
+  for (let i=0; i<14; i++) l3 += '<circle class="lamp" cx="' + (420 + i*42) + '" cy="272" r="2.3"/>';
+  for (let i=0; i<14; i++) l3 += '<rect x="' + (430 + i*42) + '" y="268" width="3" height="13"/>';
+  $('l3').innerHTML = l3;
+}
+const SKY = [[-18,'#060913','#10173a','#0e1430','#090d20','#04060e',1],[-8,'#161b45','#3b2f68','#241f4a','#18183a','#0b0b1c',.85],[-2,'#2e2f6e','#c8625f','#4a3358','#33283f','#16111f',.5],[3,'#4c6dc0','#ffa75a','#6f5468','#4d3b52','#241b2a',.15],[10,'#3f84d4','#f6d9a8','#6c86a5','#4a6381','#26354a',0],[35,'#2a72cf','#a6d4f4','#6a88aa','#4a6786','#2a3a50',0]];
+const hex2 = h => [1,3,5].map(i => parseInt(h.slice(i,i+2), 16));
+function mixSky(alt){
+  alt = clamp(alt, SKY[0][0], SKY[SKY.length-1][0]); let i = 0; while (i < SKY.length-2 && alt > SKY[i+1][0]) i++;
+  const a = SKY[i], b = SKY[i+1], t = (alt - a[0])/(b[0]-a[0]), out = [];
+  for (let k=1; k<=5; k++){ const A = hex2(a[k]), B = hex2(b[k]); out.push('rgb(' + A.map((v,j) => Math.round(v + (B[j]-v)*t)).join(',') + ')'); }
+  out.push(a[6] + (b[6]-a[6])*t); return out;
+}
+let skyMin = null, scrubbed = false;
+function setSky(min){
+  skyMin = min; const alt = altAt(min), c = mixSky(alt), root = document.documentElement.style;
+  root.setProperty('--sky-top', c[0]); root.setProperty('--sky-bot', c[1]); root.setProperty('--l1', c[2]); root.setProperty('--l2', c[3]); root.setProperty('--l3', c[4]); root.setProperty('--night', c[5].toFixed(2));
+  const orb = $('orb'), day = min >= SUN.rise - 20 && min <= SUN.set + 20;
+  let t, x, y;
+  if (day){ t = clamp((min - SUN.rise)/(SUN.set - SUN.rise), 0, 1); orb.className = 'orb sun'; orb.style.transform = 'translate(-50%,-50%) scale(' + (1 + clamp((10-alt)/30, 0, .5)).toFixed(2) + ')'; }
+  else { const len = 1440 - SUN.set + SUN.rise, m = min >= SUN.set ? min - SUN.set : min + 1440 - SUN.set; t = clamp(m/len, 0, 1); orb.className = 'orb moon'; orb.style.transform = 'translate(-50%,-50%)'; }
+  x = 88 - 76*t; y = 46 - 30*Math.sin(Math.PI*t) + 12*(1 - Math.sin(Math.PI*t))*0;
+  orb.style.left = x + '%'; orb.style.top = (58 - 40*Math.sin(Math.PI*t)) + '%';
+  $('scrub-out').textContent = hhmm(min);
+}
+function liveSkyMin(){ return isTripDay() ? pragueNow().min : 17*60 + 30; }
+function initSky(){
+  const st0 = $('stars'); let h = ''; const r = rngf(3);
+  for (let i=0; i<80; i++) h += '<div class="star" style="left:' + (r()*100).toFixed(1) + '%;top:' + (r()*62).toFixed(1) + '%;--o:' + (.35 + r()*.65).toFixed(2) + ';animation-delay:' + (r()*3).toFixed(1) + 's;width:' + (1 + r()*1.6).toFixed(1) + 'px;height:' + (1 + r()*1.6).toFixed(1) + 'px"></div>';
+  st0.innerHTML = h; buildSkyline();
+  const sc = $('scrub'); sc.value = String(liveSkyMin()); setSky(+sc.value);
+  sc.addEventListener('input', function(){ scrubbed = true; $('scrub-reset').hidden = false; setSky(+sc.value); });
+  $('scrub-reset').addEventListener('click', function(){ scrubbed = false; $('scrub-reset').hidden = true; sc.value = String(liveSkyMin()); setSky(+sc.value); });
+  setInterval(function(){ if (!scrubbed){ sc.value = String(liveSkyMin()); setSky(+sc.value); } }, 60000);
+  if (!RM){
+    let ticking = false;
+    window.addEventListener('scroll', function(){ if (ticking) return; ticking = true; requestAnimationFrame(function(){
+      const y = Math.min(scrollY, 700); $('l1').style.transform = 'translateY(' + (y*.06).toFixed(1) + 'px)'; $('l2').style.transform = 'translateY(' + (y*.16).toFixed(1) + 'px)'; $('l3').style.transform = 'translateY(' + (y*.3).toFixed(1) + 'px)';
+      $('orb').style.marginTop = (y*.1).toFixed(1) + 'px'; ticking = false; }); }, {passive:true});
+  }
+}
+
+/* גשם */
+let rainOn = false, drops = [];
+function rainLoop(){
+  const cv = $('rain'), c = cv.getContext('2d'); if (!rainOn){ c.clearRect(0,0,cv.width,cv.height); return; }
+  const w = cv.width = cv.clientWidth, h = cv.height = cv.clientHeight; c.clearRect(0,0,w,h); c.strokeStyle = 'rgba(200,220,255,.55)'; c.lineWidth = 1.2; c.beginPath();
+  drops.forEach(function(d){ d.y += d.v; d.x -= d.v*.18; if (d.y > h){ d.y = -20; d.x = Math.random()*w*1.2; } c.moveTo(d.x, d.y); c.lineTo(d.x + d.l*.18, d.y - d.l); });
+  c.stroke(); requestAnimationFrame(rainLoop);
+}
+function startRain(){ if (RM || rainOn) return; rainOn = true; drops = Array.from({length:110}, () => ({x:Math.random()*innerWidth*1.2, y:Math.random()*600, v:10 + Math.random()*9, l:10 + Math.random()*14})); rainLoop(); }
+
+/* קונפטי */
+const fx = $('fx'), fctx = fx.getContext('2d'); let parts = [], fxRun = false;
+function fxSize(){ const dpr = Math.min(devicePixelRatio || 1, 2); fx.width = innerWidth*dpr; fx.height = innerHeight*dpr; fctx.setTransform(dpr,0,0,dpr,0,0); }
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function burst(x, y, n){
+  if (RM) return; fxSize();
+  const cols = [cssVar('--lamp'), cssVar('--live'), '#ff8fa3', '#8bb4e8', '#ffffff', '#ffd36b'];
+  for (let i=0; i<n; i++){ const a = Math.random()*Math.PI*2, s = 3 + Math.random()*8; parts.push({x, y, vx:Math.cos(a)*s, vy:Math.sin(a)*s - 4, r:2 + Math.random()*4, c:cols[i % cols.length], life:70 + Math.random()*50, rot:Math.random()*6, vr:(Math.random()-.5)*.4}); }
+  if (!fxRun){ fxRun = true; requestAnimationFrame(fxLoop); }
+}
+function fxLoop(){
+  fctx.clearRect(0, 0, innerWidth, innerHeight);
+  parts = parts.filter(p => p.life > 0 && p.y < innerHeight + 30);
+  parts.forEach(function(p){ p.x += p.vx; p.y += p.vy; p.vy += .28; p.vx *= .985; p.life--; p.rot += p.vr; fctx.save(); fctx.globalAlpha = clamp(p.life/40, 0, 1); fctx.translate(p.x, p.y); fctx.rotate(p.rot); fctx.fillStyle = p.c; fctx.fillRect(-p.r, -p.r/2, p.r*2, p.r); fctx.restore(); });
+  if (parts.length) requestAnimationFrame(fxLoop); else { fxRun = false; fctx.clearRect(0, 0, innerWidth, innerHeight); }
+}
+function showFinale(){
+  if (st.finale) return; st.finale = true;
+  $('fin-km').textContent = (st.walked/1000).toFixed(1); $('fin-stops').textContent = String(Object.keys(st.arrived).length);
+  const mins = st.startedAt ? Math.round((Date.now() - st.startedAt)/60000) : 0; $('fin-time').textContent = mins >= 60 ? Math.floor(mins/60) + ':' + String(mins%60).padStart(2,'0') : mins + ' דק׳';
+  $('finale').classList.add('show');
+  for (let i=0; i<5; i++) setTimeout(function(){ burst(innerWidth*(.15 + Math.random()*.7), innerHeight*(.2 + Math.random()*.3), 70); }, i*350);
+}
+
+/* =====================================================================
+   7. ציר היום ומזג אוויר
+   ===================================================================== */
+const AX0 = 8*60, AX1 = 20*60;
+const axPct = m => ((m - AX0)/(AX1 - AX0)*100);
+function renderAxis(){
+  let h = ''; const setP = axPct(SUN.set);
+  h += '<div class="ax-day" style="background:linear-gradient(to left,#f6d9a8 0%,#9fd0f0 ' + (setP*.3).toFixed(0) + '%,#7fb2e8 ' + (setP*.7).toFixed(0) + '%,#f09a5c ' + setP.toFixed(1) + '%,#2b2a5a ' + Math.min(100, setP + 6).toFixed(1) + '%,#0d1230 100%)"></div>';
+  DAY.forEach(function(sec, i){
+    const f = toMin(sec.from), t = toMin(sec.to);
+    h += '<div class="seg c' + (i % 7) + (sec.dashed ? ' dash' : '') + '" style="right:' + axPct(f).toFixed(2) + '%;width:' + (axPct(t) - axPct(f)).toFixed(2) + '%" title="' + sec.title + ' ' + sec.range + '"><span>' + sec.short + '</span></div>';
+  });
+  for (let m = 9*60; m <= 20*60; m += 60) h += '<div class="tick" style="right:' + axPct(m).toFixed(2) + '%">' + hhmm(m) + '</div>';
+  h += '<div class="axmark sun" style="right:' + setP.toFixed(2) + '%">🌇 ' + hhmm(SUN.set) + '</div><div class="axmark now" id="axnow" style="display:none"></div>';
+  $('axis').innerHTML = h;
+  $('axis-note').textContent = 'זריחה ' + hhmm(SUN.rise) + ' · שקיעה ' + hhmm(SUN.set) + ' (לפי חישוב לפראג). ב־17:30 עולים למצודה, זמן יפה לאור זהוב.';
+}
+function paintAxis(){
+  const el = $('axnow'); if (!el) return; const n = pragueNow();
+  if (isTripDay() && n.min >= AX0 && n.min <= AX1){ el.style.display = ''; el.style.right = axPct(n.min).toFixed(2) + '%'; el.textContent = 'עכשיו ' + hhmm(n.min); } else el.style.display = 'none';
+}
+const WX = c => c === 0 ? ['בהיר','☀️'] : c <= 2 ? ['מעונן חלקית','⛅'] : c === 3 ? ['מעונן','☁️'] : c <= 48 ? ['ערפל','🌫️'] : c <= 57 ? ['טפטוף','🌦️'] : c <= 67 ? ['גשם','🌧️'] : c <= 77 ? ['שלג','❄️'] : c <= 82 ? ['ממטרים','🌧️'] : ['סופת רעמים','⛈️'];
+function loadWeather(){
+  const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + CITY.lat + '&longitude=' + CITY.lon + '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability&timezone=Europe%2FPrague&forecast_days=3&past_days=1';
+  fetch(url).then(r => r.json()).then(function(j){
+    const cur = j.current, label = WX(cur.weather_code); $('wx-card').hidden = false;
+    $('wx-t').textContent = Math.round(cur.temperature_2m) + '°'; $('wx-l').firstChild.textContent = label[1] + ' ' + label[0];
+    $('wx-s').textContent = 'מרגיש כמו ' + Math.round(cur.apparent_temperature) + '° · רוח ' + Math.round(cur.wind_speed_10m) + ' קמ״ש';
+    const chip = $('chip-wx'); if (chip) chip.innerHTML = label[1] + ' <b>' + Math.round(cur.temperature_2m) + '°</b>';
+    const hrs = []; j.hourly.time.forEach(function(t, i){ if (t.slice(0,10) === TRIP_DATE){ const h = +t.slice(11,13); if (h >= 8 && h <= 20) hrs.push({h, t:j.hourly.temperature_2m[i], p:j.hourly.precipitation_probability[i] || 0}); } });
+    if (hrs.length > 3) drawWx(hrs);
+    if (isTripDay() && cur.weather_code >= 51 && cur.weather_code !== 71 && !(cur.weather_code >= 71 && cur.weather_code <= 77)) startRain();
+  }).catch(function(){});
+}
+function drawWx(hrs){
+  const W = 600, H = 130, pl = 14, pr = 14, pt = 18, pb = 22, tmin = Math.min.apply(null, hrs.map(x => x.t)) - 1, tmax = Math.max.apply(null, hrs.map(x => x.t)) + 1;
+  const X = h => W - pr - (h - 8)/12*(W - pl - pr), Y = t => pt + (1 - (t - tmin)/(tmax - tmin))*(H - pt - pb);
+  let s = ''; hrs.forEach(function(x){ const bh = x.p/100*(H - pt - pb); s += '<rect x="' + (X(x.h) - 10).toFixed(1) + '" y="' + (H - pb - bh).toFixed(1) + '" width="20" height="' + bh.toFixed(1) + '" rx="3" fill="var(--c3)" opacity=".35"/>'; if (x.p >= 30) s += '<text x="' + X(x.h).toFixed(1) + '" y="' + (H - pb - bh - 3).toFixed(1) + '" text-anchor="middle" style="fill:var(--c3)">' + x.p + '%</text>'; });
+  s += '<polyline fill="none" stroke="var(--lamp)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="' + hrs.map(x => X(x.h).toFixed(1) + ',' + Y(x.t).toFixed(1)).join(' ') + '"/>';
+  hrs.forEach(function(x, i){ if (i % 2 === 0){ s += '<text x="' + X(x.h).toFixed(1) + '" y="' + (Y(x.t) - 8).toFixed(1) + '" text-anchor="middle" style="fill:var(--fg)">' + Math.round(x.t) + '°</text>'; } s += '<text x="' + X(x.h).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle">' + (x.h % 2 === 0 ? x.h + ':00' : '') + '</text>'; });
+  $('wx-svg').innerHTML = s;
+}
+
+/* =====================================================================
+   8. ציור הממשק
+   ===================================================================== */
+function setMsg(t, cls){ const m = $('msg'); m.textContent = t; m.className = 'msg' + (cls ? ' ' + cls : ''); }
+let toastT = null;
+function toast(t){ const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ el.classList.remove('show'); }, 3800); }
+const dirUrl = s => 'https://www.google.com/maps/dir/?api=1&destination=' + s.lat + ',' + s.lon + '&travelmode=walking';
+const iconSvg = n => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + (ICONS[n] || ICONS.flag) + '"/></svg>';
+
+function renderHeader(){
+  $('eyebrow').textContent = META.eyebrow; $('sub').textContent = META.sub;
+  $('chips').innerHTML = '<span class="chip">הליכה + סיור 4 שעות</span><span class="chip" id="chip-wx">🌤 --</span><span class="chip">🌇 שקיעה <b>' + hhmm(SUN.set) + '</b></span><span class="chip" id="clock">שעון פראג: --:--</span>';
+  $('maps').innerHTML = NAV_LINKS.map(n => '<a href="' + n.u + '" target="_blank" rel="noopener"><span class="k">' + n.k + '</span><span class="t">' + n.t + '</span><span class="go">' + n.go + '</span></a>').join('');
+  $('transit').innerHTML = TRANSIT;
+}
+function tick(){ const c = $('clock'); if (c) c.textContent = 'שעון פראג: ' + hhmm(pragueNow().min); paintAxis(); if (!live()) paintSchedule(); }
+
+function renderTimeline(){
+  const ol = $('route'); const keep = Array.from(ol.querySelectorAll('.route-progress,.walker')); ol.innerHTML = ''; keep.forEach(k => ol.appendChild(k));
+  DAY.forEach(function(sec, si){
+    const h = document.createElement('li'); h.className = 'sec-li'; h.style.setProperty('--cc', 'var(--c' + (si % 7) + ')');
+    let inner = '<div class="sec-head"><h2>' + sec.title + '</h2><small>' + sec.range + '</small></div>';
+    if (sec.fork) inner += '<div class="fork" role="group" aria-label="בחירת דרך העלייה למצודה">' +
+      '<button class="fork-opt" type="button" data-v="A" aria-pressed="true"><b>א׳ · טיפוס רגלי</b><span>רחוב נרודובה, תלול מאוד</span><div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></button>' +
+      '<button class="fork-opt" type="button" data-v="B" aria-pressed="false"><b>ב׳ · חשמלית 22</b><span>אפס מאמץ, עד הכניסה האחורית</span><div class="meter"><i class="on"></i><i></i><i></i><i></i></div></button></div><p class="auto-note" id="auto-note"></p>';
+    h.innerHTML = inner; ol.appendChild(h);
+    sec.stops.forEach(function(s){
+      const li = document.createElement('li'); li.className = 'stop pre' + (s.tag === 'meal' ? ' meal' : ''); li.dataset.id = s.id; li.style.setProperty('--cc', 'var(--c' + (si % 7) + ')');
+      const time = s.t ? s.t : '·', tagLbl = {meal:'ארוחה כשרה', guide:'בהובלת המדריך', view:'תצפית'}[s.tag];
+      li.innerHTML = '<div class="time">' + time + '</div><div class="dot">' + iconSvg(s.icon) + '</div><div class="body">' +
+        '<p class="name">' + s.name + ' <span class="latin">' + s.latin + '</span></p><p class="desc">' + s.desc + '</p>' +
+        ((s.tag || s.leave) ? '<div class="tags">' + (s.tag ? '<span class="tag ' + s.tag + '">' + tagLbl + '</span>' : '') + (s.leave ? '<span class="tag">יציאה ' + s.leave + '</span>' : '') + '</div>' : '') +
+        '<div class="actions">' + (s.story ? '<button class="btn" type="button" data-story="' + s.id + '" aria-expanded="false">מה מספרים כאן</button>' : '') +
+        '<a class="btn ghost" href="' + dirUrl(s) + '" target="_blank" rel="noopener">נווט לכאן ↗</a><button class="btn ghost" type="button" data-here="' + s.id + '">אני כאן</button></div>' +
+        (s.story ? '<div class="story" id="story-' + s.id + '" hidden><h3>' + s.story.h + '</h3><p>' + s.story.p + '</p></div>' : '') + '</div>';
+      ol.appendChild(li); stopEl[s.id] = li;
+    });
+  });
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.remove('pre'); io.unobserve(e.target); } }); }, {rootMargin:'0px 0px -6% 0px'});
+    ol.querySelectorAll('.stop').forEach(li => io.observe(li));
+  }
+  setTimeout(function(){ ol.querySelectorAll('.stop.pre').forEach(li => li.classList.remove('pre')); }, 3500);
+}
+function applyVariantUI(){
+  ALL.forEach(function(s){ const li = stopEl[s.id]; if (li) li.hidden = (s.i < 0); });
+  document.querySelectorAll('.fork-opt').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.variant)));
+}
+function railYs(){
+  const ol = $('route'), rr = ol.getBoundingClientRect(), dots = stops.map((s,i) => liOf(i).querySelector('.dot').getBoundingClientRect());
+  const ys = dots.map(d => (d.top + d.bottom)/2 - rr.top);
+  ol.style.setProperty('--rail-center', (rr.right - (dots[0].left + dots[0].right)/2).toFixed(1) + 'px');
+  ol.style.setProperty('--rail-start', ys[0].toFixed(1) + 'px'); ol.style.setProperty('--rail-total', (ys[NS-1] - ys[0]).toFixed(1) + 'px');
+  return ys;
+}
+function paintRail(){
+  const ol = $('route'), ys = railYs(); if (!tracking()){ ol.classList.remove('tracked'); return; }
+  const pos = clamp(st.pos, 0, NS-1), part = Math.min(Math.floor(pos), NS-2), t = pos - part;
+  ol.style.setProperty('--rail-progress', Math.max(0, ys[part] + (ys[part+1] - ys[part])*t - ys[0]).toFixed(1) + 'px'); ol.classList.add('tracked');
+}
+function paintSchedule(){
+  if (tracking()) return; const now = pragueNow(); let cur = -1;
+  if (isTripDay()) stops.forEach(function(s, i){ const m = toMin(s.t); if (m !== null && m <= now.min) cur = i; });
+  stops.forEach(function(s, i){ liOf(i).classList.toggle('sched', i === cur); });
+}
+function paintStops(){
+  const ni = nextIdx(), fin = st.atIdx === NS-1, tr = tracking();
+  stops.forEach(function(s, i){ const li = liOf(i);
+    li.classList.toggle('at', tr && st.atIdx === i); li.classList.toggle('next', tr && !fin && i === ni && st.atIdx !== i);
+    li.classList.toggle('passed', tr && (i < st.pos - 0.02) && st.atIdx !== i); if (tr) li.classList.remove('sched'); });
+}
+function nearestStop(f){ let b = 0, bd = Infinity; stops.forEach(function(s, i){ const d = dist(f, s); if (d < bd){ bd = d; b = i; } }); return {i:b, d:bd}; }
+function paintArrow(){
+  const ni = nextIdx(), f = st.fix; let rot = 0, note = '';
+  if (f && stops[ni]){
+    const b = bearing(f, stops[ni]); let h = null;
+    if (st.compass !== null && Date.now() - st.compassAt < 4000){ h = st.compass; note = 'לפי המצפן של הטלפון'; }
+    else if (st.speed !== null && st.speed > 0.8 && typeof f.heading === 'number' && !isNaN(f.heading)){ h = f.heading; note = 'לפי כיוון ההליכה'; }
+    rot = (b - (h || 0) + 360) % 360;
+    if (h === null){ const nm = ['צפון','צפון־מזרח','מזרח','דרום־מזרח','דרום','דרום־מערב','מערב','צפון־מערב']; note = 'כיוון לתחנה: ' + nm[Math.round(b/45) % 8] + ' (החזיקו את הטלפון עם הפנים לצפון)'; }
+  }
+  $('compass-svg').style.transform = 'rotate(' + rot.toFixed(0) + 'deg)'; $('lb-svg').style.transform = 'rotate(' + rot.toFixed(0) + 'deg)'; $('compass-note').textContent = note;
+  setConeHeading();
+}
+
+/* ---- מפה חיה (Leaflet) ---- */
+let LM = null; const lm = {tile:null, base:null, done:null, mk:[], user:null, acc:null, cone:null, theme:null, lastNext:-2};
+const isDark = () => getComputedStyle(document.documentElement).colorScheme === 'dark';
+function initLeaflet(){
+  if (!window.L){ $('mapbox').classList.add('fallback'); return; }
+  try{
+    LM = L.map('lmap', {zoomControl:false, zoomSnap:.5, attributionControl:true}).setView([CITY.lat, CITY.lon], 14);
+    LM.attributionControl.setPrefix(false); setTiles(); buildMapLayers(); fitAll();
+    LM.on('dragstart', function(){ st.mapFollow = false; $('btn-center').hidden = false; });
+    setTimeout(function(){ LM.invalidateSize(); }, 300);
+  }catch(e){ LM = null; $('mapbox').classList.add('fallback'); }
+}
+function setTiles(){
+  if (!LM) return; lm.theme = isDark(); $('lmap').classList.toggle('dark-tiles', lm.theme);
+  if (!lm.tile) lm.tile = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(LM);
+}
+function rebuildMapLayers(){ if (LM) buildMapLayers(); }
+function buildMapLayers(){
+  [lm.base, lm.done].forEach(l => { if (l) LM.removeLayer(l); }); lm.mk.forEach(m => LM.removeLayer(m)); lm.mk = [];
+  lm.base = L.polyline(nodes.map(n => [n.lat, n.lon]), {color:cssVar('--muted'), weight:4, opacity:.75, dashArray:'2 9', lineCap:'round'}).addTo(LM);
+  lm.done = L.polyline([], {color:cssVar('--live'), weight:6, opacity:.95, lineCap:'round'}).addTo(LM);
+  stops.forEach(function(s, i){
+    const m = L.marker([s.lat, s.lon], {icon:L.divIcon({className:'', html:'<div class="mk"><b>' + (i+1) + '</b></div>', iconSize:[30,30], iconAnchor:[15,15]}), keyboard:false}).addTo(LM);
+    m.bindTooltip(s.name, {permanent:true, direction:'top', offset:[0,-16], className:'mk-tip'}); m.on('click', function(){ scrollToStop(i); }); lm.mk.push(m);
+  });
+  lm.lastNext = -2;
+}
+function fitAll(){ if (LM) LM.fitBounds(L.latLngBounds(nodes.map(n => [n.lat, n.lon])), {padding:[28,28]}); }
+function setConeHeading(){
+  if (!lm.cone) return; const f = st.fix; let h = null;
+  if (st.compass !== null && Date.now() - st.compassAt < 4000) h = st.compass; else if (f && st.speed > 0.8 && typeof f.heading === 'number' && !isNaN(f.heading)) h = f.heading;
+  lm.cone.style.transform = h === null ? 'scale(0)' : 'rotate(' + h.toFixed(0) + 'deg)';
+}
+function updateMap(){
+  if (!LM) return; const f = st.fix, ni = nextIdx(), tr = tracking();
+  if (lm.theme !== isDark()){ setTiles(); buildMapLayers(); }
+  const pts = []; if (tr){ for (let k=0; k<nodes.length; k++){ if (cum[k] <= st.D) pts.push([nodes[k].lat, nodes[k].lon]); else break; } const q = pointAt(st.D); pts.push([q.lat, q.lon]); }
+  lm.done.setLatLngs(tr ? pts : []);
+  stops.forEach(function(s, i){
+    const m = lm.mk[i]; if (!m) return; const el = m.getElement(); const inner = el && el.firstChild; const isNext = tr && i === ni && st.atIdx !== i && st.atIdx !== NS-1, isAt = tr && st.atIdx === i, passed = tr && i < st.pos - 0.02;
+    if (inner) inner.className = 'mk' + (isAt ? ' at' : isNext ? ' next' : passed ? ' passed' : '');
+    const tt = m.getTooltip() && m.getTooltip().getElement(); if (tt) tt.classList.toggle('on', isNext || isAt);
+  });
+  if (f && live()){
+    const ll = [f.lat, f.lon];
+    if (!lm.user){ lm.user = L.marker(ll, {icon:L.divIcon({className:'', html:'<div class="me"><span class="cone"></span><i></i></div>', iconSize:[24,24], iconAnchor:[12,12]}), interactive:false, zIndexOffset:1000}).addTo(LM); lm.acc = L.circle(ll, {radius:f.acc, color:cssVar('--live'), weight:1, fillColor:cssVar('--live'), fillOpacity:.12, interactive:false}).addTo(LM); lm.cone = lm.user.getElement().querySelector('.cone'); }
+    else { lm.user.setLatLng(ll); lm.acc.setLatLng(ll); lm.acc.setRadius(f.acc); lm.cone = lm.user.getElement().querySelector('.cone'); }
+    setConeHeading();
+    if (st.mapFollow){
+      if (ni !== lm.lastNext && stops[ni]){ lm.lastNext = ni; LM.flyToBounds(L.latLngBounds([ll, [stops[ni].lat, stops[ni].lon]]), {padding:[60,60], maxZoom:17, duration:RM ? 0 : 1.2}); }
+      else if (!LM.getBounds().pad(-0.25).contains(ll)) LM.panTo(ll, {animate:!RM, duration:.8});
+    }
+  } else if (lm.user){ LM.removeLayer(lm.user); LM.removeLayer(lm.acc); lm.user = lm.acc = lm.cone = null; }
+}
+/* ---- גיבוי SVG כשאין Leaflet ---- */
+function drawSvgMap(){
+  const MW = 640, MH = 360, f = st.fix, ni = nextIdx(), zoomed = live() && f; let pts = zoomed ? [f] : nodes;
+  if (zoomed) [ni-1, ni, ni+1].forEach(j => { if (stops[j]) pts.push(stops[j]); });
+  let a = 90, b = -90, c = 180, d = -180; pts.forEach(p => { a = Math.min(a,p.lat); b = Math.max(b,p.lat); c = Math.min(c,p.lon); d = Math.max(d,p.lon); });
+  const cLat = (a+b)/2, cLon = (c+d)/2, my = 110574, mx = 111320*Math.cos(rad(cLat)), sx = Math.max((d-c)*mx*1.3, 280), sy = Math.max((b-a)*my*1.3, 180), sc = Math.min(MW/sx, MH/sy);
+  const X = p => MW/2 + (p.lon-cLon)*mx*sc, Y = p => MH/2 - (p.lat-cLat)*my*sc; let h = '';
+  for (let k=0; k<nodes.length-1; k++){ const dn = tracking() && cum[k+1] <= st.D + .5; h += '<line x1="' + X(nodes[k]).toFixed(1) + '" y1="' + Y(nodes[k]).toFixed(1) + '" x2="' + X(nodes[k+1]).toFixed(1) + '" y2="' + Y(nodes[k+1]).toFixed(1) + '" stroke="' + (dn ? 'var(--live)' : 'var(--line)') + '" stroke-width="' + (dn ? 4 : 3) + '" stroke-linecap="round"/>'; }
+  stops.forEach(function(s, i){ const x = X(s), y = Y(s), isNext = tracking() && i === ni && st.atIdx !== i, isAt = tracking() && st.atIdx === i, passed = tracking() && i < st.pos - .02;
+    h += '<g data-i="' + i + '" style="cursor:pointer"><circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (isNext ? 15 : 12) + '" fill="' + (isAt || passed ? 'var(--live)' : isNext ? 'var(--lamp)' : 'var(--surface)') + '" stroke="' + (isNext ? 'var(--lamp)' : passed || isAt ? 'var(--live)' : 'var(--muted)') + '" stroke-width="2.5"/><text x="' + x.toFixed(1) + '" y="' + (y+4).toFixed(1) + '" text-anchor="middle" font-size="12" font-weight="700" fill="' + (isNext || isAt || passed ? 'var(--on-lamp)' : 'var(--fg)') + '">' + (i+1) + '</text></g>'; });
+  if (f && live()) h += '<circle cx="' + X(f).toFixed(1) + '" cy="' + Y(f).toFixed(1) + '" r="8" fill="var(--live)" stroke="var(--surface)" stroke-width="3"/>';
+  $('map').innerHTML = h;
+}
+function drawMap(){ if (LM) updateMap(); else if (!window.L) drawSvgMap(); }
+
+let distShown = null, distTween = null;
+function setDist(m, off){
+  const el = $('now-dist'), sub = off ? '<small>בקו אווירי</small>' : '';
+  if (m === null){ el.innerHTML = '—'; distShown = null; return; }
+  if (RM || distShown === null){ el.innerHTML = fmtDist(m) + sub; distShown = m; return; }
+  const from = distShown, to = m, t0 = performance.now(); cancelAnimationFrame(distTween); distShown = to;
+  (function step(t){ const k = clamp((t - t0)/450, 0, 1), v = from + (to - from)*(1 - Math.pow(1 - k, 3)); el.innerHTML = fmtDist(v) + sub; if (k < 1) distTween = requestAnimationFrame(step); })(t0);
+}
+function render(){
+  const f = st.fix, tr = tracking(), ni = nextIdx(), fin = st.atIdx === NS-1;
+  const labels = {idle:'GPS כבוי', searching:'מחפש אות', live:'מיקום חי', weak:'אות חלש', denied:'אין הרשאה'}; let cls = st.status, txt = labels[st.status] || '';
+  if (st.src === 'sim' && live()){ cls = 'sim'; txt = 'הדמיה'; }
+  $('pill').className = 'pill ' + cls; $('pill-t').textContent = txt;
+  const on = st.status !== 'idle' && st.status !== 'denied'; $('btn-start').dataset.on = String(on); $('btn-start').textContent = on ? 'הפסק מעקב' : '📍 הפעל מיקום חי';
+  if (!tr){
+    $('now-label').textContent = 'המסלול מתחיל'; $('now-name').textContent = stops[0].name; setDist(null);
+    ['st-eta','st-slack','st-acc'].forEach(id => $(id).textContent = '—'); $('st-prog').textContent = '0%'; $('prog-bar').style.width = '0%';
+  } else {
+    const nxt = stops[ni]; let remain = null;
+    if (f && live()) remain = (!st.off && st.atIdx === null) ? Math.max(0, stopCum[ni] - st.D) : dist(f, nxt);
+    $('now-label').textContent = fin ? 'סיימתם את המסלול' : (st.atIdx !== null ? 'אתם ב״' + stops[st.atIdx].name + '״ · התחנה הבאה' : 'התחנה הבאה');
+    $('now-name').textContent = fin ? stops[NS-1].name : nxt.name; setDist(fin ? null : remain, st.off);
+    if (remain !== null && !fin){
+      const eta = Math.max(1, Math.ceil(remain/mpm(stopNode[ni]))); $('st-eta').textContent = eta + ' דק׳';
+      const pm = toMin(nxt.t);
+      if (pm !== null && isTripDay()){ const slack = pm - (pragueNow().min + eta); $('st-slack').textContent = (slack >= 0 ? '+' : '−') + Math.abs(slack) + ' דק׳'; $('st-slack-l').textContent = slack >= 0 ? 'מרווח לתחנה' : 'איחור לתחנה'; }
+      else { $('st-slack').textContent = nxt.t || '·'; $('st-slack-l').textContent = nxt.t ? 'שעה בלו״ז' : 'ללא שעה'; }
+    } else { $('st-eta').textContent = '—'; $('st-slack').textContent = '—'; }
+    const pct = Math.round(clamp(st.D/TOTAL, 0, 1)*100); $('st-prog').textContent = pct + '%'; $('prog-bar').style.width = pct + '%'; $('st-acc').textContent = f ? '±' + Math.round(f.acc) + ' מ׳' : '—';
+  }
+  if (live() && f){
+    if (st.status === 'weak') setMsg('קליטת GPS חלשה (±' + Math.round(f.acc) + ' מ׳). ממתין לשיפור, ההתקדמות לא מתעדכנת עד אז.', 'warn');
+    else if (st.off && !st.hasLocated){ const n = nearestStop(f); setMsg('אתם כ־' + fmtDist(n.d) + ' מהתחנה הקרובה (' + stops[n.i].name + ') ועדיין לא על המסלול. לחצו ״אני כאן״ על תחנה כדי לסמן ידנית.', 'warn'); }
+    else if (st.off){ const n = nearestStop(f); setMsg('אתם כ־' + fmtDist(st.offDist) + ' מהקו המתוכנן. התחנה הקרובה אליכם: ' + stops[n.i].name + '. אפשר ללחוץ ״אני כאן״ כדי לסמן ידנית.', 'warn'); }
+    else if (fin) setMsg('הגעתם למלון. יום מושלם!', 'ok');
+    else if (st.atIdx !== null) setMsg('הגעתם: ' + stops[st.atIdx].name + '.', 'ok');
+    else setMsg('בדרך אל ' + stops[ni].name + (st.speed !== null && st.speed > 0.3 ? ' · מהירות ' + (st.speed*3.6).toFixed(1) + ' קמ״ש' : '') + '.', 'ok');
+  }
+  paintStops(); paintRail(); drawMap(); paintArrow();
+  const hidden = $('live').getBoundingClientRect().bottom < 0;
+  $('lb-name').textContent = fin ? 'סיימתם' : stops[ni].name;
+  $('lb-sub').textContent = st.atIdx !== null && !fin ? 'אתם ב' + stops[st.atIdx].name : (st.off ? 'מחוץ למסלול' : 'התחנה הבאה');
+  const dtxt = $('now-dist').textContent; $('lb-dist').textContent = dtxt === '—' ? '' : dtxt.replace('בקו אווירי', '');
+  $('livebar').classList.toggle('show', live() && hidden);
+  if (live() && st.follow && ni !== st.lastNext && Date.now() - st.lastUserScroll > 8000) scrollToStop(st.atIdx !== null ? st.atIdx : ni, true);
+  st.lastNext = ni;
+}
+function scrollToStop(i, quiet){
+  const el = liOf(i); if (!el) return; try{ el.scrollIntoView({block:'center', behavior:RM ? 'auto' : 'smooth'}); }catch(e){ el.scrollIntoView(); }
+  if (!quiet){ el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+}
+
+/* =====================================================================
+   9. אבחון, אירועים, אתחול
+   ===================================================================== */
+function renderBanner(){
+  const b = $('banner');
+  if (!window.isSecureContext){ b.hidden = false; b.innerHTML = '<p><b>המיקום החי חסום בפתיחה הזו.</b> דפדפנים מאפשרים GPS רק בדף שנפתח בכתובת <b>https://</b> (או localhost). קובץ שנפתח ישירות מהטלפון או מהמחשב לרוב נחסם.</p><p>הפתרון: לפתוח את הדף דרך קישור https שנשלח אליכם, או להעלות את הקובץ לאחסון חינמי כמו Netlify Drop או GitHub Pages.</p>'; } else b.hidden = true;
+}
+function renderDiag(){
+  const items = [[window.isSecureContext, window.isSecureContext ? 'https ✓' : 'לא https'], ['geolocation' in navigator, 'geolocation' in navigator ? 'API מיקום ✓' : 'אין API מיקום'], [!!window.L, window.L ? 'מפה חיה ✓' : 'מפה: מצב גיבוי']], d = $('diag');
+  const paint = function(perm){ const all = items.slice(); if (perm) all.push([perm === 'granted', 'הרשאה: ' + ({granted:'ניתנה', denied:'נדחתה', prompt:'תתבקש'}[perm] || perm)]); d.innerHTML = all.map(x => '<span class="' + (x[0] ? 'good' : 'bad') + '">' + x[1] + '</span>').join(''); };
+  paint(null); try{ navigator.permissions.query({name:'geolocation'}).then(function(r){ paint(r.state); r.onchange = function(){ paint(r.state); }; }).catch(function(){}); }catch(e){}
+}
+function applyTheme(t){ if (t){ document.documentElement.dataset.theme = t; store.set('theme', t); } if (LM) setTimeout(function(){ updateMap(); }, 30); }
+function bind(){
+  $('route').addEventListener('click', function(e){
+    const sb = e.target.closest('[data-story]'); if (sb){ const el = $('story-' + sb.dataset.story); el.hidden = !el.hidden; sb.setAttribute('aria-expanded', String(!el.hidden)); return; }
+    const hb = e.target.closest('[data-here]'); if (hb){ const i = idxOf(hb.dataset.here); if (i >= 0){ if (st.src === null) st.src = 'manual'; setCursor(i); } return; }
+    const fo = e.target.closest('.fork-opt'); if (fo){ st.userVariantAt = Date.now(); setVariant(fo.dataset.v, false); }
+  });
+  $('map').addEventListener('click', function(e){ const g = e.target.closest('[data-i]'); if (g) scrollToStop(+g.dataset.i); });
+  $('btn-start').addEventListener('click', function(){ (st.status === 'idle' || st.status === 'denied') ? startGps() : stopGps(); });
+  $('btn-follow').addEventListener('click', function(){ st.follow = !st.follow; this.setAttribute('aria-pressed', String(st.follow)); store.set('follow', st.follow ? '1' : '0'); });
+  $('btn-wake').addEventListener('click', function(){ st.wakeWanted = !st.wakeWanted; this.setAttribute('aria-pressed', String(st.wakeWanted)); store.set('wake', st.wakeWanted ? '1' : '0'); st.wakeWanted ? (st.src && wakeOn()) : wakeOff(); });
+  $('btn-sim').addEventListener('click', function(){ st.simTimer ? (stopSim(), st.status = 'idle', st.src = null, render()) : startSim(); });
+  $('sim-range').addEventListener('input', function(){ if (st.simTimer) stopSim(); if (st.src !== 'sim'){ enterSim(); st.hasLocated = false; st.pos = 0; } simTo(+this.value/1000*TOTAL); });
+  $('btn-open').addEventListener('click', function(){ if (!st.fix){ toast('אין עדיין מיקום. הפעילו קודם מיקום חי.'); return; } window.open('https://www.google.com/maps/search/?api=1&query=' + st.fix.lat + ',' + st.fix.lon, '_blank', 'noopener'); });
+  $('btn-center').addEventListener('click', function(){ st.mapFollow = true; this.hidden = true; lm.lastNext = -2; updateMap(); });
+  $('btn-all').addEventListener('click', function(){ st.mapFollow = false; $('btn-center').hidden = !live(); fitAll(); });
+  $('livebar-btn').addEventListener('click', function(){ scrollToStop(st.atIdx !== null ? st.atIdx : nextIdx()); });
+  $('fin-close').addEventListener('click', function(){ $('finale').classList.remove('show'); });
+  $('theme-toggle').addEventListener('click', function(){ applyTheme(isDark() ? 'light' : 'dark'); });
+  try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(){ applyTheme(null); }); }catch(e){}
+  ['wheel','touchmove'].forEach(ev => window.addEventListener(ev, function(){ st.lastUserScroll = Date.now(); }, {passive:true}));
+  window.addEventListener('scroll', function(){ $('livebar').classList.toggle('show', live() && $('live').getBoundingClientRect().bottom < 0); }, {passive:true});
+  window.addEventListener('resize', function(){ paintRail(); if (LM) LM.invalidateSize(); });
+  if ('ResizeObserver' in window) new ResizeObserver(function(){ paintRail(); }).observe($('route'));
+}
+
+const v0 = store.get('variant'); if (v0 === 'A' || v0 === 'B') st.variant = v0;
+buildRoute(st.variant);
+renderHeader(); renderTimeline(); applyVariantUI(); renderAxis(); renderBanner(); renderDiag(); initSky(); bind();
+const th = store.get('theme'); if (th) document.documentElement.dataset.theme = th;
+if (store.get('follow') === '0'){ st.follow = false; $('btn-follow').setAttribute('aria-pressed', 'false'); }
+if (store.get('wake') === '0'){ st.wakeWanted = false; $('btn-wake').setAttribute('aria-pressed', 'false'); }
+const sc0 = store.get('cursor'); if (sc0 && isTripDay()){ const i = idxOf(sc0); if (i > 0){ st.pos = i; st.D = stopCum[i]; st.hasLocated = true; } }
+initLeaflet(); tick(); setInterval(tick, 30000); loadWeather(); render();
+requestAnimationFrame(function(){ paintRail(); if (LM) LM.invalidateSize(); });
+window.__trip = {st, get stops(){ return stops; }, onFix, setVariant, get TOTAL(){ return TOTAL; }, get stopCum(){ return stopCum; }, setSky};
+})();
+</script>
+</body>
+</html>
