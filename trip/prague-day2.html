@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>פראג בערב — מסלול חי</title>
+<meta name="theme-color" content="#13171f">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/*
+  תבנית יום טיול עם GPS חי.
+  כל תוכן היום נמצא במערך DAY בתחילת הסקריפט (תחנות, שעות, קואורדינטות, כרטיסיות הדרכה).
+  כדי לבנות יום אחר מחליפים רק אותו. הקוד של ה־GPS לא משתנה.
+  חשוב: GPS בדפדפן עובד רק מדף שנפתח ב־https:// (או localhost), לא מקובץ מקומי.
+*/
+:root{
+  --bg:#13171f; --surface:#1b212c; --surface2:#222a37; --line:#2c3442; --fg:#ece6d8; --muted:#9aa0aa;
+  --lamp:#d9b470; --lamp-soft:rgba(217,180,112,.14); --live:#47c9b8; --live-soft:rgba(71,201,184,.16);
+  --warn:#e59a6a; --done:#6f7682; --on-lamp:#151a22;
+  --display:"Frank Ruhl Libre","David Libre",Georgia,serif;
+  --body:"Assistant","Segoe UI",Arial,sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#f5f2ec; --surface:#fffdf8; --surface2:#f0ebe0; --line:#ddd5c6; --fg:#1d2230; --muted:#5f6573;
+  --lamp:#8c6121; --lamp-soft:rgba(140,97,33,.10); --live:#18806f; --live-soft:rgba(24,128,111,.12);
+  --warn:#b4571f; --done:#9a9fa8; --on-lamp:#fffdf8; color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#f5f2ec; --surface:#fffdf8; --surface2:#f0ebe0; --line:#ddd5c6; --fg:#1d2230; --muted:#5f6573;
+  --lamp:#8c6121; --lamp-soft:rgba(140,97,33,.10); --live:#18806f; --live-soft:rgba(24,128,111,.12);
+  --warn:#b4571f; --done:#9a9fa8; --on-lamp:#fffdf8; color-scheme:light}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;direction:rtl}
+button{font-family:inherit}
+.wrap{max-width:660px;margin:0 auto;padding-inline:18px;padding-block:24px 64px}
+.eyebrow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;letter-spacing:.06em;color:var(--lamp);font-weight:700}
+.theme-toggle{font-size:13px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(34px,9vw,48px);line-height:1.05;margin:.25em 0 .25em;text-wrap:balance}
+.sub{color:var(--muted);margin:0;font-size:16px}
+.leadline{height:3px;width:70px;border-radius:10px;background:linear-gradient(90deg,var(--lamp),var(--live));margin:18px 0 14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.chip b{color:var(--fg);font-weight:600}
+.chip.clock{border-color:var(--lamp);color:var(--lamp)}
+
+/* ---------- live panel ---------- */
+.live{margin-top:22px;border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden}
+.live-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px 0}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--lamp)}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--done)}
+.pill.searching i{background:var(--lamp);animation:blink 1s steps(2) infinite}
+.pill.live{border-color:var(--live);color:var(--live)}
+.pill.live i{background:var(--live);box-shadow:0 0 0 3px var(--live-soft)}
+.pill.weak{border-color:var(--warn);color:var(--warn)}
+.pill.weak i{background:var(--warn)}
+.pill.sim{border-color:var(--lamp);color:var(--lamp)}
+.pill.sim i{background:var(--lamp)}
+@keyframes blink{50%{opacity:.2}}
+
+.now{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;padding:12px 16px 4px}
+.now-label{font-size:13px;color:var(--muted);font-weight:600}
+.now-name{font-family:var(--display);font-weight:700;font-size:25px;line-height:1.2;margin:0;text-wrap:balance}
+.now-dist{font-variant-numeric:tabular-nums;font-weight:700;font-size:32px;line-height:1.1;color:var(--lamp);margin-top:2px}
+.now-dist small{font-size:15px;color:var(--muted);font-weight:600;margin-inline-start:6px}
+.compass{width:84px;height:84px;position:relative;border-radius:50%;background:var(--surface2);border:1px solid var(--line);flex:none}
+.compass svg{position:absolute;inset:0;width:100%;height:100%;transition:transform .35s ease-out}
+.compass .n{position:absolute;top:2px;inset-inline:0;text-align:center;font-size:10px;color:var(--muted);font-weight:700;line-height:1}
+.compass-note{grid-column:1/-1;font-size:12px;color:var(--muted);margin:0}
+.msg{margin:8px 16px 0;padding:9px 12px;border-radius:10px;background:var(--bg);border-inline-start:3px solid var(--line);font-size:14px;line-height:1.55}
+.msg.warn{border-color:var(--warn)}
+.msg.ok{border-color:var(--live)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:12px 16px 0;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stat{background:var(--surface);padding:8px 6px;text-align:center;min-width:0}
+.stat b{display:block;font-variant-numeric:tabular-nums;font-size:17px;line-height:1.2}
+.stat span{font-size:11px;color:var(--muted)}
+.progress{height:6px;margin:12px 16px 0;border-radius:6px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--lamp),var(--live));transition:width .6s linear}
+.mapbox{margin:12px 16px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.mapbox svg{display:block;width:100%;height:auto}
+.mapbox text{font-family:var(--body)}
+.maplabel{font-size:11px;color:var(--muted);margin:5px 16px 0}
+.controls{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px 16px}
+.btn-main{flex:1 1 200px;font-weight:700;font-size:17px;border:0;border-radius:12px;background:var(--lamp);color:var(--on-lamp);padding:13px 16px;cursor:pointer}
+.btn-main[data-on="true"]{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.toggle{font-size:14px;font-weight:600;border:1px solid var(--line);background:none;color:var(--muted);border-radius:12px;padding:10px 12px;cursor:pointer}
+.toggle[aria-pressed="true"]{border-color:var(--live);color:var(--live);background:var(--live-soft)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--lamp);outline-offset:2px}
+details.tools{border-top:1px solid var(--line);padding:10px 16px 14px;font-size:14px;color:var(--muted)}
+details.tools summary{cursor:pointer;font-weight:600}
+.tools-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.tools input[type=range]{flex:1 1 100%;accent-color:var(--lamp)}
+.diag{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.diag span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.diag .bad{color:var(--warn);border-color:var(--warn)}
+.diag .good{color:var(--live);border-color:var(--live)}
+
+.banner{margin-top:16px;padding:13px 15px;border:1px solid var(--warn);border-radius:12px;background:var(--surface);font-size:14px}
+.banner b{color:var(--warn)}
+.banner p{margin:0}
+.banner p+p{margin-top:6px}
+
+/* ---------- navigation links ---------- */
+.maps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}
+.maps a{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;min-width:0}
+.maps a:hover{border-color:var(--lamp)}
+.maps .k{font-size:12px;color:var(--lamp);font-weight:700;letter-spacing:.05em}
+.maps .t{font-weight:700;font-size:15px;line-height:1.3}
+.maps .go{font-size:13px;color:var(--muted)}
+@media (max-width:420px){.maps{grid-template-columns:1fr}}
+.info-box{padding:12px 15px;border:1px solid var(--line);border-inline-start:3px solid var(--lamp);border-radius:10px;background:var(--surface);font-size:14px;margin-top:14px}
+.info-box p{margin:0}
+.info-box strong{color:var(--lamp)}
+
+/* ---------- timeline ---------- */
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:30px 0 4px}
+.sec-head h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0}
+.sec-head small{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.route{list-style:none;margin:6px 0 0;padding:0;position:relative;--rail-center:65px;--rail-start:18px;--rail-total:0px;--rail-progress:0px}
+.route::before{content:"";position:absolute;right:calc(var(--rail-center) - 1px);top:var(--rail-start);height:var(--rail-total);width:2px;background:var(--line)}
+.route-progress{position:absolute;right:calc(var(--rail-center) - 3px);top:var(--rail-start);height:var(--rail-progress);width:6px;border-radius:8px;background:linear-gradient(to bottom,var(--lamp),var(--live));box-shadow:0 0 11px var(--live-soft);display:none;transition:height .6s linear;pointer-events:none}
+.gps-marker{position:absolute;right:calc(var(--rail-center) - 11px);top:calc(var(--rail-start) + var(--rail-progress) - 11px);width:22px;height:22px;border-radius:50%;background:var(--live);border:4px solid var(--surface);box-shadow:0 0 0 3px var(--live-soft),0 0 15px var(--live);display:none;transition:top .6s linear;pointer-events:none;z-index:3}
+.route.tracked .route-progress,.route.tracked .gps-marker{display:block}
+.sec-li{padding-top:14px}
+.sec-li .sec-head{margin:0}
+.stop{display:grid;grid-template-columns:48px 18px 1fr;gap:0 12px;padding-block:12px;scroll-margin-top:90px}
+.time{font-variant-numeric:tabular-nums;font-weight:700;font-size:15px;color:var(--muted);padding-top:2px;text-align:left;direction:ltr}
+.dot{width:14px;height:14px;border-radius:50%;margin-top:6px;margin-inline:auto;background:var(--bg);border:2px solid var(--lamp);position:relative;z-index:1}
+.body{min-width:0}
+.name{font-weight:700;font-size:18px;line-height:1.35;margin:0}
+.latin{font-size:13px;color:var(--muted);direction:ltr;unicode-bidi:isolate;font-weight:400;display:inline-block}
+.desc{margin:4px 0 0;opacity:.92;font-size:16px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:12px;border-radius:999px;padding:1px 9px;border:1px solid var(--line);color:var(--muted)}
+.tag.meal{color:var(--live);border-color:var(--live)}
+.tag.shop{color:var(--lamp);border-color:var(--lamp)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.btn{font:inherit;font-size:14px;font-weight:600;color:var(--lamp);background:var(--lamp-soft);border:0;border-radius:8px;padding:5px 11px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:none;color:var(--muted);border:1px solid var(--line)}
+.story{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:var(--display);font-size:17px;line-height:1.75}
+.story h3{font-family:var(--body);font-size:13px;letter-spacing:.06em;color:var(--live);margin:0 0 6px}
+.story p{margin:0}
+.stop.sched .dot{box-shadow:0 0 0 5px var(--lamp-soft)}
+.stop.sched .time{color:var(--lamp)}
+.stop.meal .name{color:var(--live)}
+.stop.passed .dot{background:var(--live);border-color:var(--live)}
+.stop.passed .name,.stop.passed .desc{color:var(--done)}
+.stop.next .dot{background:var(--lamp);border-color:var(--lamp);box-shadow:0 0 0 6px var(--lamp-soft),0 0 16px var(--lamp)}
+.stop.next .time{color:var(--lamp)}
+.stop.next .name::after,.stop.at .name::after{font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:8px;vertical-align:3px;white-space:nowrap}
+.stop.next .name::after{content:"הבא";background:var(--lamp);color:var(--on-lamp)}
+.stop.at .dot{background:var(--live);border-color:var(--live);box-shadow:0 0 0 7px var(--live-soft),0 0 18px var(--live)}
+.stop.at .name{color:var(--fg)}
+.stop.at .name::after{content:"אתם כאן";background:var(--live);color:var(--on-lamp)}
+.stop.flash .body{animation:flash 1.4s ease-out}
+@keyframes flash{0%{background:var(--lamp-soft)}100%{background:transparent}}
+@media (prefers-reduced-motion:no-preference){.stop.next .dot,.stop.at .dot{animation:glow 2.4s ease-in-out infinite}}
+@keyframes glow{50%{box-shadow:0 0 0 10px var(--lamp-soft),0 0 26px var(--lamp)}}
+
+/* ---------- sticky bar + toast ---------- */
+.livebar{position:fixed;inset-inline:0;top:0;z-index:20;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px;background:var(--surface);border-bottom:1px solid var(--live);box-shadow:0 6px 20px rgba(0,0,0,.25);transform:translateY(-110%);transition:transform .25s}
+.livebar.show{transform:none}
+.livebar button{all:unset;display:flex;align-items:center;gap:12px;width:100%;max-width:660px;margin:0 auto;cursor:pointer}
+.livebar .lb-arrow{width:34px;height:34px;flex:none}
+.livebar .lb-arrow svg{width:100%;height:100%;transition:transform .35s ease-out}
+.livebar .lb-text{min-width:0;flex:1}
+.livebar .lb-name{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.livebar .lb-sub{font-size:12px;color:var(--muted)}
+.livebar .lb-dist{font-weight:700;font-size:20px;color:var(--lamp);font-variant-numeric:tabular-nums;white-space:nowrap}
+.toast{position:fixed;inset-inline:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);z-index:30;max-width:520px;margin-inline:auto;padding:12px 16px;border-radius:14px;background:var(--live);color:var(--on-lamp);font-weight:700;text-align:center;opacity:0;transform:translateY(20px);pointer-events:none;transition:.3s}
+.toast.show{opacity:1;transform:none}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer p{margin:0 0 8px}
+@media (max-width:380px){.stats{grid-template-columns:repeat(2,1fr)}.now-name{font-size:22px}.now-dist{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow"><span id="eyebrow"></span><button class="theme-toggle" id="theme-toggle" type="button">◐ מצב תצוגה</button></div>
+  <h1 id="h1"></h1>
+  <p class="sub" id="sub"></p>
+  <div class="leadline"></div>
+  <div class="meta" id="meta"></div>
+</header>
+
+<div class="banner" id="banner" hidden></div>
+
+<section class="live" id="live" aria-label="מעקב מיקום בזמן אמת">
+  <div class="live-head">
+    <div><div class="kicker">📍 מיקום חי</div></div>
+    <span class="pill" id="pill"><i></i><span id="pill-t">GPS כבוי</span></span>
+  </div>
+  <div class="now">
+    <div>
+      <div class="now-label" id="now-label">המסלול מתחיל</div>
+      <h2 class="now-name" id="now-name">—</h2>
+      <div class="now-dist" id="now-dist">—</div>
+    </div>
+    <div class="compass" id="compass" aria-hidden="true">
+      <span class="n">צפון</span>
+      <svg viewBox="0 0 100 100" id="compass-svg"><path d="M50 14 L68 70 L50 60 L32 70 Z" fill="var(--lamp)"/><circle cx="50" cy="50" r="3.5" fill="var(--surface)"/></svg>
+    </div>
+    <p class="compass-note" id="compass-note"></p>
+  </div>
+  <div class="msg" id="msg" role="status" aria-live="polite">לחצו על ״הפעל מיקום חי״ ואשרו גישה למיקום.</div>
+  <div class="stats">
+    <div class="stat"><b id="st-eta">—</b><span>הליכה</span></div>
+    <div class="stat"><b id="st-slack">—</b><span id="st-slack-l">מול הלו״ז</span></div>
+    <div class="stat"><b id="st-prog">0%</b><span>מהמסלול</span></div>
+    <div class="stat"><b id="st-acc">—</b><span>דיוק GPS</span></div>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="prog-bar"></i></div>
+  <div class="mapbox"><svg id="map" viewBox="0 0 640 360" role="img" aria-label="מפה סכמטית של המסלול והמיקום שלכם"></svg></div>
+  <p class="maplabel" id="map-label">מפה סכמטית, בלי רקע רחובות. לחצו על מספר כדי לקפוץ לתחנה.</p>
+  <div class="controls">
+    <button class="btn-main" id="btn-start" type="button" data-on="false">📍 הפעל מיקום חי</button>
+    <button class="toggle" id="btn-follow" type="button" aria-pressed="true">גלילה אוטומטית</button>
+    <button class="toggle" id="btn-wake" type="button" aria-pressed="true">מסך דלוק</button>
+  </div>
+  <details class="tools">
+    <summary>בדיקה והדגמה (בלי GPS אמיתי)</summary>
+    <div class="tools-row">
+      <button class="toggle" id="btn-sim" type="button" aria-pressed="false">▶ הליכה לדוגמה</button>
+      <button class="toggle" id="btn-open" type="button">המיקום שלי בגוגל מפות ↗</button>
+      <input id="sim-range" type="range" min="0" max="1000" step="1" value="0" aria-label="הזזת מיקום מדומה לאורך המסלול">
+    </div>
+    <div class="diag" id="diag"></div>
+  </details>
+</section>
+
+<nav class="maps" id="maps" aria-label="ניווט בגוגל מפות"></nav>
+<div class="info-box" id="infobox"></div>
+
+<ol class="route" id="route" aria-label="תחנות המסלול"><div class="route-progress" aria-hidden="true"></div><div class="gps-marker" aria-hidden="true"></div></ol>
+
+<footer>
+  <p>הקואורדינטות של התחנות משוערות (כ־20–40 מ׳). ההתקדמות מחושבת לפי קו ישר בין התחנות, ולא לפי הרחובות עצמם.</p>
+  <p>המיקום נשאר במכשיר ולא נשלח לשום שרת. כפתורי הניווט פותחים את גוגל מפות עם המיקום הנוכחי כנקודת מוצא.</p>
+</footer>
+</div>
+
+<div class="livebar" id="livebar"><button type="button" id="livebar-btn" aria-label="קפיצה לתחנה הבאה">
+  <span class="lb-arrow"><svg viewBox="0 0 100 100" id="lb-svg"><path d="M50 8 L74 78 L50 64 L26 78 Z" fill="var(--lamp)"/></svg></span>
+  <span class="lb-text"><div class="lb-name" id="lb-name">—</div><div class="lb-sub" id="lb-sub">—</div></span>
+  <span class="lb-dist" id="lb-dist">—</span>
+</button></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* =====================================================================
+   1. תוכן היום — זה החלק היחיד שמשנים בין ימי טיול
+   via   = נקודות ביניים בדרך אל התחנה (לא מוצגות, רק מכוונות את הקו)
+   r     = רדיוס הגעה במטרים
+   mode  = 'walk' (ברירת מחדל) או 'ride' (נסיעה)
+   ===================================================================== */
+const TRIP_DATE = '2026-10-11';     // התאריך לפי שעון פראג, להשוואה ללו״ז
+const HOTEL = 'Hotel King David, Hybernska 42, Prague';
+const META = {
+  eyebrow: 'יום 2 בטיול · ראשון 11.10 · <bdi dir="ltr">19:00–22:00</bdi>',
+  h1: 'ערב בפראג:<br>קניות, כיכרות ורובע יהודי',
+  sub: 'הליכה רצופה מהמלון אל העיר העתיקה, סיבוב ברובע היהודי, ארוחת ערב כשרה וחזרה דרך דלואוה.',
+  chips: ['הליכה כ־3 שעות', 'מלון: <b>King David</b>', 'ארוחה: <b>Chabad Grill 20:30</b>']
+};
+const INFO = '<p><strong>🍽️ לא לאחר למסעדה:</strong> ב־Chabad Grill צריך להגיע בזמן כדי להזמין בשרים לפני שהמטבח נסגר. אם אתם בפיגור, דלגו על התחנות הרגילות (Můstek, Široká) ופנו ישר לרובע היהודי.</p>';
+const NAV_LINKS = [
+  {k:'① מקטע ראשון', t:'מהמלון לכיכר העיר העתיקה', go:'פלדיום · Na Příkopě · Můstek · Melantrichova ↗', primary:true,
+   u:'https://www.google.com/maps/dir/Hotel+King+David,+Prague/Palladium,+Prague/Na+P%C5%99%C3%ADkop%C4%9B+22,+Prague/M%C5%AFstek,+Prague/Melantrichova+15,+Prague/Starom%C4%9Bstsk%C3%A9+n%C3%A1m%C4%9Bst%C3%AD,+Prague/'},
+  {k:'② מקטע שני', t:'רובע יהודי, ארוחה וחזרה', go:'Maiselova · Široká · Vězeňská · Chabad · Dlouhá ↗', primary:true,
+   u:'https://www.google.com/maps/dir/Starom%C4%9Bstsk%C3%A9+n%C3%A1m%C4%9Bst%C3%AD,+Prague/Maiselova+18,+Prague/%C5%A0irok%C3%A1+3,+Prague/V%C4%9Bze%C5%88sk%C3%A1+1,+Prague/Chabad+Grill,+Prague/Dlouh%C3%A1+33,+Prague/Hotel+King+David,+Prague/'}
+];
+const DAY = [
+ {title:'התאקלמות וקניות', range:'19:00–19:40', stops:[
+  {id:'hotel0', t:'19:00', name:'יציאה מהמלון', latin:'Hotel King David', lat:50.08655, lon:14.43680, r:60,
+   desc:'יוצאים לדרך. הולכים מערבה ברחוב Hybernská לכיוון כיכר הרפובליקה.'},
+  {id:'palladium', t:'19:10', name:'קניון פלדיום', latin:'Palladium', lat:50.08925, lon:14.42920, r:70, tag:'shop',
+   desc:'עצירה זריזה לקניית המעיל (Columbia או Sportisimo) בקומה התחתונה או העליונה. ביציאה מהקניון נמצא מגדל אבק השריפה.'}
+ ]},
+ {title:'העיר החדשה והעיר העתיקה', range:'19:40–20:15', stops:[
+  {id:'prikope', t:'19:40', name:'מדרחוב נא פז׳יקופה', latin:'Na Příkopě', lat:50.08597, lon:14.42758, r:55,
+   desc:'הליכה לאורך שדרת הקניות הרחבה והמוארת עד לנקודת Můstek.',
+   story:{h:'״על החפיר״',p:'המשמעות של השם היא ״על החפיר״. בימי הביניים עברה ממש כאן תעלת מים עמוקה שהקיפה את חומות העיר העתיקה והפרידה בינה לבין העיר החדשה. בשנת 1760 התעלה כוסתה, ובמקומה נסללה טיילת רחבה. עם השנים נבנו כאן ארמונות ובנקים מפוארים, והיום זהו אחד מרחובות הקניות היקרים ביותר באירופה מבחינת מחירי נדל״ן. שימו לב לארכיטקטורה המרשימה של הבניינים מעל חלונות הראווה!'}},
+  {id:'mustek', t:'19:55', name:'שדרת ואצלב', latin:'Václavské náměstí · Můstek', lat:50.08360, lon:14.42430, r:60,
+   desc:'מגע עם הכיכר המרכזית ביותר של העיר החדשה.',
+   story:{h:'הלב המודרני של צ׳כיה',p:'השדרה הזו ראתה הכול: כאן התרחשו רוב האירועים הדרמטיים של המדינה במאה ה־20. ב־1918 הוכרזה כאן העצמאות, ב־1968 נכנסו לכאן הטנקים הסובייטים כדי לדכא את הפגנות ״האביב של פראג״, וכאן גם התרחשה ״מהפכת הקטיפה״ ב־1989 שהפילה את השלטון הקומוניסטי ללא ירייה אחת, כשמאות אלפים הפגינו מול המרפסות. בקצה השדרה, במעלה הגבעה, מתנוסס המבנה העצום של המוזיאון הלאומי.'}},
+  {id:'oldtown', t:'20:00', name:'כיכר העיר העתיקה', latin:'Melantrichova → Staroměstské nám.', lat:50.08735, lon:14.42085, r:70,
+   via:[[50.08569,14.42052]],
+   desc:'נכנסים לכיכר ההיסטורית דרך סמטת Melantrichova. מתרשמים מהשעון האסטרונומי ומכנסיית טין.',
+   story:{h:'השעון האסטרונומי (Orloj)',p:'השעון האסטרונומי הפועל העתיק ביותר בעולם, שהותקן ב־1410. הוא לא מראה רק את השעה, אלא גם את מחזור השמש והירח. האגדה מספרת שמועצת העיר עיוורה את בונה השעון, מאסטר האנוש, כדי שלא יוכל לבנות שעון יפה כזה בשום עיר אחרת. בכל שעה עגולה מופיעה תהלוכת 12 השליחים בחלונות למעלה. שימו לב גם לדמויות בצדדים: שלד המסמל את המוות מושך בפעמון, ולצידו דמויות המייצגות חטאים כמו יהירות (הדמות עם המראה) וקמצנות (הדמות עם שק המטבעות).'}}
+ ]},
+ {title:'הרובע היהודי', range:'20:15–20:30', stops:[
+  {id:'maisel', t:'20:15', name:'לב הרובע היהודי', latin:'Maiselova 18', lat:50.08973, lon:14.41844, r:55,
+   desc:'כניסה לרחובות ההיסטוריים של יוזפוב. עוברים ליד בית הקהילה (השעון ההפוך) ובית הכנסת מייזל.',
+   story:{h:'בית הקהילה והשעון ההפוך',p:'המבנה המרשים הזה נבנה ב־1586 במימונו של מרדכי מייזל, שהיה ראש הקהילה ושר האוצר של המלך. המבנה סימל את האוטונומיה של היהודים בגטו. תרימו את הראש אל הגג: יש פה שני שעונים. אחד רגיל עם ספרות רומיות, ואחד נוסף עם אותיות בעברית. שימו לב למחוגים של השעון העברי: הם זזים מימין לשמאל, נגד כיוון השעון הרגיל, בדיוק כפי שהשפה העברית נכתבת ונקראת.'}},
+  {id:'siroka', t:'', name:'חומות בית הקברות העתיק', latin:'Široká 3 · בית הכנסת פנקס', lat:50.08921, lon:14.41699, r:50,
+   desc:'ממשיכים ברחוב Široká, לצד חומות בית הקברות העתיק ובית הכנסת פנקס.',
+   story:{h:'בית הקברות היהודי העתיק',p:'אחד מבתי הקברות היהודיים החשובים בעולם, שפעל מהמאה ה־15 ועד סוף המאה ה־18. מכיוון שליהודים היה אסור להרחיב את שטח הקבורה מחוץ לגבולות הגטו במשך מאות שנים, הם נאלצו להביא אדמה ולקבור את המתים שכבה על גבי שכבה. ההערכה היא שיש כאן במקומות מסוימים 12 קומות של קברים. מעל פני השטח רואים כ־12,000 מצבות צפופות שמבצבצות מבעד לחומה, אבל קבורים כאן למעלה מ־100,000 איש. המפורסם שבהם הוא המהר״ל מפראג, יוצר הגולם.'}},
+  {id:'spanish', t:'20:25', name:'בית הכנסת הספרדי', latin:'Vězeňská 1', lat:50.09036, lon:14.42085, r:50,
+   desc:'עוברים ליד המבנה המורי המרשים בדרך אל המסעדה.'}
+ ]},
+ {title:'ארוחת ערב וחזרה', range:'20:30–22:00', stops:[
+  {id:'chabad', t:'20:30', leave:'21:40', name:'ארוחת ערב ב־Chabad Grill', latin:'U Milosrdných 6', lat:50.09165, lon:14.42111, r:50, tag:'meal',
+   desc:'להגיע בזמן כדי להזמין בשרים לפני סגירת המטבח. יציאה מהמסעדה בסביבות 21:40.'},
+  {id:'dlouha', t:'', name:'רחוב דלואוה', latin:'Dlouhá 33', lat:50.09070, lon:14.42590, r:60,
+   desc:'הליכה רצופה לאורך רחוב חיי הלילה המקומי, כ־20 דקות עד למלון.'},
+  {id:'hotel1', t:'22:00', approx:true, name:'חזרה למלון', latin:'Hotel King David', lat:50.08655, lon:14.43680, r:60,
+   desc:'סוף היום. השעה משוערת: 21:40 ועוד כ־20 דקות הליכה.'}
+ ]}
+];
+
+/* =====================================================================
+   2. גיאומטריה ובניית המסלול
+   ===================================================================== */
+const R_EARTH = 6371000, WALK_MPM = 75, RIDE_MPM = 250;
+const rad = d => d*Math.PI/180, deg = r => r*180/Math.PI;
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+function off(a, ref){ const k = Math.cos(rad((a.lat+ref.lat)/2)); return {x:R_EARTH*rad(a.lon-ref.lon)*k, y:R_EARTH*rad(a.lat-ref.lat)}; }
+function dist(a,b){ const q = off(a,b); return Math.hypot(q.x,q.y); }
+function bearing(a,b){
+  const f1=rad(a.lat), f2=rad(b.lat), dl=rad(b.lon-a.lon);
+  return (deg(Math.atan2(Math.sin(dl)*Math.cos(f2), Math.cos(f1)*Math.sin(f2)-Math.sin(f1)*Math.cos(f2)*Math.cos(dl)))+360)%360;
+}
+const toMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(t||''); return m ? (+m[1])*60 + (+m[2]) : null; };
+
+const stops = [], nodes = [];
+DAY.forEach((sec, si) => sec.stops.forEach(s => {
+  const mode = s.mode || 'walk';
+  (s.via||[]).forEach(v => nodes.push({lat:v[0], lon:v[1], stop:-1, mode}));
+  s.i = stops.length; s.sec = si; stops.push(s);
+  nodes.push({lat:s.lat, lon:s.lon, stop:s.i, mode});
+}));
+const NS = stops.length;
+const stopNode = stops.map((s,i) => nodes.findIndex(n => n.stop === i));
+const cum = [0];
+for (let k=1; k<nodes.length; k++) cum[k] = cum[k-1] + dist(nodes[k-1], nodes[k]);
+const TOTAL = cum[cum.length-1];
+const stopCum = stopNode.map(k => cum[k]);
+
+function seg(p, k){
+  const A = off(nodes[k], p), B = off(nodes[k+1], p);
+  const dx = B.x-A.x, dy = B.y-A.y, L2 = dx*dx+dy*dy;
+  const t = L2 ? clamp(-(A.x*dx+A.y*dy)/L2, 0, 1) : 0;
+  return {k, t, d: Math.hypot(A.x+t*dx, A.y+t*dy)};
+}
+function snap(p, k0, k1){
+  let best = null;
+  for (let k=k0; k<k1; k++){ const s = seg(p,k); if (!best || s.d < best.d) best = s; }
+  return best;
+}
+const legLen = k => cum[k+1]-cum[k];
+const legLimit = k => nodes[k+1].mode === 'ride' ? 320 : 170;
+function posFromD(D){
+  for (let i=0; i<NS-1; i++){
+    if (D <= stopCum[i+1]){ const L = stopCum[i+1]-stopCum[i]; return i + (L ? clamp((D-stopCum[i])/L, 0, 1) : 0); }
+  }
+  return NS-1;
+}
+function pointAt(D){
+  D = clamp(D, 0, TOTAL);
+  for (let k=0; k<nodes.length-1; k++){
+    if (D <= cum[k+1]){ const L = legLen(k), t = L ? (D-cum[k])/L : 0;
+      return {lat:nodes[k].lat+(nodes[k+1].lat-nodes[k].lat)*t, lon:nodes[k].lon+(nodes[k+1].lon-nodes[k].lon)*t}; }
+  }
+  return nodes[nodes.length-1];
+}
+
+/* =====================================================================
+   3. מצב
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const st = {status:'idle', src:null, fix:null, pos:0, D:0, off:false, offDist:0, atIdx:null, arrived:{},
+  hasLocated:false, jumpVotes:0, watchId:null, lastFixAt:0, prev:null, speed:null, compass:null, compassAt:0,
+  follow:true, wakeWanted:true, wake:null, lastNext:-1, lastUserScroll:0, simTimer:null, simD:0};
+const store = {
+  get(k){ try{ return localStorage.getItem('prague-d2-'+k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem('prague-d2-'+k, v); }catch(e){} }
+};
+function pragueNow(){
+  try{
+    const parts = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Prague',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+    const g = t => (parts.find(p => p.type===t)||{}).value;
+    return {date:g('year')+'-'+g('month')+'-'+g('day'), min:(+g('hour'))*60 + (+g('minute')), hhmm:g('hour')+':'+g('minute')};
+  }catch(e){ const d = new Date(); return {date:'', min:d.getHours()*60+d.getMinutes(), hhmm:d.toTimeString().slice(0,5)}; }
+}
+const isTripDay = () => pragueNow().date === TRIP_DATE;
+function fmtDist(m){ if (m < 100) return Math.round(m/5)*5 + ' מ׳'; if (m < 1000) return Math.round(m/10)*10 + ' מ׳'; return (m/1000).toFixed(1) + ' ק״מ'; }
+function mpm(k){ return nodes[k] && nodes[k].mode === 'ride' ? RIDE_MPM : WALK_MPM; }
+const live = () => st.status === 'live' || st.status === 'weak';
+
+/* =====================================================================
+   4. עיבוד נקודת מיקום
+   ===================================================================== */
+function firstFixLeg(p){
+  const all = []; let best = Infinity;
+  for (let k=0; k<nodes.length-1; k++){ const s = seg(p,k); all.push(s); if (s.d < best) best = s.d; }
+  const near = all.filter(s => s.d <= best+40);
+  const lastT = toMin(stops[NS-1].t), now = pragueNow();
+  const late = isTripDay() && lastT !== null && now.min >= lastT-30;
+  return late ? near[near.length-1] : near[0];
+}
+function onFix(f){
+  const now = Date.now();
+  if (st.prev && f.src !== 'sim'){
+    const dt = (now - st.prev.at)/1000;
+    if (dt > 0.8 && dt < 40) st.speed = dist(f, st.prev)/dt;
+  }
+  if (typeof f.speed === 'number' && f.speed >= 0) st.speed = f.speed;
+  st.prev = {lat:f.lat, lon:f.lon, at:now};
+  st.fix = f; st.lastFixAt = now;
+  if (!(f.acc <= 150)){ st.status = 'weak'; render(); return; }
+  st.status = 'live';
+
+  const c = Math.floor(st.pos + 1e-6);
+  let pick;
+  if (!st.hasLocated){ pick = firstFixLeg(f); }
+  else {
+    const win = snap(f, stopNode[Math.max(0,c-1)], stopNode[Math.min(NS-1,c+3)]);
+    const glob = snap(f, 0, nodes.length-1);
+    if (win.d <= legLimit(win.k) || win.d <= glob.d + 60){ pick = win; st.jumpVotes = 0; }
+    else if (++st.jumpVotes >= 2){ pick = glob; st.jumpVotes = 0; }
+    else pick = win;
+  }
+  st.off = pick.d > legLimit(pick.k);
+  st.offDist = pick.d;
+  if (!st.off){
+    const D = cum[pick.k] + pick.t*legLen(pick.k), np = posFromD(D);
+    if (!(np < st.pos && st.pos - np < 0.06)){ st.D = D; st.pos = np; }
+    st.hasLocated = true;
+  }
+
+  // הגעה לתחנה
+  st.atIdx = null;
+  const c2 = Math.floor(st.pos + 1e-6);
+  let bestD = Infinity;
+  for (let j=Math.max(0,c2-1); j<=Math.min(NS-1,c2+3); j++){
+    const d = dist(f, stops[j]), r = Math.max(stops[j].r||45, Math.min(f.acc*0.9, 70));
+    if (d <= r && d < bestD){ bestD = d; st.atIdx = j; }
+  }
+  if (st.atIdx !== null){
+    const j = st.atIdx;
+    if (st.pos < j){ st.pos = j; st.D = stopCum[j]; st.hasLocated = true; }
+    if (!st.arrived[j]){ st.arrived[j] = true; onArrive(j); }
+  }
+  render();
+}
+function onArrive(j){
+  const s = stops[j];
+  toast(j === NS-1 ? 'הגעתם למלון. ערב מוצלח!' : 'הגעתם: ' + s.name);
+  try{ if (navigator.vibrate) navigator.vibrate([140,70,140]); }catch(e){}
+}
+function nextIdx(){
+  if (st.atIdx !== null) return Math.min(NS-1, st.atIdx+1);
+  return Math.min(NS-1, Math.floor(st.pos + 1e-6) + 1);
+}
+function setCursor(i){
+  st.pos = i; st.D = stopCum[i]; st.atIdx = null; st.hasLocated = true; st.off = false;
+  store.set('cursor', String(i));
+  toast('סומן: אתם ב״' + stops[i].name + '״');
+  render(); scrollToStop(i);
+}
+
+/* =====================================================================
+   5. GPS: הפעלה, שגיאות, חידוש
+   ===================================================================== */
+function ok(p){ onFix({lat:p.coords.latitude, lon:p.coords.longitude, acc:p.coords.accuracy, speed:p.coords.speed, heading:p.coords.heading, src:'gps'}); }
+function fail(e){
+  if (e.code === 1){ stopWatch(); st.status = 'denied'; setMsg('הגישה למיקום נדחתה. אשרו מיקום לאתר זה בהגדרות הדפדפן (סמל המנעול ליד הכתובת) ונסו שוב.', 'warn'); }
+  else if (e.code === 2){ st.status = 'searching'; setMsg('לא ניתן לקבוע מיקום. בדקו ששירותי המיקום בטלפון פועלים.', 'warn'); }
+  else { st.status = 'searching'; setMsg('מחפש אות GPS… כדאי לעמוד במקום פתוח, רחוק מבניינים גבוהים.', 'warn'); }
+  render();
+}
+function stopWatch(){ if (st.watchId !== null){ try{ navigator.geolocation.clearWatch(st.watchId); }catch(e){} st.watchId = null; } }
+function watch(){
+  stopWatch();
+  st.watchId = navigator.geolocation.watchPosition(ok, fail, {enableHighAccuracy:true, maximumAge:0, timeout:30000});
+}
+function startGps(){
+  if (!('geolocation' in navigator)){ setMsg('הדפדפן הזה לא תומך ב־GPS. נסו Chrome או Safari.', 'warn'); return; }
+  if (!window.isSecureContext){ renderBanner(); setMsg('האתר לא נפתח ב־https, ולכן הדפדפן חוסם את המיקום. ראו ההסבר למעלה.', 'warn'); return; }
+  stopSim(); requestCompass();
+  st.src = 'gps'; st.status = 'searching'; st.fix = null;
+  setMsg('מבקש הרשאת מיקום… אשרו את הבקשה של הדפדפן.');
+  try{ watch(); }catch(e){ st.status = 'idle'; setMsg('לא הצלחתי להפעיל GPS.', 'warn'); }
+  if (st.wakeWanted) wakeOn();
+  render();
+}
+function stopGps(){
+  stopWatch(); stopSim(); wakeOff();
+  st.status = 'idle'; st.src = null; st.fix = null; st.atIdx = null; st.off = false;
+  setMsg('המעקב הופסק. לחצו על ״הפעל מיקום חי״ כדי לחדש.');
+  render();
+}
+setInterval(function(){
+  if (st.src !== 'gps' || !(st.status === 'live' || st.status === 'weak' || st.status === 'searching')) return;
+  const age = Date.now() - (st.lastFixAt || 0);
+  if (st.lastFixAt && age > 25000 && st.status !== 'searching'){ st.status = 'searching'; setMsg('אין עדכון מיקום כבר ' + Math.round(age/1000) + ' שניות. ממשיך לחפש…', 'warn'); render(); }
+  if (age > 60000 && st.lastFixAt){ try{ watch(); st.lastFixAt = Date.now(); }catch(e){} }
+}, 5000);
+document.addEventListener('visibilitychange', function(){
+  if (document.visibilityState !== 'visible') return;
+  if (st.src === 'gps' && st.status !== 'idle' && st.status !== 'denied'){ try{ watch(); }catch(e){} }
+  if (st.src && st.wakeWanted) wakeOn();
+});
+
+/* מסך דלוק */
+async function wakeOn(){
+  try{ if (!navigator.wakeLock || st.wake) return;
+    st.wake = await navigator.wakeLock.request('screen');
+    st.wake.addEventListener('release', function(){ st.wake = null; });
+  }catch(e){ st.wake = null; }
+}
+function wakeOff(){ try{ if (st.wake) st.wake.release(); }catch(e){} st.wake = null; }
+
+/* מצפן */
+function requestCompass(){
+  try{
+    const handler = function(e){
+      let a = null;
+      if (typeof e.webkitCompassHeading === 'number') a = e.webkitCompassHeading;
+      else if (e.absolute && typeof e.alpha === 'number') a = (360 - e.alpha) % 360;
+      if (a !== null){ st.compass = a; st.compassAt = Date.now(); paintArrow(); }
+    };
+    const add = function(){ window.addEventListener('deviceorientationabsolute', handler, true); window.addEventListener('deviceorientation', handler, true); };
+    if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function'){
+      DeviceOrientationEvent.requestPermission().then(function(r){ if (r === 'granted') add(); }).catch(function(){});
+    } else add();
+  }catch(e){}
+}
+
+/* הדמיה */
+function simTo(D){ st.simD = clamp(D,0,TOTAL); const q = pointAt(st.simD); onFix({lat:q.lat, lon:q.lon, acc:9, speed:1.3, src:'sim'}); $('sim-range').value = String(Math.round(st.simD/TOTAL*1000)); }
+function enterSim(){ stopWatch(); wakeOff(); st.src = 'sim'; st.status = 'live'; st.lastFixAt = Date.now(); }
+function startSim(){
+  enterSim(); st.hasLocated = false; st.pos = 0; st.arrived = {}; st.simD = 0;
+  if (st.simTimer) clearInterval(st.simTimer);
+  st.simTimer = setInterval(function(){
+    if (st.simD >= TOTAL){ stopSim(); return; }
+    const near = stops.findIndex(s => Math.abs(stopCum[s.i]-st.simD) < 12);
+    simTo(st.simD + (near >= 0 && !st.arrived[near] ? 3 : 24));
+  }, 700);
+  $('btn-sim').setAttribute('aria-pressed','true'); $('btn-sim').textContent = '■ עצירת הדמיה';
+  simTo(0);
+}
+function stopSim(){
+  if (st.simTimer){ clearInterval(st.simTimer); st.simTimer = null; }
+  $('btn-sim').setAttribute('aria-pressed','false'); $('btn-sim').textContent = '▶ הליכה לדוגמה';
+}
+
+/* =====================================================================
+   6. ציור
+   ===================================================================== */
+function setMsg(t, cls){ const m = $('msg'); m.textContent = t; m.className = 'msg' + (cls ? ' '+cls : ''); }
+let toastT = null;
+function toast(t){ const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ el.classList.remove('show'); }, 3800); }
+
+function renderHeader(){
+  $('eyebrow').innerHTML = META.eyebrow; $('h1').innerHTML = META.h1; $('sub').textContent = META.sub;
+  $('meta').innerHTML = META.chips.map(c => '<span class="chip">'+c+'</span>').join('') + '<span class="chip clock" id="clock">שעון פראג: --:--</span>';
+  $('infobox').innerHTML = INFO;
+  $('maps').innerHTML = NAV_LINKS.map(n => '<a'+(n.primary?' class="primary"':'')+' href="'+n.u+'" target="_blank" rel="noopener"><span class="k">'+n.k+'</span><span class="t">'+n.t+'</span><span class="go">'+n.go+'</span></a>').join('');
+}
+function tick(){ const c = $('clock'); if (c) c.textContent = 'שעון פראג: ' + pragueNow().hhmm; if (!live()) paintSchedule(); }
+const dirUrl = s => 'https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lon+'&travelmode=walking';
+
+function renderTimeline(){
+  const ol = $('route'); const keep = Array.from(ol.querySelectorAll('.route-progress,.gps-marker'));
+  ol.innerHTML = ''; keep.forEach(k => ol.appendChild(k));
+  DAY.forEach(function(sec){
+    const h = document.createElement('li'); h.className = 'sec-li';
+    h.innerHTML = '<div class="sec-head"><h2>'+sec.title+'</h2><small>'+sec.range+'</small></div>';
+    ol.appendChild(h);
+    sec.stops.forEach(function(s){
+      const li = document.createElement('li');
+      li.className = 'stop' + (s.tag === 'meal' ? ' meal' : ''); li.id = 'stop-'+s.i; li.dataset.i = s.i;
+      const time = s.t ? (s.approx ? '≈' : '') + s.t : '·';
+      li.innerHTML =
+        '<div class="time">'+time+'</div><div class="dot"></div><div class="body">'+
+        '<p class="name">'+s.name+' <span class="latin">'+s.latin+'</span></p>'+
+        '<p class="desc">'+s.desc+'</p>'+
+        (s.tag ? '<div class="tags"><span class="tag '+s.tag+'">'+(s.tag==='meal'?'ארוחה כשרה':'קניות')+'</span>'+(s.leave?'<span class="tag">יציאה '+s.leave+'</span>':'')+'</div>' : (s.leave?'<div class="tags"><span class="tag">יציאה '+s.leave+'</span></div>':''))+
+        '<div class="actions">'+
+          (s.story ? '<button class="btn" type="button" data-story="'+s.id+'" aria-expanded="false">מה מספרים כאן</button>' : '')+
+          '<a class="btn ghost" href="'+dirUrl(s)+'" target="_blank" rel="noopener">נווט לכאן ↗</a>'+
+          '<button class="btn ghost" type="button" data-here="'+s.i+'">אני כאן</button>'+
+        '</div>'+
+        (s.story ? '<div class="story" id="story-'+s.id+'" hidden><h3>'+s.story.h+'</h3><p>'+s.story.p+'</p></div>' : '')+
+        '</div>';
+      ol.appendChild(li);
+    });
+  });
+}
+const liOf = i => $('stop-'+i);
+function railYs(){
+  const ol = $('route'), rr = ol.getBoundingClientRect();
+  const dots = stops.map(s => liOf(s.i).querySelector('.dot').getBoundingClientRect());
+  const ys = dots.map(d => (d.top+d.bottom)/2 - rr.top);
+  ol.style.setProperty('--rail-center', (rr.right - (dots[0].left+dots[0].right)/2).toFixed(1)+'px');
+  ol.style.setProperty('--rail-start', ys[0].toFixed(1)+'px');
+  ol.style.setProperty('--rail-total', (ys[NS-1]-ys[0]).toFixed(1)+'px');
+  return ys;
+}
+function paintRail(){
+  const ol = $('route'), ys = railYs();
+  if (!live() && st.src !== 'manual' && !st.hasLocated){ ol.classList.remove('tracked'); return; }
+  const pos = clamp(st.pos, 0, NS-1), part = Math.min(Math.floor(pos), NS-2), t = pos-part;
+  const y = ys[part] + (ys[part+1]-ys[part])*t;
+  ol.style.setProperty('--rail-progress', Math.max(0, y-ys[0]).toFixed(1)+'px');
+  ol.classList.add('tracked');
+}
+function paintSchedule(){
+  if (live() || st.hasLocated) return;
+  const now = pragueNow(); let cur = -1;
+  if (isTripDay()) stops.forEach(function(s,i){ const m = toMin(s.t); if (m !== null && m <= now.min) cur = i; });
+  stops.forEach(function(s,i){ liOf(i).classList.toggle('sched', i === cur); });
+}
+function paintStops(){
+  const ni = nextIdx(), fin = st.atIdx === NS-1;
+  stops.forEach(function(s,i){
+    const li = liOf(i), tracking = live() || st.hasLocated;
+    li.classList.toggle('at', tracking && st.atIdx === i);
+    li.classList.toggle('next', tracking && !fin && i === ni && st.atIdx !== i);
+    li.classList.toggle('passed', tracking && (i < st.pos - 0.02) && st.atIdx !== i);
+    if (tracking) li.classList.remove('sched');
+  });
+}
+function nearestStop(f){ let b = 0, bd = Infinity; stops.forEach(function(s,i){ const d = dist(f,s); if (d < bd){ bd = d; b = i; } }); return {i:b, d:bd}; }
+
+function paintArrow(){
+  const ni = nextIdx(); const f = st.fix; let rot = 0, note = 'צפון למעלה';
+  if (f && stops[ni]){
+    const b = bearing(f, stops[ni]);
+    let h = null;
+    if (st.compass !== null && Date.now()-st.compassAt < 4000){ h = st.compass; note = 'לפי המצפן של הטלפון'; }
+    else if (st.speed !== null && st.speed > 0.8 && st.fix && typeof st.fix.heading === 'number' && !isNaN(st.fix.heading)){ h = st.fix.heading; note = 'לפי כיוון ההליכה'; }
+    rot = (b - (h || 0) + 360) % 360;
+    if (h === null){ const names = ['צפון','צפון־מזרח','מזרח','דרום־מזרח','דרום','דרום־מערב','מערב','צפון־מערב']; note = 'כיוון לתחנה: ' + names[Math.round(b/45)%8] + ' (החזיקו את הטלפון עם הפנים לצפון)'; }
+  }
+  $('compass-svg').style.transform = 'rotate('+rot.toFixed(0)+'deg)';
+  $('lb-svg').style.transform = 'rotate('+rot.toFixed(0)+'deg)';
+  $('compass-note').textContent = f ? note : '';
+}
+
+function drawMap(){
+  const MW = 640, MH = 360, svg = $('map'), f = st.fix, ni = nextIdx();
+  let pts, zoomed = false;
+  if (live() && f){ zoomed = true; pts = [f]; [ni-1, ni, ni+1].forEach(j => { if (stops[j]) pts.push(stops[j]); }); } else pts = nodes;
+  let a = 90, b = -90, c = 180, d = -180;
+  pts.forEach(p => { a = Math.min(a,p.lat); b = Math.max(b,p.lat); c = Math.min(c,p.lon); d = Math.max(d,p.lon); });
+  const cLat = (a+b)/2, cLon = (c+d)/2, my = 110574, mx = 111320*Math.cos(rad(cLat));
+  const sx = Math.max((d-c)*mx*1.3, 280), sy = Math.max((b-a)*my*1.3, 180);
+  const sc = Math.min(MW/sx, MH/sy);
+  const X = p => MW/2 + (p.lon-cLon)*mx*sc, Y = p => MH/2 - (p.lat-cLat)*my*sc;
+  let h = '';
+  for (let k=0; k<nodes.length-1; k++){
+    const done = (live() || st.hasLocated) && cum[k+1] <= st.D + 0.5, ride = nodes[k+1].mode === 'ride';
+    h += '<line x1="'+X(nodes[k]).toFixed(1)+'" y1="'+Y(nodes[k]).toFixed(1)+'" x2="'+X(nodes[k+1]).toFixed(1)+'" y2="'+Y(nodes[k+1]).toFixed(1)+'" stroke="'+(done?'var(--live)':'var(--line)')+'" stroke-width="'+(done?4:3)+'" stroke-linecap="round"'+(ride?' stroke-dasharray="3 7"':'')+'/>';
+  }
+  const tracking = live() || st.hasLocated;
+  stops.forEach(function(s,i){
+    const x = X(s), y = Y(s), isNext = tracking && i === ni && st.atIdx !== i && st.atIdx !== NS-1, isAt = tracking && st.atIdx === i, passed = tracking && i < st.pos - 0.02;
+    const fill = isAt ? 'var(--live)' : isNext ? 'var(--lamp)' : passed ? 'var(--live)' : 'var(--surface)';
+    const stroke = isNext ? 'var(--lamp)' : passed || isAt ? 'var(--live)' : 'var(--muted)';
+    h += '<g data-i="'+i+'" style="cursor:pointer"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(isNext?15:12)+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2.5"/>';
+    h += '<text x="'+x.toFixed(1)+'" y="'+(y+4).toFixed(1)+'" text-anchor="middle" font-size="12" font-weight="700" fill="'+((isNext||isAt||passed)?'var(--on-lamp)':'var(--fg)')+'">'+(i+1)+'</text>';
+    if (isNext || isAt || (zoomed && Math.abs(i-ni) <= 1))
+      h += '<text x="'+x.toFixed(1)+'" y="'+(y-20).toFixed(1)+'" text-anchor="middle" font-size="13" font-weight="700" fill="var(--fg)" stroke="var(--bg)" stroke-width="4" paint-order="stroke" direction="rtl">'+s.name+'</text>';
+    h += '</g>';
+  });
+  if (f && live()){
+    const x = X(f), y = Y(f), rr = clamp(f.acc*sc, 8, 70);
+    h += '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+rr.toFixed(1)+'" fill="var(--live)" opacity=".16"/>';
+    h += '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="8" fill="var(--live)" stroke="var(--surface)" stroke-width="3"/>';
+  }
+  svg.innerHTML = h;
+  $('map-label').textContent = zoomed ? 'התצוגה מתמקדת בכם ובתחנה הבאה. לחצו על מספר כדי לקפוץ לתחנה.' : 'מפה סכמטית של כל המסלול, בלי רקע רחובות. לחצו על מספר כדי לקפוץ לתחנה.';
+}
+
+function render(){
+  const f = st.fix, tracking = live() || st.hasLocated, ni = nextIdx(), fin = st.atIdx === NS-1;
+  // pill
+  const pill = $('pill'), labels = {idle:'GPS כבוי', searching:'מחפש אות', live:'מיקום חי', weak:'אות חלש', denied:'אין הרשאה'};
+  let cls = st.status; let txt = labels[st.status] || '';
+  if (st.src === 'sim' && live()){ cls = 'sim'; txt = 'הדמיה'; }
+  pill.className = 'pill ' + cls; $('pill-t').textContent = txt;
+  const btn = $('btn-start'); const on = st.status !== 'idle' && st.status !== 'denied';
+  btn.dataset.on = String(on); btn.textContent = on ? 'הפסק מעקב' : '📍 הפעל מיקום חי';
+
+  // readout
+  if (!tracking){
+    $('now-label').textContent = 'המסלול מתחיל'; $('now-name').textContent = stops[0].name; $('now-dist').innerHTML = '—';
+    $('st-eta').textContent = '—'; $('st-slack').textContent = '—'; $('st-acc').textContent = '—'; $('st-prog').textContent = '0%'; $('prog-bar').style.width = '0%';
+  } else {
+    const nxt = stops[ni]; let remain = null;
+    if (f && live()) remain = (!st.off && st.atIdx === null) ? Math.max(0, stopCum[ni]-st.D) : dist(f, nxt);
+    $('now-label').textContent = fin ? 'סיימתם את המסלול' : (st.atIdx !== null ? 'אתם ב' + '״' + stops[st.atIdx].name + '״ · התחנה הבאה' : 'התחנה הבאה');
+    $('now-name').textContent = fin ? stops[NS-1].name : nxt.name;
+    $('now-dist').innerHTML = (fin || remain === null) ? '—' : fmtDist(remain) + (st.off ? '<small>בקו אווירי</small>' : '');
+    if (remain !== null && !fin){
+      const eta = Math.max(1, Math.ceil(remain / mpm(stopNode[ni]))); $('st-eta').textContent = eta + ' דק׳';
+      const pm = toMin(nxt.t);
+      if (pm !== null && isTripDay()){
+        const slack = pm - (pragueNow().min + eta);
+        $('st-slack').textContent = (slack >= 0 ? '+' : '−') + Math.abs(slack) + ' דק׳';
+        $('st-slack-l').textContent = slack >= 0 ? 'מרווח לתחנה' : 'איחור לתחנה';
+      } else { $('st-slack').textContent = nxt.t || '·'; $('st-slack-l').textContent = nxt.t ? 'שעה בלו״ז' : 'ללא שעה'; }
+    } else { $('st-eta').textContent = '—'; $('st-slack').textContent = '—'; }
+    const pct = Math.round(clamp(st.D/TOTAL, 0, 1)*100); $('st-prog').textContent = pct + '%'; $('prog-bar').style.width = pct + '%';
+    $('st-acc').textContent = f ? '±' + Math.round(f.acc) + ' מ׳' : '—';
+  }
+
+  // message
+  if (live() && f){
+    if (st.status === 'weak') setMsg('קליטת GPS חלשה (±' + Math.round(f.acc) + ' מ׳). ממתין לשיפור, ההתקדמות לא מתעדכנת עד אז.', 'warn');
+    else if (st.off && !st.hasLocated){ const n = nearestStop(f); setMsg('אתם כ־' + fmtDist(n.d) + ' מהתחנה הקרובה (' + stops[n.i].name + ') ועדיין לא על המסלול. לחצו ״אני כאן״ על תחנה כדי לסמן ידנית.', 'warn'); }
+    else if (st.off){ const n = nearestStop(f); setMsg('אתם כ־' + fmtDist(st.offDist) + ' מהקו המתוכנן. התחנה הקרובה אליכם: ' + stops[n.i].name + '. אפשר ללחוץ ״אני כאן״ כדי לסמן ידנית.', 'warn'); }
+    else if (fin) setMsg('הגעתם למלון. ערב מוצלח!', 'ok');
+    else if (st.atIdx !== null) setMsg('הגעתם: ' + stops[st.atIdx].name + '.', 'ok');
+    else setMsg('בדרך אל ' + stops[ni].name + (st.speed !== null && st.speed > 0.3 ? ' · מהירות ' + (st.speed*3.6).toFixed(1) + ' קמ״ש' : '') + '.', 'ok');
+  }
+
+  paintStops(); paintRail(); drawMap(); paintArrow();
+
+  // sticky bar
+  const lb = $('livebar'), liveEl = $('live').getBoundingClientRect(), hidden = liveEl.bottom < 0;
+  $('lb-name').textContent = fin ? 'סיימתם' : stops[ni].name;
+  $('lb-sub').textContent = st.atIdx !== null && !fin ? 'אתם ב' + stops[st.atIdx].name : (st.off ? 'מחוץ למסלול' : 'התחנה הבאה');
+  const dtxt = $('now-dist').textContent; $('lb-dist').textContent = dtxt === '—' ? '' : dtxt.replace('בקו אווירי','');
+  lb.classList.toggle('show', live() && hidden);
+
+  // follow
+  if (live() && st.follow && ni !== st.lastNext && Date.now() - st.lastUserScroll > 8000){ scrollToStop(st.atIdx !== null ? st.atIdx : ni, true); }
+  st.lastNext = ni;
+}
+
+function scrollToStop(i, quiet){
+  const el = liOf(i); if (!el) return;
+  try{ el.scrollIntoView({block: 'center', behavior: 'smooth'}); }catch(e){ el.scrollIntoView(); }
+  if (!quiet){ el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+}
+
+/* =====================================================================
+   7. אבחון, באנר, אירועים
+   ===================================================================== */
+function renderBanner(){
+  const b = $('banner');
+  if (!window.isSecureContext){
+    b.hidden = false;
+    b.innerHTML = '<p><b>המיקום החי חסום בפתיחה הזו.</b> דפדפנים מאפשרים GPS רק בדף שנפתח בכתובת <b>https://</b> (או localhost). קובץ שנפתח ישירות מהטלפון או מהמחשב לרוב נחסם.</p><p>הפתרון: להעלות את הקובץ לאחסון חינמי כמו GitHub Pages או Netlify Drop ולפתוח את הכתובת בטלפון.</p>';
+  } else b.hidden = true;
+}
+function renderDiag(){
+  const items = [];
+  items.push([window.isSecureContext, window.isSecureContext ? 'https ✓' : 'לא https']);
+  items.push(['geolocation' in navigator, 'geolocation' in navigator ? 'API מיקום ✓' : 'אין API מיקום']);
+  const d = $('diag');
+  const paint = function(perm){
+    const all = items.slice();
+    if (perm) all.push([perm === 'granted', 'הרשאה: ' + ({granted:'ניתנה', denied:'נדחתה', prompt:'תתבקש'}[perm] || perm)]);
+    d.innerHTML = all.map(x => '<span class="'+(x[0]?'good':'bad')+'">'+x[1]+'</span>').join('');
+  };
+  paint(null);
+  try{ navigator.permissions.query({name:'geolocation'}).then(function(r){ paint(r.state); r.onchange = function(){ paint(r.state); }; }).catch(function(){}); }catch(e){}
+}
+
+function bind(){
+  $('route').addEventListener('click', function(e){
+    const sb = e.target.closest('[data-story]');
+    if (sb){ const el = $('story-'+sb.dataset.story); el.hidden = !el.hidden; sb.setAttribute('aria-expanded', String(!el.hidden)); return; }
+    const hb = e.target.closest('[data-here]');
+    if (hb){ if (st.src === null){ st.src = 'manual'; } setCursor(+hb.dataset.here); }
+  });
+  $('map').addEventListener('click', function(e){ const g = e.target.closest('[data-i]'); if (g) scrollToStop(+g.dataset.i); });
+  $('btn-start').addEventListener('click', function(){ (st.status === 'idle' || st.status === 'denied') ? startGps() : stopGps(); });
+  $('btn-follow').addEventListener('click', function(){ st.follow = !st.follow; this.setAttribute('aria-pressed', String(st.follow)); store.set('follow', st.follow?'1':'0'); });
+  $('btn-wake').addEventListener('click', function(){ st.wakeWanted = !st.wakeWanted; this.setAttribute('aria-pressed', String(st.wakeWanted)); store.set('wake', st.wakeWanted?'1':'0'); st.wakeWanted ? (st.src && wakeOn()) : wakeOff(); });
+  $('btn-sim').addEventListener('click', function(){ st.simTimer ? (stopSim(), st.status='idle', st.src=null, render()) : startSim(); });
+  $('sim-range').addEventListener('input', function(){ if (st.simTimer) stopSim(); if (st.src !== 'sim'){ enterSim(); st.hasLocated = false; st.pos = 0; } simTo(+this.value/1000*TOTAL); });
+  $('btn-open').addEventListener('click', function(){
+    if (!st.fix){ toast('אין עדיין מיקום. הפעילו קודם מיקום חי.'); return; }
+    window.open('https://www.google.com/maps/search/?api=1&query='+st.fix.lat+','+st.fix.lon, '_blank', 'noopener');
+  });
+  $('livebar-btn').addEventListener('click', function(){ scrollToStop(st.atIdx !== null ? st.atIdx : nextIdx()); });
+  $('theme-toggle').addEventListener('click', function(){
+    const dark = getComputedStyle(document.documentElement).colorScheme === 'dark';
+    document.documentElement.dataset.theme = dark ? 'light' : 'dark'; store.set('theme', dark ? 'light' : 'dark');
+  });
+  ['wheel','touchmove'].forEach(function(ev){ window.addEventListener(ev, function(){ st.lastUserScroll = Date.now(); }, {passive:true}); });
+  window.addEventListener('scroll', function(){ const lb = $('livebar'); lb.classList.toggle('show', live() && $('live').getBoundingClientRect().bottom < 0); }, {passive:true});
+  window.addEventListener('resize', function(){ paintRail(); });
+  if ('ResizeObserver' in window) new ResizeObserver(function(){ paintRail(); }).observe($('route'));
+}
+
+/* init */
+renderHeader(); renderTimeline(); renderBanner(); renderDiag(); bind();
+const th = store.get('theme'); if (th) document.documentElement.dataset.theme = th;
+if (store.get('follow') === '0'){ st.follow = false; $('btn-follow').setAttribute('aria-pressed','false'); }
+if (store.get('wake') === '0'){ st.wakeWanted = false; $('btn-wake').setAttribute('aria-pressed','false'); }
+const savedCursor = +store.get('cursor');
+if (savedCursor > 0 && savedCursor < NS && isTripDay()){ st.pos = savedCursor; st.D = stopCum[savedCursor]; st.hasLocated = true; }
+tick(); setInterval(tick, 30000);
+render(); requestAnimationFrame(function(){ paintRail(); });
+window.__trip = {st, stops, nodes, onFix, TOTAL, stopCum};  // לבדיקות
+})();
+</script>
+</body>
+</html>
