@@ -14,7 +14,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1] / "skills"
-for sub in ("video-edit-engine/scripts", "video-qa/scripts", "pixverse-generate/scripts"):
+for sub in ("video-edit-engine/scripts", "video-qa/scripts", "pixverse-generate/scripts", "veo-generate/scripts"):
     sys.path.insert(0, str(ROOT / sub))
 
 import timemap  # noqa: E402
@@ -269,6 +269,148 @@ class PixVerseTests(unittest.TestCase):
         self.assertIn("PIXVERSE_API_KEY", err)
 
 
+class _VeoMock(BaseHTTPRequestHandler):
+    calls = []
+    polls = 0
+    mode = "ok"
+
+    def log_message(self, *a):
+        pass
+
+    def _json(self, obj, code=200):
+        raw = json.dumps(obj).encode()
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
+
+    def do_POST(self):
+        body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+        _VeoMock.calls.append(("POST", self.path, {k.lower(): v for k, v in self.headers.items()}, body))
+        if _VeoMock.mode == "bad-duration" and b'"durationSeconds": 4' in body:
+            return self._json({"error": {"code": 400, "status": "INVALID_ARGUMENT", "message": "durationSeconds must be a string"}}, 400)
+        self._json({"name": "operations/abc"})
+
+    def do_GET(self):
+        _VeoMock.calls.append(("GET", self.path, {k.lower(): v for k, v in self.headers.items()}, b""))
+        if self.path.endswith("/operations/abc"):
+            _VeoMock.polls += 1
+            if _VeoMock.polls < 2:
+                return self._json({"name": "operations/abc", "done": False})
+            if _VeoMock.mode == "filtered":
+                return self._json({"done": True, "response": {"generateVideoResponse": {"raiMediaFilteredCount": 1, "raiMediaFilteredReasons": ["blocked: minors"]}}})
+            host = self.headers["Host"]
+            return self._json({"done": True, "response": {"generateVideoResponse": {"generatedSamples": [{"video": {"uri": f"http://{host}/files/v.mp4"}}]}}})
+        if self.path == "/files/v.mp4":
+            self.send_response(200)
+            self.send_header("Content-Length", "5")
+            self.end_headers()
+            self.wfile.write(b"VIDEO")
+            return
+        if self.path.startswith("/v1beta/models") or self.path.startswith("/models"):
+            return self._json({"models": [{"name": "models/veo-3.1-fast-generate-preview", "displayName": "Veo 3.1 fast"}, {"name": "models/gemini-x"}]})
+        self._json({"error": {"code": 404, "message": "nope"}}, 404)
+
+
+class VeoTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.server = HTTPServer(("127.0.0.1", 0), _VeoMock)
+        threading.Thread(target=cls.server.serve_forever, daemon=True).start()
+        os.environ["VEO_BASE_URL"] = f"http://127.0.0.1:{cls.server.server_port}/v1beta"
+        os.environ["GEMINI_API_KEY"] = "gem-test-key"
+        os.environ["VEO_POLL_SECONDS"] = "0.01"
+        os.environ["NO_PROXY"] = "127.0.0.1"
+        import importlib
+        import veo
+        cls.veo = importlib.reload(veo)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.server.shutdown()
+        cls.server.server_close()
+
+    def setUp(self):
+        _VeoMock.calls.clear()
+        _VeoMock.polls = 0
+        _VeoMock.mode = "ok"
+
+    def run_cli(self, *argv):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = self.veo.main(list(argv))
+        return code, out.getvalue(), err.getvalue()
+
+    def test_estimates(self):
+        self.assertEqual(self.veo.estimate_usd("fast", "720p", 4), 0.40)
+        self.assertEqual(self.veo.estimate_usd("standard", "1080p", 8), 3.20)
+        self.assertEqual(self.veo.estimate_usd("lite", "720p", 8), 0.40)
+        self.assertIsNone(self.veo.estimate_usd("lite", "4k", 8))
+
+    def test_text_flow_downloads_with_key_header_and_never_prints_key(self):
+        with tempfile.TemporaryDirectory() as d:
+            out_file = os.path.join(d, "c.mp4")
+            code, out, err = self.run_cli("text", "--prompt", "a fox", "--out", out_file, "--negative", "text")
+            self.assertEqual(code, 0, err)
+            self.assertEqual(Path(out_file).read_bytes(), b"VIDEO")
+            self.assertNotIn("gem-test-key", out + err)
+        post = next(c for c in _VeoMock.calls if c[0] == "POST")
+        self.assertTrue(post[1].endswith("/models/veo-3.1-fast-generate-preview:predictLongRunning"))
+        self.assertEqual(post[2]["x-goog-api-key"], "gem-test-key")
+        body = json.loads(post[3])
+        self.assertEqual(body["instances"][0]["prompt"], "a fox")
+        self.assertEqual(body["parameters"]["aspectRatio"], "9:16")
+        self.assertEqual(body["parameters"]["negativePrompt"], "text")
+        dl = [c for c in _VeoMock.calls if c[1] == "/files/v.mp4"][0]
+        self.assertEqual(dl[2]["x-goog-api-key"], "gem-test-key")
+
+    def test_image_is_sent_inline(self):
+        with tempfile.TemporaryDirectory() as d:
+            img = os.path.join(d, "a.png")
+            Path(img).write_bytes(b"\x89PNG\r\n\x1a\n" + b"0" * 16)
+            code, _, err = self.run_cli("image", "--image", img, "--prompt", "move", "--no-wait")
+        self.assertEqual(code, 0, err)
+        inst = json.loads(_VeoMock.calls[0][3])["instances"][0]
+        self.assertEqual(inst["image"]["inlineData"]["mimeType"], "image/png")
+
+    def test_dry_run_and_spend_guard_spend_nothing(self):
+        code, _, err = self.run_cli("text", "--prompt", "x", "--dry-run")
+        self.assertEqual(code, 0)
+        self.assertIn("$0.40", err)
+        code, _, err = self.run_cli("text", "--prompt", "x", "--model", "standard", "--duration", "8", "--resolution", "1080p")
+        self.assertEqual(code, 2)
+        self.assertIn("above --max-usd", err)
+        self.assertEqual(_VeoMock.calls, [])
+
+    def test_1080p_requires_8_seconds(self):
+        code, _, err = self.run_cli("text", "--prompt", "x", "--resolution", "1080p", "--duration", "4")
+        self.assertEqual(code, 2)
+        self.assertIn("8-second", err)
+
+    def test_safety_filter_is_reported(self):
+        _VeoMock.mode = "filtered"
+        code, _, err = self.run_cli("text", "--prompt", "x", "--no-wait")
+        self.assertEqual(code, 0)
+        op = json.loads(self.run_cli("text", "--prompt", "x", "--no-wait")[1])["operation"]
+        code, _, err = self.run_cli("wait", op)
+        self.assertEqual(code, 2)
+        self.assertIn("blocked", err)
+
+    def test_duration_type_fallback(self):
+        _VeoMock.mode = "bad-duration"
+        code, _, err = self.run_cli("text", "--prompt", "x", "--no-wait")
+        self.assertEqual(code, 0, err)
+        posts = [c for c in _VeoMock.calls if c[0] == "POST"]
+        self.assertEqual(len(posts), 2)
+        self.assertEqual(json.loads(posts[1][3])["parameters"]["durationSeconds"], "4")
+
+    def test_models_lists_only_veo(self):
+        code, out, _ = self.run_cli("models")
+        self.assertIn("veo-3.1-fast", out)
+        self.assertNotIn("gemini-x", out)
+
+
 class PluginStructureTests(unittest.TestCase):
     """Skills and agents must be loadable: valid front matter, names match folders, references resolve."""
     PLUGIN = Path(__file__).resolve().parents[1]
@@ -279,10 +421,14 @@ class PluginStructureTests(unittest.TestCase):
         assert text.startswith("---\n"), f"{path}: missing front matter"
         head = text.split("\n---\n", 1)[0][4:]
         fields = {}
+        key = None
         for line in head.splitlines():
-            if ":" in line and not line.startswith(" "):
-                k, v = line.split(":", 1)
-                fields[k.strip()] = v.strip()
+            if line.startswith(" ") and key:  # continuation of a folded/indented value
+                fields[key] = (fields[key] + " " + line.strip()).strip(" >")
+            elif ":" in line:
+                key, v = line.split(":", 1)
+                key = key.strip()
+                fields[key] = v.strip().strip(">").strip()
         return fields
 
     def test_manifest(self):
@@ -291,7 +437,7 @@ class PluginStructureTests(unittest.TestCase):
 
     def test_every_skill_is_valid(self):
         skills = sorted((self.PLUGIN / "skills").iterdir())
-        self.assertGreaterEqual(len(skills), 8)
+        self.assertGreaterEqual(len(skills), 10)
         for d in skills:
             fm = self.front_matter(d / "SKILL.md")
             self.assertEqual(fm["name"], d.name)

@@ -44,3 +44,20 @@ YouTube talk itself. The method is known only through Brain's write-up.
   scripts here do not depend on a model.
 - Render speeds, HyperFrames behaviour and person-segmentation quality: not tested here (no footage, no GPU,
   no OpenCV in the sandbox). The tested parts are listed in `README.md`.
+
+## Lessons from the user's own guide (`video-with-claude`) and from a mistake of mine
+
+| # | Principle | Where it lives |
+|---|---|---|
+| 22 | Contract first: script table, then the word "תפיק" before any paid generation | `video-studio` "The user's own process comes first" |
+| 23 | Lock one style early and attach a reference to every new asset | `examples/*/STYLE.md` |
+| 24 | Transitions mean something (washout = revelation, match cut = parallel, dip = silence); no effect more than 3 times | script table "transition" column |
+| 25 | Every stage is a file; versions v1, v2; resumable intermediates; verify integrity | example folders |
+| 26 | Fallback per stage | `SCRIPT.md` "fallback" column |
+| 27 | Hebrew narration with niqqud; fix a mispronounced word by changing its niqqud | `SCRIPT.md` |
+| 28 | Fresh-eyes review by a separate agent | `video-qa-reviewer` |
+
+**Recorded mistake (2026-10-13):** in the Prague funicular job, five Veo clips (USD 2.00, two of them rejected
+as look-alikes of an existing cartoon character) were generated and an animatic was rendered *before* the script
+table existed and before "תפיק". The money was small and the key and prices were known, but the rule is the
+rule: the process now makes the table the gate. The spend is listed in the example's `STATUS.md`.

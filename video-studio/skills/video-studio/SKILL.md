@@ -1,6 +1,6 @@
 ---
 name: video-studio
-description: Entry point for any video job - make, edit, generate or plan a video, reel, short, ad or hook (Hebrew or English). Picks the right route (edit existing footage, real-action hooks, AI-generated clips with PixVerse, HTML motion graphics), runs the five-versions method, gates every spend, and ends with an editor-grade check. Use when the user says video, reel, clip, ad, hook, subtitles, edit my footage, PixVerse, סרטון, ריל, פרסומת, הוק, כתוביות, תערוך לי.
+description: Entry point for any video job - make, edit, generate or plan a video, reel, short, ad or hook (Hebrew or English). Follows the user's `video-with-claude` guide (contract before work: script table, style lock, then generate only after the word תפיק), picks the right route (edit footage, real-action hooks, AI clips with Veo/PixVerse, HTML motion graphics), gates every spend, and ends with an editor-grade check. Use when the user says video, reel, clip, ad, hook, subtitles, edit my footage, PixVerse, סרטון, ריל, פרסומת, הוק, כתוביות, תערוך לי.
 ---
 
 # Video Studio (entry point)
@@ -14,6 +14,30 @@ Claude Code's lead designer works, plus their video-editing guides. It is an ind
 summary, not an official Anthropic method. See `reference/principles.md` for the full list and where each
 principle came from.
 
+## The user's own process comes first: `video-with-claude`
+
+Read `skills/video-with-claude/SKILL.md` (the user's guide) at the start of every video job. It governs;
+the rest of this file only adds route-specific craft. Binding consequences:
+
+1. **Contract before work.** Step 0 intent questions, then a **script table** (columns: # | topic | narration
+   (with niqqud for Hebrew) | what we see | what moves | transition to next | sound), then **style lock**.
+   Nothing that costs money or a long render is produced until the user writes **"תפיק"**. A tool being
+   available, a key being set, or the request sounding clear is NOT permission. Cheap free checks
+   (listing models, dry runs, estimates, reading docs) are fine before the gate.
+2. **Every stage in its own file** with a clear name and a version (`INTENT.md`, `SCRIPT.md`, `STYLE.md`,
+   `clips/`, `v1`, `v2`) so one thing can be fixed without starting over.
+3. **Meaningful transitions**, from the guide's table; the same effect no more than three times.
+4. **Plan for failure:** a fallback for each stage (a still with camera move if a clip cannot be made,
+   subtitles if a voice is missing) and resumable, cached intermediate files; check file integrity (duration,
+   size) before use.
+5. **Quality checklist of the guide (its section 10)** is the QA contract: text-in-images read back, Hebrew
+   direction, narration transcribed and compared, sync at several points, continuity, captions vs faces,
+   loudness, length, and a contact-sheet glance. Use `video-qa` to execute it.
+6. **Fresh eyes:** after QA, have a separate agent watch the result without knowing the script and report
+   where it got lost (`video-qa-reviewer`).
+7. **Hebrew narration needs niqqud** and a voice tool; a mismatch is fixed by changing that word's niqqud and
+   regenerating that paragraph.
+
 ## Core rules (apply to every route)
 
 1. **One sentence is enough.** Infer the goal, audience, platform and the single thing the viewer
@@ -24,8 +48,8 @@ principle came from.
 3. **You pick first, the human decides.** Choose the best direction, explain in three points tied to
    the video's job, name one thing to borrow from the runner-up. The user takes it, switches, or
    remixes. Apply their decision to the chosen version only.
-4. **Approve before you spend.** Anything that costs money, quota or a long render needs a visible
-   gate (table below). A correction before rendering is cheap; after rendering it is a whole round.
+4. **Approve before you spend.** Anything that costs money, quota or a long render needs the user's
+   **"תפיק"** after the script table, plus a visible gate (table below). A correction before rendering is cheap; after rendering it is a whole round.
 5. **The first render is a draft.** Say so. Plan two or three small fix rounds (one or two changes per
    round, described by what is said at that moment, not by timestamps).
 6. **Verify like an editor, then report honestly.** Use `video-qa`. Never claim a check you did not run.
@@ -60,7 +84,7 @@ requires a word-level transcript (see `video-edit-engine`).
 |---|---|---|
 | Own talking-head footage to cut, caption, add effects | A. Edit as code | `video-edit-engine` |
 | Own footage + scroll-stopping opener ("hook") | B. Real action + code element | `video-hooks-real-action` |
-| No footage; wants AI-made clips (product shot, mascot, cinematic b-roll) | C. Generate | `pixverse-generate` + `video-prompt-craft` |
+| No footage; wants AI-made clips (product shot, mascot, cinematic b-roll) | C. Generate | `veo-generate` or `pixverse-generate` + `video-prompt-craft` |
 | Titles, charts, data stories, kinetic text, no camera footage | D. HTML motion graphics | HyperFrames (MCP or local skills) |
 | Several of the above | E. Hybrid: generate clips (C), assemble and finish (A/D) | all |
 
@@ -78,7 +102,7 @@ the route that needs the least money and the least setup, and say what the alter
 
 | Before | Show | Why |
 |---|---|---|
-| Any paid generation | Prompt, model, quality, duration, **credit estimate** (`pixverse.py --dry-run`) | Money is not reversible |
+| Any paid generation | The approved script table, then prompt, model, quality, duration, **cost estimate** (`pixverse.py` / `veo.py --dry-run`) and the word **תפיק** | Money is not reversible; a past mistake: clips were generated before the contract |
 | Using generated images in a video | The images | Cheaper to reject an image than a render |
 | Rendering an edit | Word table, cut list, effect-to-word table | Fixing a transcript is seconds; fixing a render is a round |
 | Final export | Contact-sheet findings from `video-qa` | The user should not be the first reviewer |

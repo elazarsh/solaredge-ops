@@ -19,6 +19,8 @@
 | `skills/video-edit-engine` | עריכת סרטון שצילמת כקוד: תמלול ברמת מילה, חיתוך שתיקות, כתוביות עברית, 16 אפקטים על מילים, סאונד |
 | `skills/video-hooks-real-action` | הוקים של פעולה אמיתית באוויר + אלמנט שנבנה בקוד (שריפה, קימוט, ניגוב, פיצוץ, לחיצה) |
 | `skills/video-prompt-craft` | פרומפטים למודלי וידאו: נוסחה בשבעה חלקים, מסקוט ב-5 סצנות, צילום אחד מהמסלול לרחוב, החלפת דמות |
+| `skills/veo-generate` | יצירת סרטונים ב-Google Veo 3.1 דרך Gemini API (`GEMINI_API_KEY`), עם הערכת עלות בדולרים ותקרה |
+| `skills/video-with-claude` | **המדריך שלך** כסקיל מחייב: חוזה לפני עבודה, "תפיק", נעילת סגנון, מעברים משמעותיים, בקרת איכות |
 | `skills/pixverse-generate` | יצירת סרטונים ב-PixVerse (טקסט, תמונה, מעבר, הארכה) עם הערכת עלות ואישור לפני כל הוצאה |
 | `skills/video-qa` | בדיקה כמו עורך: גיליונות מגע עם timecode, נחיתת אפקטים, עברית, כתוביות, עוצמת קול |
 | `agents/video-director` | מריץ את כל התהליך מקצה לקצה |
@@ -38,10 +40,11 @@
 
 ## מה נבדק ומה לא (בכנות)
 
-**נבדק בפועל (25 בדיקות, `python3 -m unittest discover -s video-studio/tests -v`):**
+**נבדק בפועל (33 בדיקות, `python3 -m unittest discover -s video-studio/tests -v`):**
 - `timemap.py`: מיפוי זמן אחרי חיתוך והקפאה, דחיית קלטים שגויים, וגרף אודיו שרץ ב-ffmpeg ומחזיר את האורך הצפוי.
 - `hebrew_text.py`: רינדור עברית עם RAQM, גלישת שורות, ונפילה רועשת כש-RAQM חסר.
 - `contact_sheet.py`: גיליונות עם timecode ופריימים בודדים על סרטון בדיקה אמיתי.
+- `veo.py`: מול שרת מדומה, ובנוסף מול ה-API החי של Gemini (רשימת מודלים + 5 יצירות אמיתיות).
 - `pixverse.py`: מול שרת מדומה בלבד (שליחה, polling, הורדה, מזהה ייחודי בכל בקשה, מפתח לא נחשף, חסימת עלות, שגיאות קריאות).
 - מבנה הסקילים והסוכנים (front matter, נתיבים שמוזכרים בקבצים קיימים) והתקנת `install.sh`.
 - הפקודות של ffmpeg שמופיעות בתיעוד (`ebur128`, `loudnorm`, `filter_complex_script`).
@@ -64,6 +67,6 @@ video-studio/
   .claude-plugin/plugin.json
   mcp/pixverse.mcp.json.example
   agents/                   5 סוכנים
-  skills/                   8 סקילים (+ reference/ ו-scripts/)
+  skills/                   10 סקילים (+ reference/ ו-scripts/)
   tests/test_video_studio.py
 ```

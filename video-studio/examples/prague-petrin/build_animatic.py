@@ -195,8 +195,45 @@ def scene5(t, rnd):  # 17-21 toy train + heart monitor (placeholder)
     return f
 
 
+
+class ClipReader:
+    """Streams a generated clip as 1080x1920 RGB frames at 30 fps (one ffmpeg process, nothing held in memory)."""
+
+    def __init__(self, path: Path, vf: str):
+        self.proc = subprocess.Popen(["ffmpeg", "-v", "error", "-i", str(path), "-an", "-vf", f"fps={FPS},{vf},scale={W}:{H}:flags=lanczos",
+                                      "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
+        self.last = None
+
+    def next(self) -> Image.Image:
+        buf = self.proc.stdout.read(W * H * 3)
+        if len(buf) == W * H * 3:
+            self.last = Image.frombytes("RGB", (W, H), buf).convert("RGBA")
+        return self.last  # hold the last frame if the clip is a hair short
+
+    def close(self):
+        self.proc.stdout.close()
+        self.proc.wait()
+
+
+# Veo 3.1 Fast output is 720x1280; clip 2 arrives letterboxed (720x1056 picture), so it is cropped to 9:16 first.
+CLIP_FILTERS = {"clip1": "null", "clip2": "crop=594:1056:63:112", "clip5": "null"}
+
+
+def heart_monitor_overlay(f, t):
+    """Fake heart monitor + 5 stars drawn over the generated scene-5 clip."""
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(ov)
+    dy = -640
+    d.rounded_rectangle((70, 1290 + dy, 520, 1500 + dy), 24, fill=(15, 20, 25, 225), outline=(255, 255, 255, 255), width=5)
+    pts = [(95 + i * 8, 1420 + dy - (60 if (i + int(t * 30)) % 18 == 0 else 6 * math.sin(i))) for i in range(50)]
+    d.line(pts, fill=(60, 255, 120, 255), width=5)
+    paste_center(ov, text_img("72 BPM", 70, (60, 255, 120, 255), 0, "ltr", 400), 295, 1335 + dy)
+    paste_center(ov, text_img("★★★★★", 74, (255, 215, 0, 255), 4, "ltr", 700), 760, 1480 + dy)
+    return Image.alpha_composite(f, ov)
+
+
 # ---- rendering --------------------------------------------------------------------------------------------
-def render(out_video: Path, world: PhotoWorld):
+def render(out_video: Path, world: PhotoWorld, clips_dir: Path | None = None):
     car_c = world.p2c(300, 760)
     stairs_c = world.p2c(720, 860)
     ring_c = world.p2c(750, 780)
@@ -205,13 +242,18 @@ def render(out_video: Path, world: PhotoWorld):
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     n = int(DUR * FPS)
     rnd = random.Random(7)
+    readers = {}
+    if clips_dir:
+        for name, vf in CLIP_FILTERS.items():
+            if (clips_dir / f"{name}.mp4").exists():
+                readers[name] = ClipReader(clips_dir / f"{name}.mp4", vf)
     for i in range(n):
         t = i / FPS
         placeholder = None
         if t < 4:
-            frame, placeholder = scene1(t, rnd), "PLACEHOLDER - PixVerse clip 1"
+            frame, placeholder = (readers["clip1"].next(), None) if "clip1" in readers else (scene1(t, rnd), "PLACEHOLDER - clip 1")
         elif t < 8:
-            frame, placeholder = scene2(t, rnd), "PLACEHOLDER - PixVerse clip 2"
+            frame, placeholder = (readers["clip2"].next(), None) if "clip2" in readers else (scene2(t, rnd), "PLACEHOLDER - clip 2")
         elif t < 13:  # scene 3: photo, slow absurd zoom on the little car
             z = 1.0 if t < 8.5 else 1.0 + 0.95 * ease((t - 8.5) / 4.5)
             cx = 540 + (car_c[0] - 540) * ease((t - 8.5) / 4.5)
@@ -232,7 +274,10 @@ def render(out_video: Path, world: PhotoWorld):
             d.rectangle((0, 250, W, 340), fill=(200, 0, 0, 235))
             paste_center(frame, text_img("חדשות דחופות  |  BREAKING", 54, (255, 255, 255, 255), 0, "rtl", 1000), W / 2, 295)
         elif t < 21:
-            frame, placeholder = scene5(t, rnd), "PLACEHOLDER - PixVerse clip 5"
+            if "clip5" in readers:
+                frame, placeholder = heart_monitor_overlay(readers["clip5"].next(), t), None
+            else:
+                frame, placeholder = scene5(t, rnd), "PLACEHOLDER - clip 5"
         elif t < 22.6:  # scene 6: back to the photo, one more slow zoom
             frame, cam = world.view(car_c[0], car_c[1], 1.15 + 0.5 * ease((t - 21) / 1.6))
         else:
@@ -261,6 +306,8 @@ def render(out_video: Path, world: PhotoWorld):
             if a <= t < b:
                 paste_center(frame, text_img(txt, 52, (255, 255, 255, 255), 6, "rtl", 940), W / 2, 1390)
         proc.stdin.write(frame.convert("RGB").tobytes())
+    for r in readers.values():
+        r.close()
     proc.stdin.close()
     if proc.wait() != 0:
         raise RuntimeError("ffmpeg failed")
@@ -375,12 +422,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--photo", default=str(HERE / "photo_petrin.jpg"))
     ap.add_argument("--out", default=str(HERE / "animatic.mp4"))
+    ap.add_argument("--clips-dir", default=str(HERE / "clips"), help="folder with clip1/clip2/clip5.mp4 (Veo); missing clips fall back to placeholders")
     args = ap.parse_args()
     with tempfile.TemporaryDirectory() as td:
         v, a, an = Path(td) / "v.mp4", Path(td) / "a.wav", Path(td) / "an.wav"
         build_audio(a)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(a), "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", str(SR), str(an)], check=True)
-        render(v, PhotoWorld(Path(args.photo)))
+        render(v, PhotoWorld(Path(args.photo)), Path(args.clips_dir))
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(v), "-i", str(an), "-c:v", "copy", "-c:a", "aac", "-b:a", "160k",
                         "-shortest", args.out], check=True)
     print(args.out)
