@@ -28,6 +28,7 @@
 | `agents/video-prompt-writer` | כותב פרומפטים לקליפים במקביל |
 | `skills/*/scripts` | `timemap.py` (מפת זמן), `hebrew_text.py` (עברית נכונה), `contact_sheet.py`, `pixverse.py` |
 | `mcp/pixverse.mcp.json.example` | הגדרה לשרת ה-MCP הרשמי של PixVerse (אופציונלי) |
+| `examples/prague-petrin` | דוגמה מלאה: אנימטיק של 24 שניות ("רכבל האקסטרים של פראג") עם תמונה אמיתית, סאונד מסונתז, פרומפטים ועלות |
 
 ## על PixVerse
 
