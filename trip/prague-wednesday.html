@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>הבוקר האחרון בפראג — מסלול חי</title>
+<meta name="theme-color" content="#16313a">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+/*
+  יום רביעי 14.10: פטרין, מצודת פראג, בריכה וטיסה הביתה.
+  העיצוב מתחלף לפי "פרק" (6 פרקים): מלון, גבעת פטרין, סטרחוב, המצודה, הבריכה, השדה.
+  הפרק נקבע לפי ה־GPS (או לפי השעון כשאין GPS).
+  כל התוכן נמצא במערך DAY בסקריפט. GPS עובד רק מכתובת https://.
+*/
+@property --a{syntax:'<color>';inherits:true;initial-value:#f0a35e}
+@property --sky1{syntax:'<color>';inherits:true;initial-value:#2a2f5e}
+@property --sky2{syntax:'<color>';inherits:true;initial-value:#f09a62}
+:root{
+  --bg:#11151d; --surface:#192029; --surface2:#212a36; --line:#2b3441; --fg:#ece7da; --muted:#98a0ab;
+  --live:#47c9b8; --live-soft:rgba(71,201,184,.17); --warn:#e59a6a; --done:#6f7682; --on-a:#10141b;
+  --a:#f0a35e; --a:light-dark(#b4651a,#f0a35e); --a-soft:rgba(240,163,94,.16); --a-soft:color-mix(in srgb,var(--a) 17%,transparent);
+  --sky1:#2a2f5e; --sky2:#f09a62; --sil1:#4b3340; --sil2:#2c2030;
+  --display:"Frank Ruhl Libre","David Libre",Georgia,serif; --body:"Assistant","Segoe UI",Arial,sans-serif;
+  --rs:1; color-scheme:dark; transition:--a 1.4s,--sky1 1.4s,--sky2 1.4s;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#f4f1ea; --surface:#fffdf8; --surface2:#efeadf; --line:#ddd5c6; --fg:#1d2230; --muted:#5f6573; --live:#18806f; --live-soft:rgba(24,128,111,.12); --warn:#b4571f; --done:#9a9fa8; --on-a:#fffdf8; color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#f4f1ea; --surface:#fffdf8; --surface2:#efeadf; --line:#ddd5c6; --fg:#1d2230; --muted:#5f6573; --live:#18806f; --live-soft:rgba(24,128,111,.12); --warn:#b4571f; --done:#9a9fa8; --on-a:#fffdf8; color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+/* פרקים: צבע ראשי + שמיים + צללית */
+:root[data-ch="0"]{--a:#f0a35e;--a:light-dark(#b4651a,#f0a35e);--sky1:#2a2f5e;--sky2:#f09a62;--sil1:#4b3340;--sil2:#2c2030}
+:root[data-ch="1"]{--a:#6fcf8f;--a:light-dark(#1f7a45,#6fcf8f);--sky1:#14303a;--sky2:#7fb89a;--sil1:#2f5a4a;--sil2:#1c3a33}
+:root[data-ch="2"]{--a:#e58a5f;--a:light-dark(#b04a24,#e58a5f);--sky1:#4a2f3a;--sky2:#e8a06a;--sil1:#7a4238;--sil2:#4a2a30}
+:root[data-ch="3"]{--a:#e0bd68;--a:light-dark(#8c6a14,#e0bd68);--sky1:#1b2a52;--sky2:#d2ad62;--sil1:#2c3a63;--sil2:#18213f}
+:root[data-ch="4"]{--a:#4fc9d6;--a:light-dark(#0b7a8a,#4fc9d6);--sky1:#0c6a86;--sky2:#86dde6;--sil1:#0b5470;--sil2:#07405a}
+:root[data-ch="5"]{--a:#8fb0ff;--a:light-dark(#2c58c4,#8fb0ff);--sky1:#090d2a;--sky2:#3a5aa8;--sil1:#1a2550;--sil2:#0d1330}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);background-image:linear-gradient(var(--a-soft),transparent 520px);background-repeat:no-repeat;color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;direction:rtl;overflow-x:hidden}
+button{font-family:inherit}svg{display:block}
+.wrap{max-width:660px;margin:0 auto;padding-inline:18px;padding-block:6px 70px}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+
+/* ============ STAGE ============ */
+.stage{position:relative;min-height:min(92vh,680px);overflow:hidden;color:#fff;isolation:isolate;background:var(--sky2)}
+.sky{position:absolute;inset:0;background:linear-gradient(var(--sky1),var(--sky2));z-index:-6}
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.3),transparent 50%);z-index:-1;pointer-events:none}
+.amb{position:absolute;inset-inline:0;bottom:92px;aspect-ratio:400/160;opacity:0;transition:opacity 1.4s;z-index:-3;pointer-events:none}
+.amb::after{content:"";position:absolute;inset-inline:0;top:99%;height:110px;background:var(--sil2)}
+.a4::after{background:#0f93b0}
+.amb svg{position:absolute;inset:0;width:100%;height:100%}
+:root[data-ch="0"] .a0,:root[data-ch="1"] .a1,:root[data-ch="2"] .a2,:root[data-ch="3"] .a3,:root[data-ch="4"] .a4,:root[data-ch="5"] .a5{opacity:1}
+.drift{animation:driftx 40s linear infinite alternate}
+@keyframes driftx{from{transform:translateX(-30px)}to{transform:translateX(30px)}}
+.bob{animation:bobY 5s ease-in-out infinite}
+@keyframes bobY{50%{transform:translateY(-6px)}}
+.wave1{animation:waveX 7s linear infinite}.wave2{animation:waveX 11s linear infinite reverse}
+@keyframes waveX{to{transform:translateX(-100px)}}
+.flag{transform-origin:0 50%;animation:flagw 1.8s ease-in-out infinite}
+@keyframes flagw{50%{transform:skewY(-8deg) scaleX(.94)}}
+.blink{animation:blink 1.4s steps(2) infinite}
+@keyframes blink{50%{opacity:.15}}
+.note{position:absolute;bottom:34%;font-size:22px;opacity:0;color:#fff;text-shadow:0 0 10px var(--a);animation:noteUp 6s ease-in infinite}
+@keyframes noteUp{0%{transform:translateY(0) rotate(-8deg);opacity:0}15%{opacity:.9}100%{transform:translateY(-150px) rotate(14deg);opacity:0}}
+.stage.ceremony .note{animation-duration:3s}
+#leaves{position:absolute;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none}
+.stage-in{position:relative;z-index:5;max-width:660px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 16px) 18px 260px}
+.eyebrow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;letter-spacing:.06em;font-weight:700;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.theme-toggle{font-size:13px;color:#fff;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 11px;cursor:pointer;backdrop-filter:blur(6px)}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(40px,12vw,64px);line-height:1.02;margin:.3em 0 .25em;text-shadow:0 2px 24px rgba(0,0,0,.5);text-wrap:balance}
+h1 span{display:block;opacity:0;transform:translateY(22px);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards}
+h1 span:nth-child(2){animation-delay:.15s}
+.chtag{display:inline-flex;flex-direction:column;gap:1px;margin:2px 0 10px;padding:6px 14px;border-radius:14px;background:rgba(0,0,0,.32);border-inline-start:4px solid var(--a);backdrop-filter:blur(8px);text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.chtag b{font-size:18px;font-weight:800}.chtag span{font-size:13px;opacity:.85}
+@keyframes rise{to{opacity:1;transform:none}}
+.sub{margin:0;font-size:17px;max-width:30em;text-shadow:0 1px 10px rgba(0,0,0,.55);opacity:0;animation:rise .9s .5s forwards}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;opacity:0;animation:rise .9s .7s forwards}
+.chip{border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.28);backdrop-filter:blur(8px);border-radius:999px;padding:3px 12px;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip b{font-weight:700}
+.journey{position:absolute;z-index:6;inset-inline:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:636px;margin-inline:auto;display:flex;gap:6px;padding:8px;border-radius:18px;background:rgba(8,12,24,.55);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18)}
+.jc{all:unset;box-sizing:border-box;flex:1;min-width:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:12px;color:rgba(255,255,255,.72);font-size:11px;font-weight:700;text-align:center;line-height:1.2;transition:background .4s,color .4s,transform .4s}
+.jc svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.jc.done{color:var(--a)}
+.jc.cur{background:rgba(255,255,255,.16);color:#fff;transform:translateY(-3px);box-shadow:0 0 0 1px var(--a),0 0 18px var(--a-soft)}
+.jc.cur svg{stroke:var(--a)}
+.jbar{position:absolute;inset-inline:14px;bottom:-1px;height:3px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
+.jbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),#fff);transition:width .8s}
+
+/* ============ CARDS ============ */
+.card{margin-top:18px;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:16px}
+.card h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0 0 4px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--a)}
+.card-note{font-size:13px;color:var(--muted);margin:2px 0 0}
+.decide .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.opt{all:unset;box-sizing:border-box;cursor:pointer;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg);display:flex;flex-direction:column;gap:3px;transition:border-color .25s,background .25s,transform .25s}
+.opt[aria-pressed="true"]{border-color:var(--a);background:var(--a-soft);transform:translateY(-2px);box-shadow:0 8px 22px var(--a-soft)}
+.opt b{font-size:16px}.opt span{font-size:13px;color:var(--muted)}
+.opt svg{width:26px;height:26px;fill:none;stroke:var(--a);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-bottom:4px}
+.decide-note{font-size:13px;color:var(--fg);margin:10px 0 0;padding:9px 12px;border-radius:10px;background:var(--bg);border-inline-start:3px solid var(--a)}
+@media (max-width:420px){.decide .opts{grid-template-columns:1fr}}
+.count{display:flex;align-items:center;gap:16px}
+.ring{position:relative;width:96px;height:96px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .bg{stroke:var(--line)}.ring .fg{stroke:var(--a);stroke-linecap:round;transition:stroke-dashoffset .9s linear,stroke .8s;filter:drop-shadow(0 0 5px var(--a-soft))}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:20px;font-variant-numeric:tabular-nums;font-weight:800;direction:ltr}
+.count-t{min-width:0}
+.count-t h2{font-size:21px;margin:2px 0}
+.count-t p{margin:0;font-size:13px;color:var(--muted)}
+.evs{display:flex;gap:6px;overflow-x:auto;margin-top:12px;padding-bottom:4px;scrollbar-width:none}
+.ev{flex:none;border:1px solid var(--line);border-radius:12px;padding:5px 10px;font-size:12px;color:var(--muted);white-space:nowrap}
+.ev b{font-variant-numeric:tabular-nums;color:var(--fg);margin-inline-start:4px}
+.ev.past{opacity:.45;text-decoration:line-through}.ev.next{border-color:var(--a);color:var(--a)}
+.profile svg{width:100%;height:auto;margin-top:6px}
+.profile text{font-family:var(--body);font-size:10px;fill:var(--muted)}
+
+/* ============ LIVE ============ */
+.live{padding:0;overflow:hidden}
+.live-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px 0}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--done)}
+.pill.searching i{background:var(--a);animation:blink 1s steps(2) infinite}
+.pill.live{border-color:var(--live);color:var(--live)}.pill.live i{background:var(--live);box-shadow:0 0 0 3px var(--live-soft)}
+.pill.weak{border-color:var(--warn);color:var(--warn)}.pill.weak i{background:var(--warn)}
+.pill.sim{border-color:var(--a);color:var(--a)}.pill.sim i{background:var(--a)}
+.now{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;padding:12px 16px 4px}
+.now-label{font-size:13px;color:var(--muted);font-weight:600}
+.now-name{font-family:var(--display);font-weight:700;font-size:25px;line-height:1.2;margin:0;text-wrap:balance}
+.now-dist{font-variant-numeric:tabular-nums;font-weight:800;font-size:34px;line-height:1.1;color:var(--a);margin-top:2px}
+.now-dist small{font-size:14px;color:var(--muted);font-weight:600;margin-inline-start:6px}
+.compass{width:88px;height:88px;position:relative;border-radius:50%;background:radial-gradient(circle,var(--surface2),var(--surface));border:1px solid var(--line)}
+.compass::before{content:"";position:absolute;inset:7px;border-radius:50%;border:1px dashed var(--line)}
+.compass svg{position:absolute;inset:0;width:100%;height:100%;transition:transform .45s cubic-bezier(.3,1.4,.5,1);filter:drop-shadow(0 0 6px var(--a-soft))}
+.compass .n{position:absolute;top:1px;inset-inline:0;text-align:center;font-size:10px;color:var(--muted);font-weight:700;line-height:1}
+.compass-note{grid-column:1/-1;font-size:12px;color:var(--muted);margin:0}
+.msg{margin:8px 16px 0;padding:9px 12px;border-radius:10px;background:var(--bg);border-inline-start:3px solid var(--line);font-size:14px;line-height:1.55}
+.msg.warn{border-color:var(--warn)}.msg.ok{border-color:var(--live)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:12px 16px 0;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stat{background:var(--surface);padding:8px 6px;text-align:center;min-width:0}
+.stat b{display:block;font-variant-numeric:tabular-nums;font-size:17px;line-height:1.2}.stat span{font-size:11px;color:var(--muted)}
+.progress{height:6px;margin:12px 16px 0;border-radius:6px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--live));transition:width .6s linear}
+.mapbox{position:relative;margin:12px 16px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface2)}
+#lmap{height:340px;direction:ltr}#map{display:none;width:100%;height:auto}
+.mapbox.fallback #lmap{display:none}.mapbox.fallback #map{display:block}
+.mapbtns{position:absolute;z-index:500;inset-inline-start:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.mapbtns button{font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:6px 10px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.mapbtns button[hidden]{display:none}
+.maplabel{font-size:11px;color:var(--muted);margin:5px 16px 0}
+.leaflet-container{font:inherit;background:var(--surface2)}
+.leaflet-control-attribution{font-size:9px!important}
+.dark-tiles .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.75)}
+.mk{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--muted);color:var(--fg);font:800 12px var(--body);box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer}
+.mk.passed,.mk.at{background:var(--live);border-color:var(--live);color:var(--on-a)}
+.mk.next{background:var(--a);border-color:var(--a);color:var(--on-a);animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px) scale(1.12)}}
+.mk-tip{display:none;background:var(--surface);color:var(--fg);border:1px solid var(--line);font:700 12px var(--body);box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.mk-tip.on{display:block}.mk-tip::before{display:none}
+.me{position:relative;width:24px;height:24px}
+.me i{position:absolute;inset:0;border-radius:50%;background:var(--live);border:3px solid #fff;animation:pulse 2s infinite;box-shadow:0 0 0 0 rgba(71,201,184,.7)}
+.me .cone{position:absolute;left:50%;top:50%;width:0;height:0;margin:-34px 0 0 -9px;border-inline:9px solid transparent;border-bottom:26px solid rgba(71,201,184,.5);transform-origin:9px 34px;transition:transform .4s}
+@keyframes pulse{70%{box-shadow:0 0 0 18px rgba(71,201,184,0)}100%{box-shadow:0 0 0 0 rgba(71,201,184,0)}}
+.controls{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px 16px}
+.btn-main{flex:1 1 200px;font-weight:800;font-size:17px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--a),var(--warn));color:var(--on-a);padding:13px 16px;cursor:pointer;box-shadow:0 6px 22px var(--a-soft);transition:transform .15s}
+.btn-main:active{transform:scale(.97)}
+.btn-main[data-on="true"]{background:transparent;color:var(--fg);border:1px solid var(--line);box-shadow:none}
+.toggle{font-size:14px;font-weight:600;border:1px solid var(--line);background:none;color:var(--muted);border-radius:12px;padding:10px 12px;cursor:pointer}
+.toggle[aria-pressed="true"]{border-color:var(--live);color:var(--live);background:var(--live-soft)}
+details.tools{border-top:1px solid var(--line);padding:10px 16px 14px;font-size:14px;color:var(--muted)}
+details.tools summary{cursor:pointer;font-weight:600}
+.tools-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.tools-row label{font-size:13px;flex:1 1 100%}
+.tools input[type=range]{flex:1 1 100%;accent-color:var(--a)}
+.diag{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.diag span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.diag .bad{color:var(--warn);border-color:var(--warn)}.diag .good{color:var(--live);border-color:var(--live)}
+.banner{margin-top:16px;padding:13px 15px;border:1px solid var(--warn);border-radius:12px;background:var(--surface);font-size:14px}
+.banner b{color:var(--warn)}.banner p{margin:0}.banner p+p{margin-top:6px}
+
+/* ============ READING GUIDE ============ */
+.read{border-color:var(--a);box-shadow:0 10px 40px var(--a-soft)}
+.read-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.rd-tools{display:flex;gap:6px;flex-wrap:wrap}
+.rd-tools button{font-size:13px;font-weight:700;color:var(--a);background:var(--a-soft);border:0;border-radius:9px;padding:5px 10px;cursor:pointer}
+.rd-tools button[aria-pressed="true"]{background:var(--a);color:var(--on-a)}
+.read h2{font-size:calc(26px*var(--rs));margin:8px 0 0}
+.rd-lead{font-family:var(--display);font-size:calc(19px*var(--rs));line-height:1.8;margin:8px 0 0;transition:font-size .2s}
+.rd-facts{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:7px}
+.rd-facts li{font-size:calc(15px*var(--rs));padding:8px 12px;border-radius:10px;background:var(--bg);border-inline-start:3px solid var(--a)}
+.rd-ask{margin-top:12px;padding:10px 12px;border-radius:12px;border:1px dashed var(--a);font-size:calc(15px*var(--rs))}
+.rd-ask b{color:var(--a)}
+.rd-src{margin-top:10px;font-size:12px;color:var(--muted)}.rd-src a{color:var(--muted)}
+.read.swap{animation:swap .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes swap{from{opacity:.2;transform:translateY(14px)}}
+
+/* ============ NAV + TIMELINE ============ */
+.maps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}
+.maps a{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 14px;min-width:0;transition:transform .15s,border-color .15s}
+.maps a:hover{border-color:var(--a);transform:translateY(-2px)}
+.maps .k{font-size:12px;color:var(--a);font-weight:700;letter-spacing:.05em}.maps .t{font-weight:700;font-size:15px;line-height:1.3}.maps .go{font-size:13px;color:var(--muted)}
+@media (max-width:420px){.maps{grid-template-columns:1fr}}
+.route{list-style:none;margin:6px 0 0;padding:0;position:relative;--rail-center:65px;--rail-start:18px;--rail-total:0px;--rail-progress:0px}
+.route::before{content:"";position:absolute;right:calc(var(--rail-center) - 1px);top:var(--rail-start);height:var(--rail-total);width:2px;background:var(--line)}
+.route-progress{position:absolute;right:calc(var(--rail-center) - 3px);top:var(--rail-start);height:var(--rail-progress);width:6px;border-radius:8px;background:linear-gradient(to bottom,var(--a),var(--live));background-size:100% 200%;box-shadow:0 0 12px var(--live);display:none;transition:height .6s linear;pointer-events:none;animation:flow 2.4s linear infinite}
+@keyframes flow{to{background-position:0 200%}}
+.walker{position:absolute;right:calc(var(--rail-center) - 13px);top:calc(var(--rail-start) + var(--rail-progress) - 13px);width:26px;height:26px;border-radius:50%;background:var(--live);border:4px solid var(--surface);box-shadow:0 0 0 3px var(--live-soft),0 0 16px var(--live);display:none;transition:top .6s linear;pointer-events:none;z-index:4}
+.walker::before,.walker::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--live);opacity:0;animation:ring 2.4s ease-out infinite}.walker::after{animation-delay:1.2s}
+@keyframes ring{0%{transform:scale(.6);opacity:.8}100%{transform:scale(2.4);opacity:0}}
+.route.tracked .route-progress,.route.tracked .walker{display:block}
+.sec-li{padding-top:20px;list-style:none}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.sec-head h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0;padding-inline-start:12px;border-inline-start:4px solid var(--cc)}
+.sec-head small{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.stop{display:grid;grid-template-columns:50px 32px 1fr;gap:0 12px;padding-block:12px;scroll-margin-top:96px;transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.stop.pre{opacity:0;transform:translateY(26px)}.stop[hidden]{display:none}
+.time{font-variant-numeric:tabular-nums;font-weight:800;font-size:15px;color:var(--muted);padding-top:5px;text-align:left;direction:ltr}
+.dot{width:32px;height:32px;border-radius:50%;background:var(--surface);border:2px solid var(--cc);display:grid;place-items:center;position:relative;z-index:1;color:var(--cc);transition:background .4s,color .4s,transform .4s}
+.dot svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.body{min-width:0}
+.name{font-weight:800;font-size:18px;line-height:1.35;margin:0;padding-top:3px}
+.latin{font-size:13px;color:var(--muted);direction:ltr;unicode-bidi:isolate;font-weight:400;display:inline-block}
+.desc{margin:4px 0 0;opacity:.92;font-size:16px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:12px;border-radius:999px;padding:1px 9px;border:1px solid var(--line);color:var(--muted)}
+.tag.must{color:var(--warn);border-color:var(--warn)}.tag.event{color:var(--a);border-color:var(--a)}.tag.meal{color:var(--live);border-color:var(--live)}
+.subs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sb{font-size:13px;border:1px solid var(--line);border-radius:12px;padding:4px 10px;color:var(--muted)}
+.sb b{font-variant-numeric:tabular-nums;color:var(--fg);margin-inline-start:4px}
+.sb.on{border-color:var(--a);color:var(--a);background:var(--a-soft)}.sb.past{opacity:.45}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.btn{font:inherit;font-size:14px;font-weight:600;color:var(--a);background:var(--a-soft);border:0;border-radius:9px;padding:5px 11px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:none;color:var(--muted);border:1px solid var(--line)}
+.check{margin-top:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px}
+.check summary{cursor:pointer;font-weight:700;font-size:15px}
+.check label{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:15px;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--a)}
+.check label.on{opacity:.55;text-decoration:line-through}
+.stop.sched .dot{box-shadow:0 0 0 5px var(--a-soft)}.stop.sched .time{color:var(--a)}
+.stop.passed .dot{background:var(--live);border-color:var(--live);color:var(--on-a)}
+.stop.passed .name,.stop.passed .desc{color:var(--done)}
+.stop.next .dot{background:var(--a);border-color:var(--a);color:var(--on-a);transform:scale(1.15);box-shadow:0 0 0 6px var(--a-soft),0 0 18px var(--a)}
+.stop.next .time{color:var(--a)}
+.stop.next .name::after,.stop.at .name::after{font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:8px;vertical-align:3px;white-space:nowrap}
+.stop.next .name::after{content:"הבא";background:var(--a);color:var(--on-a)}
+.stop.at .dot{background:var(--live);border-color:var(--live);color:var(--on-a);transform:scale(1.2);box-shadow:0 0 0 7px var(--live-soft),0 0 20px var(--live)}
+.stop.at .name::after{content:"אתם כאן";background:var(--live);color:var(--on-a)}
+.stop.flash .body{animation:flash 1.4s ease-out}
+@keyframes flash{0%{background:var(--a-soft)}100%{background:transparent}}
+.dot.ripple::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:3px solid var(--live);animation:rip 1.2s ease-out 2}
+@keyframes rip{from{transform:scale(1);opacity:1}to{transform:scale(3.2);opacity:0}}
+@media (prefers-reduced-motion:no-preference){.stop.next .dot,.stop.at .dot{animation:glow 2.4s ease-in-out infinite}}
+@keyframes glow{50%{box-shadow:0 0 0 11px var(--a-soft),0 0 28px var(--a)}}
+.notes{margin:0;padding-inline-start:20px;font-size:15px}.notes li{margin:0 0 7px}
+.srcs{margin:8px 0 0;padding-inline-start:18px;font-size:13px;color:var(--muted)}.srcs a{color:var(--muted)}
+
+/* ============ BAR / TOAST / FINALE ============ */
+.livebar{position:fixed;inset-inline:0;top:0;z-index:20;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px;background:var(--surface);border-bottom:1px solid var(--a);box-shadow:0 6px 20px rgba(0,0,0,.3);transform:translateY(-110%);transition:transform .25s}
+.livebar.show{transform:none}
+.livebar button{all:unset;display:flex;align-items:center;gap:12px;width:100%;max-width:660px;margin:0 auto;cursor:pointer}
+.lb-arrow{width:34px;height:34px;flex:none}.lb-arrow svg{width:100%;height:100%;transition:transform .45s}
+.lb-text{min-width:0;flex:1}.lb-name{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lb-sub{font-size:12px;color:var(--muted)}
+.lb-dist{font-weight:800;font-size:20px;color:var(--a);font-variant-numeric:tabular-nums;white-space:nowrap}
+.toast{position:fixed;inset-inline:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);z-index:60;max-width:520px;margin-inline:auto;padding:12px 16px;border-radius:14px;background:var(--live);color:var(--on-a);font-weight:800;text-align:center;opacity:0;transform:translateY(20px) scale(.96);pointer-events:none;transition:.35s cubic-bezier(.2,.8,.2,1)}
+.toast.show{opacity:1;transform:none}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+.finale{position:fixed;inset:0;z-index:65;display:grid;place-items:center;padding:20px;background:rgba(5,8,22,.78);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .5s;overflow:hidden}
+.finale.show{opacity:1;pointer-events:auto}
+.finale-card{max-width:420px;width:100%;text-align:center;background:var(--surface);border:1px solid var(--a);border-radius:22px;padding:26px 22px;transform:scale(.9) translateY(20px);transition:transform .6s cubic-bezier(.2,1.3,.4,1);box-shadow:0 0 60px var(--a-soft);position:relative;z-index:2}
+.finale.show .finale-card{transform:none}
+.finale-card h2{font-family:var(--display);font-weight:900;font-size:34px;margin:0 0 6px}
+.finale-card p{margin:0 0 14px;color:var(--muted)}
+.fin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.fin-stats div{background:var(--bg);border-radius:12px;padding:10px 4px}.fin-stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums;color:var(--a)}.fin-stats span{font-size:12px;color:var(--muted)}
+.plane{position:absolute;top:18%;inset-inline-start:-80px;width:70px;color:#fff;animation:fly 6s ease-in-out .3s infinite}
+.finale:not(.show) .plane{animation:none}
+@keyframes fly{0%{transform:translate(0,60px) rotate(-14deg)}100%{transform:translate(calc(100vw + 160px),-110px) rotate(-14deg)}}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}footer p{margin:0 0 8px}
+@media (max-width:380px){.stats{grid-template-columns:repeat(2,1fr)}.now-name{font-size:22px}.now-dist{font-size:29px}.jc span{font-size:10px}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}h1 span,.sub,.chips{opacity:1;transform:none}.stop.pre{opacity:1;transform:none}.note{display:none}}
+</style>
+</head>
+<body>
+
+<section class="stage" id="stage">
+  <div class="sky"></div>
+  <div class="amb a0" id="a0"></div><div class="amb a1" id="a1"></div><div class="amb a2" id="a2"></div>
+  <div class="amb a3" id="a3"></div><div class="amb a4" id="a4"></div><div class="amb a5" id="a5"></div>
+  <canvas id="leaves" aria-hidden="true"></canvas>
+  <div class="stage-in">
+    <div class="eyebrow"><span id="eyebrow"></span><button class="theme-toggle" id="theme-toggle" type="button">◐ מצב תצוגה</button></div>
+    <h1><span>הבוקר האחרון</span><span>בפראג</span></h1>
+    <div class="chtag" id="chtag"><b id="h1-ch">—</b><span id="h1-line"></span></div>
+    <p class="sub" id="sub"></p>
+    <div class="chips" id="chips"></div>
+  </div>
+  <nav class="journey" id="journey" aria-label="פרקי היום"><div class="jbar"><i id="jbar"></i></div></nav>
+</section>
+
+<div class="wrap">
+<div class="banner" id="banner" hidden></div>
+
+<section class="card decide" id="decide" aria-label="החלטות הבוקר">
+  <div class="kicker">החלטות הבוקר של המדריך</div>
+  <h2>עולים לפטרין ברכבל?</h2>
+  <p class="card-note">מחליטים עם המשתתפים לפני היציאה. הבחירה משנה את המסלול, הציר והמפה.</p>
+  <div class="opts" role="group" aria-label="עלייה לפטרין">
+    <button class="opt" type="button" data-v="F" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M3 20L21 6M6 17l3-4 4 3M12 10V6M9 4h6"/></svg><b>רכבל פטרין</b><span>כ־4 דקות עלייה, ייתכן תור</span></button>
+    <button class="opt" type="button" data-v="W" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M13 4a1.6 1.6 0 11-3.2 0A1.6 1.6 0 0113 4zM9 21l2-7-2.2-2.2 1-5 4 2 2 3M11 14l3 2.5V21"/></svg><b>עולים ברגל</b><span>שבילי הפארק, כ־25 דק׳ (הערכה)</span></button>
+  </div>
+  <p class="decide-note" id="decide-note"></p>
+</section>
+
+<section class="card" id="count-card" aria-label="ספירה לאחור">
+  <div class="kicker" id="count-k">האירוע הבא</div>
+  <div class="count">
+    <div class="ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44" fill="none" stroke-width="7"/><circle class="fg" id="ring-fg" cx="50" cy="50" r="44" fill="none" stroke-width="7" stroke-dasharray="276.46" stroke-dashoffset="276.46"/></svg><b id="ring-t">--:--</b></div>
+    <div class="count-t"><h2 id="count-h">—</h2><p id="count-p"></p></div>
+  </div>
+  <div class="evs" id="evs"></div>
+</section>
+
+<section class="card profile" aria-label="פרופיל היום">
+  <div class="kicker">טיפוס היום (סכמטי)</div>
+  <p class="card-note" id="prof-note">מהנהר אל הגבעה, אל המצודה, ומשם אל השמיים.</p>
+  <svg id="prof" viewBox="0 0 400 130" role="img" aria-label="פרופיל גובה סכמטי של היום"></svg>
+</section>
+
+<section class="card live" id="live" aria-label="מעקב מיקום בזמן אמת">
+  <div class="live-head"><div class="kicker">📍 מיקום חי</div><span class="pill" id="pill"><i></i><span id="pill-t">GPS כבוי</span></span></div>
+  <div class="now">
+    <div><div class="now-label" id="now-label">המסלול מתחיל</div><h2 class="now-name" id="now-name">—</h2><div class="now-dist" id="now-dist">—</div></div>
+    <div class="compass" id="compass" aria-hidden="true"><span class="n">צפון</span><svg viewBox="0 0 100 100" id="compass-svg"><path d="M50 12 L69 72 L50 60 L31 72 Z" fill="var(--a)"/><circle cx="50" cy="50" r="3.5" fill="var(--surface)"/></svg></div>
+    <p class="compass-note" id="compass-note"></p>
+  </div>
+  <div class="msg" id="msg" role="status" aria-live="polite">לחצו על ״הפעל מיקום חי״ ואשרו גישה למיקום.</div>
+  <div class="stats">
+    <div class="stat"><b id="st-eta">—</b><span id="st-eta-l">הליכה</span></div>
+    <div class="stat"><b id="st-slack">—</b><span id="st-slack-l">מול הלו״ז</span></div>
+    <div class="stat"><b id="st-prog">0%</b><span>מהמסלול</span></div>
+    <div class="stat"><b id="st-acc">—</b><span>דיוק GPS</span></div>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="prog-bar"></i></div>
+  <div class="mapbox" id="mapbox"><div id="lmap"></div><svg id="map" viewBox="0 0 640 360" role="img" aria-label="מפה סכמטית"></svg>
+    <div class="mapbtns"><button id="btn-center" type="button" hidden>📍 מרכז עליי</button><button id="btn-all" type="button">🗺 כל המסלול</button></div></div>
+  <p class="maplabel">המפה מתעדכנת בזמן אמת. לחצו על מספר כדי לקפוץ לתחנה.</p>
+  <div class="controls">
+    <button class="btn-main" id="btn-start" type="button" data-on="false">📍 הפעל מיקום חי</button>
+    <button class="toggle" id="btn-follow" type="button" aria-pressed="true">גלילה אוטומטית</button>
+    <button class="toggle" id="btn-wake" type="button" aria-pressed="true">מסך דלוק</button>
+  </div>
+  <details class="tools"><summary>בדיקה והדגמה (בלי GPS אמיתי)</summary>
+    <div class="tools-row">
+      <button class="toggle" id="btn-sim" type="button" aria-pressed="false">▶ הליכה לדוגמה</button>
+      <button class="toggle" id="btn-open" type="button">המיקום שלי בגוגל מפות ↗</button>
+      <label for="sim-range">הזזת מיקום מדומה לאורך המסלול:</label><input id="sim-range" type="range" min="0" max="1000" step="1" value="0">
+      <label for="clock-range">שעון מדומה (לבדיקת הספירה לאחור והפרקים): <b id="clock-out">כבוי</b></label><input id="clock-range" type="range" min="480" max="1080" step="5" value="480">
+      <button class="toggle" id="clock-off" type="button">חזרה לשעון אמיתי</button>
+    </div>
+    <div class="diag" id="diag"></div>
+  </details>
+</section>
+
+<section class="card read" id="read" aria-label="מדריך קריאה">
+  <div class="read-top"><div class="kicker" id="rd-k">מדריך הקריאה</div>
+    <div class="rd-tools"><button id="rd-prev" type="button">הקודם</button><button id="rd-next" type="button">הבא</button><button id="rd-auto" type="button" aria-pressed="true">לפי GPS</button><button id="rd-minus" type="button" aria-label="הקטנת טקסט">א−</button><button id="rd-plus" type="button" aria-label="הגדלת טקסט">א+</button><button id="rd-tts" type="button" aria-pressed="false">🔊 הקראה</button></div></div>
+  <h2 id="rd-h">—</h2><div class="latin" id="rd-l"></div>
+  <p class="rd-lead" id="rd-lead"></p>
+  <ul class="rd-facts" id="rd-facts"></ul>
+  <div class="rd-ask" id="rd-ask"></div>
+  <div class="rd-src" id="rd-src"></div>
+</section>
+
+<nav class="maps" id="maps" aria-label="ניווט בגוגל מפות"></nav>
+
+<ol class="route" id="route" aria-label="תחנות המסלול"><div class="route-progress" aria-hidden="true"></div><div class="walker" aria-hidden="true"></div></ol>
+
+<section class="card" aria-label="כללי תיאום"><div class="kicker">חשוב לפני היציאה</div><ul class="notes" id="rules" style="margin-top:8px"></ul></section>
+<section class="card" aria-label="מקורות"><div class="kicker">מקורות למדריך</div><ul class="srcs" id="srcs"></ul><p class="card-note">חלק מהפרטים (מחירים, שעות, פתיחת הרכבל) מבוססים על דיווחים באתרים. כדאי לבדוק בבוקר באתרים הרשמיים.</p></section>
+
+<footer><p>הקואורדינטות משוערות (כ־20–60 מ׳). קטעי נסיעה ברכב או בחשמלית מחושבים בקו משוער.</p><p>המיקום נשאר במכשיר ולא נשלח לשום שרת. המפה מ־OpenStreetMap.</p></footer>
+</div>
+
+<div class="livebar" id="livebar"><button type="button" id="livebar-btn" aria-label="קפיצה לתחנה הבאה">
+  <span class="lb-arrow"><svg viewBox="0 0 100 100" id="lb-svg"><path d="M50 8 L74 78 L50 64 L26 78 Z" fill="var(--a)"/></svg></span>
+  <span class="lb-text"><div class="lb-name" id="lb-name">—</div><div class="lb-sub" id="lb-sub">—</div></span><span class="lb-dist" id="lb-dist">—</span></button></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="finale" id="finale" role="dialog" aria-modal="true" aria-labelledby="fin-h">
+  <svg class="plane" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path d="M60 30L36 26 24 6h-5l6 20-14 2-6-6H1l3 10-3 10h4l6-6 14 2-6 20h5l12-20 24-4c3-.6 3-4 0-5z"/></svg>
+  <div class="finale-card"><h2 id="fin-h">טיסה טובה הביתה!</h2><p>סיימתם בוקר מלא בפראג.</p>
+  <div class="fin-stats"><div><b id="fin-km">—</b><span>ק״מ ברגל</span></div><div><b id="fin-stops">—</b><span>תחנות</span></div><div><b id="fin-time">—</b><span>זמן במסלול</span></div></div>
+  <button class="btn-main" id="fin-close" type="button" style="width:100%">סגירה</button></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* =====================================================================
+   1. תוכן היום (החלק היחיד שמחליפים ליום אחר)
+   ch = פרק (0..5) · variant = F (רכבל) | W (ברגל) · via/viaF/viaW = נקודות ביניים
+   sub = שלבים בלי תנועה (לפי שעון) · ev = אירוע ממוקד · mode = walk | ride
+   ===================================================================== */
+const TRIP_DATE = '2026-10-14';
+const DEPART = '14:30';           // שעת יציאה לשדה (הערכה, אפשר לשנות)
+const FLIGHT = '18:00';
+const META = {eyebrow:'יום 4 בטיול · רביעי 14.10', sub:'פטרין, מצודת פראג וטקס חצוצרות, בריכה במלון, ומשם לשדה ולטיסה הביתה.'};
+const CHAPTERS = [
+  {id:'dawn', name:'בוקר במלון', short:'מלון', line:'בוקר, קפה ויוצאים', icon:'bed', from:'00:00'},
+  {id:'hill', name:'גבעת פטרין', short:'פטרין', line:'ירוק, תצפיות וגבעה', icon:'tree', from:'09:45'},
+  {id:'strahov', name:'סטרחוב ולורטה', short:'סטרחוב', line:'גגות אדומים ופעמונים', icon:'roof', from:'11:10'},
+  {id:'castle', name:'מצודת פראג', short:'מצודה', line:'שער הענקים וחצוצרות', icon:'castle', from:'11:40'},
+  {id:'pool', name:'בריכה והתארגנות', short:'בריכה', line:'מים, שקט ומזוודות', icon:'pool', from:'13:00'},
+  {id:'sky', name:'שדה התעופה והטיסה', short:'טיסה', line:'ממריאים הביתה', icon:'plane', from:DEPART}
+];
+const SOURCES = {
+  funi1:{t:'Expats.cz: הרכבל חוזר לפעול ב־22.9',u:'https://www.expats.cz/czech-news/article/back-on-track-prague-s-petrin-funicular-to-reopen-after-two-years'},
+  funi2:{t:'Expats.cz: מחיר הרכבל אחרי הפתיחה',u:'https://www.expats.cz/czech-news/article/prague-s-petrin-funicular-will-be-significantly-more-expensive-after-reopening'},
+  funi3:{t:'Prague.eu: רכבל פטרין',u:'https://www.prague.eu/en/object/places/1354/petrin-funicular-lanova-draha-na-petrin'},
+  tower:{t:'Prague.eu: מגדל פטרין',u:'https://prague.eu/en/objevujte/petrin-tower-petrinska-rozhledna'},
+  towerH:{t:'Prague City Tourism: מגדל פטרין',u:'https://praguecitytourism.cz/en/care-for-cultural-heritage-and-operation-of-important-monuments/petrin-tower'},
+  memorial:{t:'Wikipedia: Memorial to the Victims of Communism',u:'https://en.wikipedia.org/wiki/Memorial_to_the_Victims_of_Communism'},
+  hunger:{t:'Wikipedia: Hunger Wall',u:'https://en.wikipedia.org/wiki/Hunger_Wall'},
+  strahov:{t:'PragueWise: מנזר סטרחוב',u:'https://www.praguewise.com/strahov-monastery.html'},
+  loreta:{t:'Loreta Prague: הקרייון',u:'https://www.loreta.cz/en/loreto-musical/baroque-carillon'},
+  titans:{t:'Wikipedia: Wrestling Titans',u:'https://en.wikipedia.org/wiki/Wrestling_Titans'},
+  guard:{t:'Radio Prague: החלפת המשמר חוזרת',u:'https://english.radio.cz/node/8826426'},
+  castle:{t:'Prague.eu: מצודת פראג (שעות)',u:'https://www.prague.eu/en/object/places/1009/prague-castle-prazsky-hrad'},
+  airport:{t:'FlightQueue: מתי להגיע לשדה בפראג',u:'https://flightqueue.com/how-early-to-arrive-at-vaclav-havel-airport-prague'}
+};
+const NAV_LINKS = [
+  {k:'① מונית', t:'מהמלון לתחנת הרכבל Újezd', go:'ניווט ברכב ↗', u:'https://www.google.com/maps/dir/?api=1&origin=Hotel+King+David,+Hybernska+42,+Prague&destination=Ujezd+Funicular+Station,+Prague&travelmode=driving'},
+  {k:'② הליכה', t:'מפטרין לסטרחוב ולמצודה', go:'דרך סטרחוב וכיכר הרדצ׳אני ↗', u:'https://www.google.com/maps/dir/?api=1&origin=Petrin+Lookout+Tower,+Prague&destination=First+Courtyard,+Prague+Castle,+Prague&waypoints=Strahov+Monastery,+Prague%7CHradcanske+namesti,+Prague&travelmode=walking'},
+  {k:'③ בחצרות', t:'מהחצר הראשונה לקתדרלת ויטוס', go:'טיול חיצוני ↗', u:'https://www.google.com/maps/dir/?api=1&origin=First+Courtyard,+Prague+Castle,+Prague&destination=St+Vitus+Cathedral,+Prague&travelmode=walking'},
+  {k:'④ חזרה', t:'מהמצודה למלון King David', go:'מונית ↗', u:'https://www.google.com/maps/dir/?api=1&origin=Prague+Castle,+Prague&destination=Hotel+King+David,+Hybernska+42,+Prague&travelmode=driving'}
+];
+const RULES = [
+  'נקודת מפגש מחייבת: 10:50 בכניסה למגדל פטרין, גם אם מי שעולה נתקל בתור.',
+  'לא נכנסים למנזר סטרחוב, לכנסיות או לקתדרלת ויטוס. הכול מבחוץ ובחצרות הפתוחות.',
+  'להיות בשער המצודה עד 11:40 ולהתמקם לטקס לפני 12:00. הטקס כפוף לשינויים תפעוליים.',
+  'אם יש עיכוב ברכבל או בתור למגדל: מקצרים או מדלגים על התצפית בסטרחוב, לא על הזמן במלון.',
+  'שישה נוסעים: להזמין מראש רכב גדול או שתי מוניות. נקודת האיסוף תיקבע מחוץ לשטח המוגבל לתנועה.',
+  'להיות במלון בסביבות 13:00, ללכת לבריכה עד 14:00, ולצאת לשדה בזמן.'
+];
+const CHECKLIST = ['דרכונים וכרטיסי טיסה בנייד','מטענים וסוללה ניידת','בגדי ים רטובים בשקית אטומה','בדיקת החדרים (מגירות, שקעים, מקלחת)','צ׳ק־אאוט וסגירת חשבון','כרטיסי אשראי והמעיל החדש','הזמנת רכב גדול לשדה'];
+
+const DAY = [
+ {id:'dawn', title:'בוקר במלון', range:'09:30', ch:0, stops:[
+  {id:'hotel0', t:'09:30', icon:'bed', name:'יציאה ממלון King David', latin:'Hybernská 42', lat:50.08655, lon:14.43680, r:60,
+   desc:'נוסעים ב־Bolt או במונית לתחנת הרכבל התחתונה Újezd. לשישה נוסעים: רכב גדול או שתי מוניות.',
+   guide:{lead:'בוקר טוב! זה הבוקר האחרון בפראג: גבעה ירוקה, תצפיות, טקס חצוצרות בצהריים, ואחר כך שעה בבריכה לפני שחוזרים הביתה. לפני שיוצאים מחליטים יחד אם עולים לפטרין ברכבל או ברגל, ומי עולה את המגדל.',
+    facts:['יציאה ב־09:30 במונית או ב־Bolt אל תחנת Újezd.','שישה נוסעים: כדאי להזמין רכב גדול או שתי מוניות.','מפגש חובה ב־10:50 בכניסה למגדל פטרין.','12:00: החלפת המשמר בחצר הראשונה של המצודה.'],
+    ask:'מי מהקבוצה מתכוון לעלות את 299 המדרגות של המגדל?', src:[]}}
+ ]},
+ {id:'hill', title:'גבעת פטרין', range:'09:45–11:10', ch:1, stops:[
+  {id:'ujezd', t:'09:45', icon:'heart', name:'Újezd והאנדרטה לקורבנות הקומוניזם', latin:'Újezd', lat:50.08105, lon:14.40400, r:90, mode:'ride', via:[[50.08450,14.42300],[50.08100,14.41250]],
+   desc:'מגיעים לתחנת הרכבל התחתונה. ליד המדרגות יש אנדרטת ברונזה מיוחדת, שווה דקה של עצירה.',
+   guide:{lead:'לפני שעולים, עוצרים דקה ליד פסלי הברונזה על מדרגות הגבעה. זו האנדרטה לקורבנות הקומוניזם, שנחנכה ב־22 במאי 2002 ופיסל אותה אולברם זובק. הדמויות יורדות במדרגות, וכל אחת נראית במצב התפוררות אחר, כאילו האדם נשחק לאורך השנים.',
+    facts:['על הבסיס חרוטות הערכות: 205,486 נשפטו, 248 הוצאו להורג וכ־4,500 מתו בכלא.','האנדרטה עוררה ויכוח: חלק ראו בה קיטש, ואחרים התלוננו שכל הדמויות גברים.','היא נפגעה בשני פיצוצים בסוף 2003.','התחנה התחתונה של הרכבל נמצאת ממש לידה.'],
+    ask:'למה לדעתכם בחר האמן להראות דמויות שנשחקות ונעלמות?', src:['memorial']}},
+  {id:'funi', variant:'F', t:'09:50', icon:'tram', name:'ברכבל אל פטרין', latin:'Petřínská lanovka', lat:50.08335, lon:14.39580, r:90, mode:'ride', via:[[50.08228,14.39918]],
+   desc:'ממתינים ועולים אל התחנה העליונה. הזמן תלוי בתור. בדרך עוברים בתחנת Nebozízek.',
+   guide:{lead:'עולים ברכבל לפטרין. הקו נפתח ב־1891 לרגל התערוכה הגדולה בפראג, והוא מטפס מהנהר אל הגבעה בשלוש תחנות: Újezd, Nebozízek ופטרין. הקו היה סגור כשנתיים לשיפוץ, וחזר לפעול ב־22 בספטמבר 2026 לפי דיווח, עם קרונות חדשים לכ־120 נוסעים. כדאי להביט אחורה בזמן העלייה ולראות איך העיר נפרשת מתחת.',
+    facts:['לפי הדיווח: נסיעה בודדת 100 קר׳ (90 באפליקציית Lítačka). ילדים עד 15 ומעל גיל 65 חינם.','הקרונות הראשונים יוצאים ב־07:00 בהפרשים של כ־10 דקות, לפי אותו דיווח.','התאריך והמחיר מבוססים על דיווח עיתונאי. כדאי לבדוק באתר DPP בבוקר.','אם התור ארוך מדי: עוברים להחלטה ״ברגל״ בכרטיס ההחלטות.'],
+    ask:'מי מצליח לזהות מהחלון את הגשר הראשון על הנהר?', src:['funi1','funi2','funi3']}},
+  {id:'walkup', variant:'W', t:'09:50', icon:'stairs', name:'עולים ברגל בשבילי הפארק', latin:'Petřínské sady', lat:50.08235, lon:14.39900, r:90, mode:'walk', via:[[50.08172,14.40125]],
+   desc:'שבילים מטפסים בין גנים ועצי פרי, עם תצפיות בדרך. העלייה תלולה, הולכים בקצב נוח.',
+   guide:{lead:'מחליטים לעלות ברגל. שבילי פארק פטרין מטפסים בין גנים ועצי פרי, ובמעלה מחכות תצפיות על העיר. הדרך תלולה, אז הולכים בקצב נוח ועוצרים לנשום ולהסתכל אחורה.',
+    facts:['הערכת זמן: כ־25 דקות עלייה (הערכה שלנו, לא מקור רשמי).','בדרך עוברים ליד תחנת Nebozízek של הרכבל.','אם מישהו מתעייף, אפשר להצטרף לרכבל מתחנת הביניים.','נשארים עם לוח הזמנים: המפגש ב־10:50 לא זז.'],
+    ask:'כמה גגות אדומים אתם סופרים מהתצפית הראשונה?', src:[]}},
+  {id:'tower', t:'10:10', icon:'tower', tag:'must', name:'מגדל פטרין: הקבוצה מתפצלת', latin:'Petřínská rozhledna', lat:50.08352, lon:14.39509, r:90, mustMeet:'10:50',
+   desc:'א׳: עולים למגדל (299 מדרגות, או מעלית בתוספת תשלום). ב׳: מטיילים בגנים ובתצפיות למטה. כולם נפגשים ב־10:50 בכניסה.',
+   guide:{lead:'מגדל פטרין נבנה ב־1891 לתערוכה הגדולה, אחרי שחברי מועדון התיירים הצ׳כי ביקרו בפריז והתרשמו ממגדל אייפל. גובהו כ־60 מטר, ו־299 מדרגות מובילות אל התצפית. מלמעלה רואים את מצודת פראג, את הנהר ואת אלפי הגגות האדומים. בין 1953 ל־1992 שימש המגדל גם כמשדר טלוויזיה.',
+    facts:['באוקטובר המגדל פתוח 10:00–18:00 לפי Prague.eu.','כרטיס מבוגר כ־250 קר׳ לפי אתר העירייה. המעלית בתוספת תשלום ומגיעה עד פלטפורמה בגובה 51 מ׳.','מי שנשאר למטה נהנה מהגנים ומתצפיות על העיר.','מפגש חובה ב־10:50 בכניסה למגדל, גם אם יש תור. אם התור חריג, מקצרים את העלייה.'],
+    ask:'נסו לזהות מלמעלה את גשר קארל ואת מצודת פראג. מי מוצא ראשון?', src:['tower','towerH']}},
+  {id:'hunger', t:'10:50', icon:'wall', name:'חומת הרעב והגנים', latin:'Hladová zeď', lat:50.08331, lon:14.39279, r:80,
+   desc:'הליכה נופית דרך הגנים לכיוון סטרחוב, בלי כניסה למבנים דתיים.',
+   guide:{lead:'החומה שמתפתלת בגבעה היא חומת הרעב, שהוקמה בימי קרל הרביעי ונגמרה ב־1362. בנו אותה מאבן גיר שנחצבה בגבעה עצמה. השם ״רעב״ נקבע אחרי הרעב של 1361. לפי האגדה בנו אותה כדי לתת פרנסה לעניים, אבל חלק מההיסטוריונים סבורים שהמטרה העיקרית הייתה הגנה על המצודה.',
+    facts:['כ־1,200 מטר מהחומה שרדו עד היום.','בהתחלה קראו לה Zubatá, ״המשוננת״, בגלל המגדלים שלה.','אחד המגדלים משמש בסיס לכיפה של מצפה הכוכבים Štefánik.','האגדה על העבודה לעניים נחשבת סיפור שנוסף מאוחר יותר.'],
+    ask:'מה עדיף לדעתכם: להאמין לאגדה היפה או להיסטוריונים?', src:['hunger']}}
+ ]},
+ {id:'strahov', title:'סטרחוב ולורטה', range:'11:10–11:40', ch:2, stops:[
+  {id:'strahov', t:'11:10', icon:'view', name:'תצפית סטרחוב', latin:'Strahovský klášter', lat:50.08550, lon:14.39020, r:90,
+   desc:'עצירה קצרה לצילומים על גגות פראג והעיר הקטנה. נשארים בחוץ.',
+   guide:{lead:'מכאן הנוף הכי יפה על פראג בלי להיכנס לשום מבנה. מעלינו מנזר סטרחוב, שנוסד באמצע המאה ה־12 על ידי נזירים פרמונסטרטנסים. החזית הבארוקית שרואים היום היא מהמאות ה־17 וה־18, והספרייה שלו מפורסמת באולמות המצוירים. אנחנו לא נכנסים, רק נהנים מהנוף.',
+    facts:['מקורות שונים נותנים 1140 או 1143 כשנת היסוד.','הספרייה כוללת שני אולמות: התיאולוגי (1671–1679) והפילוסופי (1782–1784).','תחת המשטר הקומוניסטי המנזר הולאם, והוחזר לנזירים אחרי מהפכת הקטיפה.','נקודת צילום מצוינת לפני ההגעה למצודה.'],
+    ask:'כמה צריחים אתם סופרים מכאן?', src:['strahov']}},
+  {id:'loreta', t:'', icon:'bell', name:'עוברים ליד לורטה', latin:'Loreta · Loretánské nám.', lat:50.08928, lon:14.39155, r:70,
+   desc:'ממשיכים דרך רחובות הרובע אל חזית המצודה. אם תגיעו בשעה עגולה, תשמעו פעמונים.',
+   guide:{lead:'בדרך אל המצודה עוברים ליד לורטה, מקום עלייה לרגל בארוקי. בצריח שלה פעמוני קרייון, כ־27 פעמונים שיצק קלוד פרמי מאמסטרדם. הם מנגנים מנגינה מריאנית אוטומטית בכל שעה עגולה בשעות הפתיחה, ונשמעו לראשונה ב־1695.',
+    facts:['המנגינה מופעלת מגליל שעון בכל שעה עגולה.','לורטה פתוחה בדרך כלל 10:00–17:00, אנחנו רק עוברים.','לורטה נמצאת בכיכר Loretánské, לא בכיכר הרדצ׳אני.'],
+    ask:'מי מצליח לשמוע את הפעמונים? אם לא, חזרו לכאן בשעה עגולה.', src:['loreta']}}
+ ]},
+ {id:'castle', title:'מצודת פראג', range:'11:40–12:30', ch:3, stops:[
+  {id:'giants', t:'11:40', icon:'castle', tag:'event', name:'שער הענקים והחצר הראשונה', latin:'Hradčanské nám. · Giants Gate', lat:50.09015, lon:14.39880, r:85, via:[[50.08960,14.39770]], ev:'12:00',
+   desc:'מתרשמים מהחזית ומתמקמים לטקס בכפוף להנחיות המקום. ב־12:00 החלפת המשמר הטקסית, עם תרועת חצוצרות וחילוף הדגל.',
+   guide:{lead:'ברוכים הבאים לשער הענקים, הכניסה הטקסית של המצודה. שני הענקים הנאבקים על העמודים הם פסלים של איגנץ פלצר מ־1770–1771. את המקוריים החליפו ב־1921 בעותקים. מעבר לשער נמצאת החצר הראשונה, שתכנן מחדש האדריכל יוז׳ה פלצ׳ניק בשנות ה־20. בשער עומדים חיילי משמר המצודה, ובשעה 12:00 מתקיים הטקס החגיגי: תרועת חצוצרות והחלפת דגל, כ־15 דקות.',
+    facts:['הטקס בחינם, ומתחילים להתמקם ב־11:40. בכל שעה עגולה יש גם חילוף משמר רגיל בשערים.','השער נסגר ביולי 2024 לשיפוץ והטקס חזר באוגוסט 2024. כדאי לבדוק ב־hrad.cz אם יש שינוי.','מתחם המצודה פתוח 06:00–22:00 והכניסה לחצרות חינם. יש בדיקות ביטחון אקראיות ובלי מזוודות גדולות.','שער מתיאס, בכניסה לחצר השנייה, נבנה בערך ב־1614.'],
+    ask:'מי מצליח לזהות את הנשר ואת האריה על העמודים הסמוכים לענקים?', src:['titans','guard','castle']}},
+  {id:'vitus', t:'12:15', icon:'spire', name:'חצרות המצודה וקתדרלת ויטוס מבחוץ', latin:'Katedrála sv. Víta', lat:50.09086, lon:14.40057, r:110,
+   desc:'ביקור קצר בחצרות הפתוחות בלבד. בלי כניסה לקתדרלה.',
+   guide:{lead:'קתדרלת ויטוס ניצבת בלב המצודה, ואפשר לזהות אותה לפי הצריחים הגותיים העצומים. הבנייה התחילה ב־1344, ורק ב־1929 הושלמה, כמעט 600 שנה אחר כך. לכן אפשר לזהות במבנה שכבות של סגנונות מתקופות שונות. אנחנו מתרשמים מהחזית ומהאדריכלות מבחוץ ולא נכנסים.',
+    facts:['הבנייה נמשכה מ־1344 עד 1929.','המצודה היא מתחם ענק שנבנה יותר מאלף שנה, וממנו מנהל היום נשיא צ׳כיה את ענייניו.','מי שרוצה כניסה לבניינים: כרטיס נפרד. אנחנו נשארים בחוץ.'],
+    ask:'כמה סגנונות שונים אתם מזהים על החזית?', src:['castle']}},
+  {id:'pickup', t:'12:30', icon:'taxi', tag:'must', name:'נקודת איסוף מונית', latin:'Pražský hrad · Jelení', lat:50.09333, lon:14.39790, r:90,
+   desc:'יוצאים מהמצודה אל נקודת איסוף נגישה לרכב, מחוץ לאזור המוגבל. מזמינים מראש רכב לשישה.',
+   guide:{lead:'עוזבים את המצודה. הולכים לנקודת איסוף נגישה לרכב מחוץ לשטח המוגבל לתנועה, ומזמינים Bolt או Uber לשישה: רכב גדול או שתי מוניות. זמן הנסיעה למלון תלוי בתנועה.',
+    facts:['יעד: Hotel King David, Hybernská 42.','מגיעים למלון בסביבות 13:00.','אם הגעתם לנקודת האיסוף באיחור: מדלגים על קטעי הצילום, לא על הבריכה.'],
+    ask:'', src:[]}}
+ ]},
+ {id:'pool', title:'בריכה והתארגנות', range:'13:00–14:30', ch:4, stops:[
+  {id:'hotel1', t:'13:00', icon:'pool', name:'חזרה למלון והבריכה', latin:'Hotel King David', lat:50.08655, lon:14.43680, r:60, mode:'ride', via:[[50.09110,14.40930],[50.09300,14.41700],[50.09100,14.42590]],
+   sub:[{t:'13:00',l:'בריכה'},{t:'14:00',l:'התארגנות לטיסה'},{t:DEPART,l:'יציאה לשדה'}], checklist:true,
+   desc:'13:00–14:00 בריכה במלון. אחר כך מתארגנים: מזוודות, דרכונים וידוא שכולם מוכנים.',
+   guide:{lead:'הגענו! שעה בבריכה לפני שהכול נגמר. ב־14:00 מתחילים להתארגן: מזוודות, דרכונים, בדיקת החדרים, בגדי ים רטובים בשקית וצ׳ק־אאוט. ב־14:30 יוצאים לשדה.',
+    facts:['13:00–14:00 בריכה.','14:00–14:30 התארגנות, מזוודות וצ׳ק־אאוט.','14:30 יציאה לשדה התעופה (שעה משוערת, המדריך יאשר).','סמנו בצ׳קליסט שבתחתית הכרטיס מה כבר מוכן.'],
+    ask:'מי רוצה להישאר עוד חמש דקות בבריכה? (התשובה: אין זמן, אבל שווה לשאול).', src:[]}}
+ ]},
+ {id:'sky', title:'השדה והטיסה הביתה', range:DEPART+'–'+FLIGHT, ch:5, stops:[
+  {id:'airport', t:'15:00', approx:true, icon:'plane', name:'שדה התעופה והטיסה לישראל', latin:'Václav Havel Airport · PRG', lat:50.10205, lon:14.27057, r:300, mode:'ride', via:[[50.09050,14.42900],[50.09900,14.41800],[50.09800,14.38000],[50.09650,14.34000],[50.09900,14.29800]],
+   sub:[{t:'15:00',l:'הגעה וצ׳ק־אין'},{t:FLIGHT,l:'טיסה לישראל'}],
+   desc:'מגיעים לשדה כשלוש שעות לפני הטיסה. הטיסה חזרה לישראל ב־18:00.',
+   guide:{lead:'יוצאים לשדה התעופה על שם ואצלב האוול. בטיסות לישראל מקובל להגיע כשלוש שעות לפני ההמראה, בגלל הבדיקות הביטחוניות. הטיסה ב־18:00, ולכן הגעה בסביבות 15:00. נסיעה במונית מהעיר נמשכת בערך חצי שעה עד 45 דקות לפי התנועה (הערכה שלנו).',
+    facts:['המלצה כללית: הגעה כ־3 שעות לפני טיסה בינלאומית. בדקו את ההנחיות של חברת התעופה.','שעות העומס בשדה הן אחר הצהריים, בערך 16:00–19:00 לפי FlightQueue.','לפני הכניסה לטרמינל: דרכונים, כרטיסי טיסה ועגלות מזוודות.','הטיסה חזרה לישראל ב־18:00.'],
+    ask:'מה היה הרגע האהוב על כל אחד מכם בטיול?', src:['airport']}}
+ ]}
+];
+const EVENTS = [
+  {t:'09:30', l:'יציאה מהמלון'}, {t:'10:50', l:'מפגש בכניסה למגדל'}, {t:'11:40', l:'להיות בשער המצודה'}, {t:'12:00', l:'החלפת המשמר'},
+  {t:'12:30', l:'יציאה מהמצודה'}, {t:'13:00', l:'בריכה במלון'}, {t:'14:00', l:'התארגנות לטיסה'}, {t:DEPART, l:'יציאה לשדה'}, {t:'15:00', l:'הגעה לשדה'}, {t:FLIGHT, l:'טיסה לישראל'}
+];
+const ICONS = {
+  bed:'M3 19v-8a2 2 0 012-2h14a2 2 0 012 2v8M3 15h18M7 9V6h5v3',
+  tree:'M12 3l5 8h-3l4 6H6l4-6H7zM12 17v4',
+  roof:'M3 20V11l4-4 4 4v9M11 20V9l5-5 5 5v11M6 14h2M15 12h2',
+  castle:'M3 21V8l3 2V6l3 2V4l3 2 3-2v4l3-2v4l3-2v13zM10 21v-5a2 2 0 014 0v5',
+  pool:'M3 15c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.4 4-1.4M3 20c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.4 4-1.4M8 12V5a2 2 0 014 0M14 12V5a2 2 0 014 0M8 8h6',
+  plane:'M21 15l-8-3.5V5a1.5 1.5 0 00-3 0v6.5L2 15v2l8-1.5V19l-2 1.5V22l4-1 4 1v-1.5L14 19v-3.5L22 17z',
+  heart:'M12 20s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 10-7 10z',
+  tram:'M3 20L21 6M7 17l3-4 4 3M12 10V6M9 4h6',
+  stairs:'M3 21h5v-5h5v-5h5V6h3',
+  tower:'M9 21V9l3-6 3 6v12M7 21h10M10 13h4',
+  wall:'M3 20V10h4V7h4v3h4V7h4v3h2v10zM8 20v-5h3v5',
+  view:'M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12zM12 15a3 3 0 100-6 3 3 0 000 6z',
+  bell:'M18 16V11a6 6 0 10-12 0v5l-2 2h16zM10 21h4',
+  spire:'M12 2l3 8v10H9V10zM5 21V12l3 2M19 21V12l-3 2',
+  taxi:'M5 16V12l2-5h10l2 5v4M3 16h18M7 19v-3M17 19v-3M9 7V5h6v2',
+  car:'M5 16V12l2-5h10l2 5v4'
+};
+
+/* =====================================================================
+   2. כלים
+   ===================================================================== */
+const RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const R_EARTH = 6371000, WALK_MPM = 75, RIDE_MPM = 250;
+const rad = d => d*Math.PI/180, deg = r => r*180/Math.PI, clamp = (v,a,b) => Math.max(a, Math.min(b, v)), $ = id => document.getElementById(id);
+function off(a, ref){ const k = Math.cos(rad((a.lat+ref.lat)/2)); return {x:R_EARTH*rad(a.lon-ref.lon)*k, y:R_EARTH*rad(a.lat-ref.lat)}; }
+function dist(a,b){ const q = off(a,b); return Math.hypot(q.x,q.y); }
+function bearing(a,b){ const f1=rad(a.lat), f2=rad(b.lat), dl=rad(b.lon-a.lon); return (deg(Math.atan2(Math.sin(dl)*Math.cos(f2), Math.cos(f1)*Math.sin(f2)-Math.sin(f1)*Math.cos(f2)*Math.cos(dl)))+360)%360; }
+const toMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(t||''); return m ? (+m[1])*60 + (+m[2]) : null; };
+const hhmm = m => { m = Math.round(m); return String(Math.floor(m/60)%24).padStart(2,'0') + ':' + String(m%60).padStart(2,'0'); };
+const store = { get(k){ try{ return localStorage.getItem('prague-wed-'+k); }catch(e){ return null; } }, set(k,v){ try{ localStorage.setItem('prague-wed-'+k, v); }catch(e){} } };
+function pragueParts(d){
+  const p = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Prague',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(d);
+  const g = t => +p.find(x => x.type===t).value; return {y:g('year'), mo:g('month'), d:g('day'), h:g('hour'), mi:g('minute'), s:g('second')};
+}
+function realNow(){ try{ const q = pragueParts(new Date()); return {date:q.y+'-'+String(q.mo).padStart(2,'0')+'-'+String(q.d).padStart(2,'0'), sec:q.h*3600+q.mi*60+q.s}; }catch(e){ const d = new Date(); return {date:'', sec:d.getHours()*3600+d.getMinutes()*60+d.getSeconds()}; } }
+/* שעון הדף: אמיתי ביום הטיול, מדומה בבדיקה, אחרת null */
+function clockSec(){ if (st.simMin !== null) return st.simMin*60; const n = realNow(); return n.date === TRIP_DATE ? n.sec : null; }
+function clockMin(){ const s = clockSec(); return s === null ? null : s/60; }
+const isTripDay = () => clockSec() !== null;
+
+/* =====================================================================
+   3. בניית המסלול לפי בחירת רכבל / רגל
+   ===================================================================== */
+const ALL = []; DAY.forEach((sec, si) => sec.stops.forEach(s => { s.sec = si; s.ch = sec.ch; ALL.push(s); }));
+let stops = [], nodes = [], cum = [0], stopNode = [], stopCum = [], TOTAL = 0, NS = 0;
+function buildRoute(v){
+  stops = []; nodes = [];
+  ALL.forEach(function(s){
+    if (s.variant && s.variant !== v){ s.i = -1; return; }
+    const mode = s.mode || 'walk';
+    (s['via'+v] || s.via || []).forEach(p => nodes.push({lat:p[0], lon:p[1], stop:-1, mode}));
+    s.i = stops.length; stops.push(s); nodes.push({lat:s.lat, lon:s.lon, stop:s.i, mode});
+  });
+  NS = stops.length; stopNode = stops.map((s,i) => nodes.findIndex(n => n.stop === i));
+  cum = [0]; for (let k=1; k<nodes.length; k++) cum[k] = cum[k-1] + dist(nodes[k-1], nodes[k]);
+  TOTAL = cum[cum.length-1]; stopCum = stopNode.map(k => cum[k]);
+}
+function seg(p, k){
+  const A = off(nodes[k], p), B = off(nodes[k+1], p), dx = B.x-A.x, dy = B.y-A.y, L2 = dx*dx+dy*dy, t = L2 ? clamp(-(A.x*dx+A.y*dy)/L2, 0, 1) : 0;
+  return {k, t, d: Math.hypot(A.x+t*dx, A.y+t*dy)};
+}
+function snap(p, k0, k1){ let best = null; for (let k=k0; k<k1; k++){ const s = seg(p,k); if (!best || s.d < best.d) best = s; } return best; }
+const legLen = k => cum[k+1]-cum[k];
+const legLimit = k => nodes[k+1].mode === 'ride' ? 480 : 170;
+const mpm = k => nodes[k] && nodes[k].mode === 'ride' ? RIDE_MPM : WALK_MPM;
+function posFromD(D){ for (let i=0; i<NS-1; i++){ if (D <= stopCum[i+1]){ const L = stopCum[i+1]-stopCum[i]; return i + (L ? clamp((D-stopCum[i])/L, 0, 1) : 0); } } return NS-1; }
+function pointAt(D){ D = clamp(D, 0, TOTAL); for (let k=0; k<nodes.length-1; k++){ if (D <= cum[k+1]){ const L = legLen(k), t = L ? (D-cum[k])/L : 0; return {lat:nodes[k].lat+(nodes[k+1].lat-nodes[k].lat)*t, lon:nodes[k].lon+(nodes[k+1].lon-nodes[k].lon)*t}; } } return nodes[nodes.length-1]; }
+const idxOf = id => stops.findIndex(s => s.id === id);
+const startStopOfLeg = k => { let i = 0; for (let j=0; j<NS; j++) if (stopNode[j] <= k) i = j; return i; };
+
+/* =====================================================================
+   4. מצב ועיבוד נקודות מיקום
+   ===================================================================== */
+const st = {status:'idle', src:null, fix:null, pos:0, D:0, off:false, offDist:0, atIdx:null, arrived:{}, hasLocated:false, jumpVotes:0,
+  watchId:null, lastFixAt:0, prev:null, speed:null, compass:null, compassAt:0, follow:true, wakeWanted:true, wake:null, lastNext:-1,
+  lastUserScroll:0, simTimer:null, simD:0, variant:'F', walked:0, startedAt:0, finale:false, mapFollow:true, simMin:null,
+  previewCh:null, readIdx:0, readManual:false, tts:false, chapter:-1};
+const live = () => st.status === 'live' || st.status === 'weak';
+const tracking = () => live() || st.hasLocated;
+const stopEl = {};
+const liOf = i => stops[i] ? stopEl[stops[i].id] : null;
+function fmtDist(m){ if (m < 100) return Math.round(m/5)*5 + ' מ׳'; if (m < 1000) return Math.round(m/10)*10 + ' מ׳'; return (m/1000).toFixed(1) + ' ק״מ'; }
+
+function firstFixLeg(p){
+  const all = []; let best = Infinity;
+  for (let k=0; k<nodes.length-1; k++){ const s = seg(p,k); all.push(s); if (s.d < best) best = s.d; }
+  const near = all.filter(s => s.d <= best+40), cm = clockMin();
+  if (cm === null || near.length < 2) return near[0];
+  let pick = near[0], pm = -1;
+  near.forEach(function(s){ let m = toMin(stops[startStopOfLeg(s.k)].t); if (m === null) m = -1; if (m <= cm && m >= pm){ pm = m; pick = s; } });
+  return pick;
+}
+function onFix(f){
+  const now = Date.now();
+  if (st.prev && f.acc <= 40){
+    const dt = (now - st.prev.at)/1000, d = dist(f, st.prev);
+    if (f.src === 'sim'){ if (d > 0 && d < 400) st.walked += d; } else if (dt > 0.8 && dt < 40){ st.speed = d/dt; if (d > 4 && d < 120) st.walked += d; }
+  }
+  if (typeof f.speed === 'number' && f.speed >= 0) st.speed = f.speed;
+  if (f.acc <= 40 || !st.prev) st.prev = {lat:f.lat, lon:f.lon, at:now};
+  st.fix = f; st.lastFixAt = now; if (!st.startedAt) st.startedAt = now;
+  if (!(f.acc <= 150)){ st.status = 'weak'; render(); return; }
+  st.status = 'live'; st.previewCh = null;
+  const c = Math.floor(st.pos + 1e-6); let pick;
+  if (!st.hasLocated) pick = firstFixLeg(f);
+  else {
+    const win = snap(f, stopNode[Math.max(0,c-1)], stopNode[Math.min(NS-1,c+3)]), glob = snap(f, 0, nodes.length-1);
+    if (win.d <= legLimit(win.k) || win.d <= glob.d + 60){ pick = win; st.jumpVotes = 0; } else if (++st.jumpVotes >= 2){ pick = glob; st.jumpVotes = 0; } else pick = win;
+  }
+  st.off = pick.d > legLimit(pick.k); st.offDist = pick.d;
+  if (!st.off){ const D = cum[pick.k] + pick.t*legLen(pick.k), np = posFromD(D); if (!(np < st.pos && st.pos - np < 0.06)){ st.D = D; st.pos = np; } st.hasLocated = true; }
+  st.atIdx = null; const c2 = Math.floor(st.pos + 1e-6); let bestD = Infinity;
+  for (let j=Math.max(0,c2-1); j<=Math.min(NS-1,c2+3); j++){ const d = dist(f, stops[j]), r = Math.max(stops[j].r||45, Math.min(f.acc*0.9, 70)); if (d <= r && d < bestD){ bestD = d; st.atIdx = j; } }
+  if (st.atIdx !== null){ const j = st.atIdx; if (st.pos < j){ st.pos = j; st.D = stopCum[j]; st.hasLocated = true; } if (!st.arrived[stops[j].id]){ st.arrived[stops[j].id] = true; onArrive(j); } }
+  render();
+}
+function onArrive(j){
+  const s = stops[j]; toast(j === NS-1 ? 'הגעתם לשדה. טיסה טובה!' : 'הגעתם: ' + s.name);
+  try{ if (navigator.vibrate) navigator.vibrate([140,70,140]); }catch(e){}
+  st.readManual = false;
+  const dot = liOf(j) && liOf(j).querySelector('.dot');
+  if (dot){ dot.classList.remove('ripple'); void dot.offsetWidth; dot.classList.add('ripple'); const r = dot.getBoundingClientRect(); if (r.top > 0 && r.top < innerHeight) burst(r.left + r.width/2, r.top + r.height/2, 50); else burst(innerWidth/2, innerHeight*0.3, 40); }
+  if (j === NS-1) setTimeout(showFinale, 900);
+}
+const nextIdx = () => st.atIdx !== null ? Math.min(NS-1, st.atIdx+1) : Math.min(NS-1, Math.floor(st.pos + 1e-6) + 1);
+function setCursor(i){ st.pos = i; st.D = stopCum[i]; st.atIdx = null; st.hasLocated = true; st.off = false; st.previewCh = null; st.readManual = false; store.set('cursor', stops[i].id); toast('סומן: אתם ב״' + stops[i].name + '״'); render(); scrollToStop(i); }
+function setVariant(v){
+  if (v === st.variant) return;
+  const wasPos = st.pos, wasId = stops[Math.min(Math.floor(wasPos + 1e-6), NS-1)].id;
+  st.variant = v; store.set('variant', v); buildRoute(v);
+  const f0 = idxOf(wasId); st.pos = f0 >= 0 ? f0 + (wasPos - Math.floor(wasPos)) : Math.max(0, idxOf('ujezd'));
+  if (st.pos > NS-1) st.pos = NS-1; const fl = Math.floor(st.pos);
+  st.D = stopCum[fl] + (st.pos - fl)*((stopCum[Math.min(NS-1, fl+1)]) - stopCum[fl]); st.atIdx = null; st.lastNext = -1; st.readIdx = clamp(st.readIdx, 0, NS-1);
+  applyVariantUI(); rebuildMapLayers(); buildProfile(); render();
+}
+
+/* =====================================================================
+   5. GPS
+   ===================================================================== */
+function ok(p){ onFix({lat:p.coords.latitude, lon:p.coords.longitude, acc:p.coords.accuracy, speed:p.coords.speed, heading:p.coords.heading, src:'gps'}); }
+function fail(e){
+  if (e.code === 1){ stopWatch(); st.status = 'denied'; setMsg('הגישה למיקום נדחתה. אשרו מיקום לאתר זה בהגדרות הדפדפן (סמל המנעול ליד הכתובת) ונסו שוב.', 'warn'); }
+  else if (e.code === 2){ st.status = 'searching'; setMsg('לא ניתן לקבוע מיקום. בדקו ששירותי המיקום בטלפון פועלים.', 'warn'); }
+  else { st.status = 'searching'; setMsg('מחפש אות GPS… כדאי לעמוד במקום פתוח, רחוק מבניינים גבוהים.', 'warn'); }
+  render();
+}
+function stopWatch(){ if (st.watchId !== null){ try{ navigator.geolocation.clearWatch(st.watchId); }catch(e){} st.watchId = null; } }
+function watch(){ stopWatch(); st.watchId = navigator.geolocation.watchPosition(ok, fail, {enableHighAccuracy:true, maximumAge:0, timeout:30000}); }
+function startGps(){
+  if (!('geolocation' in navigator)){ setMsg('הדפדפן הזה לא תומך ב־GPS. נסו Chrome או Safari.', 'warn'); return; }
+  if (!window.isSecureContext){ renderBanner(); setMsg('האתר לא נפתח ב־https, ולכן הדפדפן חוסם את המיקום. ראו ההסבר למעלה.', 'warn'); return; }
+  stopSim(); requestCompass(); st.src = 'gps'; st.status = 'searching'; st.fix = null; st.mapFollow = true; $('btn-center').hidden = true;
+  setMsg('מבקש הרשאת מיקום… אשרו את הבקשה של הדפדפן.');
+  try{ watch(); }catch(e){ st.status = 'idle'; setMsg('לא הצלחתי להפעיל GPS.', 'warn'); }
+  if (st.wakeWanted) wakeOn(); render();
+}
+function stopGps(){ stopWatch(); stopSim(); wakeOff(); st.status = 'idle'; st.src = null; st.fix = null; st.atIdx = null; st.off = false; setMsg('המעקב הופסק. לחצו על ״הפעל מיקום חי״ כדי לחדש.'); render(); }
+setInterval(function(){
+  if (st.src !== 'gps' || !(st.status === 'live' || st.status === 'weak' || st.status === 'searching')) return;
+  const age = Date.now() - (st.lastFixAt || 0);
+  if (st.lastFixAt && age > 25000 && st.status !== 'searching'){ st.status = 'searching'; setMsg('אין עדכון מיקום כבר ' + Math.round(age/1000) + ' שניות. ממשיך לחפש…', 'warn'); render(); }
+  if (age > 60000 && st.lastFixAt){ try{ watch(); st.lastFixAt = Date.now(); }catch(e){} }
+}, 5000);
+document.addEventListener('visibilitychange', function(){
+  if (document.visibilityState !== 'visible') return;
+  if (st.src === 'gps' && st.status !== 'idle' && st.status !== 'denied'){ try{ watch(); }catch(e){} }
+  if (st.src && st.wakeWanted) wakeOn();
+});
+async function wakeOn(){ try{ if (!navigator.wakeLock || st.wake) return; st.wake = await navigator.wakeLock.request('screen'); st.wake.addEventListener('release', function(){ st.wake = null; }); }catch(e){ st.wake = null; } }
+function wakeOff(){ try{ if (st.wake) st.wake.release(); }catch(e){} st.wake = null; }
+function requestCompass(){
+  try{
+    const h = function(e){ let a = null; if (typeof e.webkitCompassHeading === 'number') a = e.webkitCompassHeading; else if (e.absolute && typeof e.alpha === 'number') a = (360 - e.alpha) % 360; if (a !== null){ st.compass = a; st.compassAt = Date.now(); paintArrow(); } };
+    const add = function(){ window.addEventListener('deviceorientationabsolute', h, true); window.addEventListener('deviceorientation', h, true); };
+    if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') DeviceOrientationEvent.requestPermission().then(function(r){ if (r === 'granted') add(); }).catch(function(){}); else add();
+  }catch(e){}
+}
+function simTo(D){ st.simD = clamp(D,0,TOTAL); const q = pointAt(st.simD); onFix({lat:q.lat, lon:q.lon, acc:9, speed:1.3, src:'sim'}); $('sim-range').value = String(Math.round(st.simD/TOTAL*1000)); }
+function enterSim(){ stopWatch(); wakeOff(); st.src = 'sim'; st.status = 'live'; st.lastFixAt = Date.now(); }
+function startSim(){
+  enterSim(); st.hasLocated = false; st.pos = 0; st.arrived = {}; st.simD = 0; st.finale = false; st.walked = 0; st.mapFollow = true;
+  if (st.simTimer) clearInterval(st.simTimer);
+  st.simTimer = setInterval(function(){ if (st.simD >= TOTAL){ stopSim(); return; } const near = stops.findIndex(s => Math.abs(stopCum[s.i]-st.simD) < 14); let k0 = 0; for (let k=0; k<nodes.length-1; k++){ if (st.simD <= cum[k+1]){ k0 = k; break; } } simTo(st.simD + (near >= 0 && !st.arrived[stops[near].id] ? 3 : (nodes[k0+1] && nodes[k0+1].mode === 'ride' ? 700 : 90))); }, 700);
+  $('btn-sim').setAttribute('aria-pressed','true'); $('btn-sim').textContent = '■ עצירת הדמיה'; simTo(0);
+}
+function stopSim(){ if (st.simTimer){ clearInterval(st.simTimer); st.simTimer = null; } $('btn-sim').setAttribute('aria-pressed','false'); $('btn-sim').textContent = '▶ הליכה לדוגמה'; }
+
+/* =====================================================================
+   6. אפקטים: סצנות לפי פרק, עלים, קונפטי
+   ===================================================================== */
+const SCENES = [
+ /* 0 בוקר במלון */
+ '<svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMax meet"><defs><radialGradient id="sg0"><stop offset="0" stop-color="#fff6d8"/><stop offset=".55" stop-color="#ffc47a"/><stop offset="1" stop-color="#ff9a5a" stop-opacity="0"/></radialGradient></defs><circle cx="310" cy="120" r="70" fill="url(#sg0)" class="bob"/><g fill="var(--sil1)"><rect x="0" y="92" width="58" height="68"/><rect x="62" y="74" width="44" height="86"/><rect x="110" y="98" width="50" height="62"/><rect x="164" y="82" width="38" height="78"/><rect x="206" y="104" width="60" height="56"/><rect x="270" y="88" width="48" height="72"/><rect x="322" y="100" width="78" height="60"/></g><g fill="var(--sil2)"><rect x="0" y="122" width="400" height="38"/></g><g fill="#ffd9a0" opacity=".9"><rect x="70" y="84" width="6" height="8"/><rect x="86" y="96" width="6" height="8"/><rect x="172" y="94" width="6" height="8"/><rect x="284" y="100" width="6" height="8"/><rect x="334" y="112" width="6" height="8"/><rect x="20" y="106" width="6" height="8"/></g><g><rect x="-34" y="138" width="30" height="10" rx="3" fill="#f4c542"/><rect x="-28" y="132" width="16" height="7" rx="2" fill="#f4c542"/><animateMotion dur="16s" repeatCount="indefinite" path="M0 0 H470"/></g></svg>',
+ /* 1 פטרין */
+ '<svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMax meet"><path d="M0 160V96C60 74 120 84 190 66C260 50 330 74 400 62V160Z" fill="var(--sil2)"/><path d="M0 160V122C80 100 150 114 230 100C300 88 350 104 400 96V160Z" fill="var(--sil1)"/><path d="M196 68L203 18L210 68Z" fill="var(--sil2)"/><path d="M199 52H207M198 40H208M200 28H206" stroke="var(--sil1)" stroke-width="1.4"/><rect x="199" y="14" width="8" height="6" fill="var(--sil2)"/><line x1="312" y1="152" x2="214" y2="72" stroke="var(--a)" stroke-width="2" stroke-dasharray="4 4" opacity=".7"/><g><rect x="-7" y="-4" width="14" height="8" rx="2" fill="var(--a)"/><animateMotion dur="9s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.5;1" calcMode="linear" path="M312 152 L214 72"/></g><g><circle cx="64" cy="112" r="11" fill="#e0883a"/><circle cx="84" cy="116" r="9" fill="#c9503a"/><circle cx="46" cy="118" r="8" fill="#e8c04a"/><circle cx="260" cy="96" r="10" fill="#7aa84a"/><circle cx="282" cy="100" r="9" fill="#e0883a"/><circle cx="352" cy="92" r="10" fill="#e8c04a"/><circle cx="150" cy="104" r="9" fill="#c9503a"/></g><rect class="drift" x="-40" y="108" width="520" height="22" fill="#fff" opacity=".16"/><rect class="drift" x="-60" y="84" width="520" height="14" fill="#fff" opacity=".1" style="animation-duration:55s"/></svg>',
+ /* 2 סטרחוב */
+ '<svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMax meet"><g fill="var(--sil1)"><path d="M0 160V118L22 104L44 118V160ZM44 160V110L70 94L96 110V160ZM96 160V122L120 108L146 122V160ZM146 160V114L172 98L198 114V160ZM198 160V124L224 110L250 124V160ZM250 160V108L278 92L306 108V160ZM306 160V120L332 106L358 120V160ZM358 160V112L384 98L400 108V160Z"/></g><g fill="var(--sil2)"><path d="M82 112V58L90 40L98 58V112ZM102 112V62L110 44L118 62V112Z"/><path d="M84 40Q90 22 96 40Z"/><path d="M104 44Q110 26 116 44Z"/><rect x="246" y="64" width="12" height="60"/><path d="M244 64Q252 46 260 64Z"/><rect x="250" y="40" width="4" height="10"/><rect x="0" y="130" width="400" height="30"/></g><g fill="#ffd9a0" opacity=".85"><rect x="60" y="122" width="5" height="7"/><rect x="214" y="124" width="5" height="7"/><rect x="336" y="126" width="5" height="7"/></g></svg><span class="note" style="inset-inline-start:62%;animation-delay:0s">♪</span><span class="note" style="inset-inline-start:67%;animation-delay:2s">♫</span>',
+ /* 3 מצודה */
+ '<svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMax meet"><g fill="var(--sil2)"><rect x="0" y="118" width="400" height="42"/><path d="M60 160V96L84 90V54L96 22L108 54V90L128 84V54L140 20L152 54V84L186 76V44L192 14L198 44V90L230 98V160Z"/><rect x="230" y="110" width="150" height="50"/><path d="M246 110V92L256 82L266 92V110ZM330 110V94L340 84L350 94V110Z"/></g><g fill="var(--sil1)"><path d="M0 160V132L40 126V160Z"/><rect x="262" y="118" width="14" height="42"/><rect x="292" y="118" width="14" height="42"/><circle cx="269" cy="112" r="9"/><circle cx="299" cy="112" r="9"/></g><line x1="372" y1="116" x2="372" y2="50" stroke="var(--sil1)" stroke-width="2"/><path class="flag" d="M372 52h26l-7 8 7 8h-26z" fill="var(--a)"/><g fill="#ffd9a0" opacity=".85"><rect x="96" y="100" width="5" height="9"/><rect x="144" y="98" width="5" height="9"/><rect x="190" y="104" width="5" height="9"/></g></svg><span class="note" style="inset-inline-start:30%;animation-delay:0s">♪</span><span class="note" style="inset-inline-start:36%;animation-delay:1.4s">♫</span><span class="note" style="inset-inline-start:24%;animation-delay:3s">♪</span>',
+ /* 4 בריכה */
+ '<svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMax meet"><defs><linearGradient id="pw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fe0ec"/><stop offset="1" stop-color="#0f93b0"/></linearGradient></defs><rect x="0" y="70" width="400" height="90" fill="url(#pw)"/><g opacity=".55" stroke="#fff" stroke-width="2" fill="none"><g class="wave1"><path d="M-100 92q25-12 50 0t50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0"/></g><g class="wave2"><path d="M-100 118q25-12 50 0t50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0"/></g><g class="wave1" style="animation-duration:9s"><path d="M-100 142q25-12 50 0t50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0"/></g></g><rect x="0" y="64" width="400" height="8" fill="var(--sil1)"/><g fill="var(--sil2)"><path d="M30 64v-26M24 38q6-8 12 0M44 64V32"/><path d="M340 64V42l16 22z" opacity=".0"/><rect x="300" y="52" width="46" height="8" rx="3"/><rect x="306" y="60" width="4" height="4"/><rect x="336" y="60" width="4" height="4"/></g><path d="M60 64V40M72 64V40M60 46h12M60 54h12" stroke="#cfe8f0" stroke-width="2.5" fill="none"/><g fill="#fff" class="blink"><circle cx="120" cy="88" r="2"/><circle cx="210" cy="104" r="2"/><circle cx="280" cy="90" r="2"/><circle cx="170" cy="132" r="2"/></g><circle cx="330" cy="26" r="20" fill="#fff6c8" opacity=".85" class="bob"/></svg>',
+ /* 5 שדה */
+ '<svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMax meet"><g fill="#fff" opacity=".18" class="drift"><ellipse cx="80" cy="60" rx="46" ry="9"/><ellipse cx="300" cy="44" rx="56" ry="10"/><ellipse cx="190" cy="82" rx="40" ry="7"/></g><g fill="var(--sil2)"><rect x="0" y="126" width="400" height="34"/><rect x="40" y="96" width="130" height="30"/><rect x="60" y="86" width="90" height="12"/><path d="M290 126V104L310 96L330 104V126Z"/><rect x="316" y="76" width="10" height="50"/><rect x="312" y="68" width="18" height="10" rx="2"/></g><path d="M120 160L190 126H250L330 160Z" fill="var(--sil1)"/><path d="M220 158L220 128" stroke="#fff" stroke-width="2" stroke-dasharray="6 6" opacity=".7"/><g fill="#ffd36b" class="blink"><circle cx="150" cy="140" r="2"/><circle cx="188" cy="132" r="2"/><circle cx="250" cy="132" r="2"/><circle cx="290" cy="140" r="2"/></g><g><path d="M0 0l-2-12-14-5 1-4 15 3 6-14h4l-3 15 8 2 3-6h3l-1 8 1 8h-3l-3-6-8 2 3 15h-4l-6-14-15 3-1-4z" fill="#fff" transform="translate(-10 0) scale(.7)"/><animateMotion dur="9s" repeatCount="indefinite" rotate="auto" path="M-30 130 Q 160 110 440 20"/></g></svg>'
+];
+function buildScenes(){ SCENES.forEach((s, i) => { $('a'+i).innerHTML = s; }); }
+
+let leavesOn = false, leaves = [];
+function leavesLoop(){
+  const cv = $('leaves'), c = cv.getContext('2d'); if (!leavesOn){ c.clearRect(0, 0, cv.width, cv.height); return; }
+  const w = cv.width = cv.clientWidth, h = cv.height = cv.clientHeight; c.clearRect(0, 0, w, h);
+  leaves.forEach(function(l){ l.y += l.vy; l.x += Math.sin(l.y/28 + l.p)*.7 - .15; l.r += l.vr; if (l.y > h + 14){ l.y = -14; l.x = Math.random()*w; }
+    c.save(); c.translate(l.x, l.y); c.rotate(l.r); c.fillStyle = l.c; c.globalAlpha = .8; c.beginPath(); c.ellipse(0, 0, l.s, l.s*.55, 0, 0, Math.PI*2); c.fill(); c.restore(); });
+  requestAnimationFrame(leavesLoop);
+}
+function setLeaves(on){
+  if (RM) return; if (on && !leavesOn){ leavesOn = true; const cols = ['#e0883a','#c9503a','#e8c04a','#b86a2a','#d4a03a']; leaves = Array.from({length:22}, () => ({x:Math.random()*innerWidth, y:Math.random()*500, vy:.5 + Math.random()*.9, s:4 + Math.random()*5, p:Math.random()*6, r:Math.random()*6, vr:(Math.random()-.5)*.05, c:cols[(Math.random()*cols.length)|0]})); leavesLoop(); }
+  else if (!on) leavesOn = false;
+}
+const fx = $('fx'), fctx = fx.getContext('2d'); let parts = [], fxRun = false;
+function fxSize(){ const dpr = Math.min(devicePixelRatio || 1, 2); fx.width = innerWidth*dpr; fx.height = innerHeight*dpr; fctx.setTransform(dpr,0,0,dpr,0,0); }
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function burst(x, y, n){
+  if (RM) return; fxSize(); const cols = [cssVar('--a'), cssVar('--live'), '#ff8fa3', '#8bb4e8', '#ffffff', '#ffd36b'];
+  for (let i=0; i<n; i++){ const a = Math.random()*Math.PI*2, s = 3 + Math.random()*8; parts.push({x, y, vx:Math.cos(a)*s, vy:Math.sin(a)*s - 4, r:2 + Math.random()*4, c:cols[i % cols.length], life:70 + Math.random()*50, rot:Math.random()*6, vr:(Math.random()-.5)*.4}); }
+  if (!fxRun){ fxRun = true; requestAnimationFrame(fxLoop); }
+}
+function fxLoop(){
+  fctx.clearRect(0, 0, innerWidth, innerHeight); parts = parts.filter(p => p.life > 0 && p.y < innerHeight + 30);
+  parts.forEach(function(p){ p.x += p.vx; p.y += p.vy; p.vy += .28; p.vx *= .985; p.life--; p.rot += p.vr; fctx.save(); fctx.globalAlpha = clamp(p.life/40, 0, 1); fctx.translate(p.x, p.y); fctx.rotate(p.rot); fctx.fillStyle = p.c; fctx.fillRect(-p.r, -p.r/2, p.r*2, p.r); fctx.restore(); });
+  if (parts.length) requestAnimationFrame(fxLoop); else { fxRun = false; fctx.clearRect(0, 0, innerWidth, innerHeight); }
+}
+function showFinale(){
+  if (st.finale) return; st.finale = true;
+  $('fin-km').textContent = (st.walked/1000).toFixed(1); $('fin-stops').textContent = String(Object.keys(st.arrived).length);
+  const mins = st.startedAt ? Math.round((Date.now() - st.startedAt)/60000) : 0; $('fin-time').textContent = mins >= 60 ? Math.floor(mins/60) + ':' + String(mins%60).padStart(2,'0') : mins + ' דק׳';
+  $('finale').classList.add('show'); for (let i=0; i<4; i++) setTimeout(function(){ burst(innerWidth*(.15 + Math.random()*.7), innerHeight*(.2 + Math.random()*.3), 60); }, i*400);
+}
+
+/* =====================================================================
+   7. פרקים, ספירה לאחור ופרופיל
+   ===================================================================== */
+const iconSvg = n => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + (ICONS[n] || ICONS.tower) + '"/></svg>';
+function computeChapter(){
+  if (st.previewCh !== null) return st.previewCh;
+  if (tracking()){ const idx = st.atIdx !== null ? st.atIdx : (st.pos - Math.floor(st.pos) > .5 ? Math.min(NS-1, Math.floor(st.pos)+1) : Math.floor(st.pos)); return stops[idx].ch; }
+  const cm = clockMin(); if (cm === null) return 0; let c = 0; CHAPTERS.forEach((ch, i) => { if (cm >= toMin(ch.from)) c = i; }); return c;
+}
+function applyChapter(){
+  const c = computeChapter(); const changed = c !== st.chapter; st.chapter = c;
+  document.documentElement.dataset.ch = String(c);
+  if (changed){
+    $('h1-ch').textContent = CHAPTERS[c].name; $('h1-line').textContent = CHAPTERS[c].line;
+    document.querySelectorAll('.jc').forEach(function(b, i){ b.classList.toggle('cur', i === c); b.classList.toggle('done', i < c); });
+    $('jbar').style.width = ((c + 1)/CHAPTERS.length*100) + '%';
+    try{ document.querySelector('meta[name=theme-color]').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--sky1').trim() || '#16313a'); }catch(e){}
+    setLeaves(c >= 1 && c <= 3);
+  }
+  const cm = clockMin(); $('stage').classList.toggle('ceremony', cm !== null && cm >= 11*60+55 && cm <= 12*60+15);
+}
+function renderJourney(){
+  const j = $('journey'), bar = j.querySelector('.jbar'); j.innerHTML = '';
+  CHAPTERS.forEach(function(ch, i){ const b = document.createElement('button'); b.className = 'jc'; b.type = 'button'; b.dataset.ch = i; b.innerHTML = '<svg viewBox="0 0 24 24"><path d="' + ICONS[ch.icon] + '"/></svg><span>' + ch.short + '</span>'; b.setAttribute('aria-label', ch.name); j.appendChild(b); });
+  j.appendChild(bar);
+  j.addEventListener('click', function(e){ const b = e.target.closest('.jc'); if (!b) return; st.previewCh = +b.dataset.ch; applyChapter(); const first = stops.findIndex(s => s.ch === st.previewCh); if (first >= 0) scrollToStop(first); toast('תצוגה מקדימה: ' + CHAPTERS[st.previewCh].name); });
+}
+const RING = 276.46;
+function renderEvents(){ $('evs').innerHTML = EVENTS.map(e => '<span class="ev" data-t="' + e.t + '">' + e.l + '<b>' + e.t + '</b></span>').join(''); }
+function paintCount(){
+  const cs = clockSec(), list = EVENTS.map(e => ({t:toMin(e.t)*60, l:e.l, ts:e.t})), evs = $('evs');
+  evs.querySelectorAll('.ev').forEach((e, i) => { e.classList.toggle('past', cs !== null && list[i].t < cs); e.classList.remove('next'); });
+  if (cs === null){
+    $('count-k').textContent = 'תצוגה מקדימה'; $('ring-t').textContent = '--:--'; $('ring-fg').style.strokeDashoffset = String(RING);
+    $('count-h').textContent = 'הספירה לאחור תתחיל ביום הטיול'; $('count-p').textContent = 'ב־14.10 כאן תופיע ספירה לאחור לכל אירוע: מפגש, טקס, בריכה, יציאה לשדה והטיסה. אפשר לנסות עם השעון המדומה בכלי הבדיקה.'; return;
+  }
+  const nextI = list.findIndex(e => e.t > cs);
+  if (nextI < 0){ $('count-k').textContent = 'סיימנו'; $('ring-t').textContent = '✓'; $('ring-fg').style.strokeDashoffset = '0'; $('count-h').textContent = 'טיסה טובה הביתה!'; $('count-p').textContent = ''; return; }
+  const nx = list[nextI], prev = nextI > 0 ? list[nextI-1].t : nx.t - 1800, frac = clamp((cs - prev)/(nx.t - prev), 0, 1), left = Math.max(0, nx.t - cs);
+  const h = Math.floor(left/3600), m = Math.floor((left%3600)/60), sec = Math.floor(left%60);
+  $('ring-t').textContent = h > 0 ? h + ':' + String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0') : String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+  $('ring-fg').style.strokeDashoffset = String(RING*(1 - frac)); $('count-k').textContent = 'האירוע הבא · ' + nx.ts; $('count-h').textContent = nx.l;
+  const after = list[nextI+1]; $('count-p').textContent = after ? 'אחרי זה: ' + after.l + ' (' + hhmm(after.t/60) + ')' : '';
+  const ne = evs.querySelectorAll('.ev')[nextI]; if (ne) ne.classList.add('next');
+}
+/* פרופיל טיפוס סכמטי */
+const ELEV = {hotel0:.18, ujezd:.04, funi:.8, walkup:.5, tower:1, hunger:.88, strahov:.82, loreta:.66, giants:.5, vitus:.56, pickup:.46, hotel1:.18, airport:.96};
+function catmull(pts){ let d = 'M' + pts[0][0].toFixed(1) + ' ' + pts[0][1].toFixed(1); for (let i=0; i<pts.length-1; i++){ const p0 = pts[i-1] || pts[i], p1 = pts[i], p2 = pts[i+1], p3 = pts[i+2] || p2; d += 'C' + (p1[0]+(p2[0]-p0[0])/6).toFixed(1) + ' ' + (p1[1]+(p2[1]-p0[1])/6).toFixed(1) + ' ' + (p2[0]-(p3[0]-p1[0])/6).toFixed(1) + ' ' + (p2[1]-(p3[1]-p1[1])/6).toFixed(1) + ' ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1); } return d; }
+let profPts = [];
+function buildProfile(){
+  const W = 400, H = 130, px = 22, top = 16, bot = 26; profPts = stops.map((s, i) => [px + i/(NS-1)*(W-2*px), top + (1 - (ELEV[s.id] !== undefined ? ELEV[s.id] : .4))*(H-top-bot)]);
+  const line = catmull(profPts), area = line + 'L' + profPts[NS-1][0] + ' ' + (H-bot+6) + 'L' + profPts[0][0] + ' ' + (H-bot+6) + 'Z';
+  let g = '<defs><linearGradient id="pf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--a)" stop-opacity=".5"/><stop offset="1" stop-color="var(--a)" stop-opacity="0"/></linearGradient></defs><path d="' + area + '" fill="url(#pf)"/><path id="pline" d="' + line + '" fill="none" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/><path id="pdone" d="' + line + '" fill="none" stroke="var(--a)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0 2000"/>';
+  stops.forEach(function(s, i){ g += '<circle cx="' + profPts[i][0].toFixed(1) + '" cy="' + profPts[i][1].toFixed(1) + '" r="3.5" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.6" data-i="' + i + '" class="pp" style="cursor:pointer"/>'; if (s.id === 'tower' || s.id === 'giants' || s.id === 'hotel1' || s.id === 'airport' || s.id === 'ujezd') g += '<text x="' + profPts[i][0].toFixed(1) + '" y="' + (i === NS-1 ? profPts[i][1] + 14 : H - 8) + '" text-anchor="middle">' + ({tower:'מגדל', giants:'מצודה', hotel1:'מלון', airport:'שדה', ujezd:'Újezd'})[s.id] + '</text>'; });
+  g += '<circle id="pdot" r="7" fill="var(--live)" stroke="var(--surface)" stroke-width="3" style="display:none;filter:drop-shadow(0 0 6px var(--live))"/>';
+  $('prof').innerHTML = g; paintProfile();
+}
+function paintProfile(){
+  const path = $('pdone'); if (!path) return; const tot = path.getTotalLength(), tr = tracking();
+  const frac = clamp((tr ? st.pos : 0)/(NS-1), 0, 1);
+  /* מיקום הנקודה לפי אינדקס התחנות על הנתיב */
+  let x = profPts[0][0] + frac*(profPts[NS-1][0] - profPts[0][0]), len = 0, lo = 0, hi = tot; for (let k=0; k<24; k++){ len = (lo+hi)/2; if (path.getPointAtLength(len).x < x) lo = len; else hi = len; }
+  path.style.strokeDasharray = (tr ? len : 0) + ' 2000'; const dot = $('pdot'); dot.style.display = tr ? '' : 'none'; if (tr){ const q = path.getPointAtLength(len); dot.setAttribute('cx', q.x); dot.setAttribute('cy', q.y); }
+}
+
+/* =====================================================================
+   8. מדריך קריאה
+   ===================================================================== */
+function readTarget(){
+  if (st.readManual) return st.readIdx;
+  if (tracking()){ if (st.atIdx !== null) return st.atIdx; const ni = nextIdx(); return ni; }
+  const cm = clockMin(); if (cm !== null){ let r = 0; stops.forEach((s, i) => { const m = toMin(s.t); if (m !== null && m <= cm) r = i; }); return r; }
+  return st.readIdx;
+}
+function paintReader(force){
+  const i = clamp(readTarget(), 0, NS-1), s = stops[i], first = force || i !== st.readIdx || !$('rd-h').textContent || $('rd-h').textContent === '—';
+  st.readIdx = i; if (!first) return;
+  const g = s.guide || {lead:s.desc, facts:[], ask:'', src:[]}, at = tracking() && st.atIdx === i;
+  $('rd-k').textContent = (at ? 'אתם כאן · ' : tracking() ? 'לקראת · ' : 'תחנה ' + (i+1) + ' · ') + CHAPTERS[s.ch].name;
+  $('rd-h').textContent = s.name; $('rd-l').textContent = s.latin; $('rd-lead').textContent = g.lead;
+  $('rd-facts').innerHTML = g.facts.map(f => '<li>' + f + '</li>').join(''); $('rd-ask').innerHTML = g.ask ? '<b>שאלה לקבוצה:</b> ' + g.ask : ''; $('rd-ask').hidden = !g.ask;
+  $('rd-src').innerHTML = g.src && g.src.length ? 'מקורות: ' + g.src.map(k => '<a href="' + SOURCES[k].u + '" target="_blank" rel="noopener">' + SOURCES[k].t + '</a>').join(' · ') : '';
+  const card = $('read'); card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap'); if (st.tts) speak();
+}
+function speak(){
+  try{ const s = stops[st.readIdx], g = s.guide || {lead:s.desc, facts:[], ask:''}; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(s.name + '. ' + g.lead + ' ' + g.facts.join(' ') + ' ' + (g.ask ? 'שאלה לקבוצה: ' + g.ask : '')); u.lang = 'he-IL'; u.rate = .95; u.onend = function(){ st.tts = false; $('rd-tts').setAttribute('aria-pressed', 'false'); }; speechSynthesis.speak(u); }catch(e){}
+}
+function readerNav(d){ st.readManual = true; st.readIdx = clamp(st.readIdx + d, 0, NS-1); $('rd-auto').setAttribute('aria-pressed', 'false'); paintReader(true); }
+
+/* =====================================================================
+   9. ציור הממשק
+   ===================================================================== */
+function setMsg(t, cls){ const m = $('msg'); m.textContent = t; m.className = 'msg' + (cls ? ' ' + cls : ''); }
+let toastT = null; function toast(t){ const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ el.classList.remove('show'); }, 3800); }
+const dirUrl = (s, ride) => 'https://www.google.com/maps/dir/?api=1&destination=' + s.lat + ',' + s.lon + '&travelmode=' + (ride ? 'driving' : 'walking');
+function renderHeader(){
+  $('eyebrow').textContent = META.eyebrow; $('sub').textContent = META.sub;
+  $('chips').innerHTML = '<span class="chip">10:50 מפגש במגדל</span><span class="chip">12:00 החלפת משמר</span><span class="chip">18:00 טיסה</span><span class="chip" id="clock">שעון פראג: --:--</span>';
+  $('maps').innerHTML = NAV_LINKS.map(n => '<a href="' + n.u + '" target="_blank" rel="noopener"><span class="k">' + n.k + '</span><span class="t">' + n.t + '</span><span class="go">' + n.go + '</span></a>').join('');
+  $('rules').innerHTML = RULES.map(r => '<li>' + r + '</li>').join('');
+  $('srcs').innerHTML = Object.keys(SOURCES).map(k => '<li><a href="' + SOURCES[k].u + '" target="_blank" rel="noopener">' + SOURCES[k].t + '</a></li>').join('');
+}
+function tick(){
+  const c = $('clock'); const cm = clockMin(), n = realNow(); const m = cm !== null ? cm : n.sec/60; if (c) c.textContent = (st.simMin !== null ? 'שעון מדומה: ' : 'שעון פראג: ') + hhmm(m);
+  paintCount(); paintSubs(); applyChapter(); if (!live()) paintSchedule(); paintReader(false);
+}
+function renderTimeline(){
+  const ol = $('route'), keep = Array.from(ol.querySelectorAll('.route-progress,.walker')); ol.innerHTML = ''; keep.forEach(k => ol.appendChild(k));
+  DAY.forEach(function(sec){
+    const h = document.createElement('li'); h.className = 'sec-li'; h.style.setProperty('--cc', 'var(--a)'); h.innerHTML = '<div class="sec-head"><h2>' + sec.title + '</h2><small>' + sec.range + '</small></div>'; ol.appendChild(h);
+    sec.stops.forEach(function(s){
+      const li = document.createElement('li'); li.className = 'stop pre'; li.dataset.id = s.id; li.style.setProperty('--cc', 'var(--a)');
+      const time = s.t ? (s.approx ? '≈' : '') + s.t : '·', tags = [];
+      if (s.tag === 'must') tags.push('<span class="tag must">מפגש חובה' + (s.mustMeet ? ' ' + s.mustMeet : '') + '</span>');
+      if (s.ev) tags.push('<span class="tag event">אירוע ' + s.ev + '</span>');
+      li.innerHTML = '<div class="time">' + time + '</div><div class="dot">' + iconSvg(s.icon) + '</div><div class="body"><p class="name">' + s.name + ' <span class="latin">' + s.latin + '</span></p><p class="desc">' + s.desc + '</p>' +
+        (tags.length ? '<div class="tags">' + tags.join('') + '</div>' : '') +
+        (s.sub ? '<div class="subs">' + s.sub.map(x => '<span class="sb" data-t="' + x.t + '">' + x.l + '<b>' + x.t + '</b></span>').join('') + '</div>' : '') +
+        '<div class="actions"><button class="btn" type="button" data-read="' + s.id + '">מדריך הקריאה</button><a class="btn ghost" href="' + dirUrl(s, s.mode === 'ride') + '" target="_blank" rel="noopener">נווט לכאן ↗</a><button class="btn ghost" type="button" data-here="' + s.id + '">אני כאן</button></div>' +
+        (s.checklist ? '<details class="check"><summary>צ׳קליסט לפני היציאה לשדה</summary>' + CHECKLIST.map((c, i) => '<label><input type="checkbox" data-ck="' + i + '"> <span>' + c + '</span></label>').join('') + '</details>' : '') + '</div>';
+      ol.appendChild(li); stopEl[s.id] = li;
+    });
+  });
+  if ('IntersectionObserver' in window){ const io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.remove('pre'); io.unobserve(e.target); } }); }, {rootMargin:'0px 0px -6% 0px'}); ol.querySelectorAll('.stop').forEach(li => io.observe(li)); }
+  setTimeout(function(){ ol.querySelectorAll('.stop.pre').forEach(li => li.classList.remove('pre')); }, 3500);
+  try{ const saved = JSON.parse(store.get('ck') || '[]'); ol.querySelectorAll('[data-ck]').forEach(function(c){ c.checked = saved.indexOf(+c.dataset.ck) >= 0; c.parentNode.classList.toggle('on', c.checked); }); }catch(e){}
+}
+function paintSubs(){
+  const cm = clockMin(); document.querySelectorAll('.subs').forEach(function(box){ const list = Array.from(box.querySelectorAll('.sb')); let cur = -1; list.forEach(function(b, i){ const m = toMin(b.dataset.t); if (cm !== null && m <= cm) cur = i; });
+    list.forEach(function(b, i){ b.classList.toggle('on', cm !== null && i === cur); b.classList.toggle('past', cm !== null && i < cur); }); });
+}
+function applyVariantUI(){
+  ALL.forEach(function(s){ const li = stopEl[s.id]; if (li) li.hidden = (s.i < 0); });
+  document.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.variant)));
+  $('decide-note').textContent = st.variant === 'F' ? 'הרכבל חזר לפעול ב־22.9.2026 לפי דיווח עיתונאי. נסיעה בודדת כ־100 קר׳ (90 באפליקציית Lítačka). בדקו בבוקר באתר DPP.' : 'עולים ברגל בשבילי הפארק: כ־25 דקות עלייה תלולה (הערכה). המפגש ב־10:50 במגדל נשאר כמו שהוא.';
+}
+function railYs(){
+  const ol = $('route'), rr = ol.getBoundingClientRect(), dots = stops.map((s, i) => liOf(i).querySelector('.dot').getBoundingClientRect()), ys = dots.map(d => (d.top + d.bottom)/2 - rr.top);
+  ol.style.setProperty('--rail-center', (rr.right - (dots[0].left + dots[0].right)/2).toFixed(1) + 'px'); ol.style.setProperty('--rail-start', ys[0].toFixed(1) + 'px'); ol.style.setProperty('--rail-total', (ys[NS-1] - ys[0]).toFixed(1) + 'px'); return ys;
+}
+function paintRail(){
+  const ol = $('route'), ys = railYs(); if (!tracking()){ ol.classList.remove('tracked'); return; }
+  const pos = clamp(st.pos, 0, NS-1), part = Math.min(Math.floor(pos), NS-2), t = pos - part; ol.style.setProperty('--rail-progress', Math.max(0, ys[part] + (ys[part+1] - ys[part])*t - ys[0]).toFixed(1) + 'px'); ol.classList.add('tracked');
+}
+function paintSchedule(){
+  if (tracking()) return; const cm = clockMin(); let cur = -1; if (cm !== null) stops.forEach(function(s, i){ const m = toMin(s.t); if (m !== null && m <= cm) cur = i; });
+  stops.forEach(function(s, i){ liOf(i).classList.toggle('sched', i === cur); });
+}
+function paintStops(){
+  const ni = nextIdx(), fin = st.atIdx === NS-1, tr = tracking();
+  stops.forEach(function(s, i){ const li = liOf(i); li.classList.toggle('at', tr && st.atIdx === i); li.classList.toggle('next', tr && !fin && i === ni && st.atIdx !== i); li.classList.toggle('passed', tr && (i < st.pos - 0.02) && st.atIdx !== i); if (tr) li.classList.remove('sched'); });
+}
+const nearestStop = f => { let b = 0, bd = Infinity; stops.forEach(function(s, i){ const d = dist(f, s); if (d < bd){ bd = d; b = i; } }); return {i:b, d:bd}; };
+function paintArrow(){
+  const ni = nextIdx(), f = st.fix; let rot = 0, note = '';
+  if (f && stops[ni]){
+    const b = bearing(f, stops[ni]); let h = null;
+    if (st.compass !== null && Date.now() - st.compassAt < 4000){ h = st.compass; note = 'לפי המצפן של הטלפון'; }
+    else if (st.speed !== null && st.speed > 0.8 && typeof f.heading === 'number' && !isNaN(f.heading)){ h = f.heading; note = 'לפי כיוון ההליכה'; }
+    rot = (b - (h || 0) + 360) % 360;
+    if (h === null){ const nm = ['צפון','צפון־מזרח','מזרח','דרום־מזרח','דרום','דרום־מערב','מערב','צפון־מערב']; note = 'כיוון לתחנה: ' + nm[Math.round(b/45) % 8] + ' (החזיקו את הטלפון עם הפנים לצפון)'; }
+  }
+  $('compass-svg').style.transform = 'rotate(' + rot.toFixed(0) + 'deg)'; $('lb-svg').style.transform = 'rotate(' + rot.toFixed(0) + 'deg)'; $('compass-note').textContent = note; setConeHeading();
+}
+
+/* ---- מפה (Leaflet + OSM) ---- */
+let LM = null; const lm = {tile:null, base:null, done:null, mk:[], user:null, acc:null, cone:null, theme:null, lastNext:-2};
+const isDark = () => getComputedStyle(document.documentElement).colorScheme === 'dark';
+function initLeaflet(){
+  if (!window.L){ $('mapbox').classList.add('fallback'); return; }
+  try{ LM = L.map('lmap', {zoomControl:false, zoomSnap:.5, attributionControl:true}).setView([50.087, 14.41], 13); LM.attributionControl.setPrefix(false); setTiles(); buildMapLayers(); fitAll();
+    LM.on('dragstart', function(){ st.mapFollow = false; $('btn-center').hidden = false; }); setTimeout(function(){ LM.invalidateSize(); }, 300);
+  }catch(e){ LM = null; $('mapbox').classList.add('fallback'); }
+}
+function setTiles(){ if (!LM) return; lm.theme = isDark(); $('lmap').classList.toggle('dark-tiles', lm.theme); if (!lm.tile) lm.tile = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(LM); }
+function rebuildMapLayers(){ if (LM) buildMapLayers(); }
+function buildMapLayers(){
+  [lm.base, lm.done].forEach(l => { if (l) LM.removeLayer(l); }); lm.mk.forEach(m => LM.removeLayer(m)); lm.mk = [];
+  lm.base = L.polyline(nodes.map(n => [n.lat, n.lon]), {color:cssVar('--muted'), weight:4, opacity:.75, dashArray:'2 9', lineCap:'round'}).addTo(LM);
+  lm.done = L.polyline([], {color:cssVar('--live'), weight:6, opacity:.95, lineCap:'round'}).addTo(LM);
+  stops.forEach(function(s, i){ const m = L.marker([s.lat, s.lon], {icon:L.divIcon({className:'', html:'<div class="mk"><b>' + (i+1) + '</b></div>', iconSize:[30,30], iconAnchor:[15,15]}), keyboard:false}).addTo(LM); m.bindTooltip(s.name, {permanent:true, direction:'top', offset:[0,-16], className:'mk-tip'}); m.on('click', function(){ scrollToStop(i); }); lm.mk.push(m); });
+  lm.lastNext = -2;
+}
+function fitAll(){ if (LM) LM.fitBounds(L.latLngBounds(nodes.filter(n => n.lon > 14.3).map(n => [n.lat, n.lon])), {padding:[28,28]}); }
+function setConeHeading(){ if (!lm.cone) return; const f = st.fix; let h = null; if (st.compass !== null && Date.now() - st.compassAt < 4000) h = st.compass; else if (f && st.speed > 0.8 && typeof f.heading === 'number' && !isNaN(f.heading)) h = f.heading; lm.cone.style.transform = h === null ? 'scale(0)' : 'rotate(' + h.toFixed(0) + 'deg)'; }
+function updateMap(){
+  if (!LM) return; const f = st.fix, ni = nextIdx(), tr = tracking(); if (lm.theme !== isDark()){ setTiles(); buildMapLayers(); }
+  const pts = []; if (tr){ for (let k=0; k<nodes.length; k++){ if (cum[k] <= st.D) pts.push([nodes[k].lat, nodes[k].lon]); else break; } const q = pointAt(st.D); pts.push([q.lat, q.lon]); } lm.done.setLatLngs(tr ? pts : []);
+  stops.forEach(function(s, i){ const m = lm.mk[i]; if (!m) return; const el = m.getElement(), inner = el && el.firstChild, isNext = tr && i === ni && st.atIdx !== i && st.atIdx !== NS-1, isAt = tr && st.atIdx === i, passed = tr && i < st.pos - 0.02;
+    if (inner) inner.className = 'mk' + (isAt ? ' at' : isNext ? ' next' : passed ? ' passed' : ''); const tt = m.getTooltip() && m.getTooltip().getElement(); if (tt) tt.classList.toggle('on', isNext || isAt); });
+  if (f && live()){
+    const ll = [f.lat, f.lon];
+    if (!lm.user){ lm.user = L.marker(ll, {icon:L.divIcon({className:'', html:'<div class="me"><span class="cone"></span><i></i></div>', iconSize:[24,24], iconAnchor:[12,12]}), interactive:false, zIndexOffset:1000}).addTo(LM); lm.acc = L.circle(ll, {radius:f.acc, color:cssVar('--live'), weight:1, fillColor:cssVar('--live'), fillOpacity:.12, interactive:false}).addTo(LM); lm.cone = lm.user.getElement().querySelector('.cone'); }
+    else { lm.user.setLatLng(ll); lm.acc.setLatLng(ll); lm.acc.setRadius(f.acc); lm.cone = lm.user.getElement().querySelector('.cone'); }
+    setConeHeading();
+    if (st.mapFollow){ if (ni !== lm.lastNext && stops[ni]){ lm.lastNext = ni; LM.flyToBounds(L.latLngBounds([ll, [stops[ni].lat, stops[ni].lon]]), {padding:[60,60], maxZoom:17, duration:RM ? 0 : 1.2}); } else if (!LM.getBounds().pad(-0.25).contains(ll)) LM.panTo(ll, {animate:!RM, duration:.8}); }
+  } else if (lm.user){ LM.removeLayer(lm.user); LM.removeLayer(lm.acc); lm.user = lm.acc = lm.cone = null; }
+}
+function drawSvgMap(){
+  const MW = 640, MH = 360, f = st.fix, ni = nextIdx(), zoomed = live() && f; let pts = zoomed ? [f] : nodes.filter(n => n.lon > 14.3);
+  if (zoomed) [ni-1, ni, ni+1].forEach(j => { if (stops[j]) pts.push(stops[j]); });
+  let a = 90, b = -90, c = 180, d = -180; pts.forEach(p => { a = Math.min(a,p.lat); b = Math.max(b,p.lat); c = Math.min(c,p.lon); d = Math.max(d,p.lon); });
+  const cLat = (a+b)/2, cLon = (c+d)/2, my = 110574, mx = 111320*Math.cos(rad(cLat)), sx = Math.max((d-c)*mx*1.3, 280), sy = Math.max((b-a)*my*1.3, 180), sc = Math.min(MW/sx, MH/sy);
+  const X = p => MW/2 + (p.lon-cLon)*mx*sc, Y = p => MH/2 - (p.lat-cLat)*my*sc; let h = '';
+  for (let k=0; k<nodes.length-1; k++){ const dn = tracking() && cum[k+1] <= st.D + .5; h += '<line x1="' + X(nodes[k]).toFixed(1) + '" y1="' + Y(nodes[k]).toFixed(1) + '" x2="' + X(nodes[k+1]).toFixed(1) + '" y2="' + Y(nodes[k+1]).toFixed(1) + '" stroke="' + (dn ? 'var(--live)' : 'var(--line)') + '" stroke-width="' + (dn ? 4 : 3) + '" stroke-linecap="round"/>'; }
+  stops.forEach(function(s, i){ const x = X(s), y = Y(s), isNext = tracking() && i === ni && st.atIdx !== i, isAt = tracking() && st.atIdx === i, passed = tracking() && i < st.pos - .02;
+    h += '<g data-i="' + i + '" style="cursor:pointer"><circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (isNext ? 15 : 12) + '" fill="' + (isAt || passed ? 'var(--live)' : isNext ? 'var(--a)' : 'var(--surface)') + '" stroke="' + (isNext ? 'var(--a)' : passed || isAt ? 'var(--live)' : 'var(--muted)') + '" stroke-width="2.5"/><text x="' + x.toFixed(1) + '" y="' + (y+4).toFixed(1) + '" text-anchor="middle" font-size="12" font-weight="700" fill="' + (isNext || isAt || passed ? 'var(--on-a)' : 'var(--fg)') + '">' + (i+1) + '</text></g>'; });
+  if (f && live()) h += '<circle cx="' + X(f).toFixed(1) + '" cy="' + Y(f).toFixed(1) + '" r="8" fill="var(--live)" stroke="var(--surface)" stroke-width="3"/>';
+  $('map').innerHTML = h;
+}
+function drawMap(){ if (LM) updateMap(); else if (!window.L) drawSvgMap(); }
+let distShown = null, distTween = null;
+function setDist(m, offp){
+  const el = $('now-dist'), sub = offp ? '<small>בקו אווירי</small>' : ''; if (m === null){ el.innerHTML = '—'; distShown = null; return; }
+  if (RM || distShown === null){ el.innerHTML = fmtDist(m) + sub; distShown = m; return; }
+  const from = distShown, to = m, t0 = performance.now(); cancelAnimationFrame(distTween); distShown = to;
+  (function step(t){ const k = clamp((t - t0)/450, 0, 1), v = from + (to - from)*(1 - Math.pow(1 - k, 3)); el.innerHTML = fmtDist(v) + sub; if (k < 1) distTween = requestAnimationFrame(step); })(t0);
+}
+function render(){
+  const f = st.fix, tr = tracking(), ni = nextIdx(), fin = st.atIdx === NS-1;
+  const labels = {idle:'GPS כבוי', searching:'מחפש אות', live:'מיקום חי', weak:'אות חלש', denied:'אין הרשאה'}; let cls = st.status, txt = labels[st.status] || '';
+  if (st.src === 'sim' && live()){ cls = 'sim'; txt = 'הדמיה'; } $('pill').className = 'pill ' + cls; $('pill-t').textContent = txt;
+  const on = st.status !== 'idle' && st.status !== 'denied'; $('btn-start').dataset.on = String(on); $('btn-start').textContent = on ? 'הפסק מעקב' : '📍 הפעל מיקום חי';
+  if (!tr){ $('now-label').textContent = 'המסלול מתחיל'; $('now-name').textContent = stops[0].name; setDist(null); ['st-eta','st-slack','st-acc'].forEach(id => $(id).textContent = '—'); $('st-prog').textContent = '0%'; $('prog-bar').style.width = '0%'; }
+  else {
+    const nxt = stops[ni]; let remain = null; if (f && live()) remain = (!st.off && st.atIdx === null) ? Math.max(0, stopCum[ni] - st.D) : dist(f, nxt);
+    $('now-label').textContent = fin ? 'סיימתם את המסלול' : (st.atIdx !== null ? 'אתם ב״' + stops[st.atIdx].name + '״ · התחנה הבאה' : 'התחנה הבאה'); $('now-name').textContent = fin ? stops[NS-1].name : nxt.name; setDist(fin ? null : remain, st.off);
+    if (remain !== null && !fin){
+      const ride = nodes[stopNode[ni]] && nodes[stopNode[ni]].mode === 'ride', eta = Math.max(1, Math.ceil(remain/mpm(stopNode[ni]))); $('st-eta').textContent = eta + ' דק׳'; $('st-eta-l').textContent = ride ? 'נסיעה' : 'הליכה';
+      const pm = toMin(nxt.t), cm = clockMin();
+      if (pm !== null && cm !== null){ const slack = pm - (cm + eta); $('st-slack').textContent = (slack >= 0 ? '+' : '−') + Math.abs(slack) + ' דק׳'; $('st-slack-l').textContent = slack >= 0 ? 'מרווח לתחנה' : 'איחור לתחנה'; }
+      else { $('st-slack').textContent = nxt.t || '·'; $('st-slack-l').textContent = nxt.t ? 'שעה בלו״ז' : 'ללא שעה'; }
+    } else { $('st-eta').textContent = '—'; $('st-slack').textContent = '—'; }
+    const pct = Math.round(clamp(st.D/TOTAL, 0, 1)*100); $('st-prog').textContent = pct + '%'; $('prog-bar').style.width = pct + '%'; $('st-acc').textContent = f ? '±' + Math.round(f.acc) + ' מ׳' : '—';
+  }
+  if (live() && f){
+    if (st.status === 'weak') setMsg('קליטת GPS חלשה (±' + Math.round(f.acc) + ' מ׳). ממתין לשיפור, ההתקדמות לא מתעדכנת עד אז.', 'warn');
+    else if (st.off && !st.hasLocated){ const n = nearestStop(f); setMsg('אתם כ־' + fmtDist(n.d) + ' מהתחנה הקרובה (' + stops[n.i].name + ') ועדיין לא על המסלול. לחצו ״אני כאן״ על תחנה כדי לסמן ידנית.', 'warn'); }
+    else if (st.off){ const n = nearestStop(f); setMsg('אתם כ־' + fmtDist(st.offDist) + ' מהקו המתוכנן. התחנה הקרובה אליכם: ' + stops[n.i].name + '. אפשר ללחוץ ״אני כאן״ כדי לסמן ידנית.', 'warn'); }
+    else if (fin) setMsg('הגעתם לשדה. טיסה טובה הביתה!', 'ok'); else if (st.atIdx !== null) setMsg('הגעתם: ' + stops[st.atIdx].name + '.', 'ok');
+    else setMsg('בדרך אל ' + stops[ni].name + (st.speed !== null && st.speed > 0.3 ? ' · מהירות ' + (st.speed*3.6).toFixed(1) + ' קמ״ש' : '') + '.', 'ok');
+  }
+  applyChapter(); paintStops(); paintRail(); drawMap(); paintArrow(); paintProfile(); paintSubs(); paintReader(false);
+  const hidden = $('live').getBoundingClientRect().bottom < 0; $('lb-name').textContent = fin ? 'סיימתם' : stops[ni].name;
+  $('lb-sub').textContent = st.atIdx !== null && !fin ? 'אתם ב' + stops[st.atIdx].name : (st.off ? 'מחוץ למסלול' : 'התחנה הבאה');
+  const dtxt = $('now-dist').textContent; $('lb-dist').textContent = dtxt === '—' ? '' : dtxt.replace('בקו אווירי', ''); $('livebar').classList.toggle('show', live() && hidden);
+  if (live() && st.follow && ni !== st.lastNext && Date.now() - st.lastUserScroll > 8000) scrollToStop(st.atIdx !== null ? st.atIdx : ni, true); st.lastNext = ni;
+}
+function scrollToStop(i, quiet){ const el = liOf(i); if (!el) return; try{ el.scrollIntoView({block:'center', behavior:RM ? 'auto' : 'smooth'}); }catch(e){ el.scrollIntoView(); } if (!quiet){ el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); } }
+
+/* =====================================================================
+   10. אבחון, אירועים, אתחול
+   ===================================================================== */
+function renderBanner(){ const b = $('banner'); if (!window.isSecureContext){ b.hidden = false; b.innerHTML = '<p><b>המיקום החי חסום בפתיחה הזו.</b> דפדפנים מאפשרים GPS רק בדף שנפתח בכתובת <b>https://</b> (או localhost). קובץ שנפתח ישירות מהטלפון לרוב נחסם.</p><p>הפתרון: לפתוח את הדף דרך קישור https, או להעלות את הקובץ לאחסון חינמי כמו Netlify Drop או GitHub Pages.</p>'; } else b.hidden = true; }
+function renderDiag(){
+  const items = [[window.isSecureContext, window.isSecureContext ? 'https ✓' : 'לא https'], ['geolocation' in navigator, 'geolocation' in navigator ? 'API מיקום ✓' : 'אין API מיקום'], [!!window.L, window.L ? 'מפה חיה ✓' : 'מפה: מצב גיבוי'], ['speechSynthesis' in window, 'speechSynthesis' in window ? 'הקראה ✓' : 'אין הקראה']], d = $('diag');
+  const paint = function(perm){ const all = items.slice(); if (perm) all.push([perm === 'granted', 'הרשאה: ' + ({granted:'ניתנה', denied:'נדחתה', prompt:'תתבקש'}[perm] || perm)]); d.innerHTML = all.map(x => '<span class="' + (x[0] ? 'good' : 'bad') + '">' + x[1] + '</span>').join(''); };
+  paint(null); try{ navigator.permissions.query({name:'geolocation'}).then(function(r){ paint(r.state); r.onchange = function(){ paint(r.state); }; }).catch(function(){}); }catch(e){}
+}
+function applyTheme(t){ if (t){ document.documentElement.dataset.theme = t; store.set('theme', t); } if (LM) setTimeout(updateMap, 30); }
+function bind(){
+  $('route').addEventListener('click', function(e){
+    const rb = e.target.closest('[data-read]'); if (rb){ const i = idxOf(rb.dataset.read); if (i >= 0){ st.readManual = true; st.readIdx = i; $('rd-auto').setAttribute('aria-pressed', 'false'); paintReader(true); $('read').scrollIntoView({block:'start', behavior:RM ? 'auto' : 'smooth'}); } return; }
+    const hb = e.target.closest('[data-here]'); if (hb){ const i = idxOf(hb.dataset.here); if (i >= 0){ if (st.src === null) st.src = 'manual'; setCursor(i); } return; }
+    const ck = e.target.closest('[data-ck]'); if (ck){ ck.parentNode.classList.toggle('on', ck.checked); const arr = []; document.querySelectorAll('[data-ck]').forEach(c => { if (c.checked) arr.push(+c.dataset.ck); }); store.set('ck', JSON.stringify(arr)); }
+  });
+  document.querySelectorAll('.opt').forEach(b => b.addEventListener('click', function(){ setVariant(this.dataset.v); toast(this.dataset.v === 'F' ? 'נבחר: עולים ברכבל' : 'נבחר: עולים ברגל'); }));
+  $('map').addEventListener('click', function(e){ const g = e.target.closest('[data-i]'); if (g) scrollToStop(+g.dataset.i); });
+  $('prof').addEventListener('click', function(e){ const g = e.target.closest('[data-i]'); if (g) scrollToStop(+g.dataset.i); });
+  $('btn-start').addEventListener('click', function(){ (st.status === 'idle' || st.status === 'denied') ? startGps() : stopGps(); });
+  $('btn-follow').addEventListener('click', function(){ st.follow = !st.follow; this.setAttribute('aria-pressed', String(st.follow)); store.set('follow', st.follow ? '1' : '0'); });
+  $('btn-wake').addEventListener('click', function(){ st.wakeWanted = !st.wakeWanted; this.setAttribute('aria-pressed', String(st.wakeWanted)); store.set('wake', st.wakeWanted ? '1' : '0'); st.wakeWanted ? (st.src && wakeOn()) : wakeOff(); });
+  $('btn-sim').addEventListener('click', function(){ st.simTimer ? (stopSim(), st.status = 'idle', st.src = null, render()) : startSim(); });
+  $('sim-range').addEventListener('input', function(){ if (st.simTimer) stopSim(); if (st.src !== 'sim'){ enterSim(); st.hasLocated = false; st.pos = 0; } simTo(+this.value/1000*TOTAL); });
+  $('clock-range').addEventListener('input', function(){ st.simMin = +this.value; $('clock-out').textContent = hhmm(st.simMin); st.previewCh = null; tick(); render(); });
+  $('clock-off').addEventListener('click', function(){ st.simMin = null; $('clock-out').textContent = 'כבוי'; tick(); render(); });
+  $('btn-open').addEventListener('click', function(){ if (!st.fix){ toast('אין עדיין מיקום. הפעילו קודם מיקום חי.'); return; } window.open('https://www.google.com/maps/search/?api=1&query=' + st.fix.lat + ',' + st.fix.lon, '_blank', 'noopener'); });
+  $('btn-center').addEventListener('click', function(){ st.mapFollow = true; this.hidden = true; lm.lastNext = -2; updateMap(); });
+  $('btn-all').addEventListener('click', function(){ st.mapFollow = false; $('btn-center').hidden = !live(); fitAll(); });
+  $('livebar-btn').addEventListener('click', function(){ scrollToStop(st.atIdx !== null ? st.atIdx : nextIdx()); });
+  $('fin-close').addEventListener('click', function(){ $('finale').classList.remove('show'); });
+  $('theme-toggle').addEventListener('click', function(){ applyTheme(isDark() ? 'light' : 'dark'); });
+  $('rd-prev').addEventListener('click', () => readerNav(-1)); $('rd-next').addEventListener('click', () => readerNav(1));
+  $('rd-auto').addEventListener('click', function(){ st.readManual = false; this.setAttribute('aria-pressed', 'true'); paintReader(true); });
+  const setRs = v => { v = clamp(v, .85, 1.5); document.documentElement.style.setProperty('--rs', v); store.set('rs', String(v)); };
+  $('rd-minus').addEventListener('click', () => setRs((+getComputedStyle(document.documentElement).getPropertyValue('--rs') || 1) - .1)); $('rd-plus').addEventListener('click', () => setRs((+getComputedStyle(document.documentElement).getPropertyValue('--rs') || 1) + .1));
+  $('rd-tts').addEventListener('click', function(){ if (!('speechSynthesis' in window)){ toast('הדפדפן לא תומך בהקראה'); return; } st.tts = !st.tts; this.setAttribute('aria-pressed', String(st.tts)); if (st.tts) speak(); else { try{ speechSynthesis.cancel(); }catch(e){} } });
+  try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(){ applyTheme(null); }); }catch(e){}
+  ['wheel','touchmove'].forEach(ev => window.addEventListener(ev, function(){ st.lastUserScroll = Date.now(); }, {passive:true}));
+  window.addEventListener('scroll', function(){ $('livebar').classList.toggle('show', live() && $('live').getBoundingClientRect().bottom < 0); }, {passive:true});
+  window.addEventListener('resize', function(){ paintRail(); if (LM) LM.invalidateSize(); });
+  if ('ResizeObserver' in window) new ResizeObserver(function(){ paintRail(); }).observe($('route'));
+}
+
+const v0 = store.get('variant'); if (v0 === 'F' || v0 === 'W') st.variant = v0; buildRoute(st.variant);
+renderHeader(); buildScenes(); renderJourney(); renderEvents(); renderTimeline(); applyVariantUI(); renderBanner(); renderDiag(); buildProfile(); bind();
+const th = store.get('theme'); if (th) document.documentElement.dataset.theme = th;
+const rs0 = +store.get('rs'); if (rs0) document.documentElement.style.setProperty('--rs', rs0);
+if (store.get('follow') === '0'){ st.follow = false; $('btn-follow').setAttribute('aria-pressed','false'); }
+if (store.get('wake') === '0'){ st.wakeWanted = false; $('btn-wake').setAttribute('aria-pressed','false'); }
+const sc0 = store.get('cursor'); if (sc0 && isTripDay()){ const i = idxOf(sc0); if (i > 0){ st.pos = i; st.D = stopCum[i]; st.hasLocated = true; } }
+initLeaflet(); tick(); setInterval(tick, 1000); render(); paintReader(true);
+requestAnimationFrame(function(){ paintRail(); if (LM) LM.invalidateSize(); });
+window.__trip = {st, get stops(){ return stops; }, onFix, setVariant, get TOTAL(){ return TOTAL; }, get stopCum(){ return stopCum; }, applyChapter};
+})();
+</script>
+</body>
+</html>
