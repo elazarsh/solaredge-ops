@@ -1,0 +1,6 @@
+{
+  "name": "video-studio",
+  "version": "0.1.0",
+  "description": "Video creation toolkit: five-versions workflow, footage editing as code (Hebrew-safe), real-action hooks, generative-video prompting, PixVerse API, and editor-grade QA.",
+  "keywords": ["video", "editing", "pixverse", "hebrew", "reels", "hyperframes"]
+}

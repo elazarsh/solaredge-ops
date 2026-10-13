@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "pixverse": {
+      "command": "uvx",
+      "args": ["pixverse-mcp"],
+      "env": { "PIXVERSE_API_KEY": "${PIXVERSE_API_KEY}" }
+    }
+  }
+}
