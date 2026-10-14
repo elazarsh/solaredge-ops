@@ -28,9 +28,13 @@ def require_raqm() -> None:
         )
 
 
-def load_font(font_path: str, size: int) -> ImageFont.FreeTypeFont:
+def load_font(font_path: str, size: int, weight: Optional[int] = None) -> ImageFont.FreeTypeFont:
+    """Load with RAQM. ``weight`` selects the Weight axis of a variable font (e.g. Heebo[wght].ttf, 100-900)."""
     require_raqm()
-    return ImageFont.truetype(font_path, size, layout_engine=ImageFont.Layout.RAQM)
+    font = ImageFont.truetype(font_path, size, layout_engine=ImageFont.Layout.RAQM)
+    if weight is not None:
+        font.set_variation_by_axes([weight])
+    return font
 
 
 def wrap_lines(text: str, font: ImageFont.FreeTypeFont, max_width: Optional[int], direction: str) -> list[str]:
@@ -63,11 +67,12 @@ def render_text(
     max_width: Optional[int] = None,
     line_spacing: float = 1.15,
     padding: int = 8,
+    weight: Optional[int] = None,
 ) -> Image.Image:
     """Return a tight RGBA image of ``text``. ``direction`` is 'rtl' for Hebrew/Arabic, else 'ltr'."""
     if direction not in ("rtl", "ltr"):
         raise ValueError("direction must be 'rtl' or 'ltr'")
-    font = load_font(font_path, size)
+    font = load_font(font_path, size, weight)
     lines = wrap_lines(text, font, max_width, direction)
     widths = [font.getlength(ln, direction=direction, language="he" if direction == "rtl" else "en") for ln in lines]
     line_h = int(size * line_spacing)

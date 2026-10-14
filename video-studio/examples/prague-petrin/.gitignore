@@ -1,0 +1,4 @@
+__pycache__/
+final_audio.wav
+render.log
+*.raw.wav
