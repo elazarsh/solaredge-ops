@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "gpt-image": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "python3 -m pip install -q -r mcp-gpt-image/requirements.txt >&2 && exec python3 mcp-gpt-image/server.py"
+      ],
+      "env": { "OPENAI_API_KEY": "${OPENAI_API_KEY:-}" }
+    }
+  }
+}
