@@ -1,1 +1,4 @@
 mcp>=1.2,<2
+pillow>=10.1
+numpy
+scipy

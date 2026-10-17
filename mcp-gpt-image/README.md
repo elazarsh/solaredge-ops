@@ -1,35 +1,71 @@
 # mcp-gpt-image
 
-שרת MCP שנותן ל-Claude את הכלים `generate_image` ו-`edit_image` ליצירה ועריכה של תמונות עם מודל התמונות של OpenAI (GPT image).
+שרת MCP שנותן ל-Claude יצירת תמונות עם מודל התמונות של OpenAI, וכלים מקומיים (חינמיים) שהופכים תמונה אחת ל**נכס מפורק לשכבות** שאפשר להנפיש.
+
+## הגנות עלות (ה-API בתשלום)
+
+- `generate_image` ו-`edit_image` הם **dry-run כברירת מחדל**: מציגים את הפרומפט המדויק, המודל, הגודל, האיכות והמחיר המשוער, ולא שולחים כלום עד `confirm=true`.
+- בקשה זהה לחלוטין מוגשת מהיומן (`ledger.jsonl`) בלי חיוב.
+- תקרה יומית: `GPT_IMAGE_DAILY_BUDGET_USD` (ברירת מחדל 2.00).
+- `image_usage` מציג הוצאה יומית ויצירות אחרונות.
+- מחירון (gpt-image-1, לתמונה): low ‏$0.011–0.016, medium ‏$0.042–0.063, high ‏$0.167–0.25. אם משנים את `OPENAI_IMAGE_MODEL`, יש לאמת את המחירים.
+
+## תהליך תמונה → וידאו
+
+תמונה אחת מכילה את **כל החלקים מופרדים** ("סדין בובה"), ולכן דמות שלמה עולה יצירה אחת ולא תמונה לכל איבר.
+
+1. `plan_parts_sheet`: בונה פרומפט מרשימת החלקים. חינמי. מציגים למשתמש ומאשרים רשימת חלקים, סגנון ועלות.
+2. `generate_image(..., background="transparent", confirm=true)`: הקריאה המשולמת היחידה. מומלץ קודם `quality="low"` כבדיקה.
+3. `split_parts`: חותך את הסדין לקבצי PNG שקופים לפי רכיבים מחוברים, מאחד שברים קרובים (עיניים, אצבעות), זורק כתמים, וכותב `manifest.json` ו-`labeled.png` עם מספרים.
+4. Claude מסתכל ב-`labeled.png`, נותן שמות ומגדיר היררכיה ב-`save_rig`, ומקבל `rig.json`.
+5. `render_rig`: מציג את הדמות מורכבת או בתנוחה (`{"forearm_l": 40}`), כדי לוודא שהמפרקים לא נפערים לפני שמנפישים.
+
+### פורמט rig.json
+
+| שדה | משמעות |
+|---|---|
+| `canvas` | גודל התמונה המורכבת |
+| `parts[].name`, `file`, `size` | שם, קובץ PNG וגודל בפיקסלים |
+| `parent` | שם החלק האב, או `null` לשורש |
+| `pivot` | נקודת הסיבוב, בפיקסלים של החלק עצמו |
+| `anchor` | איפה ה-pivot יושב: בפיקסלים של **האב**, או על הקנבס לשורש |
+| `z` | סדר ציור (גבוה = קדימה) |
+
+סיבוב נמדד במעלות, חיובי = עם כיוון השעון (כמו `rotate()` ב-CSS). הפורמט מתאים ישירות לאנימציה ב-HTML/GSAP: כל חלק הוא `<img>` ממוקם באופן אבסולוטי, עם `transform-origin` = pivot.
+
+### מגבלות
+
+- איכות ההפרדה תלויה במודל: ייתכן שחלקים ייגעו זה בזה או שיהיו כפולים. `labeled.png` מראה את זה מיד. כך אפשר לתקן בפרומפט או ליצור שוב.
+- אם המודל מחזיר רקע אטום, `split_parts` מסיר רקע אחיד לפי צבע הפינות. זה לא עובד עם חלקים בצבע הרקע.
+- הבדיקות בוצעו על סדין סינתטי ועל שרת OpenAI מדומה, לא על יצירה אמיתית.
 
 ## Backends
 
 | backend | דרישות | הערות |
 |---|---|---|
-| `api` | `OPENAI_API_KEY` | הדרך הרשמית והיציבה. חיוב לפי תמונה. |
-| `codex` | Codex CLI עם `codex login` (חשבון ChatGPT) | **ניסיוני.** נשען על כלי יצירת התמונות של Codex, שאינו מתועד רשמית, ויכול להפסיק לעבוד. לא נבדק מול Codex אמיתי. |
-| `auto` (ברירת מחדל) | | `api` אם יש מפתח, אחרת `codex`. |
+| `api` | `OPENAI_API_KEY` | הדרך הרשמית והיציבה. |
+| `codex` | Codex CLI עם `codex login` | **ניסיוני**, לא מתועד רשמית, לא נבדק מול Codex אמיתי. |
+| `auto` | | `api` אם יש מפתח, אחרת `codex`. |
 
 `edit_image` נתמך רק ב-`api`.
 
 ## התקנה
 
+`.mcp.json` בשורש הריפו מתקין את התלויות ומפעיל את השרת אוטומטית בכל סשן על הענף. לשימוש מחוץ לריפו:
+
 ```bash
 pip install -r mcp-gpt-image/requirements.txt
-claude mcp add gpt-image --scope user \
-  -e OPENAI_API_KEY="$OPENAI_API_KEY" \
+claude mcp add gpt-image --scope user -e OPENAI_API_KEY="$OPENAI_API_KEY" \
   -- python /abs/path/to/mcp-gpt-image/server.py
 ```
 
-השרת נטען בתחילת סשן, לכן צריך לפתוח סשן חדש אחרי ההוספה.
-
-**סשן בענן:** מוסיפים `OPENAI_API_KEY` כ-secret של הסביבה, ומוודאים שמדיניות הרשת מאפשרת `api.openai.com`. להפעלת השרת בכל סשן אפשר להוסיף `.mcp.json` בשורש הריפו עם אותה פקודה.
+שרתי MCP נטענים בתחילת סשן. בענן מוסיפים `OPENAI_API_KEY` כ-secret של הסביבה.
 
 ## משתני סביבה
 
-`OPENAI_API_KEY`, `OPENAI_IMAGE_MODEL` (ברירת מחדל `gpt-image-1`, אפשר להחליף לדגם חדש יותר), `GPT_IMAGE_OUTPUT_DIR` (ברירת מחדל `generated-images/`), `GPT_IMAGE_TIMEOUT`, `OPENAI_BASE_URL`, `CODEX_BIN`.
+`OPENAI_API_KEY`, `OPENAI_IMAGE_MODEL` (ברירת מחדל `gpt-image-1`), `GPT_IMAGE_OUTPUT_DIR` (ברירת מחדל `generated-images/`), `GPT_IMAGE_DAILY_BUDGET_USD`, `GPT_IMAGE_TIMEOUT`, `OPENAI_BASE_URL`, `CODEX_BIN`.
 
 ## אבטחה
 
-- אל תעשה commit למפתח API או ל-`~/.codex/auth.json`. הקובץ הזה שקול לסיסמה.
-- בענן עדיף מפתח API עם מגבלת הוצאה על פני העתקת `auth.json`.
+- אל תעשה commit למפתח API או ל-`~/.codex/auth.json`.
+- הקבצים והיומן נשמרים בסביבה הזמנית של הסשן. מה שחשוב צריך להעתיק החוצה.
