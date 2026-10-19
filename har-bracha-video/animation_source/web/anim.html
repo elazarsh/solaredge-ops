@@ -1,0 +1,159 @@
+<!doctype html><meta charset="utf-8">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+const W=1280,H=720,FPS=25;
+const c=document.getElementById('c'),g=c.getContext('2d');
+const ci=document.createElement('canvas');ci.width=W;ci.height=H;const gi=ci.getContext('2d');
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),lerp=(a,b,t)=>a+(b-a)*t;
+const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, easeOut=t=>1-Math.pow(1-t,3), easeIn=t=>t*t*t;
+const back=t=>{const s=1.70158;t=t-1;return t*t*((s+1)*t+s)+1};
+const IMG={}, SPR={}; let META,LINES;
+function load(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=src;});}
+const SUBS={k1:"תיכנסו. שימו לב לאור, שימו לב לשטח, שימו לב לקירות: ממוחזרים. אקולוגיים. בלי רטיבות. חוץ מגשם.",
+l1:"וואו.",y1:"ומה עם הארנונה?",k2:"אין ארנונה.",l2:"אין?",k3:"המועצה לא אוספת כאן כלום.",
+k4:"אז תושבים, בקצרה: קרטונים – לקרטוניה. גזם – לפינת הגזם. שקיות – לתוך הפח.",
+y2:"אוף, זה הבית שלנו.",l3:"ואני כבר קניתי וילונות.",n1:"ושלחו ילד בגיל המתאים לזרוק את הפח. מחוץ לפח – לא נאסף."};
+async function init(){
+  const f=new FontFace('Heebo','url(fonts/Heebo-Bold.ttf)',{weight:'700'});await f.load();document.fonts.add(f);
+  META=await (await fetch('sprites/meta.json')).json(); LINES=await (await fetch('lines_env.json')).json();
+  for(const k of ['bg_interior','bg_close','plate3','plate6','card1','card2','card3','logo'])IMG[k]=await load('assets/'+k+'.png');
+  for(const ch in META){SPR[ch]={};for(const v in META[ch]){SPR[ch][v]=await load(`sprites/${ch}_${v}.png`);SPR[ch][v+'_blink']=await load(`sprites/${ch}_${v}_blink.png`);}}
+  window.READY=true;
+}
+// ---- speech
+function amp(ch,t){for(const L of LINES){if(L.ch!==ch)continue;if(t>=L.start&&t<L.start+L.dur){const i=(t-L.start)*FPS,a=Math.floor(i);return Math.max(L.env[a]||0,(L.env[a+1]||0)*.6);}}return 0;}
+function activeLine(t){for(const L of LINES)if(t>=L.start-0.05&&t<L.start+L.dur+0.25)return L;return null;}
+function blinking(t,ph,per){const x=((t+ph)%per)/per;return x<0.05&&t>0.8;}
+// ---- character drawing: closedName/openName, h = desired height in current units
+function drawChar(ctx,ch,closed,open,x,y,h,o={}){
+  const a=o.noTalk?0:amp(ch,o.t||0),isOpen=a>0.26;
+  let name=isOpen?open:closed;
+  const bl=!isOpen&&blinking(o.t||0,o.ph||0,o.per||3.6)&&!o.noBlink;
+  const img=SPR[ch][name+(bl?'_blink':'')], m=META[ch][name];
+  const s=h/900, w=m[0]*s;
+  const t=o.t||0, br=Math.sin(t*2.4+(o.ph||0))*.012;
+  let sy=1+br+(isOpen?.02*Math.min(a,1.1):0), sx=1-br*.6-(isOpen?.01*a:0);
+  let rot=(o.rot||0)+Math.sin(t*1.3+(o.ph||0))*.008+(isOpen?Math.sin(t*9+(o.ph||0))*.014*Math.min(a,1):0);
+  ctx.save();
+  // shadow
+  ctx.globalAlpha=(o.alpha??1)*.22;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(x,y+h*.012,w*.42,h*.028,0,0,7);ctx.fill();
+  ctx.globalAlpha=o.alpha??1;
+  ctx.translate(x,y+(o.bob||0));ctx.rotate(rot);ctx.scale((o.flip?-1:1)*sx*(o.sx||1),sy*(o.sy||1));
+  ctx.drawImage(img,-w/2,-h,w,h);ctx.restore();
+}
+function cam(ctx,s,cx,cy){ctx.setTransform(s,0,0,s,W/2-cx*s,H/2-cy*s);}
+// ---- INTERIOR
+const SUB_INT=0.8333;
+function icam(t){const tc=Math.min(t,12.93);const z=1+0.45*ease(clamp(tc/12.93));return{s:SUB_INT*z,cx:lerp(768,745,ease(tc/12.93)),cy:lerp(512,640,ease(tc/12.93))};}
+function drawInterior(ctx,t){
+  const C=icam(t);ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#6b3d12';ctx.fillRect(0,0,W,H);
+  cam(ctx,C.s,C.cx,C.cy);ctx.drawImage(IMG.bg_interior,0,0,1536,1024);
+  const ent=(from,to,t0,t1)=>{const p=clamp((t-t0)/(t1-t0));return{x:lerp(from,to,easeOut(p)),mv:p>0&&p<1,p};};
+  const P=ent(1900,560,0.1,2.7),Y=ent(2250,900,0.5,3.1),L=ent(2500,1120,0.8,3.4);
+  const bob=(e,ph)=>e.mv?-Math.abs(Math.sin(t*10+ph))*16:0;
+  drawChar(ctx,'liat','base','open',L.x,900,350,{t,ph:2.1,bob:bob(L,2),per:4.1});
+  drawChar(ctx,'yossi','base','open',Y.x,905,372,{t,ph:1.2,bob:bob(Y,1),per:3.3});
+  drawChar(ctx,'pigeon','base','open',P.x,912,520,{t,ph:0,bob:bob(P,0),per:3.9});
+}
+// ---- EXTERIOR WIDE (plate3)
+const DOOR={cx:623.5,cy:750,w:97,h:196};
+const TINY3=[['yossi',662,68,'base','open'],['liat',708,64,'base','open'],['pigeon',588,95,'base','open']];
+function drawCatBlink(ctx,t,times,eyes,fur){
+  for(const tb of times){const p=(t-tb)/0.3;if(p>0&&p<1){const k=Math.sin(Math.PI*p);
+    for(const [ex,ey,rx,ry] of eyes){ctx.save();ctx.fillStyle=fur;ctx.beginPath();ctx.ellipse(ex,ey,rx*1.08,ry*lerp(0.2,1.15,k),0,0,7);ctx.fill();
+      ctx.strokeStyle='#2a1608';ctx.lineWidth=rx*.12;ctx.beginPath();ctx.moveTo(ex-rx,ey);ctx.quadraticCurveTo(ex,ey+ry*.5*(1-k)+3,ex+rx,ey);ctx.stroke();ctx.restore();}}}
+}
+const CAT3=[[[1118,213,40,24],[1208,213,40,24]],'#d9731f'];
+const CAT6=[[[1008,245,52,28],[1167,245,52,28]],'#e47a18'];
+function drawTiny(ctx,list,t,alpha=1,scaleOnly=false){
+  for(const [ch,x,h,c,o] of list)drawChar(ctx,ch,c,o,x,918,h,{t,ph:x*.01,alpha,noTalk:true,per:4});
+}
+function drawExtWide(ctx,t){
+  const t1=13.5,t2=16.0;
+  let u=clamp((t-t1)/(t2-t1)); u=ease(u);
+  const sE0=1280/348.4,sE1=SUB_INT;
+  let s=Math.exp(lerp(Math.log(sE0),Math.log(sE1),u)),cx=lerp(DOOR.cx,768,u),cy=lerp(DOOR.cy,528,u);
+  // S4 zoom-in toward door
+  let zin=clamp((t-17.3)/0.75);zin=easeIn(zin);
+  if(t>=17.3){s=Math.exp(lerp(Math.log(sE1),Math.log(3.0),zin));cx=lerp(768,DOOR.cx-150,zin);cy=lerp(528,820,zin);}
+  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#d9c38f';ctx.fillRect(0,0,W,H);
+  cam(ctx,s,cx,cy);ctx.drawImage(IMG.plate3,0,0,1536,1024);
+  drawCatBlink(ctx,t,[16.5,17.2],CAT3[0],CAT3[1]);
+  // interior dissolves into the box as the camera pulls back
+  if(t<16.1){
+    const wI=348.4,hI=196,al=1-ease(clamp((u-0.08)/0.62));
+    if(al>0.01){ctx.save();ctx.globalAlpha=al;ctx.drawImage(ci,DOOR.cx-wI/2,DOOR.cy-hI/2,wI,hI);ctx.restore();}
+  }
+  const ca=clamp((t-15.3)/0.7);if(ca>0)drawTiny(ctx,TINY3,t,ca);
+}
+// ---- CLOSE scene
+function drawClose(ctx,t){
+  const z=1+0.06*clamp((t-18.2)/6.2);
+  ctx.setTransform(1,0,0,1,0,0);cam(ctx,SUB_INT*z,768,560);ctx.drawImage(IMG.bg_close,0,0,1536,1024);
+  const s5=t>=24.4;
+  drawChar(ctx,'liat',s5?'pout':'base',s5?'pout_open':'open',1050,962,470,{t,ph:2.1,rot:s5?0.03:0,per:4.4});
+  drawChar(ctx,'yossi',s5?'groan':'base',s5?'groan_open':'open',860,968,500,{t,ph:1.2,per:3.3});
+  drawChar(ctx,'pigeon','tired','tired_open',420,972,700,{t,ph:0.4,per:3.8});
+}
+// ---- Final wide (plate6)
+function drawFinal(ctx,t){
+  const z=lerp(1.18,1,easeOut(clamp((t-29.4)/1.2)));
+  ctx.setTransform(1,0,0,1,0,0);cam(ctx,SUB_INT*z,lerp(560,768,easeOut(clamp((t-29.4)/1.2))),lerp(600,528,easeOut(clamp((t-29.4)/1.2))));
+  ctx.drawImage(IMG.plate6,0,0,1536,1024);
+  drawCatBlink(ctx,t,[30.6,32.9],CAT6[0],CAT6[1]);
+  const p=ease(clamp((t-29.6)/4.2)),mv=p>0&&p<1;
+  const bob=ph=>mv?-Math.abs(Math.sin(t*9+ph))*3.2:0;
+  const L=[['liat',lerp(640,300,p),60,2],['yossi',lerp(585,255,p),63,1],['pigeon',lerp(530,205,p),90,0]];
+  for(const [ch,x,h,ph] of L)drawChar(ctx,ch,'base','open',x,918,h,{t,ph,bob:bob(ph),noTalk:true});
+}
+// ---- overlays
+function wrap(ctx,text,maxW){const words=text.split(' '),lines=[];let cur='';for(const w of words){const tst=cur?cur+' '+w:w;if(ctx.measureText(tst).width>maxW&&cur){lines.push(cur);cur=w;}else cur=tst;}lines.push(cur);return lines;}
+function caption(ctx,t){
+  const L=activeLine(t);if(!L)return;const txt=SUBS[L.id];
+  ctx.setTransform(1,0,0,1,0,0);ctx.font='700 40px Heebo';ctx.direction='rtl';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  const lines=wrap(ctx,txt,1080),lh=50,y0=H-34-(lines.length-1)*lh;
+  ctx.lineJoin='round';ctx.lineWidth=9;ctx.strokeStyle='rgba(0,0,0,.9)';ctx.fillStyle='#fff';
+  lines.forEach((l,i)=>{ctx.strokeText(l,W/2,y0+i*lh);ctx.fillText(l,W/2,y0+i*lh);});
+}
+function labelS3(ctx,t){
+  const a=clamp((t-15.35)/0.35)*clamp((17.3-t)/0.25);if(a<=0)return;
+  const p=back(clamp((t-15.35)/0.45)),txt='מחוץ לפח – המועצה לא אוספת.';
+  ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=a;ctx.font='700 46px Heebo';ctx.direction='rtl';ctx.textAlign='center';
+  const w=ctx.measureText(txt).width+80,h=84,x=W/2,y=84;
+  ctx.translate(x,y);ctx.scale(p,p);ctx.fillStyle='#0f9648';ctx.beginPath();ctx.roundRect(-w/2,-h/2,w,h,22);ctx.fill();
+  ctx.fillStyle='#fff';ctx.fillText(txt,0,16);ctx.globalAlpha=1;
+}
+const CARD_T=[19.74,21.30,22.92];
+function cards(ctx,t){
+  const out=clamp((24.55-t)/0.3);
+  [IMG.card1,IMG.card2,IMG.card3].forEach((im,i)=>{
+    const a=clamp((t-CARD_T[i])/0.4);if(a<=0||out<=0)return;const p=back(a),w=330,h=w*im.height/im.width;
+    ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=Math.min(1,a*2)*out;ctx.translate(1085,92+i*196+h/2);ctx.scale(p,p);
+    ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=14;ctx.drawImage(im,-w/2,-h/2,w,h);ctx.shadowBlur=0;ctx.globalAlpha=1;});
+}
+function endCard(ctx,t){
+  const a=clamp((t-33.55)/0.4);if(a<=0)return;ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=a;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  const p=back(clamp((t-33.7)/0.5)),h=400,w=h*IMG.logo.width/IMG.logo.height;
+  ctx.translate(W/2,300);ctx.scale(p,p);ctx.drawImage(IMG.logo,-w/2,-h/2,w,h);ctx.setTransform(1,0,0,1,0,0);
+  ctx.globalAlpha=a*clamp((t-34.0)/0.4);ctx.font='700 40px Heebo';ctx.direction='rtl';ctx.textAlign='center';ctx.fillStyle='#064a21';ctx.fillText('מחוץ לפח – לא נאסף',W/2,655);ctx.globalAlpha=1;
+}
+// ---- master
+function frame(t){
+  g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;
+  if(t<16.1){drawInterior(gi,t);}
+  if(t<13.5){g.setTransform(1,0,0,1,0,0);g.drawImage(ci,0,0);}
+  else if(t<17.3)drawExtWide(g,t);
+  else if(t<29.4){
+    // S4 start: zoom into door then crossfade to close scene
+    if(t<18.25){drawExtWide(g,t);const a=clamp((t-17.85)/0.4);if(a>0){g.globalAlpha=a;drawClose(g,t);g.globalAlpha=1;}}
+    else drawClose(g,t);
+  }
+  else drawFinal(g,t);
+  if(t>=15.3&&t<17.3)labelS3(g,t);
+  if(t>=18)cards(g,t);
+  caption(g,t);endCard(g,t);
+}
+window.renderFrame=t=>{frame(t);return true;};
+init();
+</script>
