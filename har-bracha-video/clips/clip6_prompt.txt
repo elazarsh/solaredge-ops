@@ -1,5 +1,13 @@
 Flat 2D vector TV-comedy cartoon, thin dark outlines, flat colors, big expressive eyes. Start frame: first image. End frame: second image. Duration 6 seconds, one continuous shot, nearly static camera with only a very slow gentle push-in.
 
-A medium close-up of a tired lawyer pigeon in a pinstripe suit standing in front of a cardboard box wall, with a male mouse in a checkered shirt and a female mouse in a pink dress standing beside him. The pigeon has dropped his sales act and talks straight to the camera in a weary, sincere, deadpan way, his beak moving as if he is giving a short public announcement. While talking, he raises one wing and counts on his feathers: first one feather, then two, then three, with small beats of his head on each count, ending with three feathers held up as in the end frame. Between counts he lets out a tiny tired sigh. The two mice stay beside him, bored and listening: the male mouse blinks slowly and rolls his eyes slightly, the female mouse looks at the pigeon with a gentle neutral face. Subtle breathing and blinking only, no big body movement, nobody walks.
+Only the characters move. Nothing new appears on the screen: no icons, no arrows, no objects floating in the air, no text.
 
-Keep the character designs, colors, the cardboard box wall, the arrow marking and the garbage bag exactly the same. Smooth limited cartoon animation, no morphing, no style change, no new characters. No text, no subtitles, no captions, no logos, no watermark.
+Character movement:
+0.0-1.0s: The tired pigeon looks straight into the camera, takes a small weary breath and begins to speak, his beak moving. His wing starts to rise.
+1.0-2.2s: He raises one feather and gives a small head nod as if saying "one", beak moving.
+2.2-3.6s: He raises a second feather, head tilting slightly to the side, beak moving, as if saying "two".
+3.6-5.0s: He raises a third feather and gives a firm tired nod, as if saying "three", with a tiny sigh.
+5.0-6.0s: He holds three feathers up, stares at the camera and blinks slowly, beak closing.
+Throughout: the male mouse next to him is bored, glances sideways at the pigeon, slowly rolls his eyes and exhales once. The female mouse looks at the pigeon, then at the male mouse, with a small head tilt. Subtle breathing and blinking only, nobody walks.
+
+Keep the character designs, colors and the background exactly the same. Smooth limited cartoon animation, no morphing, no style change, no new characters. No text, no subtitles, no captions, no logos, no watermark.
