@@ -1,0 +1,9 @@
+Flat 2D vector TV-comedy cartoon, thin dark outlines, flat colors. Start frame: first image (medium shot of the cardboard box with the three tiny characters in front of it). End frame: second image (wide shot with the huge green wheelie bin and the big ginger cat). Duration 6 seconds, one continuous camera move, no cuts.
+
+Timeline:
+0.0-1.0s: Medium shot. The pigeon in the pinstripe suit, the male mouse and the female mouse stand in front of the cardboard box door, waiting. Small idle movements: the pigeon shifts his briefcase to the other wing, the mice blink and glance around.
+1.0-4.0s: The camera pulls back smoothly and steadily, drifting slightly to the right and tilting up a little. The cardboard box shrinks in the frame, the black garbage bag comes into view, and then a huge green wheelie bin rises into the frame on the right, taller than the box. The three characters shrink with the box and stay in the same spot in front of the door, they do not walk. As the bin appears, the pigeon and the two mice slowly turn their heads and look up toward it.
+4.0-5.0s: The big ginger cat lounging on the bin lid is revealed. It looks down at them with half-closed eyes, a smug smirk and a fish bone in the corner of its mouth. The three small characters freeze with worried faces.
+5.0-6.0s: The camera settles on the wide shot from the end frame. The cat slowly blinks, its tail sways slowly down the side of the bin, and the fish bone twitches. The characters stay tiny and still next to the box.
+
+Keep the proportions exactly as in the end frame: the box is smaller than the bin, the characters are very small next to the cat. Keep the characters' designs, the box and the bin consistent. Smooth limited cartoon animation, no morphing, no new characters. No text, no subtitles, no captions, no logos, no watermark.
