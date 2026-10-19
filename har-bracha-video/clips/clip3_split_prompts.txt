@@ -1,0 +1,7 @@
+FALLBACK if the single 6-second move does not work: split into two clips and join them in editing.
+
+CLIP 3A  (start frame: clip3_start.png, end frame: clip3_wall_frame.png), 3 seconds:
+Flat 2D vector TV-comedy cartoon. A fast smooth zoom-out (camera dollies straight backward) from a close two-shot inside a cardboard room; the mouse and the pigeon shrink and the cardboard room appears around them, then the camera moves out through the cardboard wall and the whole frame fills with plain brown corrugated cardboard texture with a tape seam. At the end no characters are visible. No text, no subtitles, no logos, no watermark.
+
+CLIP 3B  (start frame: clip3_wall_frame.png, end frame: clip3_end.png), 3 seconds:
+Flat 2D vector TV-comedy cartoon. Starting on a frame filled with brown corrugated cardboard texture, the camera keeps zooming out smoothly: the texture resolves into the front of a big cardboard box with a small dark doorway on a street pavement, next to a huge green wheelie bin. In the last second the big ginger cat sitting on the bin lid is revealed and slowly blinks. No characters visible. No text, no subtitles, no logos, no watermark.

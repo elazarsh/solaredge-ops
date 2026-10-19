@@ -1,5 +1,10 @@
-Flat 2D vector TV-comedy cartoon, thin dark outlines, flat colors. Start frame: first image. End frame: second image. Duration 6 seconds, one continuous shot.
+Flat 2D vector TV-comedy cartoon, thin dark outlines, flat colors. Start frame: first image. End frame: second image. Duration 6 seconds, one continuous camera move, no cuts.
 
-The shot starts on a close two-shot of a pigeon and a mouse inside a room whose walls are corrugated cardboard, the pigeon frozen in a too-wide oily smile. The camera pulls smoothly backward through the cardboard wall behind them: for a brief moment the brown cardboard texture fills the whole frame, then it clears as the camera passes through and keeps pulling back outside. It is revealed that the room was the inside of a cardboard box standing on a street pavement next to a huge green wheelie bin, with a big ginger cat sitting on the bin lid, looking down. In the final frame the characters are no longer visible, they stay inside the box. The cat slowly blinks.
+Timeline:
+0.0-1.0s: Static close two-shot inside a room with corrugated cardboard walls. A mouse speaks with a raised eyebrow, a pigeon next to him is frozen in a too-wide oily smile.
+1.0-2.5s: A fast, smooth zoom-out (camera dollies straight backward). The two characters shrink and the whole cardboard room appears around them: cardboard walls, brown tape seam, printed arrows, a lamp.
+2.5-3.3s: The camera moves out through the cardboard wall. For about half a second the whole frame is filled with plain brown corrugated cardboard texture with a tape seam. No characters and no cat are visible in this moment.
+3.3-5.0s: The camera keeps zooming out and the cardboard texture resolves into the front of a big cardboard box standing on a street pavement, with a small dark doorway cut in it. A huge green wheelie bin stands next to the box. The characters are not visible, they stay inside the box.
+5.0-6.0s: The camera settles on the wide shot from the end frame. Only now the big ginger cat is revealed sitting on the bin lid, looking down; it slowly blinks. Everything else is still.
 
-Keep the cardboard box, bin and cat consistent with the end frame. Smooth limited cartoon animation, no morphing, no new characters. No text, no subtitles, no captions, no logos, no watermark.
+Keep the box, bin and cat consistent with the end frame. Smooth limited cartoon animation, no morphing, no new characters. No text, no subtitles, no captions, no logos, no watermark.
