@@ -1,0 +1,43 @@
+BASE="Speak in Hebrew. This is a voice-over for a 2D animated TV comedy cartoon. Performance must be strongly characterful, theatrical and polished like a professional Israeli animation voice actor, with a slightly bright, squeaky, nasal edge in the voice (a cartoon-character quality), clear diction. "
+KAL=BASE+"Character: a slick, shady lawyer who is a pigeon, selling a dubious apartment. Smooth oily baritone with a squeaky nasal top, overconfident salesman, a smile in the voice, rolling fast rhythm."
+YOS=BASE+"Character: a young male mouse, dry, sarcastic and tired, high nasal whiny tone with a squeaky edge, deadpan, sentences end with a complaining rising tone."
+LIA=BASE+"Character: a young female mouse, very bright, high and squeaky, breathy and sweet, naive genuine excitement."
+NAR=BASE+"Character: a public service announcer for the local council, upbeat and friendly but crisp, medium-high bright voice, small cartoon-like squeak, clear and brisk."
+LINES=[
+ dict(id="k1a",ch="pigeon",voice="Algieba",
+  nik="תִּכָּנְסוּ, שִׂימוּ לֵב לָאוֹר, שִׂימוּ לֵב לַקִּירוֹת, מְמוּחְזָרִים, בְּלִי רְטִיבוּת,",
+  plain="תיכנסו, שימו לב לאור, שימו לב לקירות, ממוחזרים, בלי רטיבות,",
+  style=KAL+" Very fast, 4 words per second, enthusiastic sales pitch, no pauses between items."),
+ dict(id="l1",ch="liat",voice="Leda",nik="וָואוּ!",plain="וואו!",
+  style=LIA+" A short delighted high gasp: 'wow!'"),
+ dict(id="k1b",ch="pigeon",voice="Algieba",nik="חוּץ מִגֶּשֶׁם.",plain="חוץ מגשם.",
+  style=KAL+" Said casually and innocently, as if it is a tiny detail nobody cares about."),
+ dict(id="y1",ch="yossi",voice="Zubenelgenubi",nik="וּמָה עִם הָאַרְנוֹנָה?",plain="ומה עם הארנונה?",
+  style=YOS+" Suspicious raised-eyebrow question, enunciate every syllable including the last one."),
+ dict(id="k2",ch="pigeon",voice="Algieba",nik="אֵין אַרְנוֹנָה.",plain="אין ארנונה.",
+  style=KAL+" Casual, extra friendly, as if it is a minor detail. Enunciate every syllable."),
+ dict(id="l2",ch="liat",voice="Leda",nik="אֵין?",plain="אין?",
+  style=LIA+" Puzzled but still smiling, sweet."),
+ dict(id="k3",ch="pigeon",voice="Algieba",nik="הַמּוֹעָצָה לֹא אוֹסֶפֶת כָּאן כְּלוּם.",plain="המועצה לא אוספת כאן כלום.",
+  style=KAL+" Cheerful, as if it were a perk. VERY fast, 4 words per second, finish the last word 'כְּלוּם' fully."),
+ dict(id="k4",ch="pigeon",voice="Algieba",
+  nik="אָז תּוֹשָׁבִים בִּקְצָרָה, קַרְטוֹנִים לַקַּרְטוֹנִיָּה, גֶּזֶם לְפִנַּת הַגֶּזֶם, שַׂקִּיּוֹת לְתוֹךְ הַפַּח.",
+  plain="אז תושבים בקצרה, קרטונים לקרטוניה, גזם לפינת הגזם, שקיות לתוך הפח.",
+  style=KAL+" He has dropped the sales act: tired, honest, sincere, a small weary sigh before starting, still with the squeaky nasal edge. Brisk, with short pauses between the three items and slight emphasis on each."),
+ dict(id="y2",ch="yossi",voice="Zubenelgenubi",nik="אוּף, זֶה הַבַּיִת שֶׁלָּנוּ.",plain="אוף, זה הבית שלנו.",
+  style=YOS+" A short whiny comical 'oof' groan (under half a second) then the rest FAST, 3.5 words per second, exasperated but not angry at anyone, like a sulky kid sighing at the sky."),
+ dict(id="l3",ch="liat",voice="Leda",nik="וַאֲנִי כְּבָר קָנִיתִי וִילוֹנוֹת.",plain="ואני כבר קניתי וילונות.",
+  style=LIA+" Soft, small and gently disappointed, a little pout, no crying, FAST pace about 3.5 words per second, quick sad trail-off."),
+ dict(id="n1",ch="narrator",voice="Schedar",
+  nik="וְשִׁלְחוּ יֶלֶד בַּגִּיל הַמַּתְאִים לִזְרוֹק אֶת הַפַּח, מִחוּץ לַפַּח לֹא נֶאֱסָף.",
+  plain="ושלחו ילד בגיל המתאים לזרוק את הפח, מחוץ לפח לא נאסף.",
+  style=NAR+" Slow down slightly on the last words 'לֹא נֶאֱסָף'."),
+ dict(id="c1",ch="cat",voice="Puck",
+  nik="וְשִׁלְחוּ יֶלֶד בַּגִּיל הַמַּתְאִים לִזְרוֹק אֶת הַפַּח, מִחוּץ לַפַּח לֹא נֶאֱסָף.",
+  plain="ושלחו ילד בגיל המתאים לזרוק את הפח. מחוץ לפח, לא נאסף.",
+  style=BASE+"Character: a smug, lazy ginger street cat who thinks he owns the bin, a self-satisfied landlord. Slightly nasal, squeaky and sarcastic with a slight lazy drawl but fast, amused superior tone, a smirk in the voice. FAST brisk pace, about 3.5 words per second, no long pauses; only the last words 'לֹא נֶאֱסָף' slightly slower and deadpan."),
+ dict(id="y2a",ch="yossi",voice="Zubenelgenubi",nik="זֶה הַבַּיִת שֶׁלָּנוּ!",plain="זה הבית שלנו!",
+  style=YOS+" A whiny, comical complaint, exasperated but gentle and kid-friendly, not angry at anyone, slightly rising and cracking on the last word."),
+ dict(id="y2b",ch="yossi",voice="Zubenelgenubi",nik="אוּף...",plain="אוף",
+  style=YOS+" A single long comical exasperated groan 'ooooof', lasting about one and a half seconds, like a sulky kid sighing at the sky. Not angry."),
+]
