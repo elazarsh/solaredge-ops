@@ -1,0 +1,11 @@
+Flat 2D vector TV-comedy cartoon, thin dark outlines, flat colors, big expressive eyes. Start frame: first image. End frame: second image. Duration 6 seconds, one continuous shot, static camera with only a very slow gentle push-in.
+
+Only the characters move. Nothing new appears on the screen: no icons, no arrows, no floating objects, no text. Gentle, kid-friendly mood: nobody is angry at anyone, nobody cries, nobody shouts.
+
+Character movement:
+0.0-1.0s: The pigeon lowers his raised wing and gives one slow tired blink. The two mice's faces fall as the message sinks in.
+1.0-2.8s: The male mouse slumps, lifts his chin, tilts his head back and closes his eyes, letting out a long, whiny, comical "ugh" sigh with his mouth open, like a sulky kid complaining to the sky.
+2.8-4.2s: The female mouse slowly lowers her eyes to the ground, her face turning into a small sad pout, and she hugs a small bundle of colorful curtain fabric to her chest. She does not cry.
+4.2-6.0s: The pigeon turns his head sideways, lifts his wrist and glances at his wristwatch with a slightly awkward look, as if he has another appointment, the briefcase still in his other wing. All three hold their final poses as in the end frame, with only slow breathing and a slow blink.
+
+Keep the character designs, colors and the background exactly the same. Smooth limited cartoon animation, no morphing, no style change, no new characters. No text, no subtitles, no captions, no logos, no watermark.
