@@ -19,6 +19,8 @@ dist/
 # video-studio build output
 video-studio/**/node_modules/
 video-studio/**/out/
+video-studio/**/.*.hf-transaction-*/
+video-studio/**/work-*/
 video-studio/**/.hyperframes/
 video-studio/**/snapshots/
 # ep1 vlog: regenerated intermediates (gen/composite.py, ui render, gen/foley.py)
