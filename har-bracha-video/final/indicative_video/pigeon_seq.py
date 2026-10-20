@@ -28,9 +28,9 @@ for (s,e) in scenes:
 SC=0.64
 X0=min(b[0] for b in bb[A-1:B]); X1=max(b[2] for b in bb[A-1:B]); Y0=min(b[1] for b in bb[A-1:B]); Y1=max(b[3] for b in bb[A-1:B])
 print('bbox',X0,Y0,X1,Y1)
-out=S+'pig/seq'; shutil.rmtree(out,ignore_errors=True); os.makedirs(out)
+out=S+'pig/seqR'; shutil.rmtree(out,ignore_errors=True); os.makedirs(out)
 # place: feet bottom at y=1048, left edge at x=30
-w=int((X1-X0)*SC); h=int((Y1-Y0)*SC); left=30; top=1048-h
+w=int((X1-X0)*SC); h=int((Y1-Y0)*SC); left=1920-40-w; top=1048-h
 print('size',w,h,'top',top)
 k=0
 for (s,e,p) in plan:
