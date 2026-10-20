@@ -9,12 +9,12 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 TOOLS=../../../tools
-# music: bgm-vlog.wav = assets/bgm/gen/melo-c.wav trimmed at its first downbeat (0.807s), matched to -17 LUFS, ducked to 0.6 until the lockup (33.6s)
+# music: bgm-vlog.wav = assets/bgm/gen/hh-c.wav (energetic ukulele pop + light hip-hop drums) trimmed at its first downbeat (1.515s), matched to -17 LUFS, no ducking
 (cd ui && npx --yes hyperframes@0.8.96 render -o ../ui.mp4 -f 30 -q high -w 2 --quiet)
 python3 gen/foley.py
 python3 gen/composite.py edl.json ui.mp4 assets/footage.mp4
 npx --yes hyperframes@0.8.96 render -o out/ep1-vlog-v9-raw.mp4 -f 30 -q high -w 2 --quiet
 bash $TOOLS/loudnorm.sh out/ep1-vlog-v9-raw.mp4 out/ep1-vlog-v9-norm.mp4
 # delivery size (the raw render is ~180 MB because of the film grain)
-ffmpeg -v error -y -i out/ep1-vlog-v9-norm.mp4 -c:v libx264 -crf 21 -preset slow -pix_fmt yuv420p -movflags +faststart -c:a copy out/ep1-vlog-v9.7.mp4
-bash $TOOLS/ad-qa.sh out/ep1-vlog-v9.7.mp4
+ffmpeg -v error -y -i out/ep1-vlog-v9-norm.mp4 -c:v libx264 -crf 21 -preset slow -pix_fmt yuv420p -movflags +faststart -c:a copy out/ep1-vlog-v10.mp4
+bash $TOOLS/ad-qa.sh out/ep1-vlog-v10.mp4

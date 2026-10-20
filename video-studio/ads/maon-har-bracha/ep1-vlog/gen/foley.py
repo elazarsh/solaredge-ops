@@ -50,7 +50,7 @@ for at, ch in ev:
 for at in (0.15, T["n2"], T["n3"]): add(buzz(), at - 0.05, 0.22)
 for at in (T["open"], T["sel"], T["back"], T["tapB"], T["fwd"], T["pick"], T["fsend"]): add(click(0.3), at, 0.12)
 pop, ping = load("../ep1-forwarded/assets/sfx/pop.mp3"), load("../ep1-forwarded/assets/sfx/notification.mp3")
-add(pop, T["send"], 0.35); add(pop, T["fwIn"], 0.3); add(ping, T["oops"], 0.3)
+add(pop, T["send"], 0.35); add(pop, T["fwIn"], 0.3); add(ping, T["oops"], 0.3); add(ping, T["yalla"], 0.3)
 
 # room tone: soft brown noise + a far bird, never silent
 w = np.cumsum(rng.normal(0, 1, len(out))); w -= np.convolve(w, np.ones(4800) / 4800, "same"); w /= np.abs(w).max()
