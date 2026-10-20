@@ -129,8 +129,10 @@
       .notif .ic { width: 120px; height: 120px; border-radius: 30px; background: var(--wa); flex: none; display: flex; align-items: center; justify-content: center; font-size: 64px; }
       .notif b { display: block; font-size: 52px; }
       .notif span { display: block; font-size: 46px; color: var(--sub); white-space: nowrap; }
-      #n1 { height: 360px; }
+      #n1 { height: 360px; } #n2 { height: 360px; }
       .notif span.two { line-height: 1.3; color: #3B4A54; }
+      .notif > div:nth-child(2) { flex: 1; min-width: 0; }
+      .notif span { overflow: hidden; text-overflow: ellipsis; }
       .notif .cnt { margin-inline-start: auto; background: #25D366; color: #fff; font-weight: 800; font-size: 50px; border-radius: 40px; padding: 4px 26px; direction: ltr; }
       .h { opacity: 0; }
           #mNew .t.wrap { white-space: normal; }
@@ -163,15 +165,15 @@
               <div class="sel" id="m1sel"></div>
               <div class="who" style="color:#E65100">רחלי</div>
               <div class="quote"><div class="qn" style="color:#2E7D32">נועה</div><div class="qt">ומתלבטת אם כדאי לעבוד במעונות…</div></div>
-              <div class="t" style="font-weight:600; font-size:60px; white-space:nowrap">נועה, האמת? לא ממליצה 😬</div>
-              <div class="t" style="white-space:nowrap">שמעתי שהתנאים שם לא משהו</div>
-              <div class="t" style="white-space:nowrap">בגלל השכר, כנראה לא כדאי</div>
+              <div class="t" style="font-weight:600; font-size:60px; white-space:nowrap">נועה, האמת? הצוות שם פצצה 💣</div>
+              <div class="t" style="white-space:nowrap">אבל שמעתי שהתנאים לא משהו</div>
+              <div class="t" style="white-space:nowrap">בגלל השכר, כנראה לא כדאי 😬</div>
               <div class="meta">08:14</div>
               <div class="rx">😬😱 <b>87</b></div>
             </div></div>
             <!-- my reply (sent) -->
             <div class="row out h" id="rMe" style="top:2350px"><div class="b" style="max-width:960px">
-              <div class="quote"><div class="qn">רחלי</div><div class="qt">נועה, האמת? לא ממליצה 😬</div></div>
+              <div class="quote"><div class="qn">רחלי</div><div class="qt">נועה, האמת? הצוות שם פצצה 💣</div></div>
               <div class="t">רחלי, נראה לי שאת טועה 🙂</div>
               <div class="t">אני כמעט בטוחה ששלחו על זה הודעה בקבוצת העדכונים</div>
               <div class="meta">08:16 <span class="tick">✓✓</span></div>
@@ -190,7 +192,7 @@
           </div>
 
           <div class="bottom" id="bottom" data-layout-allow-overlap>
-            <div class="inrow"><div class="mic" id="mic">🎤</div><div class="icol"><div class="replybar" id="replybar"><div class="quote"><div class="qn">רחלי</div><div class="qt">נועה, האמת? לא ממליצה 😬</div></div></div><div class="ifield" id="ifield">הודעה</div></div></div>
+            <div class="inrow"><div class="mic" id="mic">🎤</div><div class="icol"><div class="replybar" id="replybar"><div class="quote"><div class="qn">רחלי</div><div class="qt">נועה, האמת? הצוות שם פצצה 💣</div></div></div><div class="ifield" id="ifield">הודעה</div></div></div>
           </div>
           <div id="kb" data-layout-allow-overlap>
             <div class="sugg"><span id="s1">נראה</span><span id="s2">אני</span><span id="s3">בטוחה</span></div>
@@ -266,7 +268,7 @@
           <div class="clock"><span class="ltr">9:41</span></div>
           <div class="date">יום שלישי, 30 בספטמבר</div>
           <div class="notif" id="n1"><div class="ic">💬</div><div><b>נשות הברכה</b><span class="two">נועה: אני חדשה בישוב 👋<br>ומתלבטת אם כדאי לעבוד<br>במעונות של הר ברכה? 🤔</span></div><div class="cnt">47</div></div>
-          <div class="notif h" id="n2"><div class="ic">💬</div><div><b>נשות הברכה</b><span>רחלי: נועה, האמת? לא ממליצה 😬</span></div><div class="cnt">412</div></div>
+          <div class="notif h" id="n2"><div class="ic">💬</div><div><b>נשות הברכה</b><span class="two">רחלי: נועה, האמת? הצוות<br>שם פצצה 💣 אבל שמעתי<br>שהתנאים לא משהו…</span></div><div class="cnt">412</div></div>
           <div class="notif h" id="n3"><div class="ic">💬</div><div><b>נשות הברכה</b><span>שירה: גם אני רציתי לשאול 👀</span></div><div class="cnt">999+</div></div>
         </div>
       </div>
@@ -275,7 +277,7 @@
     <script>
       // ---- the edit (final-video seconds); keep in sync with ../edl.json ----
       const T = window.T = {
-        n2: 1.9, n3: 2.75, open: 3.3,             // lock screen on the table, tap → chat
+        n2: 1.6, n3: 3.0, open: 3.3,             // lock screen on the table, tap → chat
         sel: 9.2, reply: 9.5,                     // long-press the rumor → reply
         type0: 10.15, del0: 12.6, delStep: 0.05,  // typing; ⌫ press-and-hold while the right thumb covers ⌫ in clips/type3a (2.6–2.95 s)
         send: 17.45,
