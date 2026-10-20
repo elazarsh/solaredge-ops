@@ -1,0 +1,186 @@
+<!doctype html><meta charset="utf-8">
+<style>
+@font-face{font-family:RK;src:url(../tech/fonts/Rubik800.ttf);font-weight:800}
+@font-face{font-family:RM;src:url(../tech/fonts/Rubik500.ttf);font-weight:500}
+@font-face{font-family:HB;src:url(../edit/fonts/Heebo-Bold.ttf);font-weight:700}
+@font-face{font-family:DS;src:url(../edit/fonts/DoodleShadow.ttf)}
+*{box-sizing:border-box}
+html,body{margin:0;background:#f6f7f0;overflow:hidden;width:1920px;height:1080px;direction:rtl;font-family:RK,HB,sans-serif}
+.abs{position:absolute}
+.scene{position:absolute;inset:0;overflow:hidden}
+.bgshape{position:absolute;inset:0;background:radial-gradient(1200px 700px at 80% 10%,#ffffff 0,#f6f7f0 60%),#f6f7f0}
+.hill{position:absolute;left:-200px;right:-200px;bottom:-110px;height:250px;border-radius:50% 50% 0 0;background:#0f9648}
+.hill2{position:absolute;left:-300px;right:-100px;bottom:-190px;height:250px;border-radius:50% 50% 0 0;background:#7dc13f}
+.hdr{position:absolute;top:0;left:0;right:0;height:120px;background:#064a21;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 48px}
+.hdr .t{font:800 40px RK,HB;letter-spacing:.5px}
+.hdr .s{font:800 40px DS;color:#ffd27a}
+.hdr img{height:92px;background:#fff;border-radius:14px;padding:4px}
+.pill{position:absolute;padding:14px 38px;border-radius:60px;font:800 70px RK,HB;color:#fff;white-space:nowrap}
+.lbl{position:absolute;text-align:center;font:800 78px RK,HB;color:#064a21;white-space:nowrap}
+.sub{position:absolute;text-align:center;font:500 46px RM,HB;color:#fff;white-space:nowrap;text-shadow:0 2px 6px rgba(0,0,0,.45)}
+svg{overflow:visible}
+.tick{position:absolute;width:130px;height:130px;border-radius:50%;background:#0f9648;display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+#root{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;direction:rtl}
+#fade{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#wipe{position:absolute;top:-10%;bottom:-10%;width:60%;background:linear-gradient(90deg,#0f9648,#7dc13f);transform:skewX(-14deg);opacity:0}
+.row{position:absolute;left:0;width:1920px;text-align:center;white-space:nowrap}
+.ch{display:inline-block;white-space:pre;transform-origin:50% 70%}
+</style>
+<div id=root>
+ <div class=scene id=s1><img class=abs src="../tech/assets/bg_wide.png" style="left:-100px;top:-100px;width:2120px;height:1280px;filter:blur(28px) brightness(.8)"><img id=bg1 class=abs src="../tech/assets/bg_wide.png" style="left:150px;top:0;width:1620px;height:1080px;transform-origin:50% 60%"><div class=abs style="inset:0;background:linear-gradient(rgba(6,50,25,.45),rgba(6,50,25,.15) 60%,rgba(6,50,25,.45))"></div>
+  <div class="abs row" id=s1a style="top:90px;font:400 230px/1 DS"></div><div class="abs row" id=s1b style="top:340px;font:400 250px/1 DS"></div>
+  <div class="abs" style="left:48px;top:40px;display:flex;gap:18px;align-items:center"><img src="../tech/assets/logo_harbracha.png" style="height:110px;background:#fff;border-radius:16px;padding:6px"></div>
+ </div>
+ <div class=scene id=s2><div class=bgshape></div><div class=hill></div><div class=hill2></div><div class=hdr><img src="../tech/assets/logo_harbracha.png"><div class=t>איך מפנים נכון?</div><div class=s>מחוץ לפח? לא נאסף!</div></div><div id=s2c></div></div>
+ <div class=scene id=s3><div class=bgshape></div><div class=hill></div><div class=hill2></div><div class=hdr><img src="../tech/assets/logo_harbracha.png"><div class=t>איך מפנים נכון?</div><div class=s>מחוץ לפח? לא נאסף!</div></div><div id=s3c></div></div>
+ <div class=scene id=s4><div class=bgshape></div><div class=hill></div><div class=hill2></div><div class=hdr><img src="../tech/assets/logo_harbracha.png"><div class=t>איך מפנים נכון?</div><div class=s>מחוץ לפח? לא נאסף!</div></div><div id=s4c></div></div>
+ <div class=scene id=sE><div class=bgshape></div><div class=hill></div><div class=hill2></div><div class=hdr><img src="../tech/assets/logo_harbracha.png"><div class=t>למה מפנים נכון?</div><div class=s>מחוץ לפח? לא נאסף!</div></div><div id=sEc></div></div>
+ <div class=scene id=s6><img class=abs src="../tech/assets/bg_wide.png" style="left:-100px;top:-100px;width:2120px;height:1280px;filter:blur(28px) brightness(.8)"><img id=bg6 class=abs src="../tech/assets/bg_wide.png" style="left:150px;top:0;width:1620px;height:1080px"><div class=abs style="inset:0;background:linear-gradient(rgba(6,50,25,.5),rgba(6,50,25,.1) 55%,rgba(6,50,25,.6))"></div>
+  <div class="abs row" id=s6a style="top:70px;font:400 200px/1 DS"></div><div class="abs row" id=s6b style="top:290px;font:400 215px/1 DS"></div>
+  <div class="abs" id=s6t style="left:140px;right:140px;bottom:70px;background:rgba(6,74,33,.92);border-radius:40px;color:#fff;text-align:center;padding:26px 30px;font:800 70px/1.2 RK,HB">מחוץ לפח – לא נאסף</div></div>
+ <div class=scene id=s7 style="background:#fff"><div class=abs id=f7a style="top:0;left:0;right:0;text-align:center;top:100px"><img src="../tech/assets/logo_harbracha.png" id=f7l style="height:520px"></div>
+  <div class=abs id=f7b style="top:660px;left:0;right:0;text-align:center"><img src="../tech/assets/logo_council.jpg" id=f7c style="height:300px"></div>
+  <div class="abs" id=f7t style="display:none"></div></div>
+ <div id=wipe></div><div id=fade></div>
+</div>
+<script>
+const E=t=>t<0?0:t>1?1:t, ease=t=>{t=E(t);return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}, out3=t=>1-Math.pow(1-E(t),3);
+const back=t=>{t=E(t);const s=1.8;t-=1;return t*t*((s+1)*t+s)+1};
+let ENV={}; // narrator envelope per second index (25fps)
+const FPS=25;
+function amp(t){const a=ENV.amp||[];const i=Math.floor(t*FPS);return Math.max(a[i]||0,(a[i+1]||0)*.6);}
+// ---------- SVG icons ----------
+const SV={
+ flatbox:(w)=>`<svg width="${w}" viewBox="0 0 420 300"><g><rect x="30" y="170" width="340" height="90" rx="6" fill="#b87a30" stroke="#6b4417" stroke-width="6"/><rect x="170" y="170" width="60" height="90" fill="#e8c27a" opacity=".85"/><rect x="50" y="100" width="340" height="90" rx="6" fill="#c68a3c" stroke="#6b4417" stroke-width="6" transform="rotate(-3 220 145)"/><rect x="190" y="100" width="60" height="90" fill="#e8c27a" opacity=".85" transform="rotate(-3 220 145)"/><rect x="40" y="36" width="340" height="90" rx="6" fill="#d19849" stroke="#6b4417" stroke-width="6" transform="rotate(2 210 80)"/><path d="M80 74h60M300 82h50" stroke="#8a5a20" stroke-width="6" stroke-linecap="round" transform="rotate(2 210 80)"/><path d="M92 220v-24M110 220v-24" stroke="#3a2410" stroke-width="7"/></g></svg>`,
+ branches:(w)=>`<svg width="${w}" viewBox="0 0 420 300"><g stroke="#6b4417" stroke-linecap="round"><path d="M40 250 L380 70" stroke-width="16"/><path d="M60 260 L360 140" stroke-width="14"/><path d="M80 230 L400 200" stroke-width="12"/><path d="M180 190 L230 90" stroke-width="9"/><path d="M290 120 L330 40" stroke-width="9"/></g><g fill="#4fa83d" stroke="#2a6a22" stroke-width="3"><ellipse cx="230" cy="86" rx="34" ry="18" transform="rotate(-50 230 86)"/><ellipse cx="335" cy="40" rx="34" ry="18" transform="rotate(-40 335 40)"/><ellipse cx="370" cy="150" rx="36" ry="18" transform="rotate(20 370 150)"/><ellipse cx="120" cy="190" rx="34" ry="18" transform="rotate(-20 120 190)"/><ellipse cx="300" cy="100" rx="30" ry="16" transform="rotate(30 300 100)"/><ellipse cx="410" cy="195" rx="30" ry="16"/></g></svg>`,
+ bag:(w)=>`<svg width="${w}" viewBox="0 0 300 340"><path d="M150 40 C120 20 100 40 112 70 C60 100 20 170 30 250 C40 320 260 320 270 250 C280 170 240 100 188 70 C200 40 180 20 150 40Z" fill="#26292b" stroke="#0e0f10" stroke-width="7"/><path d="M118 74h64" stroke="#555a5e" stroke-width="9" stroke-linecap="round"/><path d="M90 150 C80 200 90 250 110 280" fill="none" stroke="#5b6165" stroke-width="10" stroke-linecap="round" opacity=".7"/></svg>`,
+ bin:(w,body,lid,open,sym)=>`<svg width="${w}" viewBox="0 0 360 480"><g transform="${open?'rotate(-28 70 110)':''}"><rect x="40" y="70" width="280" height="46" rx="14" fill="${lid}" stroke="#0a2a14" stroke-width="7"/></g><path d="M62 118 L298 118 L276 440 L84 440Z" fill="${body}" stroke="#0a2a14" stroke-width="7"/><circle cx="296" cy="440" r="34" fill="#202426" stroke="#0a0c0d" stroke-width="6"/><circle cx="296" cy="440" r="14" fill="#8a9296"/>${sym||''}</svg>`,
+ pen:(w)=>`<svg width="${w}" viewBox="0 0 440 340"><path d="M30 300 C60 130 380 130 410 300Z" fill="#4fa83d" stroke="#2a6a22" stroke-width="7"/><g fill="#7dc13f" stroke="#2a6a22" stroke-width="3"><ellipse cx="140" cy="210" rx="40" ry="18" transform="rotate(-25 140 210)"/><ellipse cx="260" cy="190" rx="44" ry="18" transform="rotate(20 260 190)"/><ellipse cx="330" cy="250" rx="40" ry="18" transform="rotate(-15 330 250)"/><ellipse cx="190" cy="260" rx="40" ry="16"/></g><g stroke="#6b4417" stroke-width="12" stroke-linecap="round"><path d="M20 120V320M110 100V320M200 94V320M290 94V320M380 100V320M420 120V320"/></g><path d="M16 160H424M16 230H424" stroke="#8a5a20" stroke-width="14" stroke-linecap="round"/></svg>`,
+ check:(s)=>`<svg width="${s}" viewBox="0 0 100 100"><path d="M24 54 L43 74 L78 30" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ foldsym:()=>`<g transform="translate(120 230)"><rect x="0" y="0" width="120" height="80" rx="6" fill="#e8c27a" stroke="#6b4417" stroke-width="6"/><path d="M60 0V80" stroke="#6b4417" stroke-width="5"/><path d="M-20 30 L20 -10" stroke="#fff" stroke-width="10" stroke-linecap="round"/></g>`,
+};
+function el(parent,html,css){const d=document.createElement('div');d.className='abs';d.style.cssText=css||'';d.innerHTML=html;parent.appendChild(d);return d;}
+// ------------- slogan letters -------------
+function mkRow(id,txt){const r=document.getElementById(id);r.innerHTML='';const arr=[];for(const c of txt){const s=document.createElement('span');s.className='ch';s.textContent=(c==' '?'  ':c);r.appendChild(s);arr.push(s);}return arr;}
+function sloganStyle(rowsA,rowsB,col1,col2,stroke){}
+// back layers for dark backing
+function dupRow(id,bk){const r=document.getElementById(id);const c=r.cloneNode(false);c.id=id+'_b';c.style.color=bk;c.style.webkitTextStroke='46px '+bk;c.style.filter='blur(1.2px)';r.parentNode.insertBefore(c,r);return c;}
+const A1=[],B1=[];
+(function(){
+ const a=document.getElementById('s1a'),b=document.getElementById('s1b');
+ a.style.color='#fff3c4'; b.style.color='#ffb41f'; a.style.filter='drop-shadow(0 0 14px rgba(255,255,200,.55))'; b.style.filter='drop-shadow(0 0 16px rgba(255,170,40,.6))';
+ const ab=dupRow('s1a','rgba(10,60,30,.9)'), bb=dupRow('s1b','rgba(88,12,52,.92)');
+ [['s1a_b','מחוץ לפח?',A1],['s1a','מחוץ לפח?',A1],['s1b_b','לא נאסף!',B1],['s1b','לא נאסף!',B1]].forEach(([id,t,arr])=>{mkRow(id,t).forEach(x=>arr.push(x));});
+ const a6=document.getElementById('s6a'),b6=document.getElementById('s6b'); a6.style.color='#fff3c4'; b6.style.color='#ffb41f';
+ dupRow('s6a','rgba(10,60,30,.9)'); dupRow('s6b','rgba(88,12,52,.92)');
+ [['s6a_b','מחוץ לפח?'],['s6a','מחוץ לפח?'],['s6b_b','לא נאסף!'],['s6b','לא נאסף!']].forEach(([id,t])=>mkRow(id,t));
+})();
+function popRow(spans,t,t0,n,rot){spans.forEach((c,ii)=>{const i=ii%n;const p=back((t-t0-i*0.05)/0.38);c.style.opacity=E((t-t0-i*0.05)/0.08);c.style.transform=`translateY(${(1-p)*-130+Math.sin(t*3+i)*3}px) scale(${0.3+0.7*p}) rotate(${(i%2?1:-1)*rot*(1-p)}deg)`;});}
+function popRowUp(spans,t,t0,n){spans.forEach((c,ii)=>{const i=ii%n;const p=back((t-t0-i*0.05)/0.35);c.style.opacity=E((t-t0-i*0.05)/0.08);c.style.transform=`translateY(${(1-p)*140+Math.sin(t*3.4+i)*4}px) scale(${2.2-1.2*p}) rotate(${(i%2?1:-1)*8*(1-p)}deg)`;});}
+// ------------ scene builders ------------
+const SC={};
+function buildFlow(id,cfg){
+ const c=document.getElementById(id); c.innerHTML='';
+ const o={};
+ // presenter (pigeon)
+ o.pig=el(c,`<img src="../tech/assets/pigeon_open.png" style="height:760px;position:absolute;left:0;top:0"><img src="../tech/assets/pigeon_base.png" style="height:760px;position:absolute;left:0;top:0">`,'left:30px;top:290px;width:420px;height:760px;transform-origin:50% 100%');
+ o.pigO=o.pig.children[0]; o.pigC=o.pig.children[1];
+ o.pill=el(c,cfg.pill,`right:520px;top:170px;`);
+ o.item=el(c,cfg.item,`right:150px;top:250px;transform-origin:50% 50%`);
+ o.itemL=el(c,`<div class=lbl style="position:static">${cfg.itemLbl}</div>`,`right:150px;top:650px;width:600px;text-align:center`);
+ o.dest=el(c,cfg.dest,`left:640px;top:200px;transform-origin:50% 100%`);
+ o.destL=el(c,`<div class=lbl style="position:static;color:${cfg.col}">${cfg.destLbl}</div>`,`left:540px;top:735px;width:640px;text-align:center`);
+ o.arrow=el(c,`<svg width="520" height="160" viewBox="0 0 520 160"><path id="${id}p" d="M500 80 H70" fill="none" stroke="${cfg.col}" stroke-width="26" stroke-linecap="round" stroke-dasharray="460" stroke-dashoffset="460"/><path d="M130 22 L50 80 L130 138" fill="none" stroke="${cfg.col}" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" opacity="0"/></svg>`,'left:1010px;top:420px;');
+ o.tick=el(c,`<div class=tick style="background:${cfg.col}">${SV.check(90)}</div>`,'left:990px;top:190px;opacity:0;transform:scale(0)');
+ o.tip=el(c,`<div class=sub style="position:static">${cfg.tip}</div>`,'left:480px;right:480px;top:945px;color:#fff');
+ SC[id]=o; o.cfg=cfg;
+}
+function flowAnim(id,t,len){ // t local seconds
+ const o=SC[id],cfg=o.cfg;
+ const a=amp(CFG.flow[id].start+t); t=t*1.3;
+ o.pigO.style.opacity=a>0.25?1:0; o.pigC.style.opacity=a>0.25?0:1;
+ o.pig.style.transform=`translateY(${Math.sin(t*3)*5}px) rotate(${Math.sin(t*1.7)*1.2}deg) scale(${1+0.01*a})`;
+ const pi=back((t-0.0)/0.5); o.pill.style.transform=`scale(${pi})`; o.pill.style.opacity=E(t/0.2);
+ const ii=back((t-0.3)/0.6); o.item.style.opacity=E((t-0.3)/0.15)*(t<cfg.fly+0.5?1:0); o.itemL.style.opacity=E((t-0.6)/0.3);
+ const dd=back((t-0.5)/0.6); o.dest.style.opacity=E((t-0.5)/0.15); o.destL.style.opacity=E((t-1.0)/0.3);
+ o.dest.style.transform=`scale(${0.5+0.5*dd})`;
+ const ap=E((t-1.2)/0.7); const path=document.getElementById(id+'p'); path.style.strokeDashoffset=460*(1-ap); path.nextElementSibling.setAttribute('opacity',ap>0.9?1:0);
+ o.arrow.style.opacity=ap>0?1:0;
+ // item flight
+ const f=E((t-cfg.fly)/0.7), fe=ease(f);
+ const dx=-(parseFloat(getComputedStyle(o.item).right)-0) ; 
+ o.item.style.transform=`translate(${-fe*cfg.dx}px,${-Math.sin(fe*Math.PI)*160+fe*cfg.dy}px) scale(${(0.5+0.5*ii)*(1-0.55*fe)}) rotate(${fe*-12}deg)`;
+ // bin wobble when item lands
+ const w=E((t-cfg.fly-0.55)/0.4); o.dest.style.transform=`scale(${0.5+0.5*dd}) rotate(${Math.sin(w*20)*4*(1-w)*(f>=1?1:0)}deg)`;
+ const tk=back((t-cfg.fly-0.8)/0.4); o.tick.style.opacity=t>cfg.fly+0.8?1:0; o.tick.style.transform=`scale(${tk})`;
+ o.tip.style.opacity=E((t-1.4)/0.4);
+}
+function initScenes(){
+ buildFlow('s2c',{col:'#1075bd',pill:`<div class=pill style="background:#1075bd">קרטונים</div>`,item:SV.flatbox(520),itemLbl:'קרטונים מקופלים',dest:SV.bin(380,'#1075bd','#0c5a94',false,SV.foldsym()),destLbl:'קרטוניה',tip:'שטוחים ומקופלים – כדי שיכנסו',fly:2.4,dx:1050,dy:60,tNarr:4.2});
+ buildFlow('s3c',{col:'#4fa83d',pill:`<div class=pill style="background:#4fa83d">גזם וענפים</div>`,item:SV.branches(520),itemLbl:'גזם וענפים',dest:SV.pen(520),destLbl:'פינת הגזם',tip:'גזם לפינת הגזם – לא לשים ליד הפח',fly:2.4,dx:1050,dy:120,tNarr:10});
+ buildFlow('s4c',{col:'#0f9648',pill:`<div class=pill style="background:#0f9648">שקיות זבל</div>`,item:SV.bag(360),itemLbl:'שקית סגורה',dest:SV.bin(380,'#2f7d32','#1f5a24',true,''),destLbl:'בתוך הפח',tip:'סוגרים היטב ומניחים בפנים',fly:2.4,dx:1000,dy:-10,tNarr:14.9});
+}
+initScenes();
+// ---- explain scene ----
+(function(){
+ const c=document.getElementById('sEc'); const o={};
+ o.pig=el(c,`<img src="../tech/assets/pigeon_open.png" style="height:760px;position:absolute;left:0;top:0"><img src="../tech/assets/pigeon_base.png" style="height:760px;position:absolute;left:0;top:0">`,'left:30px;top:290px;width:420px;height:760px;transform-origin:50% 100%');
+ o.pigO=o.pig.children[0]; o.pigC=o.pig.children[1];
+ o.bin=el(c,SV.bin(380,'#2f7d32','#1f5a24',false,''),'left:1380px;top:200px;transform-origin:70% 100%');
+ o.box=el(c,SV.flatbox(300),'left:540px;top:560px'); o.br=el(c,SV.branches(300),'left:850px;top:560px'); o.bag=el(c,SV.bag(160),'left:1160px;top:595px');
+ const xm=()=>`<div style="width:110px;height:110px;border-radius:50%;background:#d63a2f;display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.3)"><svg width="70" height="70" viewBox="0 0 100 100"><path d="M24 24 L76 76 M76 24 L24 76" stroke="#fff" stroke-width="16" stroke-linecap="round"/></svg></div>`;
+ o.x1=el(c,xm(),'left:640px;top:470px;opacity:0'); o.x2=el(c,xm(),'left:950px;top:470px;opacity:0'); o.x3=el(c,xm(),'left:1185px;top:480px;opacity:0');
+ o.truck=el(c,`<svg width="560" height="300" viewBox="0 0 560 300"><rect x="30" y="60" width="330" height="150" rx="18" fill="#0f9648" stroke="#064a21" stroke-width="7"/><rect x="60" y="85" width="270" height="22" rx="8" fill="#7dc13f"/><path d="M360 100 H470 Q510 100 520 140 L530 210 H360Z" fill="#1075bd" stroke="#0a4570" stroke-width="7"/><path d="M385 115 H465 Q492 115 500 145 H385Z" fill="#cfe8fb"/><rect x="20" y="205" width="515" height="22" rx="8" fill="#26292b"/><circle cx="120" cy="235" r="46" fill="#202426" stroke="#0a0c0d" stroke-width="7"/><circle cx="120" cy="235" r="18" fill="#8a9296"/><circle cx="440" cy="235" r="46" fill="#202426" stroke="#0a0c0d" stroke-width="7"/><circle cx="440" cy="235" r="18" fill="#8a9296"/><circle cx="520" cy="190" r="12" fill="#f28a1f"/><path d="M5 120 L30 120 L30 200 L5 200Z" fill="#064a21"/></svg>`,'left:2100px;top:790px');
+ o.pin=el(c,`<div class=pill style="background:#0f9648;position:static;font-size:60px">בפנים – נאסף</div>`,'left:1180px;top:130px;opacity:0');
+ o.pout=el(c,`<div class=pill style="background:#d63a2f;position:static;font-size:60px">מסביב – נשאר</div>`,'left:640px;top:330px;opacity:0');
+ o.tick=el(c,`<div class=tick>${SV.check(90)}</div>`,'left:1510px;top:380px;opacity:0;transform:scale(0)');
+ SC.sE=o;
+})();
+function sE(t){const o=SC.sE; // t local (s)
+ const a=amp(CFG.explainStart+t); o.pigO.style.opacity=a>0.25?1:0; o.pigC.style.opacity=a>0.25?0:1;
+ o.pig.style.transform=`translateY(${Math.sin(t*3)*5}px) rotate(${Math.sin(t*1.7)*1.2}deg)`;
+ const e=CFG.explain; // {in:[t0,t1],tilt:[..],xs:[..]}
+ // items appear
+ const ap=(x,t0)=>E((t-t0)/0.35); o.box.style.opacity=ap(0,0.2);o.br.style.opacity=ap(0,0.3);o.bag.style.opacity=ap(0,0.4);o.bin.style.opacity=ap(0,0.1);
+ [o.box,o.br,o.bag].forEach((x,i)=>x.style.transform=`translateY(${(1-back((t-0.2-i*0.1)/0.5))*-80}px)`);
+ // truck drive in/out
+ const tin=ease((t-e.in)/1.0), tout=ease((t-e.out)/1.2);
+ const x=2100-(2100-1180)*tin-(1180+700)*tout; o.truck.style.left=x+'px'; o.truck.style.transform=`translateY(${Math.sin(t*14)*2}px)`;
+ // bin tilt when truck arrives
+ const tl=E((t-e.tilt)/0.5)-E((t-e.tilt-0.9)/0.5); o.bin.style.transform=`rotate(${tl*-32}deg)`;
+ o.pin.style.opacity=E((t-e.tilt-0.3)/0.2); o.pin.style.transform=`scale(${back((t-e.tilt-0.3)/0.4)})`;
+ o.tick.style.opacity=t>e.tilt+0.9?1:0; o.tick.style.transform=`scale(${back((t-e.tilt-0.9)/0.4)})`;
+ [o.x1,o.x2,o.x3].forEach((xx,i)=>{const k=back((t-e.xs-i*0.25)/0.35);xx.style.opacity=t>e.xs+i*0.25?1:0;xx.style.transform=`scale(${k})`;});
+ o.pout.style.opacity=E((t-e.xs)/0.2); o.pout.style.transform=`scale(${back((t-e.xs)/0.4)})`;
+}
+let CFG={scn:[],flow:{},explainStart:3.2,explain:{in:0.5,tilt:1.6,out:2.9,xs:3.4}};
+// ---------------- master ----------------
+function R(t){
+ const SCN=CFG.scn;
+ for(const [id,a,b] of SCN){document.getElementById(id).style.display=(t>=a&&t<b+0.02)?'block':'none';}
+ document.getElementById('s7').style.display='none';
+ let wp=0;for(const [,a,b] of SCN){if(a>0){const d=t-a;if(d>-0.15&&d<0.35)wp=1;}}
+ const wipe=document.getElementById('wipe'); wipe.style.opacity=wp;
+ for(const [,a,b] of SCN){if(a>0){const d=(t-a+0.15)/0.5;if(d>0&&d<1)wipe.style.left=(100-d*220)+'%';}}
+ popRow(A1,t,0.25,9,6); popRowUp(B1,t,0.85,8);
+ document.getElementById('bg1').style.transform=`scale(${1+0.05*E(t/3.2)})`;
+ for(const k in CFG.flow){const tt=t-CFG.flow[k].start; if(tt>=-0.05&&tt<CFG.flow[k].len) flowAnim(k,Math.max(tt,0));}
+ const es=CFG.explainStart; if(t>=es&&t<es+7.5) sE(t-es);
+ const r=CFG.recap; if(r&&t>=r){const u=t-r;
+   const a6=[...document.getElementById('s6a_b').children,...document.getElementById('s6a').children],b6=[...document.getElementById('s6b_b').children,...document.getElementById('s6b').children];
+   popRow(a6,u,0.05,9,6); popRowUp(b6,u,0.5,8);
+   const tb=document.getElementById('s6t'); tb.style.transform=`translateY(${(1-back((u-0.9)/0.4))*200}px)`; tb.style.opacity=E((u-0.9)/0.2);
+   document.getElementById('bg6').style.transform=`scale(${1.05-0.05*E(u/3)})`;}
+}
+function F(t){ // final card
+ for(const id of ['s1','sE','s2','s3','s4','s6']) document.getElementById(id).style.display='none';
+ document.getElementById('s7').style.display='block'; document.getElementById('wipe').style.opacity=0;
+ const l=back(t/0.5),c=back((t-0.5)/0.5),tt=0;
+ document.getElementById('f7l').style.transform=`scale(${l})`;document.getElementById('f7l').style.opacity=E(t/0.2);
+ document.getElementById('f7c').style.transform=`scale(${c})`;document.getElementById('f7c').style.opacity=E((t-0.5)/0.2);
+ document.getElementById('f7t').style.opacity=tt;
+}
+function P(t){ // poster: scene 1 with council logo
+ R(t); const e=document.getElementById('s1'); if(!document.getElementById('pc')){const d=document.createElement('div');d.id='pc';d.className='abs';d.style.cssText='right:36px;bottom:30px;background:#fff;border-radius:22px;padding:14px 22px;box-shadow:0 8px 24px rgba(0,0,0,.35)';d.innerHTML='<img src="../tech/assets/logo_council.jpg" style="height:190px">';e.appendChild(d);} }
+window.READY=false; document.fonts.ready.then(()=>{window.READY=true;});
+</script>
