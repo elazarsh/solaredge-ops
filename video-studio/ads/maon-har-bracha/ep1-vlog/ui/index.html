@@ -129,6 +129,8 @@
       .notif .ic { width: 120px; height: 120px; border-radius: 30px; background: var(--wa); flex: none; display: flex; align-items: center; justify-content: center; font-size: 64px; }
       .notif b { display: block; font-size: 52px; }
       .notif span { display: block; font-size: 46px; color: var(--sub); white-space: nowrap; }
+      #n1 { height: 360px; }
+      .notif span.two { line-height: 1.3; color: #3B4A54; }
       .notif .cnt { margin-inline-start: auto; background: #25D366; color: #fff; font-weight: 800; font-size: 50px; border-radius: 40px; padding: 4px 26px; direction: ltr; }
       .h { opacity: 0; }
           #mNew .t.wrap { white-space: normal; }
@@ -262,7 +264,7 @@
         <div class="pane" id="lock" data-layout-allow-overlap>
           <div class="clock"><span class="ltr">9:41</span></div>
           <div class="date">יום שלישי, 30 בספטמבר</div>
-          <div class="notif" id="n1"><div class="ic">💬</div><div><b>נשות הברכה</b><span>נועה: אני חדשה בישוב ומתלבטת…</span></div><div class="cnt">47</div></div>
+          <div class="notif" id="n1"><div class="ic">💬</div><div><b>נשות הברכה</b><span class="two">נועה: אני חדשה בישוב 👋<br>ומתלבטת אם כדאי לעבוד<br>במעונות של הר ברכה? 🤔</span></div><div class="cnt">47</div></div>
           <div class="notif h" id="n2"><div class="ic">💬</div><div><b>נשות הברכה</b><span>רחלי: נועה, האמת? לא ממליצה 😬</span></div><div class="cnt">412</div></div>
           <div class="notif h" id="n3"><div class="ic">💬</div><div><b>נשות הברכה</b><span>שירה: גם אני רציתי לשאול 👀</span></div><div class="cnt">999+</div></div>
         </div>
@@ -272,7 +274,7 @@
     <script>
       // ---- the edit (final-video seconds); keep in sync with ../edl.json ----
       const T = window.T = {
-        n2: 0.9, n3: 1.9, open: 3.3,             // lock screen on the table, tap → chat
+        n2: 1.9, n3: 2.75, open: 3.3,             // lock screen on the table, tap → chat
         sel: 9.2, reply: 9.5,                     // long-press the rumor → reply
         type0: 10.15, del0: 12.6, delStep: 0.05,  // typing; ⌫ press-and-hold while the right thumb covers ⌫ in clips/type3a (2.6–2.95 s)
         send: 17.45,
