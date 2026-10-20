@@ -1,0 +1,11 @@
+Image-to-video, 6 seconds, seamless loop. Flat 2D vector TV-comedy cartoon style, thin dark outlines, flat colors. Keep the input image exactly as is: same character design, colors, proportions, clothes, briefcase and rolled contract. Plain solid magenta background, static camera, no camera movement, the character stays in the same place and the same size and never leaves the frame.
+
+Movement (minimalist, subtle, like a limited-animation presenter talking to the audience):
+- Gentle breathing: the chest and shoulders rise and fall very slightly, about one cycle per 2 seconds.
+- Slow natural blinks every 2 to 3 seconds, with the heavy half-closed eyelids staying relaxed and smug.
+- The head makes tiny nods and a very slight tilt, a few degrees at most, in rhythm with speech.
+- The beak opens and closes in a simple talking motion, as if giving a calm public announcement, with small pauses between phrases (no exaggerated mouth).
+- Once around the middle, the free wing lifts a few centimeters and returns, a small emphasizing gesture, while the other wing keeps holding the briefcase.
+- The feet stay planted, no walking, no turning, no big body movement.
+
+The last frame matches the first frame so it can loop. No morphing, no new objects, no new characters, no text, no subtitles, no captions, no logos, no watermark, no background changes.
