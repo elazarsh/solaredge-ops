@@ -2,7 +2,7 @@
 # Keyboard clicks land exactly on the UI's keystrokes (same typing script as ui/index.html), phone buzz on the wood,
 # taps, the WhatsApp send pop and an incoming-message ping, over a quiet kitchen room tone.
 import json, re, subprocess, numpy as np
-SR = 48000; DUR = 34.3
+SR = 48000; DUR = 36.8
 rng = np.random.default_rng(3)
 html = open("ui/index.html", encoding="utf-8").read()
 T = {k: float(v) for k, v in re.findall(r"(\w+): ([\d.]+)", html[html.index("const T = window.T"):html.index("};", html.index("const T = window.T"))])}
@@ -50,7 +50,7 @@ for at, ch in ev:
 for at in (0.15, T["n2"], T["n3"]): add(buzz(), at - 0.05, 0.22)
 for at in (T["open"], T["sel"], T["back"], T["tapB"], T["fwd"], T["pick"], T["fsend"]): add(click(0.3), at, 0.12)
 pop, ping = load("../ep1-forwarded/assets/sfx/pop.mp3"), load("../ep1-forwarded/assets/sfx/notification.mp3")
-add(pop, T["send"], 0.35); add(pop, T["fwIn"], 0.3); add(ping, T["oops"], 0.3); add(ping, T["yalla"], 0.3)
+add(pop, T["send"], 0.35); add(pop, T["fwIn"], 0.3); add(ping, T["oops"], 0.3); add(ping, T["noa"], 0.3); add(ping, T["yalla"], 0.3)
 
 # room tone: soft brown noise + a far bird, never silent
 w = np.cumsum(rng.normal(0, 1, len(out))); w -= np.convolve(w, np.ones(4800) / 4800, "same"); w /= np.abs(w).max()

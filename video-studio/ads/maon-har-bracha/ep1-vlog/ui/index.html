@@ -142,8 +142,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="34.3" data-width="1080" data-height="2590">
-      <div id="ui" class="clip" data-start="0" data-duration="34.3" data-track-index="0" data-layout-allow-overlap>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="36.8" data-width="1080" data-height="2590">
+      <div id="ui" class="clip" data-start="0" data-duration="36.8" data-track-index="0" data-layout-allow-overlap>
 
         <!-- נשות הברכה -->
         <div class="pane" id="chatA" data-layout-allow-overlap>
@@ -185,7 +185,8 @@
               <div class="meta">09:02 <span class="tick">✓✓</span></div>
             </div></div>
             <div class="row in h" id="rOops" style="top:3690px"><div class="b"><div class="who" style="color:#E65100">רחלי</div><div class="t">אופס 🙈 צודקת!</div><div class="t">אז השמועה כבר לא נכונה</div><div class="rx h" id="rx2">😍🙌 <b>356</b></div></div></div>
-            <div class="row in h" id="rYalla" style="top:4040px"><div class="b"><div class="who" style="color:#2E7D32">נועה</div><div class="t">יאללה, אז אני נרשמת 🙌</div></div></div>
+            <div class="row in h" id="rNoa" style="top:4040px"><div class="b"><div class="who" style="color:#2E7D32">נועה</div><div class="t">על הצוות והאווירה שם</div><div class="t">כולם מדברים 🥰</div><div class="t">רק השכר הזה עצר אותי</div></div></div>
+            <div class="row in h" id="rYalla" style="top:4415px"><div class="b"><div class="t">יאללה, אז אני נרשמת 🙌</div></div></div>
           </div>
 
           <div class="bottom" id="bottom" data-layout-allow-overlap>
@@ -280,7 +281,7 @@
         send: 17.45,
         back: 18.2, tapB: 19.4, chatB: 19.65,     // back arrow → chats list → updates group (RTL push transitions)
         facts: 20.5, factStep: 1.45, factAt: [0, 1.6, 2.8, 4.0, 5.9],  // 5 facts; the 4th (two lines) reads longer
-        fwd: 28.0, sheet: 28.15, pick: 29.0, fsend: 29.6, toA: 29.75, fwIn: 30.05, typingIn: 30.5, oops: 31.3, yalla: 32.5, end: 34.3,
+        fwd: 28.0, sheet: 28.15, pick: 29.0, fsend: 29.6, toA: 29.75, fwIn: 30.05, typingIn: 30.5, oops: 31.3, noa: 32.7, yalla: 34.9, end: 36.8,
       };
       const tl = gsap.timeline({ paused: true });
       const ease = "power2.inOut";
@@ -396,8 +397,10 @@
       tl.fromTo("#rOops", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, T.oops);
       tl.to("#listA", { y: -2900, duration: 0.5, ease }, T.oops);
       tl.fromTo("#rx2", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }, T.oops + 0.8);
+      tl.fromTo("#rNoa", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, T.noa);
+      tl.to("#listA", { y: -3150, duration: 0.5, ease }, T.noa);
       tl.fromTo("#rYalla", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, T.yalla);
-      tl.to("#listA", { y: -3100, duration: 0.5, ease }, T.yalla);
+      tl.to("#listA", { y: -3380, duration: 0.5, ease }, T.yalla);
 
       window.__timelines["main"] = tl;
       tl.seek(0);
