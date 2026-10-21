@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>והנה איל — composition</title>
+<style>
+@font-face{font-family:Poem;src:url(/assets/FrankRuhlLibre-400.woff) format("woff");font-weight:400;font-display:block}
+@font-face{font-family:Poem;src:url(/assets/FrankRuhlLibre-600.woff) format("woff");font-weight:600;font-display:block}
+html,body{margin:0;background:#070d12;overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:#0a1218;font-family:Poem,serif;direction:rtl}
+.abs{position:absolute}
+#bg{position:absolute;inset:0}
+#base{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:50% 50%;filter:brightness(.5) saturate(.9)}
+.win{position:absolute;overflow:hidden;-webkit-mask-repeat:no-repeat}
+.win img{position:absolute;display:block}
+#scrim{position:absolute;inset:0;background:radial-gradient(ellipse 62% 58% at 50% 50%,rgba(7,12,18,.72) 0%,rgba(7,12,18,.54) 55%,rgba(7,12,18,.14) 100%)}
+#tint{position:absolute;inset:0;background:#8aa0c4;mix-blend-mode:multiply}
+#flash{position:absolute;inset:0;background:#ffcf8a;mix-blend-mode:screen}
+#frame{position:absolute;inset:42px;border:1.5px solid rgba(230,196,145,.4);pointer-events:none}
+#frame:before,#frame:after{content:"";position:absolute;left:calc(50% - 4px);width:8px;height:8px;background:#e6c491;transform:rotate(45deg)}
+#frame:before{top:-5px}#frame:after{bottom:-5px}
+#text{position:absolute;inset:0}
+.stz{position:absolute;left:0;top:0;width:1920px;height:1080px;display:flex;align-items:center;justify-content:center}
+.blk{text-align:center;will-change:transform}
+.ln{white-space:nowrap;line-height:1.62;direction:rtl}
+.w{display:inline-block;margin:0 .13em;will-change:opacity,transform,filter}
+.ghost{opacity:0;filter:blur(3px)}
+#breath{position:absolute;left:50%;height:2px;background:#e6c491;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 14px rgba(230,196,145,.7)}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0}
+.card .eyebrow{font-size:38px;color:#efd8ae;letter-spacing:.04em;margin-bottom:18px}
+.card .big{font-weight:600;color:#fff1d8;text-shadow:0 6px 40px rgba(0,0,0,.6)}
+.card .rule{width:110px;height:2px;background:#dcbc84;margin:26px auto 0;box-shadow:0 0 24px rgba(228,180,90,.25)}
+.card .sub{font-size:40px;color:#d9cdb5;margin-top:26px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg">
+    <img id="base" src="/build/stills/base.jpg">
+    <div id="wins"></div>
+    <div id="tint"></div>
+  </div>
+  <div id="scrim"></div>
+  <div id="flash"></div>
+  <div id="frame"></div>
+  <div id="text"></div>
+  <div id="breath"></div>
+  <div class="card" id="title">
+    <div class="eyebrow">פָּרָשַׁת וַיֵּרָא</div>
+    <div class="big" style="font-size:168px;line-height:1.2">וְהִנֵּה אַיִל</div>
+    <div class="rule"></div>
+  </div>
+  <div class="card" id="cta1">
+    <div class="big" style="font-size:66px;line-height:1.4;color:#fff1d8">תמצאו אותנו בפייסבוק:</div>
+    <div class="big" style="font-size:104px;line-height:1.3;color:#f0d09b;margin-top:6px">אלעזר וחוה שחור</div>
+    <div class="rule"></div>
+    <div class="sub">עוד תובנות מפרשת השבוע</div>
+  </div>
+  <div class="card" id="cta2">
+    <div class="big" style="font-size:96px;line-height:1.4;color:#f0d09b">אם אהבתם — שתפו</div>
+    <div class="rule"></div>
+  </div>
+</div>
+<script>
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const sstep=x=>{x=clamp(x);return x*x*(3-2*x)};
+const lerp=(a,b,x)=>a+(b-a)*x;
+const NIQ=/[֑-ׇ]/g;
+const lt=s=>s.replace(NIQ,'').replace(/[^א-ת]/g,'');
+const PIVOT=109.6;
+let TL,stz=[],wins=[],ghost=null;
+
+function matchPhrase(words,phrase){const pk=phrase.split(' ').map(lt);const keys=words.map(w=>w.k);const out=[];
+  for(let i=0;i+pk.length<=keys.length;i++){if(pk.every((k,j)=>keys[i+j]===k))out.push(i)}return out}
+
+async function init(){
+  TL=await (await fetch('/build/timeline.json')).json();
+  await document.fonts.load('400 60px Poem');await document.fonts.load('600 60px Poem');
+  const text=document.getElementById('text');
+  TL.stanzas.forEach((s,si)=>{
+    const flat=s.lines.flat();
+    const o={s,id:s.id,words:flat,el:null,blk:null,els:[]};
+    const stz=document.createElement('div');stz.className='stz';
+    const blk=document.createElement('div');blk.className='blk';
+    const base=s.kind==='refrain'?68:s.kind==='pivot'?96:s.id===13?56:s.id===15?58:60;
+    s.lines.forEach(line=>{
+      const ln=document.createElement('div');ln.className='ln';
+      line.forEach(w=>{
+        const sp=document.createElement('span');sp.className='w';sp.textContent=w.t;
+        const heavy=w.em||s.kind==='refrain'||s.kind==='pivot';
+        sp.style.fontWeight=heavy?600:400;o.els.push(sp);ln.appendChild(sp);
+      });
+      blk.appendChild(ln);
+    });
+    stz.appendChild(blk);text.appendChild(stz);
+    o.el=stz;o.blk=blk;blk.style.fontSize=base+'px';stz.style.display='flex';stz.style.visibility='hidden';
+    o.base=base;stz.dataset.id=s.id;
+    stz_push(o);
+  });
+  // fit width
+  stz.forEach(o=>{let mx=0;o.blk.querySelectorAll('.ln').forEach(l=>{mx=Math.max(mx,l.scrollWidth)});
+    const fs=mx>1560?o.base*1560/mx:o.base;o.blk.style.fontSize=fs+'px';o.fs=fs;
+    o.h=o.blk.getBoundingClientRect().height});
+  // visibility windows
+  stz.forEach((o,i)=>{
+    const s=o.s,prev=stz[i-1],next=stz[i+1];
+    const gp=prev?s.first-prev.s.last:9,gn=next?next.s.first-s.last:9;
+    if(o.id===8)o.en=[s.first-0.03,s.first];
+    else if(o.id===11)o.en=[prev.s.last+1.0,prev.s.last+1.4];
+    else if(gp<0.6)o.en=[s.first-0.18,s.first+0.12];
+    else if(gp<1.0)o.en=[s.first-0.3,s.first+0.05];
+    else if(o.id===7)o.en=[s.first-0.15,s.first+0.15];
+    else o.en=[s.first-0.6,s.first-0.1];
+    if(!next)o.ex=[231.9,232.6];
+    else if(o.id===10)o.ex=[s.last+0.7,s.last+1.1];
+    else if(gn<0.6)o.ex=[s.last-0.02,s.last+0.28];
+    else{const a=s.last+Math.min(0.3,gn*0.15+0.05);const dur=clamp(next.s.first-0.55-a,0.4,1.0);o.ex=[a,a+dur]}
+    o.pre=s.first<PIVOT-0.5;
+    o.words.forEach(w=>{w.ls=w.s;w.fx={}});
+  });
+  setupFx();
+  // ghost of stanza 6 for stanza 7 (afterimage)
+  const g6=stz[6];ghost=g6.el.cloneNode(true);ghost.classList.add('ghost');ghost.style.visibility='visible';
+  ghost.querySelectorAll('.w').forEach(w=>w.style.opacity=1);text.insertBefore(ghost,text.firstChild);
+  // echoes for "קוראת"
+  const kor=stz[6].words.findIndex(w=>w.k==='קוראת');
+  if(kor>=0){stz[6].echo=[];for(let k=0;k<3;k++){const c=stz[6].els[kor].cloneNode(true);c.style.position='absolute';c.style.margin='0';
+    c.style.pointerEvents='none';c.style.opacity=0;stz[6].els[kor].parentNode.style.position='relative';
+    stz[6].els[kor].parentNode.appendChild(c);stz[6].echo.push(c)}stz[6].korIdx=kor}
+  // windows
+  const wroot=document.getElementById('wins');
+  for(const w of TL.windows){
+    const d=document.createElement('div');d.className='win';const [bx,by,bw,bh]=w.box;
+    d.style.cssText+=`left:${bx}px;top:${by}px;width:${bw}px;height:${bh}px;opacity:0;`;
+    const full=w.box[2]>=1900;
+    const m=full?'radial-gradient(ellipse farthest-corner at 50% 50%,#000 55%,transparent 100%)'
+                :'radial-gradient(ellipse closest-side at 50% 50%,#000 40%,transparent 100%)';
+    if(w.type!=='grow'){d.style.webkitMaskImage=m;d.style.maskImage=m}
+    const img=document.createElement('img');
+    if(w.type==='still'||w.type==='grow'){
+      img.src=`/build/stills/${w.id}.jpg`;
+      if(w.type==='still'){const [tw,th]=w.still;img.style.width=tw+'px';img.style.height=th+'px';
+        img.style.left=(bw-tw)/2+'px';img.style.top=(bh-th)/2+'px';}
+      else{img.style.width='1920px';img.style.height='1080px';img.style.left='0';img.style.top='0'}
+    }else{img.style.width=bw+'px';img.style.height=bh+'px';img.style.left='0';img.style.top='0'}
+    d.appendChild(img);wroot.appendChild(d);w.el=d;w.img=img;w.cur=-1;
+  }
+  await Promise.all(TL.windows.filter(w=>w.type!=='clip').map(w=>w.img.decode().catch(()=>{})));
+  await Promise.all(stz.map(o=>0));
+  window.READY=true;
+}
+function stz_push(o){stz.push(o)}
+
+function setupFx(){
+  const S=id=>stz.find(o=>o.id===id);
+  let o;
+  o=S(0);matchPhrase(o.words,'מרחק').forEach(i=>o.words[i].fx.far=1);
+  o=S(1);['הלב','מסתבך'].forEach(p=>matchPhrase(o.words,p).forEach(i=>o.words[i].fx.knot=1));
+  o=S(4);o.words.forEach((w,i)=>{w.fx.side=i===0?1:i===1?-1:0;if(i===2)w.fx.meet=1});
+  o=S(5);matchPhrase(o.words,'תלויים').forEach(i=>o.words[i].fx.hang=1);
+  o=S(6);matchPhrase(o.words,'קוראת').forEach(i=>o.words[i].fx.echo=1);
+  matchPhrase(o.words,'הנני').forEach(i=>o.words[i].fx.silent=1);
+  o=S(9);matchPhrase(o.words,'האיל').forEach(i=>{o.words[i].ls-=1.4});
+  [10,18].forEach(id=>{o=S(id);const n=o.words.length;let j=-1;o.words.forEach((w,i)=>{if(w.k==='איל')j=i});if(j>=0)o.words[j].fx.reveal=1});
+  o=S(11);matchPhrase(o.words,'נאחזה').forEach(i=>o.words[i].fx.stuck=1);
+  ['קול','ישועה'].forEach(p=>matchPhrase(o.words,p).forEach(i=>o.words[i].fx.voice=1));
+  o=S(13);matchPhrase(o.words,'שבו').forEach(i=>o.words[i].fx.arrive=1);
+  o=S(15);o.words.forEach((w,i)=>{w.fx.grow=1});
+  o=S(16);matchPhrase(o.words,'עינים').forEach(i=>o.words[i].fx.eyes=1);o.rise=1;
+  o=S(17);o.reveal=1;
+  o=S(19);const L=o.words.length-1;o.words[L].fx.you=1;o.words[L].ls+=0.6;
+  o=S(8);o.words.forEach(w=>w.ls=o.s.first-0.0);
+}
+
+function windowState(w,t){
+  const f0=w.t0,f1=w.t1;
+  if(t<f0||t>f1)return 0;
+  return sstep((t-f0)/w.fadeIn)*(1-sstep((t-(f1-w.fadeOut))/w.fadeOut));
+}
+
+function renderBg(s){
+  // slow drift on base
+  const p=clamp((s+3.5)/(TL.songDur+TL.lead+TL.tail));
+  document.getElementById('base').style.transform=`scale(${1.0+0.06*p}) translate(${-8*p}px,${-5*p}px)`;
+  // grade
+  const g=sstep((s-108.3)/3.2);
+  document.getElementById('bg').style.filter=`saturate(${lerp(.62,1.02,g)}) brightness(${lerp(.96,1.04,g)})`;
+  document.getElementById('tint').style.opacity=lerp(.62,0,g);
+  const up=sstep((s-108.3)/1.4),dn=1-sstep((s-109.7)/1.7);
+  document.getElementById('flash').style.opacity=s<109.7?0.5*up:0.5*dn;
+  // windows
+  return Promise.all(TL.windows.map(w=>{
+    const a=windowState(w,s)*w.opacity;
+    w.el.style.opacity=a.toFixed(4);
+    if(a<=0)return null;
+    let te=s;
+    if(w.freeze&&s>=w.freeze[0]&&s<w.freeze[1])te=w.freeze[0];
+    const pr=clamp((te-w.t0)/(w.t1-w.t0));
+    if(w.type==='clip'){
+      const idx=clamp(Math.floor((te-w.clipStart)*TL.fps),0,w.nframes-1);
+      if(idx!==w.cur){w.cur=idx;w.img.src=`/build/frames/${w.id}/${String(idx+1).padStart(4,'0')}.jpg`;return w.img.decode().catch(()=>{})}
+    }else if(w.type==='still'){
+      const zmax=Math.max(...w.zoom);const z=lerp(w.zoom[0],w.zoom[1],pr);
+      const dy=w.dy?lerp(w.dy[0],w.dy[1],pr):0;
+      w.img.style.transform=`translateY(${dy}px) scale(${z/zmax})`;
+    }else if(w.type==='grow'){
+      const gr=lerp(w.grow[0],w.grow[1],sstep(pr));
+      const rx=1100*gr,ry=650*gr;
+      const m=`radial-gradient(ellipse ${rx}px ${ry}px at 66% 52%,#000 38%,transparent 100%)`;
+      w.el.style.webkitMaskImage=m;w.el.style.maskImage=m;
+      w.img.style.transform=`scale(${lerp(1.02,1.1,pr)})`;
+    }
+    return null;
+  }));
+}
+
+function renderStanza(o,t){
+  const s=o.s,[e0,e1]=o.en,[x0,x1]=o.ex;
+  const vis=t>e0-0.02&&t<x1+1.8;
+  if(!vis){o.el.style.visibility='hidden';return null}
+  o.el.style.visibility='visible';
+  const enterA=sstep((t-e0)/Math.max(e1-e0,0.001));
+  const n=o.words.length;const dur=0.45;
+  const stag=n>1?Math.max(0,(x1-x0-dur)/(n-1)):0;
+  const pre=o.pre;
+  const baseCol=pre?'#dfe6ee':'#fff0d6',gold=pre?'#f0d09b':'#ffd991';
+  const dim=0.38;
+  let blkY=0;
+  if(o.rise){blkY=-26*sstep((t-s.first)/Math.max(s.last-s.first,1))}
+  o.blk.style.transform=`translateY(${blkY}px)`;
+  o.words.forEach((w,i)=>{
+    const el=o.els[i];const f=w.fx;
+    let xa=x0+i*stag,xb=xa+dur;
+    if(f.silent){xa=s.last+1.0;xb=xa+0.55}
+    const exitA=1-sstep((t-xa)/(xb-xa));
+    let lit=sstep((t-w.ls)/0.3);
+    let opa=dim+(1-dim)*lit;
+    if(f.silent){lit=0;opa=0.55}
+    if(o.reveal){opa=lit; if(i===n-1)opa=Math.max(opa,0.28*enterA)}
+    if(o.id===19&&w.fx.you){opa=dim+(1-dim)*sstep((t-w.ls)/0.5)}
+    let tx=0,ty=0,sc=1,bl=0,ls=0,rot=0;
+    const rel=t-w.ls;
+    if(f.far){sc=0.82;bl=1.6;ls=0.12;ty=-6}
+    if(f.knot){ls=-0.075*sstep(rel/0.8);sc=lerp(1,0.97,sstep(rel/0.8))}
+    if(f.side){tx=f.side*150*(1-enterA)}
+    if(f.meet){sc=lerp(1.2,1,sstep((t-o.s.first+0.3)/0.9))}
+    if(f.hang){ty=9*sstep(rel/1.2);rot=1.6*sstep(rel/1.2)}
+    if(f.reveal){const k=sstep((rel+0.2)/1.4);sc=lerp(1.0,1.32,sstep((rel+0.4)/0.8));bl=(1-k)*16;opa=sstep((rel+0.4)/0.5)}
+    if(f.stuck){ls=-0.085*sstep(rel/0.5)}
+    if(f.voice){sc=lerp(1,1.12,sstep(rel/2.0));ls=0.05*sstep(rel/2.0)}
+    if(f.arrive){const k=sstep((rel+1.2)/1.2);tx=300*(1-k);opa=Math.min(opa,0.15+0.85*k)*(lit>0?1:k*1)}
+    if(f.grow){const k=clamp(rel/0.7);const pop=rel<0?0:Math.sin(k*Math.PI)*0.07;sc=lerp(0.95,1,sstep(rel/0.4))+pop;ty=6*(1-sstep(rel/0.5))}
+    if(f.eyes){ls=0.16*sstep(rel/1.0)}
+    if(f.you){sc=lerp(1,1.18,sstep(rel/0.8))}
+    // enter/exit
+    if(pre){bl+=(1-enterA)*7+(1-exitA)*8}else{ty+=(1-enterA)*18-(1-exitA)*14}
+    const heavyGold=w.em||o.s.kind==='refrain'||o.s.kind==='pivot';
+    el.style.color=heavyGold?gold:baseCol;
+    const glow=lit>0?Math.exp(-Math.max(0,rel)/0.8):0;
+    const gp=glow*(heavyGold?1.5:1)*(f.silent?0:1);
+    el.style.textShadow=`0 2px 14px rgba(0,0,0,.55)${gp>0.02?`,0 0 ${(16*gp).toFixed(1)}px rgba(255,226,170,${(0.85*gp).toFixed(3)})`:''}`;
+    el.style.opacity=(opa*enterA*exitA).toFixed(4);
+    el.style.filter=bl>0.05?`blur(${bl.toFixed(2)}px)`:'none';
+    el.style.letterSpacing=ls?`${ls}em`:'0';
+    el.style.transform=`translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${sc.toFixed(4)}) rotate(${rot}deg)`;
+  });
+  // echoes of "קוראת"
+  if(o.echo){const w=o.words[o.korIdx];const el=o.els[o.korIdx];
+    o.echo.forEach((c,k)=>{const r=t-(w.ls+0.35*(k+1));const a=r>0&&r<1.8?0.55*(1-r/1.8)*(1-k*0.2):0;
+      c.style.opacity=a.toFixed(3);c.style.left=el.offsetLeft+'px';c.style.top=el.offsetTop+'px';
+      const sc=1+0.3*(k+1)*clamp(r/1.8);c.style.transform=`scale(${sc.toFixed(3)})`;c.style.filter=`blur(${(2+k*2)}px)`;c.style.color=gold;
+      c.style.textShadow='none'})}
+  return o;
+}
+
+function renderCards(t,s){
+  const set=(id,a)=>{document.getElementById(id).style.opacity=clamp(a).toFixed(3)};
+  // title card in the lead-in (video time t)
+  set('title',sstep((t-0.4)/1.0)*(1-sstep((t-2.7)/0.8)));
+  // end cards in song time
+  const e=232.6;
+  set('cta1',sstep((s-(e+0.0))/0.8)*(1-sstep((s-(e+4.4))/0.6)));
+  set('cta2',sstep((s-(e+4.7))/0.8)*(1-sstep((s-(TL.songDur+TL.tail-0.7))/0.6)));
+  document.getElementById('frame').style.opacity=sstep((t-0.2)/1.0);
+}
+
+window.seek=async(t)=>{
+  const s=t-TL.lead;
+  const waits=[renderBg(s)];
+  let active=null,best=-1;
+  stz.forEach(o=>{
+    const r=renderStanza(o,s);
+    if(r){const v=Math.min(sstep((s-o.en[0])/0.5),1-sstep((s-o.ex[0])/1.0));if(v>best){best=v;active=o}}
+  });
+  // afterimage for stanza 7
+  const o7=stz[7];
+  if(ghost){const a=0.13*sstep((s-o7.en[0])/0.8)*(1-sstep((s-o7.ex[0]-0.3)/0.9));ghost.style.opacity=a.toFixed(3)}
+  // breath line under the active block
+  const b=document.getElementById('breath');
+  if(active&&best>0.02){
+    const idx=clamp(Math.floor(s*TL.fps),0,TL.env.length-1);const e=TL.env[idx]||0;
+    b.style.top=(540+active.h/2+36)+'px';b.style.width=(200+240*e)+'px';b.style.opacity=(0.2+0.65*e)*clamp(best*1.5);
+  }else b.style.opacity=0;
+  renderCards(t,s);
+  await Promise.all(waits.flat());
+  await new Promise(r=>requestAnimationFrame(()=>r()));
+};
+init();
+</script>
+</body>
+</html>

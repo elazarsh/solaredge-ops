@@ -1,0 +1,4 @@
+build/node_modules/
+build/frames/
+build/out/
+build/snaps/
