@@ -11,5 +11,6 @@ data/
 .pytest_cache/
 .claude/*
 !.claude/skills/
+!.claude/settings.json
 dist/
 generated-images/
