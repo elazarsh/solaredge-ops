@@ -5,7 +5,7 @@
 - `assets/` — חומרי המקור (אודיו, קליפים, פוסטר, תמונת רקע, גופנים, תמלול).
 - `clips/` — קטעים חתוכים (A, B, D מואטים; C במהירות מקור). `tools/slowmo.sh` — חיתוך והאטה.
 - `build/` — הקומפוזיציה: `prep.py` (זמני מילים וחלונות), `extract.py` (פריימים וחיתוכים), `index.html` (הקומפוזיציה), `render.mjs` ו־`run_render.sh` (רינדור), `sheet.py` (גיליון מגע).
-- `delivery/` — גרסה 1: `vayera-video-master.mp4`, `vayera-video-share.mp4`. **גרסה 2 (אפקטים מורחבים, כותרת תלת־ממדית):** `vayera-video-v2-master.mp4` (49MB) ו־`vayera-video-v2-share.mp4` (20MB).
+- `delivery/` — גרסה 3 (הנוכחית): `vayera-video-v3-master.mp4` (49MB) ו־`vayera-video-v3-share.mp4` (20MB). גרסאות קודמות: v2, v1. הדגמת ההליכה: `walking-preview-slow25.mp4`.
 - `assets/title/` — תמונת הכותרת (מקור ונוסח מנוקה משוליים), `build/defringe.py` — הניקוי.
 
 ## בנייה מחדש
