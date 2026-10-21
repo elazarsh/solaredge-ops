@@ -1,0 +1,734 @@
+[
+ {
+  "stanza": 0,
+  "model": "pro",
+  "screen": "מֵרָחֹק״.",
+  "heard": "מֵרָחוֹק"
+ },
+ {
+  "stanza": 0,
+  "model": "pro",
+  "screen": "וּבֶלֵב",
+  "heard": "וּבְלֵב"
+ },
+ {
+  "stanza": 0,
+  "model": "pro",
+  "screen": "בֶּיִצְחָק",
+  "heard": "בְּיִצְחָק"
+ },
+ {
+  "stanza": 0,
+  "model": "pro",
+  "screen": "לֶךָ",
+  "heard": "לְךָ"
+ },
+ {
+  "stanza": 0,
+  "model": "pro",
+  "screen": "זֶרַע״",
+  "heard": "זָרַע"
+ },
+ {
+  "stanza": 0,
+  "model": "flash",
+  "screen": "מֵרָחֹק״.",
+  "heard": "מֵרָחוֹק"
+ },
+ {
+  "stanza": 0,
+  "model": "flash",
+  "screen": "וּבֶלֵב",
+  "heard": "וּבְלֵב"
+ },
+ {
+  "stanza": 0,
+  "model": "flash",
+  "screen": "בֶּיִצְחָק",
+  "heard": "בְיִצְחָק"
+ },
+ {
+  "stanza": 0,
+  "model": "flash",
+  "screen": "לֶךָ",
+  "heard": "לְךָ"
+ },
+ {
+  "stanza": 0,
+  "model": "flash",
+  "screen": "זֶרַע״",
+  "heard": "זָרַע"
+ },
+ {
+  "stanza": 1,
+  "model": "pro",
+  "screen": "מֶיַשֶּׁרֶת",
+  "heard": "מְיַשֶּׁרֶת"
+ },
+ {
+  "stanza": 1,
+  "model": "pro",
+  "screen": "כֶּתֶף",
+  "heard": "כָּתֵף"
+ },
+ {
+  "stanza": 1,
+  "model": "pro",
+  "screen": "בֶּנָהּ,",
+  "heard": "בְּנָהּ"
+ },
+ {
+  "stanza": 1,
+  "model": "pro",
+  "screen": "וֶהִיא",
+  "heard": "וְהִיא"
+ },
+ {
+  "stanza": 1,
+  "model": "pro",
+  "screen": "לֶיַד",
+  "heard": "לְיַד"
+ },
+ {
+  "stanza": 1,
+  "model": "flash",
+  "screen": "מֶיַשֶּׁרֶת",
+  "heard": "מְיַשֶּׁרֶת"
+ },
+ {
+  "stanza": 1,
+  "model": "flash",
+  "screen": "כֶּתֶף",
+  "heard": "כְּתַף"
+ },
+ {
+  "stanza": 1,
+  "model": "flash",
+  "screen": "בֶּנָהּ,",
+  "heard": "בְּנָהּ"
+ },
+ {
+  "stanza": 1,
+  "model": "flash",
+  "screen": "וֶהִיא",
+  "heard": "וְהִיא"
+ },
+ {
+  "stanza": 1,
+  "model": "flash",
+  "screen": "לֶיַד",
+  "heard": "לְיַד"
+ },
+ {
+  "stanza": 3,
+  "model": "pro",
+  "screen": "וּבֶנוֹ,",
+  "heard": "וּבְנוֹ"
+ },
+ {
+  "stanza": 3,
+  "model": "pro",
+  "screen": "וֶהָהָר",
+  "heard": "וְהָהָר"
+ },
+ {
+  "stanza": 3,
+  "model": "flash",
+  "screen": "וּבֶנוֹ,",
+  "heard": "וּבְנוֹ"
+ },
+ {
+  "stanza": 3,
+  "model": "flash",
+  "screen": "וֶהָהָר",
+  "heard": "וְהָהָר"
+ },
+ {
+  "stanza": 4,
+  "model": "pro",
+  "screen": "שֶׁנֵיהֶם",
+  "heard": "שְׁנֵיהֶם"
+ },
+ {
+  "stanza": 4,
+  "model": "flash",
+  "screen": "שֶׁנֵיהֶם",
+  "heard": "שְׁנֵיהֶם"
+ },
+ {
+  "stanza": 5,
+  "model": "pro",
+  "screen": "לֶפָנָיו.",
+  "heard": "לְפָנָיו,"
+ },
+ {
+  "stanza": 5,
+  "model": "pro",
+  "screen": "הַעָתִיד",
+  "heard": "הֶעָתִיד"
+ },
+ {
+  "stanza": 5,
+  "model": "pro",
+  "screen": "וֶהוּא",
+  "heard": "וְהוּא"
+ },
+ {
+  "stanza": 5,
+  "model": "pro",
+  "screen": "בֶּשׂוֹרָה",
+  "heard": "בְּשׂוֹרָה"
+ },
+ {
+  "stanza": 5,
+  "model": "pro",
+  "screen": "וּמַדִּים",
+  "heard": "מַדִּים"
+ },
+ {
+  "stanza": 5,
+  "model": "flash",
+  "screen": "לֶפָנָיו.",
+  "heard": "לְפָנָיו"
+ },
+ {
+  "stanza": 5,
+  "model": "flash",
+  "screen": "הָעֵצִים.",
+  "heard": "וְהָעֵצִים,"
+ },
+ {
+  "stanza": 5,
+  "model": "flash",
+  "screen": "וֶהוּא",
+  "heard": "וְהוּא"
+ },
+ {
+  "stanza": 5,
+  "model": "flash",
+  "screen": "בֶּשׂוֹרָה",
+  "heard": "בְּשׂוֹרָה"
+ },
+ {
+  "stanza": 5,
+  "model": "flash",
+  "screen": "וּמַדִּים",
+  "heard": "מַדִּים"
+ },
+ {
+  "stanza": 6,
+  "model": "pro",
+  "screen": "וֶאֵין",
+  "heard": "וְאֵין"
+ },
+ {
+  "stanza": 6,
+  "model": "pro",
+  "screen": "״הִנֵּנִי״.",
+  "heard": "הִנְנִי."
+ },
+ {
+  "stanza": 6,
+  "model": "flash",
+  "screen": "וֶאֵין",
+  "heard": "וְאֵין"
+ },
+ {
+  "stanza": 7,
+  "model": "pro",
+  "screen": "וֶיֵשׁ",
+  "heard": "וְיֵשׁ"
+ },
+ {
+  "stanza": 7,
+  "model": "pro",
+  "screen": "וֶהָהָר",
+  "heard": "וְהָהָר"
+ },
+ {
+  "stanza": 7,
+  "model": "pro",
+  "screen": "בֶּתוֹכָם.",
+  "heard": "בְּתוֹכָם,"
+ },
+ {
+  "stanza": 7,
+  "model": "pro",
+  "screen": "רֶשׁוּמִים",
+  "heard": "רְשׁוּמִים"
+ },
+ {
+  "stanza": 7,
+  "model": "flash",
+  "screen": "וֶיֵשׁ",
+  "heard": "וְיֵשׁ"
+ },
+ {
+  "stanza": 7,
+  "model": "flash",
+  "screen": "וֶהָהָר",
+  "heard": "וְהָהָר"
+ },
+ {
+  "stanza": 7,
+  "model": "flash",
+  "screen": "בֶּתוֹכָם.",
+  "heard": "בְּתוֹכָם"
+ },
+ {
+  "stanza": 7,
+  "model": "flash",
+  "screen": "רֶשׁוּמִים",
+  "heard": "רְשׁוּמִים"
+ },
+ {
+  "stanza": 7,
+  "model": "flash",
+  "screen": "בָּעֵינַיִם,",
+  "heard": "בַּעֵינַיִם"
+ },
+ {
+  "stanza": 9,
+  "model": "pro",
+  "screen": "בֶּטֶרֶם",
+  "heard": "בְּטֶרֶם"
+ },
+ {
+  "stanza": 9,
+  "model": "pro",
+  "screen": "יֶמֵי",
+  "heard": "יְמֵי"
+ },
+ {
+  "stanza": 9,
+  "model": "pro",
+  "screen": "בֶרֵאשִׁית",
+  "heard": "בְּרֵאשִׁית"
+ },
+ {
+  "stanza": 9,
+  "model": "pro",
+  "screen": "נִשְׁמֶרָה",
+  "heard": "נִשְׁמְרָה"
+ },
+ {
+  "stanza": 9,
+  "model": "flash",
+  "screen": "בֶּטֶרֶם",
+  "heard": "בְּטֶרֶם"
+ },
+ {
+  "stanza": 9,
+  "model": "flash",
+  "screen": "יֶמֵי",
+  "heard": "יְמֵי"
+ },
+ {
+  "stanza": 9,
+  "model": "flash",
+  "screen": "בֶרֵאשִׁית",
+  "heard": "בְּרֵאשִׁית"
+ },
+ {
+  "stanza": 9,
+  "model": "flash",
+  "screen": "נִשְׁמֶרָה",
+  "heard": "נִשְׁמְרָה"
+ },
+ {
+  "stanza": 10,
+  "model": "pro",
+  "screen": "וֶהִנֵּה",
+  "heard": "וְהִנֵּה"
+ },
+ {
+  "stanza": 10,
+  "model": "flash",
+  "screen": "וֶהִנֵּה",
+  "heard": "וְהִנֵּה"
+ },
+ {
+  "stanza": 11,
+  "model": "pro",
+  "screen": "בֶּנוֹ״.",
+  "heard": "בְּנוֹ,"
+ },
+ {
+  "stanza": 11,
+  "model": "pro",
+  "screen": "וּבֶנוֹ",
+  "heard": "וּבְנוֹ"
+ },
+ {
+  "stanza": 11,
+  "model": "pro",
+  "screen": "לֶאָב.",
+  "heard": "לְאָב."
+ },
+ {
+  "stanza": 11,
+  "model": "pro",
+  "screen": "שֶׁנֶּאֶחֲזָה",
+  "heard": "שֶׁנֶּאֶחְזָה"
+ },
+ {
+  "stanza": 11,
+  "model": "pro",
+  "screen": "יֶשׁוּעָה.",
+  "heard": "יְשׁוּעָה."
+ },
+ {
+  "stanza": 11,
+  "model": "flash",
+  "screen": "עַכְשָׁיו",
+  "heard": "עַכְשָׁו"
+ },
+ {
+  "stanza": 11,
+  "model": "flash",
+  "screen": "בֶּנוֹ״.",
+  "heard": "בְּנוֹ,"
+ },
+ {
+  "stanza": 11,
+  "model": "flash",
+  "screen": "וּבֶנוֹ",
+  "heard": "וּבְנוֹ"
+ },
+ {
+  "stanza": 11,
+  "model": "flash",
+  "screen": "לֶאָב.",
+  "heard": "לְאָב"
+ },
+ {
+  "stanza": 11,
+  "model": "flash",
+  "screen": "שֶׁנֶּאֶחֲזָה",
+  "heard": "שֶׁנֶּאֶחְזָה"
+ },
+ {
+  "stanza": 11,
+  "model": "flash",
+  "screen": "יֶשׁוּעָה.",
+  "heard": "יְשׁוּעָה"
+ },
+ {
+  "stanza": 12,
+  "model": "pro",
+  "screen": "לֶמַעַן",
+  "heard": "לְמַעַן"
+ },
+ {
+  "stanza": 12,
+  "model": "pro",
+  "screen": "וֶרֵעָי,",
+  "heard": "וְרֵעַי"
+ },
+ {
+  "stanza": 12,
+  "model": "flash",
+  "screen": "לֶמַעַן",
+  "heard": "לְמַעַן"
+ },
+ {
+  "stanza": 12,
+  "model": "flash",
+  "screen": "וֶרֵעָי,",
+  "heard": "וְרֵעָי"
+ },
+ {
+  "stanza": 13,
+  "model": "pro",
+  "screen": "מָה",
+  "heard": "מַה"
+ },
+ {
+  "stanza": 13,
+  "model": "pro",
+  "screen": "לֶהַכְרִיעַ.",
+  "heard": "לְהַכְרִיעַ."
+ },
+ {
+  "stanza": 13,
+  "model": "pro",
+  "screen": "מֶבַקְּשֵׁי",
+  "heard": "מְבַקְשֵׁי"
+ },
+ {
+  "stanza": 13,
+  "model": "pro",
+  "screen": "זֶרוֹעוֹת",
+  "heard": "זְרוֹעוֹת"
+ },
+ {
+  "stanza": 13,
+  "model": "pro",
+  "screen": "לֶהַכּוֹת",
+  "heard": "לְהַכּוֹת"
+ },
+ {
+  "stanza": 13,
+  "model": "pro",
+  "screen": "וּשֶׁבוּיִים",
+  "heard": "וּשְׁבוּיִים"
+ },
+ {
+  "stanza": 13,
+  "model": "pro",
+  "screen": "זֶרוֹעוֹת",
+  "heard": "זְרוֹעוֹת"
+ },
+ {
+  "stanza": 13,
+  "model": "flash",
+  "screen": "מֶסִירוּתָם",
+  "heard": "מְסִירוּתָם"
+ },
+ {
+  "stanza": 13,
+  "model": "flash",
+  "screen": "לֶהַכְרִיעַ.",
+  "heard": "לְהַכְרִיעַ"
+ },
+ {
+  "stanza": 13,
+  "model": "flash",
+  "screen": "מֶבַקְּשֵׁי",
+  "heard": "מְבַקְשֵׁי"
+ },
+ {
+  "stanza": 13,
+  "model": "flash",
+  "screen": "זֶרוֹעוֹת",
+  "heard": "זְרוֹעוֹת"
+ },
+ {
+  "stanza": 13,
+  "model": "flash",
+  "screen": "לֶהַכּוֹת",
+  "heard": "לְהַכּוֹת"
+ },
+ {
+  "stanza": 13,
+  "model": "flash",
+  "screen": "וּשֶׁבוּיִים",
+  "heard": "וּשְׁבוּיִים"
+ },
+ {
+  "stanza": 13,
+  "model": "flash",
+  "screen": "זֶרוֹעוֹת",
+  "heard": "זְרוֹעוֹת"
+ },
+ {
+  "stanza": 14,
+  "model": "pro",
+  "screen": "״וֶיִרַשׁ",
+  "heard": "וְיִירַשׁ"
+ },
+ {
+  "stanza": 14,
+  "model": "flash",
+  "screen": "״וֶיִרַשׁ",
+  "heard": "וְיִירַשׁ"
+ },
+ {
+  "stanza": 14,
+  "model": "flash",
+  "screen": "אוֹיְבָיו״.",
+  "heard": "אֹיְבָיו"
+ },
+ {
+  "stanza": 15,
+  "model": "pro",
+  "screen": "וֶהָאָרֶץ",
+  "heard": "וְהָאָרֶץ"
+ },
+ {
+  "stanza": 15,
+  "model": "pro",
+  "screen": "חוּפּוֹת",
+  "heard": "חֻפּוֹת"
+ },
+ {
+  "stanza": 15,
+  "model": "pro",
+  "screen": "יֶלָדִים",
+  "heard": "יְלָדִים"
+ },
+ {
+  "stanza": 15,
+  "model": "pro",
+  "screen": "בֶּכָל",
+  "heard": "בְּכָל"
+ },
+ {
+  "stanza": 15,
+  "model": "pro",
+  "screen": "מֶקַבֶּלֶת",
+  "heard": "מְקַבֶּלֶת"
+ },
+ {
+  "stanza": 15,
+  "model": "flash",
+  "screen": "וֶהָאָרֶץ",
+  "heard": "וְהָאָרֶץ"
+ },
+ {
+  "stanza": 15,
+  "model": "flash",
+  "screen": "חוּפּוֹת",
+  "heard": "חֻפּוֹת"
+ },
+ {
+  "stanza": 15,
+  "model": "flash",
+  "screen": "יֶלָדִים",
+  "heard": "יְלָדִים"
+ },
+ {
+  "stanza": 15,
+  "model": "flash",
+  "screen": "בֶּכָל",
+  "heard": "וּבְכָל"
+ },
+ {
+  "stanza": 15,
+  "model": "flash",
+  "screen": "מֶקַבֶּלֶת",
+  "heard": "מְקַבֶּלֶת"
+ },
+ {
+  "stanza": 16,
+  "model": "pro",
+  "screen": "לֶהַכִּיר",
+  "heard": "לְהַכִּיר"
+ },
+ {
+  "stanza": 16,
+  "model": "pro",
+  "screen": "בַּגֶּבוּרָה,",
+  "heard": "בַּגְּבוּרָה"
+ },
+ {
+  "stanza": 16,
+  "model": "pro",
+  "screen": "לֶהוֹדוֹת",
+  "heard": "לְהוֹדוֹת"
+ },
+ {
+  "stanza": 16,
+  "model": "pro",
+  "screen": "וֶכַמָּה",
+  "heard": "וְכַמָּה"
+ },
+ {
+  "stanza": 16,
+  "model": "pro",
+  "screen": "בֶּכוֹחֵנוּ",
+  "heard": "בְּכוֹחֵנוּ"
+ },
+ {
+  "stanza": 16,
+  "model": "flash",
+  "screen": "לֶהַכִּיר",
+  "heard": "לְהַכִּיר"
+ },
+ {
+  "stanza": 16,
+  "model": "flash",
+  "screen": "בַּגֶּבוּרָה,",
+  "heard": "בַּגְּבוּרָה"
+ },
+ {
+  "stanza": 16,
+  "model": "flash",
+  "screen": "לֶהוֹדוֹת",
+  "heard": "לְהוֹדוֹת"
+ },
+ {
+  "stanza": 16,
+  "model": "flash",
+  "screen": "וֶכַמָּה",
+  "heard": "וְכַמָּה"
+ },
+ {
+  "stanza": 16,
+  "model": "flash",
+  "screen": "בֶּכוֹחֵנוּ",
+  "heard": "בְּכֹחֵנוּ"
+ },
+ {
+  "stanza": 17,
+  "model": "pro",
+  "screen": "יַחְדָּו,",
+  "heard": "יַחְדָּיו"
+ },
+ {
+  "stanza": 17,
+  "model": "pro",
+  "screen": "וּבֶכָל",
+  "heard": "וּבְכָל"
+ },
+ {
+  "stanza": 17,
+  "model": "pro",
+  "screen": "לֶצִדָּם",
+  "heard": "לְצִדָּם"
+ },
+ {
+  "stanza": 17,
+  "model": "flash",
+  "screen": "וּבֶכָל",
+  "heard": "וּבְכָל"
+ },
+ {
+  "stanza": 17,
+  "model": "flash",
+  "screen": "לֶצִדָּם",
+  "heard": "לְצִדָּם"
+ },
+ {
+  "stanza": 18,
+  "model": "pro",
+  "screen": "שֶׁנֵיהֶם",
+  "heard": "שְׁנֵיהֶם"
+ },
+ {
+  "stanza": 18,
+  "model": "pro",
+  "screen": "יַחְדָּו״.",
+  "heard": "יַחְדָּיו"
+ },
+ {
+  "stanza": 18,
+  "model": "pro",
+  "screen": "מֵרָחֹק״",
+  "heard": "מֵרָחוֹק"
+ },
+ {
+  "stanza": 18,
+  "model": "pro",
+  "screen": "וֶהִנֵּה",
+  "heard": "וְהִנֵּה"
+ },
+ {
+  "stanza": 18,
+  "model": "flash",
+  "screen": "שֶׁנֵיהֶם",
+  "heard": "שְׁנֵיהֶם"
+ },
+ {
+  "stanza": 18,
+  "model": "flash",
+  "screen": "מֵרָחֹק״",
+  "heard": "מֵרָחוֹק"
+ },
+ {
+  "stanza": 18,
+  "model": "flash",
+  "screen": "וֶהִנֵּה",
+  "heard": "וְהִנֵּה"
+ }
+]
