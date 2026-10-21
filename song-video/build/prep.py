@@ -18,7 +18,7 @@ SONG_DUR = 232.32
 
 transcript = json.load(open(sys.argv[1], encoding="utf-8"))
 timings = json.load(open(os.path.join(ROOT, "timings.json"), encoding="utf-8"))["stanzas"]
-stanzas = json.load(open(os.path.join(ROOT, "assets", "stanzas.json"), encoding="utf-8"))
+stanzas = json.load(open(os.path.join(ROOT, "assets", "stanzas-v3.json"), encoding="utf-8"))
 
 NIQQUD = re.compile(r"[֑-ׇ]")
 def letters(s):
@@ -168,8 +168,10 @@ OP = 0.56
 windows = [
     {"id": "w0",  "type": "still", "src": "art", "crop": [0, 100, 1100], "box": R,  "t0": -3.5, "t1": 26.9, "zoom": [1.0, 1.10]},
     {"id": "w1",  "type": "clip", "src": "d-mother-door", "crop": [250, 150, 700], "box": L, "t0": 27.0, "t1": 45.2, "clipStart": 27.3},
-    {"id": "w3",  "type": "clip", "src": "c1-walk-mountain", "crop": [300, 0, 980], "box": R2, "t0": 50.2, "t1": 56.0, "clipStart": 50.6},
-    {"id": "w4",  "type": "clip", "src": "c2-walk-olive", "crop": [300, 120, 800], "box": L2, "t0": 56.0, "t1": 60.6, "clipStart": 56.4},
+    {"id": "wA1", "opacity": 0.68, "type": "clip", "src": "c1-walk-s25", "crop": [280, 150, 880], "box": L, "t0": 46.0, "t1": 53.9, "clipStart": 46.3, "fadeIn": 1.5, "fadeOut": 0.8},
+    {"id": "wA2", "opacity": 0.68, "type": "clip", "src": "c2-walk-s25", "crop": [300, 180, 880], "box": L, "t0": 53.1, "t1": 60.7, "clipStart": 53.1, "fadeIn": 0.8, "fadeOut": 1.4},
+    {"id": "wB1", "opacity": 0.68, "type": "clip", "src": "c1-walk-s25", "crop": [280, 150, 880], "box": L, "t0": 195.2, "t1": 203.9, "clipStart": 195.6, "fadeIn": 1.5, "fadeOut": 0.8},
+    {"id": "wB2", "opacity": 0.68, "type": "clip", "src": "c2-walk-s25", "crop": [300, 180, 880], "box": L, "t0": 203.0, "t1": 212.0, "clipStart": 203.1, "fadeIn": 0.8, "fadeOut": 1.6},
     {"id": "w5",  "type": "still", "src": "art", "crop": [380, 330, 900], "box": L, "t0": 60.2, "t1": 75.2, "zoom": [1.0, 1.12]},
     {"id": "w6",  "type": "still", "src": "art", "crop": [800, 150, 872], "box": R, "t0": 75.0, "t1": 99.2, "zoom": [1.0, 1.06], "freeze": [94.7, 98.9]},
     {"id": "w7",  "type": "clip", "src": "a-calm", "crop": [0, 130, 760], "box": L, "t0": 98.8, "t1": 109.9, "clipStart": 98.8, "fadeOut": 1.3},
@@ -181,8 +183,6 @@ windows = [
     {"id": "w11b", "type": "clip", "src": "a-calm", "crop": [0, 100, 900], "box": L, "t0": 147.7, "t1": 160.8, "clipStart": 147.9, "fadeIn": 1.0},
     {"id": "w12", "type": "grow", "src": "art", "box": FULL, "t0": 160.4, "t1": 181.2, "grow": [0.36, 1.0]},
     {"id": "w13", "type": "still", "src": "art", "crop": [0, 0, 1672], "box": FULL, "t0": 180.6, "t1": 196.2, "zoom": [1.10, 1.0], "dy": [30, -30]},
-    {"id": "w14a", "type": "clip", "src": "c1-walk-mountain", "crop": [300, 0, 980], "box": R2, "t0": 195.4, "t1": 205.2, "clipStart": 195.8},
-    {"id": "w14b", "type": "clip", "src": "c2-walk-olive", "crop": [300, 120, 800], "box": L2, "t0": 202.6, "t1": 212.6, "clipStart": 203.0},
     {"id": "w15", "type": "still", "src": "art", "crop": [0, 100, 1100], "box": R, "t0": 212.6, "t1": 224.2, "zoom": [1.0, 1.10]},
     {"id": "w16", "type": "still", "src": "art", "crop": [0, 0, 1672], "box": FULL, "t0": 223.6, "t1": 233.6, "zoom": [1.0, 1.06], "opacity": 0.46},
 ]
