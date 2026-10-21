@@ -9,6 +9,8 @@ data/
 *.log
 *.egg-info/
 .pytest_cache/
-.claude/
+.claude/*
+!.claude/skills/
+!.claude/settings.json
 dist/
 generated-images/

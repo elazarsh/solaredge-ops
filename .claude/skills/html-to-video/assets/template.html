@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<!-- תבנית סרטון HTML דטרמיניסטי. __DUR__ ו-__CUES__ מוחלפים ע"י scripts/build.py.
+     חוזה: window.TOTAL, window.OFF, window.seek(t), window.preload(). בלי Math.random/Date: אותו t = אותו פריים. -->
+<style>
+@font-face{font-family:Heebo;font-weight:400;src:url(fonts/heebo-hebrew-400-normal.woff2) format('woff2');unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:Heebo;font-weight:700;src:url(fonts/heebo-hebrew-700-normal.woff2) format('woff2');unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:Heebo;font-weight:900;src:url(fonts/heebo-hebrew-900-normal.woff2) format('woff2');unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:Heebo;font-weight:400;src:url(fonts/heebo-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:Heebo;font-weight:700;src:url(fonts/heebo-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:Heebo;font-weight:900;src:url(fonts/heebo-latin-900-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+:root{--bg:#070a14;--co:#4aa8ff;--me:#ffb347;--ex:#3dff9a;--tx:#eaf2ff;--dim:#9db0d6;--pn:rgba(255,255,255,.07);--bd:rgba(150,190,255,.28)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);font-family:Heebo,'Liberation Sans',sans-serif;color:var(--tx)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;direction:rtl}
+.scene{position:absolute;left:0;top:0;width:1920px;height:1080px;visibility:hidden;opacity:0}
+.abs{position:absolute}
+/* כל מחלקת עזר שאתה משתמש בה חייבת להיות מוגדרת כאן. מחלקה חסרה = באג תצוגה (למשל פס ירוק מתוח) */
+.tag{position:absolute;white-space:nowrap}
+.panel{position:absolute;background:var(--pn);border:2px solid var(--bd);border-radius:26px}
+.cc{position:absolute;border-radius:26px;border:3px solid rgba(74,168,255,.7);background:linear-gradient(160deg,rgba(74,168,255,.16),rgba(74,168,255,.04))}
+.mc{position:absolute;border-radius:26px;border:3px solid rgba(255,179,71,.75);background:linear-gradient(160deg,rgba(255,179,71,.17),rgba(255,179,71,.04))}
+.ec{position:absolute;border-radius:26px;border:3px solid rgba(61,255,154,.8);background:linear-gradient(160deg,rgba(61,255,154,.14),rgba(0,0,0,.35))}
+.h1{font-weight:900;font-size:84px;line-height:1.05}.h2{font-weight:900;font-size:60px;line-height:1.1}.h3{font-weight:700;font-size:44px;line-height:1.2}
+.t{font-weight:700;font-size:40px;line-height:1.3}.dim{color:var(--dim)}.co{color:var(--co)}.me{color:var(--me)}.ex{color:var(--ex)}
+#badge{position:absolute;left:56px;top:34px;height:74px;min-width:420px;padding:0 30px;border-radius:40px;font-weight:900;font-size:36px;line-height:74px;z-index:60;display:flex;align-items:center;gap:16px}
+#hud{position:absolute;left:56px;right:56px;bottom:30px;height:14px;z-index:60;display:flex;gap:4px;direction:rtl}
+#hud div{height:100%;border-radius:7px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}
+#hud i{position:absolute;right:0;top:0;height:100%;width:0}
+</style></head>
+<body><div id="stage"><div id="scenes"></div><div id="badge"></div><div id="hud"></div></div>
+<script src="gsap.min.js"></script>
+<script>
+const DUR=__DUR__;const CUES=__CUES__;const LEAD=0.6;          // הקול מתחיל LEAD שניות אחרי תחילת הסצנה
+const OFF=[];let acc=0;for(const d of DUR){OFF.push(acc);acc+=d}
+const TOTAL=acc;
+const tl=gsap.timeline({paused:true});
+const $=(h,cls,parent,style)=>{const d=document.createElement('div');if(cls)d.className=cls;if(style)d.style.cssText=style;d.innerHTML=h||'';(parent||document.getElementById('scenes')).appendChild(d);return d};
+const Q=(i,n)=>OFF[i]+LEAD+(CUES[i][n]??0);                    // זמן מוחלט של cue בסצנה i
+// כניסה מונפשת: fromTo עם immediateRender ברירת מחדל (true) => האלמנט מוסתר עד ה-cue. אם יש עוד tween על אותו אלמנט
+// (למשל פעימה אחרי הכניסה) שלח לו immediateRender:false, אחרת הוא דורס את מצב ההתחלה של הכניסה (ולהפך: בלי hide ראשוני האלמנט נראה מוקדם = חפיפה)
+const IN=(el,t,o={})=>tl.fromTo(el,{opacity:0,y:o.y??30,x:o.x??0,scale:o.s??1},{opacity:1,y:0,x:0,scale:1,duration:o.d??.55,ease:o.e??'power3.out'},t);
+const OUT=(el,t,d=.3)=>tl.to(el,{opacity:0,duration:d,ease:'power1.in'},t);
+function typeOn(el,text,t,dur){const o={p:0};tl.to(o,{p:1,duration:dur,ease:'none',onUpdate:()=>{el.textContent=text.slice(0,Math.round(text.length*o.p))}},t)}
+// קטגוריות צבע (תג עליון + סרגל התקדמות מקוטע). שנה לפי הסרטון; בסרטון הסבר: מושג כללי כחול, שיטה כתומה, דוגמה ירוקה
+const CAT={intro:{c:'#cfd9ff',t:'מבוא'},concept:{c:'#4aa8ff',t:'מושג כללי'},method:{c:'#ffb347',t:'שיטת העבודה שלי'},example:{c:'#3dff9a',t:'דוגמה חיה'}};
+const segs=[];
+function setCats(i,list){list.forEach((x,k)=>{const t0=x[0]==='start'?OFF[i]:Q(i,x[0]);const t1=k+1<list.length?Q(i,list[k+1][0]):OFF[i]+DUR[i];segs.push({t0,t1,cat:x[1]})})}
+// כניסת סצנה: מופיעה עם clip-path, נעלמת (opacity 0) 0.3 ש' לפני סיומה. הסצנה הקודמת תמיד נעלמת לפני שהבאה נכנסת
+function reveal(sc,i){
+  const t0=OFF[i],t1=OFF[i]+DUR[i];
+  tl.set(sc,{visibility:'visible',opacity:1},t0);
+  tl.fromTo(sc,{clipPath:'circle(0% at 50% 55%)'},{clipPath:'circle(150% at 50% 55%)',duration:.7,ease:'power3.out',immediateRender:false},t0);
+  tl.to(sc,{opacity:0,duration:.3,ease:'power1.in'},t1-.3);tl.set(sc,{visibility:'hidden'},t1);
+}
+// ---- סצנות (מחליפים בתוכן אמיתי). כלל מבנה בטוח מחפיפות: כל שלב (phase) במכל משלו; מכל קודם נעלם לפני שהבא נכנס (מרווח ~0.3 ש')
+function S01(sc,i){
+  const title=$('כותרת הסצנה <span class="co">הראשונה</span>','h1 abs',sc,'right:100px;top:160px;width:1200px');IN(title,OFF[i]+.3,{x:100,y:0});
+  // phase 1: רשימה שמופיעה ב-cue 'list'; phase 2 מחליפה אותה ב-cue 'next' (הראשונה נעלמת קודם)
+  const p1=$('','abs',sc,'right:100px;top:420px;width:1100px');
+  ['ראשון','שני','שלישי'].forEach((s,k)=>{const r=$(s,'t abs',p1,`right:0;top:${k*80}px`);IN(r,Q(i,'list')+k*.35)});
+  OUT(p1,Q(i,'next')-.3);
+  const p2=$('<span class="me">והנה השלב הבא</span>','h2 abs',sc,'right:100px;top:480px');IN(p2,Q(i,'next')+.1);
+  setCats(i,[['start','intro'],['list','concept'],['next','method']]);
+}
+function S02(sc,i){
+  const box=$('','ec',sc,'right:100px;top:300px;width:900px;height:360px;padding:40px');
+  const l=$('','h2 abs',box,'right:40px;top:60px');typeOn(l,'דוגמה שמוקלדת על המסך',Q(i,'type'),1.6);
+  IN(box,OFF[i]+.3,{y:60,s:.9});
+  setCats(i,[['start','example']]);
+}
+const builders=[S01,S02];
+builders.forEach((b,i)=>{const sc=$('','scene');reveal(sc,i);b(sc,i)});
+const badge=document.getElementById('badge'),hudEl=document.getElementById('hud');segs.sort((a,b)=>a.t0-b.t0);
+const hudFills=[];DUR.forEach(d=>{const sg=$('','',hudEl,`flex:${d}`);const f=document.createElement('i');sg.appendChild(f);hudFills.push(f)});
+function updChrome(t){
+  let cat='intro';for(const s of segs){if(t>=s.t0&&t<s.t1)cat=s.cat}
+  const c=CAT[cat];badge.style.background=c.c+'33';badge.style.border=`3px solid ${c.c}`;badge.style.color=c.c;badge.textContent=c.t;
+  DUR.forEach((d,i)=>{let cc='intro';for(const s of segs){if(OFF[i]+d/2>=s.t0&&OFF[i]+d/2<s.t1)cc=s.cat}hudFills[i].style.background=CAT[cc].c;hudFills[i].style.width=(Math.max(0,Math.min(1,(t-OFF[i])/d))*100)+'%'});
+}
+window.TOTAL=TOTAL;window.OFF=OFF;
+window.seek=function(t){tl.time(t);updChrome(t)};      // tl.time(t) דטרמיניסטי: אין לצלם בזמן אמת
+window.preload=async function(){await document.fonts.ready;await Promise.all([...document.images].map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r})))};
+</script></body></html>
