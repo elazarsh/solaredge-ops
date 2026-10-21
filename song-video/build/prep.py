@@ -12,7 +12,7 @@ import json, re, subprocess, sys, array, math, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 FPS = 24
-LEAD = 3.5       # title card before the song starts
+LEAD = 5.5       # title card before the song starts
 TAIL = 10.0       # end card after the song
 SONG_DUR = 232.32
 
