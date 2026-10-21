@@ -1,0 +1,14 @@
+{
+  "provider": "gemini",
+  "tts_model": "gemini-3.8-flash-tts",
+  "voice": "Sulafat",
+  "lang": "he",
+  "style": "Israeli woman in her thirties, native Hebrew, talking casually to her phone camera in an Instagram story. Natural, relaxed, a little self-ironic, a smile in the voice. Not an announcer.",
+  "lines": [
+    { "id": "01-open", "text": "אָז בִּקַּשְׁתֶּם... מָה יֵשׁ לִי בַּתִּיק." },
+    { "id": "02-evening", "text": "וְזֶה... בִּשְׁבִיל הָעֶרֶב.", "style": "Quieter, a tired half-sigh, slower. Honest, not dramatic." },
+    { "id": "03-punch", "text": "הָעֲבוֹדָה נִגְמֶרֶת בְּאַרְבַּע. הַנְּצָנְצִים? אַף פַּעַם.", "style": "Amused and warm, laughing a little on the second sentence. Unhurried." },
+    { "id": "04-cta", "text": "מְעוֹנוֹת הַר בְּרָכָה מְחַפְּשִׂים מְטַפְּלוֹת וּמְטַפְּלִים. דַּבְּרוּ עִם אִירִית.", "style": "Warm, inviting and clear. Calm pace." }
+  ],
+  "bgm": { "mode": "none" }
+}

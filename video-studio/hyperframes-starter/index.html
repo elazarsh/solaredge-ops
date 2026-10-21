@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="he">
+    <!-- Never put dir="rtl" on <html>: it renders a blank video. Scope direction: rtl to text elements. -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <!-- GSAP is served locally: cdn.jsdelivr.net is blocked in the cloud sandbox. -->
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/Heebo-VF.ttf"); font-weight: 100 900; }
+      @font-face { font-family: "Rubik"; src: url("assets/fonts/Rubik-VF.ttf"); font-weight: 300 900; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #FFB400; }
+      #root {
+        width: 100%; height: 100%;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+        font-family: "Heebo", sans-serif; direction: rtl;
+      }
+      #words { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; direction: rtl; }
+      .word { color: #fff; font-size: 200px; font-weight: 900; line-height: 1; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
+      <div id="words" class="clip" data-start="0" data-duration="4" data-track-index="0">
+        <div class="word">בואי</div>
+        <div class="word">לגדול</div>
+        <div class="word">איתנו</div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".word", { y: 180, scale: 0.4, opacity: 0, duration: 0.7, ease: "back.out(1.8)", stagger: 0.18 }, 0.1);
+      tl.to("body", { backgroundColor: "#FF5A5F", duration: 0.01 }, 1.6);
+      tl.to("body", { backgroundColor: "#00A699", duration: 0.01 }, 2.8);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+out/raw-*
+hf/snapshots/
+hf/assets/gen/raw/
+hf/assets/gen/cut.log
+hf/assets/music/bed-b.mp3
+hf/assets/music/A1.mp3
+hf/assets/music/B2.mp3
+v2/out/raw-*
+v2/seg/
+v2/footage.mp4
+v2/hf/snapshots/
+v2/a.wav
+v2/b.wav
+v2/clips/s6c_glitter.mp4
+v2/hf3/snapshots/
+v2/vo4/*.mp3
+v2/vo4/t*.wav
