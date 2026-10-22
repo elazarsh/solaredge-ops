@@ -2,9 +2,22 @@
   "extraKnownMarketplaces": {
     "hyperframes": {
       "source": { "source": "github", "repo": "heygen-com/hyperframes" }
+    },
+    "claude-plugins-official": {
+      "source": { "source": "github", "repo": "anthropics/claude-plugins-official" }
+    },
+    "superpowers-marketplace": {
+      "source": { "source": "github", "repo": "obra/superpowers-marketplace" }
+    },
+    "caveman": {
+      "source": { "source": "github", "repo": "JuliusBrussee/caveman" }
     }
   },
   "enabledPlugins": {
-    "hyperframes@hyperframes": true
+    "hyperframes@hyperframes": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "claude-security@claude-plugins-official": true,
+    "superpowers@superpowers-marketplace": true,
+    "caveman@caveman": true
   }
 }
