@@ -26,7 +26,7 @@ const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, de
 page.on('response', r => { if (r.status() >= 400) console.error('HTTP', r.status(), r.url()); });
 page.on('pageerror', e => console.error('PAGEERROR', e.message));
 page.on('console', m => { if (m.type() === 'error') console.error('CONSOLE', m.text()); });
-await page.goto(`http://127.0.0.1:${port}/build/index.html`);
+await page.goto(`http://127.0.0.1:${port}/build/index.html${arg('look', null) ? '?look=' + arg('look') : ''}`);
 await page.waitForFunction(() => window.READY === true, null, { timeout: 120000 });
 const png = arg('png', false);
 const q = Number(arg('q', 92));

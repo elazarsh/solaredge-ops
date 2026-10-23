@@ -84,6 +84,11 @@ const NIQ=/[֑-ׇ]/g;
 const lt=s=>s.replace(NIQ,'').replace(/[^א-ת]/g,'');
 const easeOut=x=>1-Math.pow(1-clamp(x),3);
 const PIVOT=109.6;
+const LOOKS={
+  base:{img:.5,scrim:[.72,.54,.14],satPre:.62,satPost:1.02,brPre:.96,brPost:1.04,tint:.62,winMul:1,dim:.38,rays:1,mote:1,txt:'#dfe6ee',txtWarm:'#fff0d6'},
+  alive:{img:.78,scrim:[.50,.34,.06],satPre:.98,satPost:1.22,brPre:1.12,brPost:1.18,tint:.22,winMul:1.2,dim:.56,rays:2.1,mote:1.35,txt:'#f4f7fb',txtWarm:'#fff6e4'}
+};
+const LOOK=LOOKS[new URLSearchParams(location.search).get('look')||'base'];
 let TL,stz=[],ghost=null,titles={},ctx,sprites={},P=[],E=[];
 
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -120,6 +125,8 @@ async function init(){
   TL=await (await fetch('/build/timeline.json')).json();
   await document.fonts.load('400 60px Poem');await document.fonts.load('600 60px Poem');
   ctx=document.getElementById('fx').getContext('2d');
+  document.getElementById('base').style.filter=`brightness(${LOOK.img}) saturate(.9)`;
+  document.getElementById('scrim').style.background=`radial-gradient(ellipse 62% 58% at 50% 50%,rgba(7,12,18,${LOOK.scrim[0]}) 0%,rgba(7,12,18,${LOOK.scrim[1]}) 55%,rgba(7,12,18,${LOOK.scrim[2]}) 100%)`;
   // sprites
   const mk=(r,g,b)=>{const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');
     const gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,`rgba(${r},${g},${b},1)`);gr.addColorStop(.35,`rgba(${r},${g},${b},.55)`);gr.addColorStop(1,`rgba(${r},${g},${b},0)`);
@@ -238,8 +245,8 @@ function renderBg(s){
   const bs=document.getElementById('base');
   bs.style.transform=`scale(${(1.0+0.06*p+punch).toFixed(4)}) translate(${(-8*warp(s)/240).toFixed(2)}px,${(-5*warp(s)/240).toFixed(2)}px)`;
   const g=sstep((s-108.3)/3.2);
-  document.getElementById('bg').style.filter=`saturate(${lerp(.62,1.02,g)}) brightness(${lerp(.96,1.04,g)})`;
-  document.getElementById('tint').style.opacity=lerp(.62,0,g);
+  document.getElementById('bg').style.filter=`saturate(${lerp(LOOK.satPre,LOOK.satPost,g)}) brightness(${lerp(LOOK.brPre,LOOK.brPost,g)})`;
+  document.getElementById('tint').style.opacity=lerp(LOOK.tint,0,g);
   const up=sstep((s-108.3)/1.4),dn=1-sstep((s-109.7)/1.7);
   document.getElementById('flash').style.opacity=s<109.7?0.5*up:0.5*dn;
   // rays
@@ -247,7 +254,7 @@ function renderBg(s){
   if(s>108.5)ra=lerp(0.14,0.34,sstep((s-111)/60))*(1-0.5*sstep((s-195)/15))+0.10*Math.max(0,Math.sin((s-163)/14*Math.PI))*(s>160&&s<182?1:0);
   if(s>=222&&s<240)ra=Math.max(ra,0.34);
   if(s<108.5)ra=0.05*sstep((s+3)/20);
-  const rays=document.getElementById('rays');rays.style.opacity=(ra*0.7*(0.85+0.15*Math.sin(s*0.7))).toFixed(3);
+  const rays=document.getElementById('rays');rays.style.opacity=(Math.min(.9,ra*LOOK.rays)*0.7*(0.85+0.15*Math.sin(s*0.7))).toFixed(3);
   rays.style.transform=`rotate(${(-8+0.07*tp).toFixed(2)}deg)`;
   // light leaks
   let la=0,lx=0;const leaks=[[59.0,61.6],[135.2,137.6],[160.0,162.6]];
@@ -258,7 +265,7 @@ function renderBg(s){
   gr.style.transform=`translate(${((gi*37)%61)-30}px,${((gi*53)%47)-23}px)`;
   // windows
   return Promise.all(TL.windows.map((w,wi)=>{
-    const a=windowState(w,s)*w.opacity;
+    const a=Math.min(.85,windowState(w,s)*w.opacity*LOOK.winMul);
     w.el.style.opacity=a.toFixed(4);
     if(a<=0)return null;
     let te=s;
@@ -297,7 +304,7 @@ function drawFx(s){
     const tw=0.75+0.25*Math.sin(p.tw+tp*1.6);
     const base=p.d*tw*sstep((s+4)/3);
     const sz=p.sz*(1+m*0.25)*6;
-    const aA=0.30*(1-m)*base,aG=0.42*m*base;
+    const aA=0.30*(1-m)*base,aG=0.42*LOOK.mote*m*base;
     if(aA>0.01){ctx.globalAlpha=aA;ctx.drawImage(sprites.ash,x-sz/2,y-sz/2,sz,sz)}
     if(aG>0.01){ctx.globalAlpha=aG;ctx.drawImage(sprites.gold,x-sz/2,y-sz/2,sz,sz)}
   }
@@ -354,9 +361,9 @@ function renderStanza(o,t){
   const n=o.words.length;const dur=0.45;
   const stag=n>1?Math.max(0,(x1-x0-dur)/(n-1)):0;
   const pre=o.pre;
-  const baseCol=pre?'#dfe6ee':'#fff0d6';
+  const baseCol=pre?LOOK.txt:LOOK.txtWarm;
   const gradA=pre?'#b9a47c,#efe0bd,#c4ab7b,#f3e6c6,#b9a47c':'#c9993f,#f9e8b8,#d9b36d,#fff3cf,#c9993f';
-  const dim=0.38;
+  const dim=LOOK.dim;
   // recede while the gold title blooms over the lyric
   let rec=0;if(o.recede)rec=sstep((t-o.recede[0])/0.6)*(1-sstep((t-o.recede[1])/0.6));
   let blkY=-40*rec+2.5*Math.sin(t*0.8+o.id);
