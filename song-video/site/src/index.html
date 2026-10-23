@@ -1,0 +1,70 @@
+<title>והנה איל</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700;900&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/*@@FONTS@@*/
+/* Layout idea: a dark foyer with three doors. Each door is a live miniature of one world (dawn, manuscript, stage). */
+:root{--bg:#0a0e1a;--ink:#f6f1e4;--dim:#b9b4a6;--gold:#e8c46c;--serif:"Frank Ruhl Libre","FRL Local","Times New Roman",serif;--sans:"Assistant","Segoe UI",Arial,sans-serif;color-scheme:dark}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--serif);font-size:19px;line-height:1.7;direction:rtl;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow-x:hidden}
+.page{max-width:1180px;margin:0 auto;padding-block:8vh 10vh;display:flex;flex-direction:column;gap:44px}
+.eyebrow{font:700 14px var(--sans);letter-spacing:.24em;color:var(--gold)}
+h1{font:900 clamp(64px,13vw,168px)/.98 var(--serif);margin:10px 0 0;background:linear-gradient(180deg,#fff6df 10%,#e8c46c 62%,#b88a38);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font:400 clamp(20px,2.5vw,27px)/1.6 var(--serif);max-width:32em;color:var(--dim);margin:14px 0 0;text-wrap:balance}
+.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media (max-width:900px){.doors{grid-template-columns:minmax(0,1fr)}}
+.door{box-shadow:0 0 0 1px rgba(255,255,255,.12);position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;min-height:460px;padding:26px;border-radius:6px;overflow:hidden;text-decoration:none;color:var(--ink);isolation:isolate;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.door:hover,.door:focus-visible{transform:translateY(-6px)}
+.door:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.door .art{position:absolute;inset:0;z-index:-1}
+.door .no{font:900 14px var(--sans);letter-spacing:.22em}
+.door h2{font:900 clamp(34px,4vw,48px)/1.05 var(--serif);margin:0}
+.door p{margin:0;font:400 17px/1.55 var(--sans);max-width:24em}
+.door .go{margin-top:8px;font:700 15px var(--sans);display:inline-flex;gap:8px;align-items:center}
+.door .go::after{content:"‹";font-size:22px;line-height:1;transition:transform .3s}
+.door:hover .go::after{transform:translateX(-6px)}
+
+/* door 1: dawn */
+.d1{background:linear-gradient(180deg,#0a0e1c 0%,#2a3a66 45%,#f0a458 100%)}
+.d1 .art{background:
+  radial-gradient(60% 40% at 30% 100%,rgba(255,226,150,.9),transparent 70%),
+  radial-gradient(1.5px 1.5px at 20% 14%,#fff,transparent),radial-gradient(1.5px 1.5px at 62% 22%,#fff,transparent),radial-gradient(1.5px 1.5px at 80% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 40% 30%,#fff,transparent)}
+.d1 .art::after{content:"";position:absolute;left:-10%;right:-10%;bottom:0;height:44%;background:#0b1224;clip-path:polygon(0 70%,16% 50%,34% 62%,56% 28%,76% 52%,100% 36%,100% 100%,0 100%);animation:drift 14s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translateX(-3%)}}
+.d1 .no{color:#ffd9a0}
+/* door 2: manuscript */
+.d2{background:#d8c9a2;color:#22170c}
+.d2 .art{background:radial-gradient(70% 55% at 50% 40%,rgba(255,244,214,.95),transparent 75%),linear-gradient(180deg,rgba(20,10,2,.55),rgba(20,10,2,.15) 70%)}
+.d2 .art::before{content:"";position:absolute;left:18%;right:18%;top:14%;height:46%;box-shadow:inset 0 0 0 1px #22170c,inset 0 0 0 5px rgba(255,250,232,.0),inset 0 0 0 6px rgba(34,23,12,.55);background:repeating-linear-gradient(180deg,transparent 0 18px,rgba(34,23,12,.55) 18px 21px)}
+.d2 .art::after{content:"";position:absolute;right:50%;top:8%;margin-right:-7px;width:14px;height:24px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(60% 70% at 50% 70%,#fff3b0,#ffb13b 60%,#e8641c);box-shadow:0 0 22px 8px rgba(255,160,50,.7);animation:fl 1.3s ease-in-out infinite alternate}
+@keyframes fl{0%{transform:scale(1,1) rotate(-3deg)}100%{transform:scale(1.05,.95) rotate(2deg)}}
+.d2 .no{color:#8b2a1d} .d2 p{color:#3a2b1a} .d2 .go{color:#8b2a1d}
+/* door 3: stage */
+.d3{background:#070b18}
+.d3 .art{background:conic-gradient(from 200deg at 50% 100%,transparent 0 10deg,rgba(255,226,150,.28) 10deg 14deg,transparent 14deg 22deg,rgba(255,226,150,.28) 22deg 26deg,transparent 26deg 34deg,rgba(255,226,150,.28) 34deg 38deg,transparent 38deg 46deg,rgba(255,226,150,.28) 46deg 50deg,transparent 50deg 360deg),radial-gradient(70% 60% at 50% 100%,#e8964a,#1f2a52 70%,#070b18);animation:spin 16s linear infinite alternate}
+@keyframes spin{to{filter:hue-rotate(-24deg) brightness(1.15)}}
+.d3 .no{color:#ffd36b}
+.notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;font:400 16px/1.65 var(--sans);color:var(--dim)}
+@media (max-width:900px){.notes{grid-template-columns:minmax(0,1fr)}}
+.notes b{display:block;color:var(--ink);font-weight:700;margin-bottom:4px}
+@media (prefers-reduced-motion:reduce){.door .art,.door .art::before,.door .art::after{animation:none!important}}
+</style>
+<div class="page">
+  <header>
+    <div class="eyebrow">קריאה בנחת · פרשנות · מראי מקומות</div>
+    <h1>וְהִנֵּה אַיִל</h1>
+    <p class="lead">שלוש דרכים לקרוא את אותו שיר. בכולן עשר תחנות, בית אחרי בית, ומה שעומד מאחוריו. בכולן האווירה משתנה עם התקדמות השיר, מענן קשור על ההר ועד אור בוקר.</p>
+  </header>
+  <nav class="doors" aria-label="שלושה עיצובים">
+    <a class="door d1" href="a-dawn.html"><div class="art"></div><span class="no">עיצוב א</span><h2>עלות השחר</h2><p>עלייה אחת ארוכה. השמיים, ההרים והחלקיקים משתנים בגלילה, ובאיל הכול נפתח לאור.</p><span class="go">לכניסה</span></a>
+    <a class="door d2" href="b-manuscript.html"><div class="art"></div><span class="no">עיצוב ב</span><h2>כתב יד</h2><p>דף של כתב יד לאור נר. מילים באמצע, פרשנות ומקורות בשוליים. באיל הדף מואר והדיו הופך לזהב.</p><span class="go">לכניסה</span></a>
+    <a class="door d3" href="c-stage.html"><div class="art"></div><span class="no">עיצוב ג</span><h2>במה</h2><p>עשר במות חיות, אחת לכל תחנה, וטיפוגרפיה ענקית. מגירה בצד מספרת מה עומד מאחורי כל בית.</p><span class="go">לכניסה</span></a>
+  </nav>
+  <section class="notes">
+    <div><b>האזנה</b>בכל עיצוב אפשר ללחוץ ״האזינו״: הדף מלווה את השיר מילה אחר מילה וגולל לבד. לחיצה על בית מנגנת אותו.</div>
+    <div><b>מקורות</b>הפסוקים מועתקים מספריא ומתחת לכל קטע קישור לפתיחה בספריא. מה שלא אומת מסומן ״לא אומת״.</div>
+    <div><b>מצב יוצר</b>בתחתית כל עיצוב כפתור שמציג איפה מוצעות הדוגמיות השקטות של ״עוקד והנעקד״ ו״למען אחי ורעי״.</div>
+  </section>
+</div>
