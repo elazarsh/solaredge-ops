@@ -47,7 +47,7 @@ MD_PATTERNS = {
     "רשימה ממוספרת": re.compile(r"^[ \t]*\d+[.)][ \t]+\S", re.M),
 }
 
-HARD_CATEGORIES = {"chatbot"}
+HARD_CATEGORIES = {"chatbot", "validation"}
 CATEGORY_NAMES = {
     "chatbot": "שאריות מהצ'אט",
     "inflated": "ניפוח חשיבות / קלישאות",
@@ -58,6 +58,12 @@ CATEGORY_NAMES = {
     "analysis_tail": "זנב ניתוחי (ובכך מדגיש...)",
     "hedge": "הסתייגות נוסחתית",
     "promo": "שפה שיווקית",
+    "validation": "ליקוק הקורא או השאלה",
+    "reassure": "הרגעה שלא התבקשה",
+    "signpost": "הכרזה במקום אמירה (הנה מה ש..., בוא נפרק)",
+    "rhetorical": "שאלה רטורית שנענית מיד",
+    "closer": "הצעת המשך או סגירה נוסחתית",
+    "outreach": "מיילי פנייה: התרשמות והתלהבות כלליות",
 }
 
 
@@ -134,6 +140,18 @@ def main():
         rhythm_note = f"אורך משפט ממוצע {mean:.1f} מילים, שונות {cv:.2f}, {in_band:.0%} מהמשפטים בין 8 ל-20 מילים"
         if cv < 0.40 or in_band > 0.80:
             soft.append((0, "קצב אחיד מדי", rhythm_note))
+
+    # שברי משפט רצופים (3 משפטים או יותר של עד 4 מילים ברצף) ופתיחות זהות
+    run = 0
+    for i, n in enumerate(lengths):
+        run = run + 1 if n <= 4 else 0
+        if run == 3:
+            soft.append((0, "שברי משפט רצופים (קצב דרמטי)", sents[i - 2][:40] + " | " + sents[i - 1][:20] + " | " + sents[i][:20]))
+    openers = [s.split()[0] for s in sents]
+    for i in range(2, len(openers)):
+        if openers[i] == openers[i - 1] == openers[i - 2] and len(openers[i]) > 1:
+            soft.append((0, "שלושה משפטים רצופים שנפתחים באותה מילה", openers[i]))
+            break
 
     print(f"{words} מילים, {len(sents)} משפטים")
     if rhythm_note:
