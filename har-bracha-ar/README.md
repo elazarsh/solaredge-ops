@@ -30,6 +30,8 @@ python3 -m http.server 8000      # ואז http://localhost:8000/?sim=1
 ```
 
 * `?sim=1` מפעיל **מצב הדגמה** בלי מצלמה (גוררים עם האצבע/עכבר כדי להסתכל). טוב לפיתוח ולתצוגה במחשב.
+* **פריסה אוטומטית:** אחרי מיזוג ל־`main`, ה־workflow ‏`.github/workflows/har-bracha-ar-pages.yml` מפרסם את האתר ב־GitHub Pages.
+  חד־פעמי: Settings → Pages → Source: **GitHub Actions**. הכתובת: `https://<משתמש>.github.io/<מאגר>/`. שימו לב: אתר Pages הוא ציבורי, ובמאגר פרטי הוא דורש חשבון בתשלום.
 * **בטלפון חייבים HTTPS** (דרישת הדפדפן למצלמה ולחיישנים). הדרכים הפשוטות:
   העלאת התיקייה ל־GitHub Pages / Cloudflare Pages / Netlify (גרירה והורדה), או מנהרה זמנית לבדיקות (`cloudflared tunnel --url http://localhost:8000`).
 * בדיקות מתמטיקה: `node --test tests/geo.test.mjs`
