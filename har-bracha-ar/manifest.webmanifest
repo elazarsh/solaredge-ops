@@ -1,0 +1,12 @@
+{
+  "name": "נוף חי · הר ברכה",
+  "short_name": "נוף חי",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#06121c",
+  "theme_color": "#06121c",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

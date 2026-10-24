@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#06121c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>נוף חי · הר ברכה</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <video id="cam" playsinline muted autoplay></video>
+  <canvas id="fx"></canvas>
+  <div id="touch"></div>
+  <div id="labels"></div>
+  <canvas id="tape"></canvas>
+
+  <header id="top" hidden>
+    <div id="stationName"></div>
+    <div id="demoTag">נתוני הדגמה</div>
+  </header>
+
+  <aside id="tools" hidden>
+    <button id="btnCalib" title="כיול">⌖<span>כיול</span></button>
+    <button id="btnStation" title="תחנה">⌂<span>תחנה</span></button>
+    <button id="btnMode" title="מצב">◐<span>הדגמה</span></button>
+  </aside>
+
+  <footer id="bottom" hidden>
+    <div id="yearBar" hidden>
+      <span>שנה</span>
+      <input id="year" type="range" min="2026" max="2035" step="1" value="2030">
+      <output id="yearOut">2030</output>
+    </div>
+    <nav id="chips"></nav>
+  </footer>
+
+  <section id="calib" hidden>
+    <h3>כיול: יישרו את הטבעת</h3>
+    <p id="calibHint"></p>
+    <p id="calibDelta"></p>
+    <label class="fov">רוחב שדה <input id="fov" type="range" min="45" max="90" step="1" value="65"><output id="fovOut">65°</output></label>
+    <div class="row">
+      <button id="calibOk" class="primary">יושר ✓</button>
+      <button id="calibReset">איפוס</button>
+      <button id="calibSkip">דלג</button>
+    </div>
+  </section>
+
+  <section id="sheet" hidden>
+    <button id="sheetClose" aria-label="סגור">✕</button>
+    <div id="sheetBody"></div>
+  </section>
+
+  <section id="pick" hidden>
+    <h2>היכן אתם עומדים?</h2>
+    <div id="pickList"></div>
+  </section>
+
+  <section id="start">
+    <div class="grid"></div>
+    <div class="card">
+      <div class="eyebrow">הר ברכה · מציאות רבודה</div>
+      <h1>נוף חי</h1>
+      <p>כוונו את הטלפון אל האופק וראו מה יש שם — הרים, ערים, סיפורי תנ״ך והיסטוריה, וגם איך הישוב יראה בעוד שנים.</p>
+      <button id="go" class="primary big">הפעל מצלמה</button>
+      <button id="goSim" class="ghost">מצב הדגמה (בלי מצלמה)</button>
+      <small id="startErr"></small>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
