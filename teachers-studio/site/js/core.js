@@ -1,4 +1,4 @@
-/* ליבת האתר: כלי עזר, אחסון, העתקה, הורדה, ניתוב, דיאלוגים וערכת העבודה האישית */
+/* ליבת האתר: כלי עזר, אחסון, העתקה, הורדה, ניתוב עם מעברים, תפריט תצוגה, דיאלוגים וערכת העבודה האישית */
 (function (TS) {
   'use strict';
 
@@ -49,19 +49,19 @@
   };
 
   /* ---------- העתקה ---------- */
-  TS.copy = function (text, doneMsg) {
+  TS.copy = function (text, doneMsg, srcEl) {
+    function ok() { TS.toast(doneMsg || 'הועתק'); if (TS.fx) TS.fx.burst(srcEl); }
     function fallback() {
       var ta = document.createElement('textarea');
       ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
       document.body.appendChild(ta); ta.select();
-      var ok = false;
-      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      var done = false;
+      try { done = document.execCommand('copy'); } catch (e) { done = false; }
       document.body.removeChild(ta);
-      TS.toast(ok ? (doneMsg || 'הועתק') : 'ההעתקה נחסמה. סמנו את הטקסט והעתיקו ידנית.');
+      if (done) ok(); else TS.toast('ההעתקה נחסמה. סמנו את הטקסט והעתיקו ידנית.');
     }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function () { TS.toast(doneMsg || 'הועתק'); }, fallback);
-    } else { fallback(); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback);
+    else fallback();
   };
 
   /* ---------- הורדה: יכולת ה־downloads של claude.ai אם קיימת, אחרת קישור הורדה רגיל ---------- */
@@ -106,7 +106,7 @@
     });
   };
 
-  /* מוריד קובץ שפורסם יחד עם האתר */
+  /* מוריד קובץ שפורסם יחד עם האתר. קובצי ZIP נבנים בדפדפן מהקבצים המפורסמים. */
   TS.downloadPublished = function (path, filename) {
     var rec = /\.zip$/i.test(path) && TS.library && TS.library.recipe ? TS.library.recipe(path) : null;
     if (rec && window.JSZip) {
@@ -128,18 +128,18 @@
   };
 
   /* ---------- דיאלוגים ---------- */
-  function openDialog(d) {
+  TS.openDialog = function (d) {
     if (typeof d.showModal === 'function') { if (!d.open) d.showModal(); } else { d.setAttribute('open', ''); }
-  }
-  function closeDialog(d) {
+  };
+  TS.closeDialog = function (d) {
     if (typeof d.close === 'function') d.close(); else d.removeAttribute('open');
-  }
+  };
   TS.openViewer = function (title, text, actionsHtml, onActions) {
     $('#viewer-title').textContent = title;
     $('#viewer-text').textContent = text;
     $('#viewer-actions').innerHTML = actionsHtml || '';
     if (onActions) onActions($('#viewer-actions'));
-    openDialog($('#viewer'));
+    TS.openDialog($('#viewer'));
   };
 
   /* ---------- הערכה שלי: הנחיות ששמרתם, מקומי בדפדפן ---------- */
@@ -175,16 +175,16 @@
     render: function () {
       var l = TS.kit.list(), body = $('#kit-body'), acts = $('#kit-actions');
       if (!l.length) {
-        body.innerHTML = '<p class="muted">עדיין לא שמרתם הנחיות. בסוף כל מסלול בסטודיו יש כפתור ״שמירה בערכה שלי״.</p><p class="muted small">הערכה נשמרת בדפדפן הזה בלבד. כדי לשמור לצמיתות, הורידו קובץ.</p>';
+        body.innerHTML = '<p class="muted">עדיין לא שמרתם הנחיות. בסוף כל מסלול בסטודיו יש כפתור ״שמירה בערכה שלי״.</p><p class="muted small" style="margin-top:8px">הערכה נשמרת בדפדפן הזה בלבד. כדי לשמור לצמיתות, הורידו קובץ.</p>';
         acts.innerHTML = '';
         return;
       }
       body.innerHTML = '<ul class="kit-list">' + l.map(function (x) {
         return '<li><div><b>' + esc(x.title) + '</b><span class="muted small">' + esc(x.topic || '') + ' · ' + esc(x.date) + '</span></div>' +
-          '<div class="row-actions"><button class="btn sm" type="button" data-kit-copy="' + x.id + '">' + TS.icon('copy') + 'העתקה</button>' +
+          '<div class="row" style="gap:6px"><button class="btn sm" type="button" data-kit-copy="' + x.id + '">' + TS.icon('copy') + 'העתקה</button>' +
           '<button class="btn sm" type="button" data-kit-open="' + x.id + '">פתיחה בסטודיו</button>' +
           '<button class="btn sm ghost" type="button" data-kit-del="' + x.id + '" aria-label="מחיקה">' + TS.icon('trash') + '</button></div></li>';
-      }).join('') + '</ul><p class="muted small">הערכה נשמרת בדפדפן הזה בלבד ולא עוברת בין מכשירים. הורדה לקובץ שומרת עותק קבוע.</p>';
+      }).join('') + '</ul><p class="muted small" style="margin-top:14px">הערכה נשמרת בדפדפן הזה בלבד ולא עוברת בין מכשירים. הורדה לקובץ שומרת עותק קבוע.</p>';
       acts.innerHTML = '<button class="btn primary" type="button" id="kit-dl">' + TS.icon('download') + 'הורדת כל הערכה (Markdown)</button>';
       $('#kit-dl').addEventListener('click', function () { TS.save('teacher-kit.md', TS.kit.markdown()); });
     }
@@ -208,23 +208,31 @@
     return { view: 'home', param: null, section: 'home' };
   }
 
+  function reduced() { return !!(TS.fx && TS.fx.reduced()); }
+
   TS.render = function (token, opts) {
     opts = opts || {};
     var r = parse(token);
-    var out = TS.views[r.view](r.param);
     var main = $('#main');
-    main.innerHTML = out.html;
-    document.title = (out.title ? out.title + ' · ' : '') + TS.meta.siteName;
-    $$('.site-nav a').forEach(function (a) {
-      var on = a.getAttribute('data-section') === r.section;
-      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
-    });
-    $('#site-nav').classList.remove('open');
-    $('#btn-menu').setAttribute('aria-expanded', 'false');
-    if (out.after) out.after(main);
-    if (!opts.keepScroll) { window.scrollTo(0, 0); }
-    if (!opts.noFocus) { main.focus({ preventScroll: true }); }
+    function swap() {
+      var out = TS.views[r.view](r.param);
+      main.innerHTML = out.html;
+      document.title = (out.title ? out.title + ' · ' : '') + TS.meta.siteName;
+      $$('.links a').forEach(function (a) {
+        var on = a.getAttribute('data-section') === r.section;
+        if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      });
+      TS.closeMenu();
+      if (out.after) out.after(main);
+      if (!opts.keepScroll) window.scrollTo(0, 0);
+      if (!opts.noFocus) main.focus({ preventScroll: true });
+      if (TS.fx) { TS.fx.scan(main); TS.fx.navInd(); TS.fx.progress(); }
+    }
     current.token = (token || '').replace(/^#/, '') || 'home';
+    if (document.startViewTransition && !opts.instant && !reduced() && current.booted) {
+      try { document.startViewTransition(swap); } catch (e) { swap(); }
+    } else { swap(); }
+    current.booted = true;
   };
 
   TS.go = function (token, opts) {
@@ -238,6 +246,14 @@
     if (t !== current.token) TS.render(t);
   });
 
+  /* ---------- תפריט נייד ---------- */
+  TS.closeMenu = function () {
+    var nav = $('#site-nav'), b = $('#btn-menu');
+    if (nav) nav.classList.remove('open');
+    if (b) b.setAttribute('aria-expanded', 'false');
+    document.documentElement.style.overflow = '';
+  };
+
   /* ---------- אירועים כלליים ---------- */
   document.addEventListener('click', function (e) {
     var a = e.target.closest('[data-route]');
@@ -247,19 +263,19 @@
       return;
     }
     var c = e.target.closest('[data-close]');
-    if (c) { var d = c.closest('dialog'); if (d) closeDialog(d); return; }
+    if (c) { var d = c.closest('dialog'); if (d) TS.closeDialog(d); return; }
     var cp = e.target.closest('[data-copy-text]');
-    if (cp) { TS.copy(cp.getAttribute('data-copy-text')); return; }
+    if (cp) { TS.copy(cp.getAttribute('data-copy-text'), null, cp); return; }
     var cs = e.target.closest('[data-copy-sel]');
-    if (cs) { var el = $(cs.getAttribute('data-copy-sel')); if (el) TS.copy(el.textContent); return; }
+    if (cs) { var el = $(cs.getAttribute('data-copy-sel')); if (el) TS.copy(el.textContent, null, cs); return; }
     var kc = e.target.closest('[data-kit-copy]');
-    if (kc) { var it = TS.kit.list().filter(function (x) { return x.id === kc.getAttribute('data-kit-copy'); })[0]; if (it) TS.copy(it.text); return; }
+    if (kc) { var it = TS.kit.list().filter(function (x) { return x.id === kc.getAttribute('data-kit-copy'); })[0]; if (it) TS.copy(it.text, null, kc); return; }
     var kd = e.target.closest('[data-kit-del]');
     if (kd) { TS.kit.remove(kd.getAttribute('data-kit-del')); TS.kit.render(); return; }
     var ko = e.target.closest('[data-kit-open]');
     if (ko) {
       var it2 = TS.kit.list().filter(function (x) { return x.id === ko.getAttribute('data-kit-open'); })[0];
-      closeDialog($('#kit'));
+      TS.closeDialog($('#kit'));
       if (it2) TS.go('task-' + it2.taskId);
       return;
     }
@@ -278,32 +294,59 @@
       }, function () { TS.toast('הקובץ לא נמצא. פתחו את האתר בכתובת המפורסמת.'); });
       return;
     }
+    if (!e.target.closest('#prefs, #btn-prefs')) { var pf = $('#prefs'); if (pf && !pf.hidden) { pf.hidden = true; $('#btn-prefs').setAttribute('aria-expanded', 'false'); } }
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { var m = $('#site-nav.open'); if (m) { m.classList.remove('open'); $('#btn-menu').setAttribute('aria-expanded', 'false'); $('#btn-menu').focus(); } }
+    if (e.key === 'Escape') {
+      var pf = $('#prefs');
+      if (pf && !pf.hidden) { pf.hidden = true; $('#btn-prefs').setAttribute('aria-expanded', 'false'); $('#btn-prefs').focus(); }
+      var nav = $('#site-nav.open');
+      if (nav) { TS.closeMenu(); $('#btn-menu').focus(); }
+    }
   });
 
+  /* ---------- מעטפת: ערכת צבעים, הקרנה, תנועה, תפריטים ---------- */
   TS.chrome = function () {
     var root = document.documentElement;
-    function apply(key, cls, btn) {
+    root.classList.add('js');
+    var THEMES = ['auto', 'light', 'dark'], THEME_LABEL = { auto: 'אוטומטי', light: 'בהיר', dark: 'כהה' };
+
+    function applyTheme() {
+      var t = TS.store.get('theme', 'auto');
+      if (t === 'auto') { if (TS.store.get('theme-touched', false)) root.removeAttribute('data-theme'); }
+      else root.setAttribute('data-theme', t);
+      $('#pf-theme-st').textContent = THEME_LABEL[t] || 'אוטומטי';
+    }
+    function applyFlag(key, cls, stId) {
       var on = !!TS.store.get(key, false);
       root.classList.toggle(cls, on);
-      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      $('#' + stId).textContent = on ? 'פעיל' : 'כבוי';
       return on;
     }
-    var bs = $('#btn-size'), bm = $('#btn-motion');
-    apply('proj', 'proj', bs); apply('reduce', 'reduce', bm);
-    bs.addEventListener('click', function () { TS.store.set('proj', !TS.store.get('proj', false)); apply('proj', 'proj', bs); TS.toast(root.classList.contains('proj') ? 'תצוגת הקרנה פעילה' : 'תצוגת הקרנה כבויה'); });
-    bm.addEventListener('click', function () { TS.store.set('reduce', !TS.store.get('reduce', false)); apply('reduce', 'reduce', bm); TS.toast(root.classList.contains('reduce') ? 'התנועה הופחתה' : 'התנועה חזרה'); });
+    applyTheme(); applyFlag('proj', 'proj', 'pf-size-st'); applyFlag('reduce', 'reduce', 'pf-motion-st');
+
+    $('#pf-theme').addEventListener('click', function () {
+      var t = TS.store.get('theme', 'auto'), n = THEMES[(THEMES.indexOf(t) + 1) % THEMES.length];
+      TS.store.set('theme', n); TS.store.set('theme-touched', true); applyTheme();
+    });
+    $('#pf-size').addEventListener('click', function () { TS.store.set('proj', !TS.store.get('proj', false)); applyFlag('proj', 'proj', 'pf-size-st'); setTimeout(function () { TS.fx.navInd(); }, 60); });
+    $('#pf-motion').addEventListener('click', function () { TS.store.set('reduce', !TS.store.get('reduce', false)); applyFlag('reduce', 'reduce', 'pf-motion-st'); TS.fx.scan($('#main')); });
+
+    $('#btn-prefs').addEventListener('click', function (e) {
+      e.stopPropagation();
+      var p = $('#prefs'); p.hidden = !p.hidden;
+      this.setAttribute('aria-expanded', p.hidden ? 'false' : 'true');
+    });
     $('#btn-menu').addEventListener('click', function () {
       var nav = $('#site-nav'), open = !nav.classList.contains('open');
       nav.classList.toggle('open', open);
       this.setAttribute('aria-expanded', open ? 'true' : 'false');
+      root.style.overflow = open ? 'hidden' : '';
     });
-    $('#btn-kit').addEventListener('click', function () { TS.kit.render(); openDialog($('#kit')); });
+    $('#btn-kit').addEventListener('click', function () { TS.kit.render(); TS.openDialog($('#kit')); });
     $$('dialog').forEach(function (d) {
-      d.addEventListener('click', function (e) { if (e.target === d) closeDialog(d); });
+      d.addEventListener('click', function (e) { if (e.target === d) TS.closeDialog(d); });
     });
     TS.kit.badge();
   };
