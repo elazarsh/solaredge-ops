@@ -33,6 +33,8 @@
         TS.tasks.map(function (t) { return item(t.title, t.short, '', viewBtn('downloads/prompts/' + t.id + '.md', t.id + '.md') + dlBtn('downloads/prompts/' + t.id + '.md', t.id + '-template.md') + '<a class="btn sm" href="#task-' + t.id + '" data-route="task-' + t.id + '">למחולל</a>'); }).join('') +
       '</section>' +
 
+      '<section class="lib-group"><h2>לוגו בית הספר</h2><p class="lead" style="margin-block:6px 10px">קובץ הלוגו לשימוש בתוצרים. מצרפים אותו לשיחה בכלי ה־AI כשמבקשים עיצוב עם לוגו.</p>' +
+        '<div class="lib-item"><div><h4>לוגו חמ״ד בנים הר ברכה (PNG)</h4><p>רקע שקוף מחוץ לעיגול. הלוגו הוא של בית הספר, ואינו תבנית של הסטודיו.</p></div><div class="row-actions"><img src="assets/logo.png" alt="" width="69" height="63" style="background:#fff;border-radius:50%">' + dlBtn('assets/logo.png', 'har-bracha-logo.png') + '</div></div></section>' +
       '<section class="lib-group"><h2>מדריכים וסקריפטים</h2>' +
         L.guides.map(function (g) { return item(g[1], g[2], own(), viewBtn('downloads/' + g[0], g[0].split('/').pop()) + dlBtn('downloads/' + g[0], g[0].split('/').pop())); }).join('') +
       '</section>' +

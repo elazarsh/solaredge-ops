@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="הר ברכה">
-  <title>הר ברכה</title>
-  <circle cx="32" cy="32" r="30" fill="#1D4E89"/>
-  <path d="M10 45 L26 23 L34 33 L40 25 L54 45 Z" fill="#F7F2E8"/>
-  <circle cx="45" cy="17" r="4.5" fill="#F7F2E8"/>
-  <path d="M14 49 H50" stroke="#F7F2E8" stroke-width="2.2" stroke-linecap="round"/>
-</svg>

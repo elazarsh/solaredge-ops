@@ -41,7 +41,7 @@
     var html =
       '<div class="hero"><div class="wrap hero-in" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));align-items:center">' +
         '<div class="stack lg">' +
-          '<div class="stack"><span class="eyebrow rise">הסטודיו של חדר המורים · חמ״ד בנים הר ברכה</span>' +
+          '<div class="stack"><img class="hero-logo rise" src="assets/logo.png" alt="לוגו חמ״ד בנים הר ברכה: מקום שהלב חפץ" width="120" height="110"><span class="eyebrow rise">הסטודיו של חדר המורים · חמ״ד בנים הר ברכה</span>' +
           '<h1 class="rise d1">מה תרצו להכין היום?</h1>' +
           '<p class="lead rise d2">בחרו משימה אמיתית מהשבוע שלכם, ענו על כמה שאלות, וקבלו הנחיה מקצועית מוכנה להעתקה לכלי הבינה המלאכותית שלכם.</p></div>' +
           '<div class="search rise d3" role="search">' + icon('search') + '<label class="sr" for="task-q">חיפוש משימה</label><input id="task-q" type="search" placeholder="חפשו: מבחן, שיר, הודעה להורים…" autocomplete="off"></div>' +

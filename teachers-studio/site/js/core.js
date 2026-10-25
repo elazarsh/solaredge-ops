@@ -119,9 +119,9 @@
         .then(function (blob) { return TS.save(filename || path.split('/').pop(), blob, 'application/zip'); })
         .catch(function () { TS.toast('יצירת ה־ZIP נכשלה. הורידו את הקבצים אחד אחד מהספרייה.'); });
     }
-    var binary = /\.(zip)$/i.test(path);
+    var binary = /\.(zip|png)$/i.test(path);
     return TS.fetchFile(path, binary).then(function (data) {
-      return TS.save(filename || path.split('/').pop(), data, binary ? 'application/zip' : 'text/plain;charset=utf-8');
+      return TS.save(filename || path.split('/').pop(), data, /\.png$/i.test(path) ? 'image/png' : binary ? 'application/zip' : 'text/plain;charset=utf-8');
     }, function () {
       TS.toast('הקובץ לא נמצא. אם פתחתם את האתר מקובץ מקומי, השתמשו בכתובת המפורסמת.');
     });

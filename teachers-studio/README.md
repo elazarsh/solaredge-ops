@@ -33,7 +33,7 @@ cd teachers-studio/site && python3 -m http.server 8765
 
 ## החלפת הלוגו
 
-`site/assets/logo.svg` הוא לוגו זמני. מחליפים בקובץ אחד (SVG או PNG, ואז מעדכנים את שם הקובץ ב־`site/index.html`).
+הלוגו נמצא ב־`site/assets/logo.png` (הלוגו של בית הספר, חתוך לעיגול עם רקע שקוף מחוץ לו). להחלפה: מחליפים את הקובץ באותו שם.
 
 ## תוכן ובדיקות
 
