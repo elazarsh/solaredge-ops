@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דף עבודה</title>
+<style>
+  /* משתנים: משנים כאן צבעים וגדלים בלבד */
+  :root {
+    --brand: #1d4e89;
+    --ink: #1b1f2a;
+    --muted: #596070;
+    --line: #c9ccd3;
+    --paper: #ffffff;
+    --font-body: "Heebo", "Assistant", "Segoe UI", Arial, sans-serif;
+    --size-body: 14pt;
+    --size-title: 22pt;
+    --gap: 12mm;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #eceff3; color: var(--ink); font-family: var(--font-body); font-size: var(--size-body); line-height: 1.6; }
+  .page { width: 210mm; min-height: 297mm; margin: 8mm auto; padding: 14mm; background: var(--paper); }
+  h1 { font-size: var(--size-title); margin: 0 0 4mm; color: var(--brand); }
+  .meta { display: flex; gap: var(--gap); border-bottom: 2px solid var(--brand); padding-bottom: 3mm; margin-bottom: var(--gap); color: var(--muted); }
+  .q { margin-bottom: var(--gap); break-inside: avoid; }
+  .q b { color: var(--brand); }
+  .answer { border-bottom: 1px solid var(--line); height: 9mm; }
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { background: none; }
+    .page { margin: 0; width: auto; min-height: 0; padding: 0; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <h1>כותרת הדף</h1>
+  <div class="meta"><span>שם: ____________</span><span>תאריך: ____________</span></div>
+  <div class="q"><b>1.</b> שאלה לדוגמה.<div class="answer"></div></div>
+  <div class="q"><b>2.</b> שאלה לדוגמה נוספת.<div class="answer"></div></div>
+</main>
+</body>
+</html>
