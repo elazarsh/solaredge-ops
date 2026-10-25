@@ -82,7 +82,11 @@ main:focus { outline: none; }
 ::selection { background: var(--brand-soft-2); }
 [hidden] { display: none !important; }
 code, kbd { font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: .86em; }
-code { background: var(--brand-soft); padding: 1px 6px; border-radius: 6px; direction: ltr; unicode-bidi: embed; }
+code { background: var(--brand-soft); padding: 1px 6px; border-radius: 6px; direction: ltr; unicode-bidi: isolate; }
+bdi[dir=ltr] { unicode-bidi: isolate; }
+:where(em, i, cite, address) { font-style: normal; }
+p em, li em, .prose em { font-weight: 600; }
+p, li { text-wrap: pretty; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip { position: absolute; top: -80px; inset-inline-start: 12px; background: var(--brand); color: var(--brand-ink); padding: 10px 18px; border-radius: 0 0 12px 12px; z-index: 120; transition: top .2s; }
 .skip:focus { top: 0; }
@@ -114,9 +118,9 @@ main { padding-top: 96px; min-height: 80vh; }
 .small { font-size: .88rem; }
 
 /* ---------- טיפוגרפיה ---------- */
-h1, h2, h3, h4 { margin: 0; line-height: 1.1; text-wrap: balance; font-family: var(--f-display); letter-spacing: -.015em; }
-h1 { font-weight: 700; font-size: clamp(2.6rem, 7.4vw, 5.8rem); line-height: 1.02; letter-spacing: -.03em; }
-h2 { font-weight: 600; font-size: clamp(1.9rem, 4.2vw, 3.1rem); letter-spacing: -.025em; }
+h1, h2, h3, h4 { margin: 0; line-height: 1.1; text-wrap: balance; font-family: var(--f-display); letter-spacing: 0; }
+h1 { font-weight: 700; font-size: clamp(2.6rem, 7.4vw, 5.8rem); line-height: 1.02; letter-spacing: 0; }
+h2 { font-weight: 600; font-size: clamp(1.9rem, 4.2vw, 3.1rem); letter-spacing: 0; }
 h3 { font-weight: 600; font-size: 1.35rem; }
 h4 { font-weight: 600; font-size: 1.02rem; letter-spacing: 0; }
 p { margin: 0; }
@@ -134,7 +138,7 @@ p { margin: 0; }
 .nav-wrap.scrolled .nav { box-shadow: 0 14px 40px -16px rgba(18, 20, 27, .35); }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); padding-inline: 4px 10px; flex: none; }
 .brand img { height: 38px; width: auto; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px var(--line); }
-.brand b { font-family: var(--f-display); font-size: .98rem; font-weight: 600; white-space: nowrap; letter-spacing: -.01em; }
+.brand b { font-family: var(--f-display); font-size: .98rem; font-weight: 600; white-space: nowrap; letter-spacing: 0; }
 .links { position: relative; display: flex; align-items: center; gap: 0; }
 .links a { position: relative; z-index: 1; color: var(--ink-2); text-decoration: none; font-weight: 500; font-size: .92rem; padding: 9px 14px; border-radius: 999px; white-space: nowrap; transition: color .2s; }
 .links a:hover { color: var(--ink); }
@@ -316,7 +320,7 @@ html.js [data-rv].in { opacity: 1; transform: none; filter: none; }
 .task-list { list-style: none; margin: 0; padding: 0; }
 .task-link { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; padding: 26px 8px; border-bottom: 1px solid var(--line-2); text-decoration: none; color: var(--ink); transition: padding .35s var(--ease), background .3s; }
 .task-list li:first-child .task-link { border-top: 1px solid var(--line-2); }
-.task-link b { display: block; font-family: var(--f-display); font-weight: 500; font-size: clamp(1.4rem, 3vw, 2.1rem); letter-spacing: -.02em; transition: color .25s; }
+.task-link b { display: block; font-family: var(--f-display); font-weight: 500; font-size: clamp(1.4rem, 3vw, 2.1rem); letter-spacing: 0; transition: color .25s; }
 .task-link small { display: block; color: var(--ink-3); font-size: .95rem; margin-top: 2px; }
 .task-link .arr { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line-2); display: grid; place-items: center; transition: all .35s var(--spring); color: var(--ink-3); }
 .task-link:hover { padding-inline: 22px; color: var(--ink); background: linear-gradient(to left, var(--brand-soft), transparent 70%); }
@@ -620,3 +624,7 @@ html.reduce .words .w > span { transform: none; }
 .mock .mk-body.one { grid-template-columns: minmax(0, 1fr); }
 .mock .mk-foot { padding: 10px 14px; border-top: 1px solid var(--line); background: var(--bg-2); }
 .mock .mk-side b { font-size: .72rem; color: var(--ink-3); font-weight: 600; }
+
+/* RTL: אייקונים כיווניים */
+svg:has(> use[href="#i-external"]) { transform: scaleX(-1); }
+.timer .clock { unicode-bidi: isolate; }

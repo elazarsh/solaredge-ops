@@ -253,7 +253,7 @@
           }
         });
         var navLinks = $$('.cnav a', root);
-        function setOn(id) { navLinks.forEach(function (a) { var on = a.getAttribute('data-chgo') === id; a.classList.toggle('on', on); if (on && a.scrollIntoView) { var nav = a.parentNode; nav.scrollLeft = a.offsetLeft - nav.clientWidth / 2 + a.clientWidth / 2; } }); }
+        function setOn(id) { navLinks.forEach(function (a) { var on = a.getAttribute('data-chgo') === id; a.classList.toggle('on', on); if (on && a.scrollIntoView) { var nav = a.parentNode, ar = a.getBoundingClientRect(), nr = nav.getBoundingClientRect(); nav.scrollLeft += (ar.left + ar.width / 2) - (nr.left + nr.width / 2); } }); }
         if ('IntersectionObserver' in window) {
           var io = new IntersectionObserver(function (entries) { entries.forEach(function (en) { if (en.isIntersecting) setOn(en.target.getAttribute('data-ch')); }); }, { rootMargin: '-35% 0px -55% 0px' });
           $$('.concept[data-ch]', root).forEach(function (c) { io.observe(c); });

@@ -109,7 +109,7 @@
         '<label class="chip rad"><input type="radio" name="mode" value="ready"' + (st.mode !== 'ask' ? ' checked' : '') + '><span><b>יש לי מספיק פרטים</b><em>הכינו את התוצר עכשיו</em></span></label>' +
         '<label class="chip rad"><input type="radio" name="mode" value="ask"' + (st.mode === 'ask' ? ' checked' : '') + '><span><b>עזרו לי לדייק</b><em>שאלו עד שלוש שאלות ואז הכינו</em></span></label></div></fieldset>' +
       '<div class="codebox final-prompt" style="margin-top:24px"><header><span>ההנחיה <span class="muted small" id="wc"></span></span><button class="btn sm" type="button" data-act="copy">' + icon('copy') + 'העתקה</button></header><pre id="final-pre" tabindex="0"></pre></div>' +
-      '<div class="final-actions"><button class="btn primary lg mag" type="button" data-act="copy">' + icon('copy') + 'העתקת ההנחיה</button><button class="btn" type="button" data-act="md">' + icon('download') + 'הורדה כ־Markdown</button><button class="btn" type="button" data-act="kit">' + icon('kit') + 'שמירה בערכה שלי</button></div>' +
+      '<div class="final-actions"><button class="btn primary lg mag" type="button" data-act="copy">' + icon('copy') + 'העתקת ההנחיה</button><button class="btn" type="button" data-act="md">' + icon('download') + 'הורדה כ־Markdown</button><button class="btn" type="button" data-act="html" title="דף עצמאי שנפתח נכון בעברית בדפדפן וב־Word">' + icon('download') + 'הורדה כדף HTML</button><button class="btn" type="button" data-act="kit">' + icon('kit') + 'שמירה בערכה שלי</button></div>' +
       '<div style="margin-top:44px">' +
         acc('הכלי המתאים, ולמה', '', toolAdvice(task)) +
         acc('רשימת בדיקת איכות', all.length, '<ul class="checks" id="qa-list">' + all.map(function (q, i) { return '<li><label><input type="checkbox" data-qa="' + i + '"' + (checks[i] ? ' checked' : '') + '><span>' + esc(q) + '</span></label></li>'; }).join('') + '</ul>') +
@@ -233,6 +233,7 @@
             var act = b.getAttribute('data-act'), built = TS.engine.build(task, st);
             if (act === 'copy') TS.copy(built.text, 'ההנחיה הועתקה. הדביקו אותה בכלי ה־AI.', b);
             else if (act === 'md') TS.save(task.id + '-prompt.md', TS.engine.markdown(task, st));
+            else if (act === 'html') TS.save(task.id + '-prompt.html', TS.bidi.htmlDoc(task.title + ': הנחיה', built.text), 'text/html;charset=utf-8');
             else if (act === 'kit') { TS.kit.add({ taskId: task.id, title: task.title, topic: st.values.topic || st.values.purpose || st.values.docType || '', text: built.text }); TS.toast('נשמר בערכה שלי'); }
             else if (act === 'full') TS.openViewer('ההנחיה: ' + task.title, built.text, '<button class="btn primary" type="button" id="v-copy">' + icon('copy') + 'העתקה</button>', function (box) { $('#v-copy', box).addEventListener('click', function () { TS.copy(built.text, 'ההנחיה הועתקה.', this); }); });
           }

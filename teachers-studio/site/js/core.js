@@ -215,6 +215,8 @@
     var r = parse(token);
     var main = $('#main');
     function swap() {
+      /* מחליפים את האלמנט עצמו כדי שמאזיני אירועים של מסך קודם לא יישארו פעילים */
+      var fresh = main.cloneNode(false); main.parentNode.replaceChild(fresh, main); main = fresh;
       var out = TS.views[r.view](r.param);
       main.innerHTML = out.html;
       document.title = (out.title ? out.title + ' · ' : '') + TS.meta.siteName;
