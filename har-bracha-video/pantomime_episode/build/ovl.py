@@ -1,8 +1,8 @@
 import numpy as np, math, os, shutil
 from PIL import Image, ImageDraw
-FPS=25; END=21.0; W,H=1920,1080
-WINS=[(11.2,13.4,0.10,0.45,1.2,True),(14.45,16.35,0.45,0.90,1.0,True),(19.48,20.6,0.90,1.0,0,False)]
-PULSES=[10.3,14.45,19.55]
+FPS=25; END=21.5; W,H=1920,1080
+WINS=[(11.92,13.72,0.12,0.45,1.0,True),(15.28,17.28,0.45,0.80,1.0,True),(19.44,20.360000000000003,0.80,1.0,0,False)]
+PULSES=[9.299999999999999,15.33,19.490000000000002]
 def E(x): return max(0,min(1,x))
 def tintcol(p):
     # p in [0,1): day -> dusk -> night -> dawn -> day
