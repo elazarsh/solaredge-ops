@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8">
+<style>
+@font-face{font-family:DS;src:url(../edit/fonts/DoodleShadow.ttf)}
+html,body{margin:0;background:transparent;overflow:hidden;width:1920px;height:1080px;direction:rtl}
+.row{position:absolute;left:0;width:1920px;text-align:center;white-space:nowrap;font:400 270px/1 DS}
+.ch{display:inline-block;white-space:pre;transform-origin:50% 70%}
+</style>
+<div id=r1 class=row style="top:70px"></div>
+<script>
+const E=t=>t<0?0:t>1?1:t; const back=t=>{t=E(t);const s=1.8;t-=1;return t*t*((s+1)*t+s)+1};
+const txt="אותה שקית?";
+function mk(id,color,stroke,blur){const r=document.getElementById(id);const arr=[];for(const c of txt){const s=document.createElement('span');s.className='ch';s.textContent=c==' '?'  ':c;s.style.color=color;if(stroke){s.style.webkitTextStroke=stroke+'px '+color}if(blur)s.style.filter=blur;r.appendChild(s);arr.push(s);}return arr;}
+const back_=(()=>{const r=document.getElementById('r1');const c=r.cloneNode(false);c.id='r1b';r.parentNode.insertBefore(c,r);return c})();
+const A=[];
+function build(){
+ const rb=document.getElementById('r1b'),r=document.getElementById('r1');
+ for(const c of txt){const s=document.createElement('span');s.className='ch';s.textContent=c==' '?'  ':c;s.style.color='rgba(10,60,30,.92)';s.style.webkitTextStroke='52px rgba(10,60,30,.92)';s.style.filter='blur(1.2px)';rb.appendChild(s);A.push(s);}
+ for(const c of txt){const s=document.createElement('span');s.className='ch';s.textContent=c==' '?'  ':c;s.style.color='#fff3c4';s.style.filter='drop-shadow(0 0 14px rgba(255,255,200,.55))';r.appendChild(s);A.push(s);}
+}
+build();
+function T(t){A.forEach((c,ii)=>{const i=ii%txt.length;const p=back((t-0.5-i*0.06)/0.4);c.style.opacity=E((t-0.5-i*0.06)/0.08);c.style.transform=`translateY(${(1-p)*-160+Math.sin(t*3+i)*4}px) scale(${0.3+0.7*p}) rotate(${(i%2?1:-1)*10*(1-p)}deg)`;});}
+window.READY=false;document.fonts.ready.then(()=>{window.READY=true});
+</script>

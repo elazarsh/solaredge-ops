@@ -14,8 +14,10 @@ EDL=[("clip","c1","c1",1.4,5.2,1.0),
  ("clip","steam","c3b",6.0,6.9,1.0),
  ("clip","c4a","c4",0.75,2.5,1.0),
  ("clip","c4b","c4",3.75,5.0,1.0),
- ("clip","c5","c5",0.0,4.4,1.05),
- ("still","G","G_react.png",1.6,0.62,1.0,1.12),
+ ("still","Ldrop","L_drop.png",1.7,0.5,1.0,1.0),
+ ("clip","c5","c5",1.0,4.4,1.0),
+ ("still","G","G_react.png",1.5,0.5,1.0,1.0),
+ ("still","K","K_aha.png",2.3,0.5,1.0,1.0),
  ("clip","c6","c6",2.5,4.04,1.0)]
 def mk_clip(n,key,a,b,sp):
     nf=int(round((b-a)/sp*FPS))
