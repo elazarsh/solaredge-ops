@@ -64,18 +64,39 @@ for z in zones:
 for (x,y,r,c) in [(620,1450,90,"#ffd23f"),(1900,1500,80,"#ffffff"),(560,2500,70,"#ffffff"),(1960,2450,100,"#ffd23f"),(700,2900,60,"#ffd23f")]: dec.append(spark(x,y,r,c))
 svg.append('<g id="confetti-sparkles">'+"".join(dec)+'</g>')
 # --- minimal call-to-action pills ---
-def pill(x,y,w,h,col,dark,txt,icon):
-    _,uu=text_path2(txt,1000,0,0,FONT2); sz=min(96,(w-300)/uu*1000)
-    tp,tw=text_path2(txt,sz,x+(w-230)/2,y+(h-sz*1.0)/2-4,FONT2)
+def ink_text(txt,size,cx,cy,fontfile):
+    """text path whose INK bounding box is centered exactly on (cx,cy); returns path, ink width"""
+    from fontTools.pens.boundsPen import BoundsPen
+    ff=TTFont(fontfile); g2=ff.getGlyphSet(); cm=ff.getBestCmap(); u=ff["head"].unitsPerEm; hm=ff["hmtx"]
+    vis=txt[::-1]; k=size/u; x=0; items=[]; xmin=1e9; xmax=-1e9; ymin=1e9; ymax=-1e9
+    for c in vis:
+        n=cm.get(ord(c)); a=hm[n][0] if n else u*0.3
+        if n:
+            bp=BoundsPen(g2); g2[n].draw(bp)
+            if bp.bounds:
+                x0,y0,x1,y1=bp.bounds; xmin=min(xmin,x+x0); xmax=max(xmax,x+x1); ymin=min(ymin,y0); ymax=max(ymax,y1)
+            items.append((n,x))
+        x+=a
+    ox=cx-((xmin+xmax)/2)*k; oy=cy+((ymin+ymax)/2)*k   # baseline y so ink is vertically centered
+    out=[]
+    for n,xx in items:
+        pen=SVGPathPen(g2); g2[n].draw(pen); d=pen.getCommands()
+        if d: out.append(f'<path transform="translate({ox+xx*k:.1f},{oy:.1f}) scale({k:.5f},{-k:.5f})" d="{d}"/>')
+    return "\n".join(out),(xmax-xmin)*k
+def pill(x,y,w,h,col,dark,txt,icon_fn,icon_w,k_icon):
+    sz=88; _,tw=ink_text(txt,sz,0,0,FONT2)
+    gap=46; group=icon_w+gap+tw; gx0=x+(w-group)/2          # group (icon on the right, text on its left) centered in the pill
+    icx=gx0+group-icon_w/2; tcx=gx0+tw/2; cy=y+h/2
+    tp,_=ink_text(txt,sz,tcx,cy,FONT2)
     return (f'<g id="pill">'
             f'<rect x="{x+10}" y="{y+14}" width="{w}" height="{h}" rx="{h/2}" fill="{dark}"/>'
             f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{h/2}" fill="{col}" stroke="#ffffff" stroke-width="8"/>'
-            f'<g fill="#ffffff">{tp}</g>{icon}</g>')
+            f'<g fill="#ffffff">{tp}</g>{icon_fn(icx,cy,k_icon)}</g>')
 bag_icon=lambda cx,cy,k: f'<g transform="translate({cx-50*k:.0f},{cy-55*k:.0f}) scale({k})"><path d="M50,8 C40,0 34,10 40,20 C14,34 4,62 8,86 C12,112 88,112 92,86 C96,62 86,34 60,20 C66,10 60,0 50,8Z" fill="#26292b" stroke="#ffffff" stroke-width="4"/><path d="M38,24 H62" stroke="#6b7176" stroke-width="5" stroke-linecap="round"/><path d="M26,56 C22,72 26,88 34,98" fill="none" stroke="#6b7176" stroke-width="5" stroke-linecap="round"/></g>'
 box_icon=lambda cx,cy,k: f'<g transform="translate({cx-55*k:.0f},{cy-40*k:.0f}) scale({k})"><rect x="0" y="30" width="110" height="60" rx="5" fill="#b87a30" stroke="#ffffff" stroke-width="4"/><rect x="42" y="30" width="26" height="60" fill="#e8c27a"/><path d="M0,34 L22,4 H88 L110,34Z" fill="#c68a3c" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/><path d="M-10,52 L18,22" stroke="#ffffff" stroke-width="0"/></g>'
 ph=150; py=1215
-svg.append(pill(1290,py,1090,ph,"#0F9648","#064A21","שקיות – לתוך הפח",bag_icon(1290+1090-120,py+ph/2,1.1)))
-svg.append(pill(100,py,1090,ph,"#1075BD","#0A4170","קרטונים – לקרטוניה",box_icon(100+1090-125,py+ph/2,1.15)))
+svg.append(pill(1290,py,1090,ph,"#0F9648","#064A21","שקיות – לתוך הפח",bag_icon,100*1.1,1.1))
+svg.append(pill(100,py,1090,ph,"#1075BD","#0A4170","קרטונים – לקרטוניה",box_icon,110*1.15,1.15))
 # art
 svg.append('<ellipse id="ground-shadow" cx="1230" cy="3068" rx="360" ry="34" fill="#0A3C1E" opacity="0.28"/>')
 s=min(2300/aw,1690/ah); ax=1240-aw*s/2; ay=3075-ah*s; print('art scale',s,aw*s,ah*s)
