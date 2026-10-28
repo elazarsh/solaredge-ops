@@ -79,20 +79,14 @@ svg.append(sh(l2,"#3D0824",14,20,64)); svg.append(sh(l2,"#D6336C",0,0,46)); svg.
 svg.append('</g>')
 # footer strip with logos
 svg.append(f'<g id="footer"><rect x="0" y="3110" width="{W}" height="398" fill="#ffffff"/><rect x="0" y="3094" width="{W}" height="22" fill="#0F9648"/>')
-# --- footer: three logos side by side ---
-tgt=300  # logo height
-bw,bh=932,933
-# logo 1: Har Bracha with original tagline
-hb1w,hb1h,hb1=read("hb")
-# logo 2: Shefa lockup (icon + name + department)
-sc1=tgt/hb1h; sc2=tgt/hh; sc3=tgt/ch_
-w1_=hb1w*sc1; w2_=hw*sc2; w3_=cw*sc3
-gap=150; w3_=w3_*1.08; total=w1_+w2_+w3_+2*gap; x0=(W-total)/2; y0=3110+(398-tgt)/2+6
-x1=x0; x2=x1+w1_+gap; x3=x2+w2_+gap
-svg.append(f'<g id="logo-1-har-bracha" transform="translate({x1:.1f},{y0:.1f}) scale({sc1:.5f})">{hb1}</g>')
-svg.append(f'<rect id="divider-1" x="{x1+w1_+gap/2-3:.1f}" y="3170" width="6" height="280" fill="#cfd8c8" rx="3"/>')
-svg.append(f'<g id="logo-2-shefa-har-bracha" transform="translate({x2:.1f},{y0:.1f}) scale({sc2:.5f})">{hb}</g>')
-svg.append(f'<rect id="divider-2" x="{x2+w2_+gap/2-3:.1f}" y="3170" width="6" height="280" fill="#cfd8c8" rx="3"/>')
-svg.append(f'<g id="logo-3-shomron-council" transform="translate({x3:.1f},{y0-6:.1f}) scale({sc3*1.08:.5f})">{cc}</g></g>')
+# --- footer: two logos side by side (Shefa Har Bracha + Shomron council) ---
+tgt=330
+sc2=tgt/hh; sc3=tgt/ch_*1.05
+w2_=hw*sc2; w3_=cw*sc3
+gap=220; total=w2_+w3_+gap; x0=(W-total)/2; y0=3110+(398-tgt)/2+4
+x2=x0; x3=x2+w2_+gap
+svg.append(f'<g id="logo-1-shefa-har-bracha" transform="translate({x2:.1f},{y0:.1f}) scale({sc2:.5f})">{hb}</g>')
+svg.append(f'<rect id="divider" x="{x2+w2_+gap/2-3:.1f}" y="3170" width="6" height="280" fill="#cfd8c8" rx="3"/>')
+svg.append(f'<g id="logo-2-shomron-council" transform="translate({x3:.1f},{y0-4:.1f}) scale({sc3:.5f})">{cc}</g></g>')
 svg.append('</svg>')
 open("poster.svg","w").write("\n".join(svg)); print("size KB",len("\n".join(svg))//1024)
