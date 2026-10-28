@@ -30,10 +30,10 @@ def paths(svg,drop_magenta=True):
         keep.append(p)
     return w,h,keep
 if __name__=="__main__":
-    art=Image.open("poster_art_0.png").convert("RGB")
+    art=Image.open("poster_art_2.png").convert("RGB")
     import numpy as _np
     arr=_np.array(art).astype(int); bgm=(arr[...,0]>170)&(arr[...,2]>140)&(arr[...,1]<140); ys,xs=_np.where(~bgm)
     bx=(max(0,xs.min()-12),max(0,ys.min()-12),min(art.width,xs.max()+12),min(art.height,ys.max()+12)); print("bbox",bx); art=art.crop(bx)
-    a=prep(art,2); trace(a,"art_raw.svg",speck=10,cp=6,ld=14)
+    a=prep(art,3); trace(a,"art_raw.svg",speck=10,cp=6,ld=14)
     w,h,ps=paths("art_raw.svg"); print("art",w,h,len(ps))
     open("art_paths.txt","w").write("\n".join(ps)); open("art_size.txt","w").write(f"{w} {h}")
