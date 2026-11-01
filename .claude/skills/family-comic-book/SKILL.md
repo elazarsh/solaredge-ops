@@ -15,7 +15,7 @@ description: >
 
 קבצים נלווים:
 - `references/story-method.md`: איך מחלצים סיפור מחומרים גולמיים ובונים תסריט עם מתח, הפתעה וסוף חזק.
-- `references/production-pipeline.md`: חלוקת עבודה בין הכלים, מאגר גיטהב לכל ספר, הנחיות לתמונות.
+- `references/production-pipeline.md`: חלוקת עבודה בין הכלים, **עבודה חסכונית עם תתי סוכנים (2א, חובה לפני כל הפעלת סוכן)**, מאגר גיטהב לכל ספר, הנחיות לתמונות.
 - `references/tech-architecture.md`: איך בנוי הצופה (HTML), מנוע הפאנלים, הכיתוב, הפנים, האנימציות.
 - `references/print-and-publish.md`: אתר ציבורי, PDF להדפסה, כריכות, QR.
 - `references/qa-checklist.md`: בדיקות לפני כל מסירה, ותקלות שכבר קרו (לא לחזור עליהן).
