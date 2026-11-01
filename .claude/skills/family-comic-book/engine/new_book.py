@@ -18,7 +18,7 @@ if (B / 'layout' / 'book.json').exists():
     raise SystemExit(f'{B} already has a book. Nothing changed.')
 for d in ['sources', 'ref', 'research', 'layout', 'art/panels', 'art/web', 'art/receipts', 'art/claude', 'handoffs/claude', 'handoffs/codex', 'print']:
     (B / d).mkdir(parents=True, exist_ok=True)
-for f in ['geometry.py', 'build_sketch.py', 'sketch-template.html', 'detect_faces.py', 'print_pdf.js', 'print_pdf.py', 'register_art.py', 'map_satellite.py', 'map_labels.py', 'shot.js']:
+for f in ['geometry.py', 'build_sketch.py', 'sketch-template.html', 'detect_faces.py', 'print_pdf.js', 'print_pdf.py', 'register_art.py', 'map_satellite.py', 'map_labels.py', 'shot.js', 'compare_versions.js']:
     shutil.copy(E / f, B / 'layout' / f)
 slug = o.slug or o.prefix.lower()
 cfg = dict(book_root='..', title_he=o.title, title_en=o.title_en, id_prefix=o.prefix + '-', progress='art/progress.json',

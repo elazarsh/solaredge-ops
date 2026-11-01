@@ -36,7 +36,7 @@ description: >
    `cd layout && python3 build_sketch.py` → `sketch.html` ו־`script-he.md` למשפחה. `--landscape` לגרסה לרוחב.
 6. **תמונות:** קודקס לפי `AGENTS.md` שם קבצים ב־`art/panels/<מזהה>.png` → `python3 register_art.py` → `detect_faces.py <yunet.onnx>` → `build_sketch.py`.
 7. **PDF:** שרת http מתיקיית הספר, `node layout/print_pdf.js http://localhost:PORT/layout/sketch.html OUT he 300 [landscape]` → `python3 layout/print_pdf.py OUT [--landscape]`.
-8. **לפני כל שליחה:** צילום כל עמוד שהשתנה ובדיקה בעין (סעיף 7).
+8. **לפני כל שליחה:** צילום כל עמוד שהשתנה ובדיקה בעין, ו־`compare_versions.js` שמוודא ששתי הגרסאות מחזיקות אותו מידע (סעיף 7).
 
 ## 1. מה המשתמש רוצה (כללי ברזל)
 1. **סיפור אמיתי, בכבוד.** הסיפור של הדמות (סבא, סבתא) בגוף ראשון, כפי שסופר לנכדים. חם, מכובד, עם הומור. אף פעם לא גרפי: אלימות, ענישה או זוועות מוצגות בצללית, ברמז או מחוץ לפריים.
