@@ -53,14 +53,14 @@ body.work .pid{display:block}
 /* lettering */
 .tx{position:absolute;z-index:20;font-size:clamp(.62rem,1.85cqw,1.12rem);line-height:1.3;text-wrap:balance;text-align:center}
 .tx.cap{font-family:'Frank Ruhl Libre',serif;font-weight:700;color:var(--cap);background:var(--capbg);box-shadow:0 0 1em .6em var(--capbg);padding:.15em .35em;border-radius:.6em;text-shadow:0 1px 2px #000;text-align:start}
-.tx.bub,.tx.tho,.tx.whi{font-family:Rubik,sans-serif;font-weight:500;color:#2a1c10;background:none;border:0;padding:.55em .95em;letter-spacing:.005em}
+.tx.bub,.tx.tho,.tx.whi{font-family:Rubik,sans-serif;font-weight:500;color:#2e2014;background:none;border:0;padding:.55em .95em;letter-spacing:.005em}
 .tx.tho{border-radius:42%/40%}
 .tx.whi{border-style:dashed}
 .tx.sho{font-family:Rubik,sans-serif;font-weight:700;color:var(--ink);background:#ffe27a;border:2.6px solid var(--ink);padding:.7em 1.1em;clip-path:polygon(0 18%,12% 0,25% 14%,40% 0,55% 12%,70% 0,84% 14%,100% 4%,92% 30%,100% 52%,90% 70%,100% 92%,80% 86%,64% 100%,50% 86%,34% 100%,20% 86%,4% 96%,10% 70%,0 50%,8% 32%)}
 .tx .who{display:none}
 .tx svg.kids{width:7.5em;height:4.2em;display:block}
 .tail{position:absolute;z-index:21;overflow:visible;pointer-events:none}
-.tail.bshape{z-index:19;filter:drop-shadow(0 1px 2.5px rgba(20,10,0,.35))}
+.tail.bshape{z-index:19;filter:drop-shadow(0 .5px 1.5px rgba(20,10,0,.16))}
 .tail.behind{z-index:18;filter:drop-shadow(1.5px 2px 1.5px rgba(0,0,0,.28))}
 .tx img.memo{display:block;width:10.5em;height:auto;aspect-ratio:1.45;opacity:.9;filter:sepia(.35) saturate(.85);margin:-.2em auto -.3em}
 .sp.title.lit{background:#f3e6cc}
@@ -392,9 +392,9 @@ html.print .pw{animation:none!important}
       svg('path', { d: 'M' + (sx - uy * hf) + ',' + (sy + ux * hf) + ' L' + (sx + ux * ln) + ',' + (sy + uy * ln) + ' L' + (sx + uy * hf) + ',' + (sy - ux * hf) + 'Z', fill: '#ffe27a', stroke: '#1b1410', 'stroke-width': 2.4, 'stroke-linejoin': 'round' }, s);
       return;
     }
-    var FILL = '#f7efdc', INK = 'rgba(58,40,24,.78)';
-    var g = svg('g', { opacity: .93 }, s);
-    var rx = r.w / 2 + fs * .15, ry = r.h / 2 + fs * .1, n = 2.6;   /* superellipse: rounder than a box, fuller than an ellipse */
+    var FILL = 'rgba(250,243,228,.8)', INK = 'rgba(70,48,28,.5)';   /* soft, semi-transparent, thin line (lettering practice) */
+    var g = svg('g', {}, s);
+    var rx = r.w / 2 + fs * .45, ry = r.h / 2 + fs * .3, n = 2.25;   /* an oval with room around the text */
     function pt(th, bump) {
       var c = Math.cos(th), sn = Math.sin(th), q = 1 + (bump || 0);
       return [cx + rx * q * Math.sign(c) * Math.pow(Math.abs(c), 2 / n), cy + ry * q * Math.sign(sn) * Math.pow(Math.abs(sn), 2 / n)];
@@ -402,7 +402,7 @@ html.print .pw{animation:none!important}
     var cloud = k === 'tho', per = Math.PI * (rx + ry), bumps = Math.max(8, Math.round(per / (fs * 1.7)));
     function bumpAt(th) { return cloud ? .06 * Math.abs(Math.sin(th * bumps / 2)) - .03 : 0; }
     var thm = Math.atan2(dy / ry, dx / rx), N = 140, pts = [], tail = !prev && !cloud;
-    var del = tail ? Math.min(.42, (fs * .5) / Math.min(rx, ry)) : 0;
+    var del = tail ? Math.min(.22, (fs * .3) / Math.min(rx, ry)) : 0;   /* narrow tail base */
     for (var i = 0; i <= N; i++) {
       var th = thm + del + (2 * Math.PI - 2 * del) * i / N;
       pts.push(pt(th, bumpAt(th)));
@@ -411,18 +411,18 @@ html.print .pw{animation:none!important}
     for (var j = 1; j < pts.length; j++) dpath += ' L' + pts[j][0].toFixed(1) + ',' + pts[j][1].toFixed(1);
     if (tail) {
       var e = pt(thm), gap = Math.hypot(m[0] - e[0], m[1] - e[1]);
-      var len = Math.max(fs * .9, Math.min(gap - fs * .3, fs * 2.3));
+      var len = Math.max(fs * .7, Math.min(gap * .45, fs * 1.5));   /* a third to half of the way to the mouth */
       var tip = [e[0] + ux * len, e[1] + uy * len], A = pts[pts.length - 1], B = pts[0];
-      var bend = fs * .28, px = -uy, py = ux;   /* a gentle curve, as if drawn with one stroke */
+      var bend = fs * .16, px = -uy, py = ux;   /* outer edge bows out a little, inner edge in: an even taper */
       dpath += ' Q' + ((A[0] + tip[0]) / 2 + px * bend).toFixed(1) + ',' + ((A[1] + tip[1]) / 2 + py * bend).toFixed(1) + ' ' + tip[0].toFixed(1) + ',' + tip[1].toFixed(1);
-      dpath += ' Q' + ((B[0] + tip[0]) / 2 + px * bend * .4).toFixed(1) + ',' + ((B[1] + tip[1]) / 2 + py * bend * .4).toFixed(1) + ' ' + B[0].toFixed(1) + ',' + B[1].toFixed(1);
+      dpath += ' Q' + ((B[0] + tip[0]) / 2 + px * bend * .9).toFixed(1) + ',' + ((B[1] + tip[1]) / 2 + py * bend * .9).toFixed(1) + ' ' + B[0].toFixed(1) + ',' + B[1].toFixed(1);
     }
     dpath += 'Z';
-    svg('path', { d: dpath, fill: FILL, stroke: INK, 'stroke-width': 1.5, 'stroke-linejoin': 'round', 'stroke-dasharray': k === 'whi' ? '5 4' : '' }, g);
+    svg('path', { d: dpath, fill: FILL, stroke: INK, 'stroke-width': 1.1, 'stroke-linejoin': 'round', 'stroke-dasharray': k === 'whi' ? '5 4' : '' }, g);
     if (cloud && !prev) {   /* thought: three small soft puffs toward the thinker */
       var e2 = pt(thm), gap2 = Math.hypot(m[0] - e2[0], m[1] - e2[1]), dd = Math.max(fs * .9, Math.min(gap2 - fs * .3, fs * 2.4));
       [[.28, .24], [.6, .17], [.9, .11]].forEach(function (c) {
-        svg('circle', { cx: e2[0] + ux * (dd * c[0] + fs * .2), cy: e2[1] + uy * (dd * c[0] + fs * .2), r: c[1] * fs, fill: FILL, stroke: INK, 'stroke-width': 1.3 }, g);
+        svg('circle', { cx: e2[0] + ux * (dd * c[0] + fs * .2), cy: e2[1] + uy * (dd * c[0] + fs * .2), r: c[1] * fs * .8, fill: FILL, stroke: INK, 'stroke-width': 1 }, g);
       });
     }
   }
