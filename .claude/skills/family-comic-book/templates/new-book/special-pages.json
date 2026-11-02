@@ -1,0 +1,9 @@
+{
+ "coverArtFile": "",
+ "titleArtFile": "",
+ "he": {"series": "סיפורי {{HERO}} · ספר 1", "title": "{{TITLE}}", "subtitle": "סיפור אמיתי בקומיקס", "credit": "על פי הזיכרונות של ...",
+        "dedication": "", "dedicationNote": "", "cardTitle": "מה לקחתי מהדרך", "takeaways": ["", "", ""], "continued": "",
+        "blurb": ["", "", ""], "forWho": "לכל המשפחה: לילדים, להורים ולסבים"},
+ "en": {"series": "", "title": "{{TITLE_EN}}", "subtitle": "A true story in comics", "credit": "", "dedication": "", "dedicationNote": "",
+        "cardTitle": "What I took from the journey", "takeaways": ["", "", ""], "continued": "", "blurb": ["", "", ""], "forWho": "For the whole family"}
+}
