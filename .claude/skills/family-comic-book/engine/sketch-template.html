@@ -24,6 +24,7 @@ main{padding:2vh 16px 10vh}
 .plabel b{font:700 1rem 'Frank Ruhl Libre',serif;color:var(--cap);letter-spacing:0}
 .note{display:none;margin:.6rem 0 0;padding:.6rem .8rem;border-inline-start:3px solid var(--gold);background:#1d140c;color:#e9dcc3;font-size:.85rem;line-height:1.5}
 body.work .note{display:block}
+.page.present,html.print .page.present{background:#e9d9b5;--rim:#7a5a32}
 .page{position:relative;width:100%;aspect-ratio:100/141;container-type:inline-size;background:#140e09;border-radius:4px;box-shadow:0 20px 40px rgba(0,0,0,.6)}
 .cv{position:absolute;inset:1.8%}
 .pw{position:absolute;filter:drop-shadow(1.5px 0 0 var(--rim)) drop-shadow(-1.5px 0 0 var(--rim)) drop-shadow(0 1.5px 0 var(--rim)) drop-shadow(0 -1.5px 0 var(--rim)) drop-shadow(0 14px 18px rgba(0,0,0,.5))}
@@ -52,14 +53,15 @@ body.work .pid{display:block}
 /* lettering */
 .tx{position:absolute;z-index:20;font-size:clamp(.62rem,1.85cqw,1.12rem);line-height:1.3;text-wrap:balance;text-align:center}
 .tx.cap{font-family:'Frank Ruhl Libre',serif;font-weight:700;color:var(--cap);background:var(--capbg);box-shadow:0 0 1em .6em var(--capbg);padding:.15em .35em;border-radius:.6em;text-shadow:0 1px 2px #000;text-align:start}
-.tx.bub,.tx.tho,.tx.whi{font-family:Rubik,sans-serif;font-weight:600;color:#1f150d;background:none;border:0;padding:.55em .95em}
+.tx.bub,.tx.tho,.tx.whi{font-family:Rubik,sans-serif;font-weight:500;color:#2a1c10;background:none;border:0;padding:.55em .95em;letter-spacing:.005em}
 .tx.tho{border-radius:42%/40%}
 .tx.whi{border-style:dashed}
 .tx.sho{font-family:Rubik,sans-serif;font-weight:700;color:var(--ink);background:#ffe27a;border:2.6px solid var(--ink);padding:.7em 1.1em;clip-path:polygon(0 18%,12% 0,25% 14%,40% 0,55% 12%,70% 0,84% 14%,100% 4%,92% 30%,100% 52%,90% 70%,100% 92%,80% 86%,64% 100%,50% 86%,34% 100%,20% 86%,4% 96%,10% 70%,0 50%,8% 32%)}
 .tx .who{display:none}
 .tx svg.kids{width:7.5em;height:4.2em;display:block}
 .tail{position:absolute;z-index:21;overflow:visible;pointer-events:none}
-.tail.bshape{z-index:19;filter:drop-shadow(1.5px 2px 1.5px rgba(0,0,0,.28))}
+.tail.bshape{z-index:19;filter:drop-shadow(0 1px 2.5px rgba(20,10,0,.35))}
+.tail.behind{z-index:18;filter:drop-shadow(1.5px 2px 1.5px rgba(0,0,0,.28))}
 .tx img.memo{display:block;width:10.5em;height:auto;aspect-ratio:1.45;opacity:.9;filter:sepia(.35) saturate(.85);margin:-.2em auto -.3em}
 .sp.title.lit{background:#f3e6cc}
 .sp.title.lit .veil{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,rgba(255,249,236,.86) 0%,rgba(255,246,228,.6) 45%,rgba(255,244,224,.15) 80%)}
@@ -90,6 +92,8 @@ body.work .legend{display:block}
 .sp.title p{font:500 3cqw/1.6 'Frank Ruhl Libre',serif;color:#e7d6b6;max-width:80%}
 .sp.close{background:radial-gradient(ellipse at 50% 40%,#3a2612,#120b06 75%)}
 .sp.close .in{justify-content:center;gap:5cqw}
+.sp.close .closeart{width:100%;border-radius:1cqw;box-shadow:0 2cqw 4cqw rgba(0,0,0,.55)}
+.sp.close:has(.closeart) .in{gap:3cqw}
 .card{background:#fbf5e6;color:#1b1410;width:78%;padding:6cqw 6cqw 5cqw;border-radius:1.2cqw;box-shadow:0 2cqw 4cqw rgba(0,0,0,.5);background-image:repeating-linear-gradient(transparent 0 6.4cqw,#d9cdb4 6.4cqw 6.55cqw);text-align:start}
 .card h3{margin:0 0 3cqw;font:900 5.4cqw 'Frank Ruhl Libre',serif;color:#7a2a1a;text-align:center}
 .card ol{margin:0;padding:0;list-style:none;display:grid;gap:2.6cqw;counter-reset:k}
@@ -98,6 +102,17 @@ body.work .legend{display:block}
 .sp .cont{font:900 6cqw 'Frank Ruhl Libre',serif;color:#f2c46a}
 .sp.back .in{justify-content:center;gap:3.4cqw}
 .sp.back .blurb{font:500 3.3cqw/1.65 'Frank Ruhl Libre',serif;color:#f3e8d2;max-width:86%;display:grid;gap:2.2cqw}
+.sp.back .bphoto{margin:1cqw 0 .5cqw;width:56%;background:#fbf7ee;padding:1.2cqw 1.2cqw 3.2cqw;box-shadow:0 1.5cqw 3cqw rgba(0,0,0,.6);transform:rotate(-2deg)}
+.sp.back .bphoto img{display:block;width:100%;filter:sepia(.2)}
+html.land .sp.back .bphoto{width:42%}
+.sp.back:has(.bphoto) .blurb{font-size:2.45cqw;line-height:1.55;gap:1.2cqw}
+.sp.back:has(.bphoto) h2{font-size:9cqw}
+.sp.back:has(.bphoto) .in{gap:2cqw}
+html.land .sp.back:has(.bphoto) .in{inset:5% 20%;gap:1.4cqw}
+html.land .sp.back:has(.bphoto) .blurb{font-size:2.2cqw;gap:.8cqw}
+html.land .sp.close:has(.closeart) .in{inset:4% 20%;gap:2cqw}
+html.land .sp.close .closeart{width:60%}
+html.land .sp.close:has(.closeart) .card{padding:3.5cqw 5cqw 3cqw}
 .sp.back .for{font:700 2.8cqw Heebo;color:#e9c98c;letter-spacing:.06em}
 /* print: one A4 sheet per section, nothing else */
 html.print header,html.print .plabel,html.print .note,html.print .legend,html.print .intro{display:none!important}
@@ -179,7 +194,7 @@ html.print .pw{animation:none!important}
     var lab = el('div', 'plabel', wrap);
     el('b', '', lab).textContent = pg.title;
     el('span', '', lab).textContent = UI[lang].page + ' ' + pg.n;
-    var pageEl = el('div', 'page', wrap); pageEl.style.aspectRatio = '100/' + (pg.H * 1.037).toFixed(1);
+    var pageEl = el('div', 'page' + (pg.present ? ' present' : ''), wrap); pageEl.style.aspectRatio = '100/' + (pg.H * 1.037).toFixed(1);
     var page = el('div', 'cv', pageEl);
     pg._page = page; pg._pageEl = pageEl;
     (pg.photos || []).forEach(function (ph) {
@@ -220,10 +235,13 @@ html.print .pw{animation:none!important}
     } else if (kind === 'title') {
       el('q', '', inn).textContent = L.dedication; el('p', '', inn).textContent = L.dedicationNote;
     } else if (kind === 'close') {
+      if (S.closeArt) { var ca = el('img', 'closeart', inn); ca.src = S.closeArt; ca.alt = ''; }
       var card = el('div', 'card', inn); el('h3', '', card).textContent = L.cardTitle; var ol = el('ol', '', card);
       L.takeaways.forEach(function (x) { el('li', '', ol).textContent = x; }); el('div', 'cont', inn).textContent = L.continued;
     } else if (kind === 'back') {
-      el('div', 'kick', inn).textContent = L.series; el('h2', '', inn).textContent = L.title; var b = el('div', 'blurb', inn);
+      el('div', 'kick', inn).textContent = L.series; el('h2', '', inn).textContent = L.title;
+      if (S.backPhoto) { var bp = el('figure', 'bphoto', inn); var bi = el('img', '', bp); bi.src = S.backPhoto; bi.alt = ''; }
+      var b = el('div', 'blurb', inn);
       L.blurb.forEach(function (x) { el('p', '', b).textContent = x; }); el('div', 'for', inn).textContent = L.forWho;
     }
   }
@@ -352,37 +370,61 @@ html.print .pw{animation:none!important}
         }
         d.style.left = x + 'px'; d.style.top = y + 'px';
         placed.push({ x: x, y: y, w: w, h: h }); obst.push({ x: x, y: y, w: w, h: h });
-        if (m && (k === 'bub' || k === 'tho' || k === 'whi' || k === 'sho')) drawTail(host, pg, d, { x: x, y: y, w: w, h: h }, m, k);
+        if (m && (k === 'bub' || k === 'tho' || k === 'whi' || k === 'sho')) {
+          var me = { x: x, y: y, w: w, h: h }, fsz = parseFloat(getComputedStyle(d).fontSize), lb = q._lastBub;
+          var near = lb && (Math.max(lb.r.y, me.y) - Math.min(lb.r.y + lb.r.h, me.y + me.h)) < fsz * 1.2 && Math.min(lb.r.x + lb.r.w, me.x + me.w) - Math.max(lb.r.x, me.x) > fsz * 2;
+          var prev = lb && near && lb.speaker === (t.speaker || '') && lb.k === k && k !== 'sho' ? lb.r : null;
+          drawTail(host, pg, d, me, m, k, prev);
+          q._lastBub = { speaker: t.speaker || '', k: k, r: me };
+        }
       });
     });
   }
-  function drawTail(host, pg, d, r, m, k) {
+  function drawTail(host, pg, d, r, m, k, prev) {
+    /* One continuous shape per bubble: a soft rounded body whose outline flows into the tail (like a hand-lettered comic). */
     var fs = parseFloat(getComputedStyle(d).fontSize), cx = r.x + r.w / 2, cy = r.y + r.h / 2;
-    var FILL = k === 'sho' ? '#ffe27a' : '#f8eed8', INK = '#3a2818';
     var s = svg('svg', { class: 'tail' + (k === 'sho' ? '' : ' bshape'), width: 1, height: 1 }, host);
     s.style.left = '0px'; s.style.top = '0px'; pg._tx.push(s);
-    var g = svg('g', { opacity: k === 'sho' ? 1 : .84 }, s);
-    var rx = r.w / 2, ry = r.h / 2;
-    if (k !== 'sho') {   /* the bubble itself, so bubble and tail are one shape with one transparency */
-      var rr = k === 'tho' ? [Math.min(r.w * .45, fs * 2.2), Math.min(r.h * .48, fs * 2.2)] : [Math.min(r.w * .5, fs * 1.5), Math.min(r.h * .5, fs * 1.5)];
-      svg('rect', { x: r.x, y: r.y, width: r.w, height: r.h, rx: rr[0], ry: rr[1], fill: FILL, stroke: INK, 'stroke-width': 2, 'stroke-dasharray': k === 'whi' ? '5 4' : '' }, g);
-    }
     var dx = m[0] - cx, dy = m[1] - cy, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
-    var t = 1 / Math.sqrt((dx / rx) * (dx / rx) + (dy / ry) * (dy / ry));   /* where the line to the mouth leaves the ellipse */
-    var ex = cx + dx * t * .97, ey = cy + dy * t * .97, gap = Math.hypot(m[0] - ex, m[1] - ey);
-    if (k === 'tho') {
-      var dd = Math.max(fs * .9, Math.min(gap - fs * .3, fs * 2.4));
-      [[.3, .26], [.62, .19], [.92, .13]].forEach(function (c) {
-        svg('circle', { cx: ex + ux * dd * c[0] + ux * fs * .25, cy: ey + uy * dd * c[0] + uy * fs * .25, r: c[1] * fs, fill: FILL, stroke: INK, 'stroke-width': 1.8 }, g);
-      });
+    if (k === 'sho') {   /* shout keeps its jagged box; tail only */
+      var tt = 1 / Math.sqrt((dx / (r.w / 2)) * (dx / (r.w / 2)) + (dy / (r.h / 2)) * (dy / (r.h / 2)));
+      var sx = cx + dx * tt * .9, sy = cy + dy * tt * .9, ln = Math.max(fs * .8, Math.min(Math.hypot(m[0] - sx, m[1] - sy) - fs * .3, fs * 2)), hf = fs * .32;
+      svg('path', { d: 'M' + (sx - uy * hf) + ',' + (sy + ux * hf) + ' L' + (sx + ux * ln) + ',' + (sy + uy * ln) + ' L' + (sx + uy * hf) + ',' + (sy - ux * hf) + 'Z', fill: '#ffe27a', stroke: '#1b1410', 'stroke-width': 2.4, 'stroke-linejoin': 'round' }, s);
       return;
     }
-    var len = Math.max(fs * .8, Math.min(gap - fs * .35, fs * 2.2)), half = fs * .34, px = -uy, py = ux;
-    var bx = ex - ux * fs * .35, by = ey - uy * fs * .35;   /* base sits just inside the bubble */
-    var a = [bx + px * half, by + py * half], b = [bx - px * half, by - py * half], tip = [ex + ux * len, ey + uy * len];
-    var bend = half * .35, c1 = [(a[0] + tip[0]) / 2 + px * bend, (a[1] + tip[1]) / 2 + py * bend], c2 = [(b[0] + tip[0]) / 2 + px * bend, (b[1] + tip[1]) / 2 + py * bend];
-    svg('path', { d: 'M' + a + ' Q' + c1 + ' ' + tip + ' Q' + c2 + ' ' + b + 'Z', fill: FILL, stroke: 'none' }, g);
-    svg('path', { d: 'M' + a + ' Q' + c1 + ' ' + tip + ' Q' + c2 + ' ' + b, fill: 'none', stroke: INK, 'stroke-width': k === 'sho' ? 2.6 : 2, 'stroke-linejoin': 'round', 'stroke-dasharray': k === 'whi' ? '5 4' : '' }, g);
+    var FILL = '#f7efdc', INK = 'rgba(58,40,24,.78)';
+    var g = svg('g', { opacity: .93 }, s);
+    var rx = r.w / 2 + fs * .15, ry = r.h / 2 + fs * .1, n = 2.6;   /* superellipse: rounder than a box, fuller than an ellipse */
+    function pt(th, bump) {
+      var c = Math.cos(th), sn = Math.sin(th), q = 1 + (bump || 0);
+      return [cx + rx * q * Math.sign(c) * Math.pow(Math.abs(c), 2 / n), cy + ry * q * Math.sign(sn) * Math.pow(Math.abs(sn), 2 / n)];
+    }
+    var cloud = k === 'tho', per = Math.PI * (rx + ry), bumps = Math.max(8, Math.round(per / (fs * 1.7)));
+    function bumpAt(th) { return cloud ? .06 * Math.abs(Math.sin(th * bumps / 2)) - .03 : 0; }
+    var thm = Math.atan2(dy / ry, dx / rx), N = 140, pts = [], tail = !prev && !cloud;
+    var del = tail ? Math.min(.42, (fs * .5) / Math.min(rx, ry)) : 0;
+    for (var i = 0; i <= N; i++) {
+      var th = thm + del + (2 * Math.PI - 2 * del) * i / N;
+      pts.push(pt(th, bumpAt(th)));
+    }
+    var dpath = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+    for (var j = 1; j < pts.length; j++) dpath += ' L' + pts[j][0].toFixed(1) + ',' + pts[j][1].toFixed(1);
+    if (tail) {
+      var e = pt(thm), gap = Math.hypot(m[0] - e[0], m[1] - e[1]);
+      var len = Math.max(fs * .9, Math.min(gap - fs * .3, fs * 2.3));
+      var tip = [e[0] + ux * len, e[1] + uy * len], A = pts[pts.length - 1], B = pts[0];
+      var bend = fs * .28, px = -uy, py = ux;   /* a gentle curve, as if drawn with one stroke */
+      dpath += ' Q' + ((A[0] + tip[0]) / 2 + px * bend).toFixed(1) + ',' + ((A[1] + tip[1]) / 2 + py * bend).toFixed(1) + ' ' + tip[0].toFixed(1) + ',' + tip[1].toFixed(1);
+      dpath += ' Q' + ((B[0] + tip[0]) / 2 + px * bend * .4).toFixed(1) + ',' + ((B[1] + tip[1]) / 2 + py * bend * .4).toFixed(1) + ' ' + B[0].toFixed(1) + ',' + B[1].toFixed(1);
+    }
+    dpath += 'Z';
+    svg('path', { d: dpath, fill: FILL, stroke: INK, 'stroke-width': 1.5, 'stroke-linejoin': 'round', 'stroke-dasharray': k === 'whi' ? '5 4' : '' }, g);
+    if (cloud && !prev) {   /* thought: three small soft puffs toward the thinker */
+      var e2 = pt(thm), gap2 = Math.hypot(m[0] - e2[0], m[1] - e2[1]), dd = Math.max(fs * .9, Math.min(gap2 - fs * .3, fs * 2.4));
+      [[.28, .24], [.6, .17], [.9, .11]].forEach(function (c) {
+        svg('circle', { cx: e2[0] + ux * (dd * c[0] + fs * .2), cy: e2[1] + uy * (dd * c[0] + fs * .2), r: c[1] * fs, fill: FILL, stroke: INK, 'stroke-width': 1.3 }, g);
+      });
+    }
   }
 
   function render() {
