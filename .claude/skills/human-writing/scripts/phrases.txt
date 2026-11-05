@@ -1,0 +1,89 @@
+# category<TAB>regex   (תבנית בודדת בכל שורה; מוסיפים כאן שורות כשמזהים סימן חדש)
+# קטגוריות: chatbot = קשיח, השאר רך.
+chatbot	^\s*(בטח|כמובן|בהחלט|בשמחה)[!,.]
+chatbot	^\s*הנה\s
+chatbot	מקווה ש(זה|הדבר)\s+(עוזר|יעזור)
+chatbot	אשמח\s+לעזור
+chatbot	רוצה\s+ש(אמשיך|אכין|אנסח|אפרט|אוסיף|אעשה)
+chatbot	שאלה\s+מצוינת
+chatbot	אל\s+תהסס
+chatbot	תרגיש\s+חופשי
+chatbot	(?i)\b(certainly|sure)!\s
+chatbot	(?i)\bI hope this helps\b
+chatbot	(?i)\bgreat question\b
+chatbot	(?i)\blet me know if\b
+chatbot	oaicite|contentReference|turn0search|grok_card|\[cite:\s*\d
+inflated	מהווה\s+עדות
+inflated	נקודת\s+מפנה
+inflated	משאיר\s+חותם
+inflated	ממלא\s+תפקיד\s+(מרכזי|מכריע|חיוני)
+inflated	תפקיד\s+(מרכזי|מכריע|קריטי)\s+ב
+inflated	נוף\s+(המשתנה|משתנה|הדינמי)
+inflated	שטיח\s+(עשיר|רקום)|מארג\s+עשיר
+inflated	(בעולם|בעידן)\s+(המשתנה|הדיגיטלי|המהיר|התחרותי|של\s+היום)
+inflated	צוללים\s+לעומק|בואו\s+נצלול|נצלול\s+ל
+inflated	נעמיק\s+ב
+inflated	(?i)\b(stands|serves) as\b|\ba testament to\b|\bpivotal\b|\bevolving landscape\b|\brich tapestry\b
+filler	חשוב\s+(מאוד\s+)?לציין|ראוי\s+לציין|יש\s+לציין\s+ש|כדאי\s+לציין
+filler	חשוב\s+לזכור\s+ש
+filler	לא\s+ניתן\s+להתעלם
+filler	(?<!\S)אין\s+ספק\s+ש|(?<!\S)ללא\s+ספק
+filler	(?i)\bit'?s (worth|important to) not(e|ing)\b
+filler	(?i)\bin today'?s (fast-paced|digital|ever-changing)\b
+connector	(?<!\S)יתרה\s+מכך
+connector	בנוסף\s+לכך
+connector	(?<!\S)לסיכום[,:]|לסיכומו\s+של\s+דבר|בסופו\s+של\s+דבר[,]
+connector	(?i)\bin (conclusion|summary)\b|\bmoreover\b|\bfurthermore\b|\badditionally,
+calque	משנה\s+את\s+כללי\s+המשחק
+calque	כאן\s+נכנס(ת|ים|ות)?\s+לתמונה
+calque	בהיר\s+כקריסטל
+calque	(?<!\S)למנף|מנוף\s+ל|(?<!\S)לשחרר\s+את\s+הפוטנציאל
+calque	בצורה\s+חלקה|חלק\s+וחסר\s+תפרים
+calque	מגוון\s+רחב\s+של|שפע\s+של
+calque	רב[\s־-]?(גוני|ממדי)|הוליסטי
+calque	(?i)\bgame[- ]changer\b|\bseamless(ly)?\b|\bleverag(e|ing)\b|\bdelve\b|\bmultifaceted\b|\bunlock the potential\b
+vague_attr	מומחים\s+(טוענים|סבורים|מסכימים)
+vague_attr	יש\s+(הטוענים|הסבורים|מי\s+שטוען)
+vague_attr	דוחות\s+בתעשייה|מחקרים\s+מראים\s+ש
+vague_attr	(?i)\bexperts (argue|say|agree)\b|\bindustry reports\b|\bobservers have\b
+analysis_tail	ו?בכך\s+(מדגיש|משקף|מחזק|מבטיח|מאפשר|מסמן|תורם)
+analysis_tail	(המדגיש|המשקף|המסמל|המעיד)\s+את
+analysis_tail	(?i),\s+(highlighting|underscoring|emphasizing|reflecting|showcasing|fostering|ensuring)\b
+hedge	הפרטים\s+אינם\s+מתועדים
+hedge	אין\s+בכך\s+כדי
+promo	שוקק|מרהיב|פורץ\s+דרך|מוביל\s+בתחומו|מחויבות\s+ל(מצוינות|איכות)
+promo	(?i)\bboasts\b|\bnestled\b|\bgroundbreaking\b|\brenowned\b|\bvibrant\b
+# --- הודעות, מיילים ותגובות (נוסף אחרי סבב מחקר שני) ---
+# validation = ליקוק הקורא/השאלה בפתיחה. קשיח כי זה הסימן הכי מזוהה של צ'אט.
+validation	(אתה|את|אתם|אתן)\s+צודק(ת|ים|ות)?\s+(לגמרי|בהחלט|ב-?100)
+validation	(זו|זאת|זה)\s+(נקודה|שאלה|תובנה|הערה|תצפית)\s+(מצוינת|מעולה|חכמה|חדה|נהדרת|מעניינת\s+מאוד)
+validation	(שאלה|נקודה|תובנה|הערה)\s+(מצוינת|מעולה|חכמה|חדה|נהדרת)
+validation	(?i)\byou'?re (absolutely|completely|totally) right\b|\bgood catch\b|\bthat'?s a (great|excellent|fantastic) (point|question|idea)\b
+validation	(מעורר|מעוררת)\s+השראה|תודה\s+ששיתפת|תודה\s+על\s+השיתוף
+# reassure = הרגעה רגשית שאף אחד לא ביקש. אצל GPT 5.x: "you're not broken".
+reassure	(אתה|את|אתם)\s+לא\s+(לבד|לבדך|לבד\s+בזה)
+reassure	זה\s+(לגמרי|לחלוטין)\s+(נורמלי|טבעי|הגיוני|בסדר)
+reassure	אני\s+מבין(ה)?\s+(לגמרי|היטב|מצוין)?\s*את\s+ה(תסכול|דאגה|לחץ|קושי)
+reassure	אל\s+תדאג|אין\s+סיבה\s+לדאגה
+reassure	(?i)\byou'?re not (broken|alone|crazy|imagining)\b|\bI (completely )?understand (your|the) (frustration|concern)\b|\bthat'?s completely (normal|valid)\b
+# signpost = הכרזה על מה שעומד לבוא במקום לומר אותו.
+signpost	הנה\s+(מה\s+ש|הדבר\s+ש|הנקודות|העיקר)
+signpost	(?<!\S)(בוא|בואו)\s+(נפרק|נבין|נבחן|נתחיל|נעבור)
+signpost	מה\s+שחשוב\s+(לדעת|להבין|לזכור)\s*[:.]
+signpost	(?s)קודם\s+כול.{5,300}?(שנית|שנייה).{5,300}?(שלישית|שלישי)
+signpost	(?i)\bhere'?s (what|the thing|the kicker|the deal|the catch)\b|\blet'?s (break|unpack|dive)\b|\bhere are (a few|some|several)\b
+# rhetorical = שאלה רטורית שנענית מיד / "האמת?" / "בכנות?"
+rhetorical	(?<!\S)(האמת|בכנות|ביושר|תכלס|ובכן)\?
+rhetorical	(?i)\b(honestly|truthfully|the truth)\?\s
+rhetorical	(?i)\bthe (real|short|honest) (answer|truth|question)\s*(is)?[:.]
+# closer = הצעה/סגירה בסוף
+closer	אם\s+(יש\s+לך|יש\s+לכם|תרצה|תרצו|תרצי)\s+(שאלות|עוד|משהו|שאעזור|שאפרט)
+closer	אל\s+(תהסס|תהססו|תהססי)\s+לפנות|אל\s+תסס
+closer	אשמח\s+(לסייע|לעזור|לפרט|לענות)
+closer	אני\s+כאן\s+(בשבילך|כדי|אם)
+closer	(?i)\bfeel free to (reach out|ask|contact)\b|\bdon'?t hesitate to\b|\bhappy to help\b|\bI'?m here (to help|if)\b
+# outreach = מיילי פנייה וקרירים (טביעות אצבע: impressed/fascinated/eager to/caught my attention)
+outreach	מקווה\s+ש(המייל|המכתב|ההודעה)\s+מוצא(ת)?\s+אותך|מקווה\s+שאתה\s+בטוב
+outreach	התרשמתי\s+(מאוד|ממש|עמוקות)|נלהב(ת)?\s+(להתחבר|להכיר|לשמוע|להמשיך)|משך\s+את\s+תשומת\s+ליבי|מרתק(ת)?\s+אותי
+outreach	גישה\s+(חדשנית|מהפכנית)|פתרון(ות)?\s+(חדשני|מהפכני)|שיתוף\s+פעולה\s+פורה|להעמיק\s+בנושא
+outreach	(?i)\bI hope this (email|message) finds you well\b|\bI was (impressed|fascinated|intrigued) by\b|\beager to (connect|learn)\b|\bcaught my attention\b|\bI wanted to reach out\b
