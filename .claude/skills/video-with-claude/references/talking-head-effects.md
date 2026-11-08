@@ -43,3 +43,37 @@
 
 ## מה לא ידוע (אל תמציא)
 כיצד היוצר בנה אותם (כלי, פרומפט, סקיל). המקור לא חושף. כל מימוש חדש דורש בניה ובדיקה.
+
+---
+
+# 15 סגנונות עריכה לסרטון אנכי (מדריך "15 Claude edit styles" של Arcads)
+
+מקור: עמוד אחד של Arcads (חברה מסחרית; המדריך מפרסם את הכלי שלהם ומציע 1,000 קרדיטים חינם ללקוחות חדשים). **הקובץ שקיבלנו מכיל רק את רשימת הפקודות והתיאורים הקצרים. הסקיל עצמו (`arcads-cut`, "Download the skill") לא נמצא בקובץ, ולא ראינו את תוכנו.** מה שכתוב כאן הוא מה שהעמוד אומר, ללא ידע על המימוש.
+
+תהליך שהעמוד מתאר: קליפ גולמי אחד + פקודת סלאש אחת = עריכה אנכית גמורה. התקנה: לפרוס את ה-zip של הסקיל, לגרור את התיקייה ל-Claude Code ולכתוב "install the arcads-cut skill". פקודה לדוגמה: `/liquid-glass`. הפקודה `/arcads-cut` עם הקליפ והמילה `all` מייצרת את כל הסגנונות. העריכות יוצאות **ללא שמע** ("silent"); כדי לשמור את הקול צריך לכתוב "keep my audio". העמוד אומר שזה בחינם ועובד ב-Claude Code ב-Mac וב-Windows.
+
+| פקודה | תיאור (כפי שנכתב) | הקרוב אצלנו |
+|---|---|---|
+| `/liquid-glass` | כתוביות ועדשה בסגנון זכוכית | `embedded-captions` |
+| `/depth-title` | מילים תלת-ממדיות מאחורי האדם | `embedded-captions`, `talking-head-recut` |
+| `/kinetic-captions` | כתוביות תלת-ממדיות מילה אחר מילה | `embedded-captions` |
+| `/cinematic-trailer` | מראה טריילר קולנועי | `media-use` (grading), `motion-graphics` |
+| `/neon-outline` | קו ניאון ושלטים סביב האדם | `talking-head-recut` |
+| `/glitch-hud` | HUD עתידני ותקלות | `hyperframes-registry` (גליץ'), `motion-graphics` |
+| `/card-flip-3d` | כרטיס תלת-ממדי שמתהפך | `hyperframes-animation` (Three.js) |
+| `/infinite-zoom` | מסגרות בתוך מסגרות | `hyperframes-keyframes` (זום) |
+| `/ui-depth-reel` | חלונות אפליקציה צפים | `motion-graphics` (UI) |
+| `/news-broadcast` | חבילת חדשות מתפרצות | `motion-graphics` (lower-third) |
+| `/explainer-panel-reel` | תרשים שלב אחר שלב | `faceless-explainer`, `motion-graphics` |
+| `/swiss-grid` | עיצוב כרזה שוויצרי | `hyperframes-creative` (טיפוגרפיה) |
+| `/scrapbook-collage` | קולאז' נייר בסגנון זין | `keyframe-images` (נייר גזור) |
+| `/cutout-grid` | רשת פופ-ארט של האדם | `talking-head-recut` |
+| `/ranking-format` | ספירה לאחור/דירוג תלת-ממדי | `motion-graphics` (ספירת מספרים) |
+
+## מה לקחת
+1. **ברירת מחדל "שקט" היא מלכודת:** העריכות של הכלי יוצאות בלי קול. אצלנו הקול הוא חלק מהתסריט, לכן תמיד לציין במפורש לשמור קול.
+2. **מבנה של "פקודה אחת לסגנון":** אפשר לחקות אצלנו בסקילים קטנים לכל סגנון, אבל אין בכך צורך כל עוד `talking-head-recut` ו-`embedded-captions` מכסים את המשפחה. לא נבנה 15 סקילים בלי בקשה.
+3. **סגנונות כיוון:** שימושי כרשימת ברירה לשאלת הרפרנס בשלב 0 של `video-with-claude` ("איזה מהמראות האלה?").
+
+## מה לא ידוע
+תוכן הסקיל `arcads-cut`. כדי ללמוד ממנו צריך להוריד אותו מ-Arcads ולשלוח אותו (zip). אל תתקין סקיל מ-zip חיצוני בלי לקרוא אותו קודם.
