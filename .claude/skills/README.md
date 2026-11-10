@@ -37,4 +37,9 @@
 |---|---|---|
 | `family-comic-book` | "ספר קומיקס משפחתי", "סיפור של סבא/סבתא", "ספר מהיומנים" | שיטת סיפור (מתח, חידה, סוף ומסר), חלוקת עבודה בין ChatGPT/Codex ל־Claude, מאגר גיטהב לכל ספר, ארכיטקטורת הצופה, אתר ו־PDF להדפסה, בדיקות. `references/`, `portable/` (ChatGPT, Codex), `templates/` |
 
+## מחקר משפחתי בארכיונים
+| סקיל | מתי מופעל | מה בתוכו |
+|---|---|---|
+| `family-archive-research` | "לחפש על סבא", "מחקר שורשים", "לכתוב לארכיון", "יד ושם", "Arolsen" | קובץ מצב לכל מחקר, קטלוג מאגרים וארכיונים, תבניות פניות בחמש שפות, תדריך לסוכני חיפוש עם תוויות ודאות, טעויות שכבר נעשו. `references/`, `templates/`, `scripts/` (תאריך עברי, רינדור סריקות, חילוץ טקסט, דפי מגע). תלויות: `pip install pyluach pymupdf pillow python-docx python-pptx openpyxl beautifulsoup4` |
+
 מימוש לדוגמה: `elazarsh/journey-to-father-comic` ("הגיבור שלי · המסע אל אבא"), אתר: https://elazarsh.github.io/hagibor-hanamuch/
