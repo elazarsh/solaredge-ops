@@ -40,6 +40,6 @@
 ## מחקר משפחתי בארכיונים
 | סקיל | מתי מופעל | מה בתוכו |
 |---|---|---|
-| `family-archive-research` | "לחפש על סבא", "מחקר שורשים", "לכתוב לארכיון", "יד ושם", "Arolsen" | קובץ מצב לכל מחקר, קטלוג מאגרים וארכיונים, תבניות פניות בחמש שפות, תדריך לסוכני חיפוש עם תוויות ודאות, טעויות שכבר נעשו. `references/`, `templates/`, `scripts/` (תאריך עברי, רינדור סריקות, חילוץ טקסט, דפי מגע). תלויות: `pip install pyluach pymupdf pillow python-docx python-pptx openpyxl beautifulsoup4` |
+| `family-archive-research` | "דמות חדשה", "לחפש על סבא", "מחקר שורשים", "לכתוב לארכיון", "יד ושם", "Arolsen" | **אוטופיילוט לדמות חדשה**: קליטה, תיקיית מחקר, תוכנית מבוססת השערות, חיפוש ממצה (מטריצת רשומות), מעגל קרובים (FAN), הוכחה לפי GPS, סוכנים עם סבב אימות, פניות לארכיונים. `references/` (method, routing לכל אזור, sources, names, letters, agent-brief, pitfalls), `templates/`, `scripts/` (`new_research`, `lint_research`, `merge_sources`, `names`, `hebdate`, `render`, `extract`, `contact`). תלויות: `pip install pyluach pymupdf pillow python-docx python-pptx openpyxl beautifulsoup4`. הסקיל משתפר אחרי כל מחקר (סעיף "לשפר את הסקיל") |
 
 מימוש לדוגמה: `elazarsh/journey-to-father-comic` ("הגיבור שלי · המסע אל אבא"), אתר: https://elazarsh.github.io/hagibor-hanamuch/

@@ -4,8 +4,10 @@ BS = chr(92)
 
 
 def lp(path):
-    """Long-path-safe absolute Windows path."""
+    """Absolute path; on Windows only, a long-path-safe (\\\\?\\) path. No-op prefix on Linux/macOS."""
     p = os.path.abspath(path)
+    if os.name != 'nt':
+        return p
     if p.startswith(BS * 2 + '?' + BS):
         return p
     return BS * 2 + '?' + BS + p

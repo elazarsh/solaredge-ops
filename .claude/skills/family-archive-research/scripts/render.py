@@ -31,7 +31,10 @@ def main():
         for f in walk_files(root, IMG_EXT | {'.pdf'}):
             stem = safe(os.path.splitext(os.path.basename(f))[0])
             if f.lower().endswith('.pdf'):
-                import fitz
+                try:
+                    import pymupdf as fitz
+                except ImportError:
+                    import fitz
                 doc = fitz.open(lp(f))
                 rng = range(len(doc))
                 if a.pages:

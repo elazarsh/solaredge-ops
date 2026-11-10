@@ -28,7 +28,10 @@ def read_txt(p):
 
 
 def pdf_text(p):
-    import fitz
+    try:
+        import pymupdf as fitz
+    except ImportError:
+        import fitz
     doc = fitz.open(lp(p))
     out, chars = [], 0
     for i, pg in enumerate(doc):
