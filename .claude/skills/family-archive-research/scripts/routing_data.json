@@ -1,0 +1,126 @@
+{
+  "_doc": "since_before_end: trigger applies if the person lived/was born in the region at any time up to the end of the period (e.g. conscription), not only during it. Machine-readable source catalog used by plan_sources.py and ingest.py. status: V=tried in real research (see references/sources.md), L=learned from web research, not verified, G=general knowledge, verify first. access: online-free < online-paid < letter < onsite. Update status only after real use.",
+  "regions": [
+    {"id": "hu", "name": "הונגריה, סלובקיה, רותניה הקרפטית, טרנסילבניה", "keys": ["hungary", "הונגריה", "magyarország", "ungarn", "hongrie", "slovakia", "סלובקיה", "slovensko", "ruthenia", "רותניה", "carpath", "transylvania", "טרנסילבניה", "erdély", "kosice", "košice", "miskolc", "מישקולץ", "budapest", "בודפשט", "abaúj", "borsod", "zemplén"],
+     "note": "רישום אזרחי בהונגריה מ-1895; לפני כן פנקסי קהילה יהודיים. אחרי 1920 חלק מהשטחים בצ'כוסלובקיה ורומניה.",
+     "sources": [
+      {"name": "FamilySearch - פנקסי קהילות יהודיות בהונגריה (סרוקים)", "url": "https://www.familysearch.org/", "types": ["לידה", "נישואין", "פטירה"], "status": "V", "access": "online-free", "notes": "דורש חשבון חינמי (המשתמש). לרוב לא מאונדקס - דפדוף בתמונות. חיפוש בקטלוג לפי שם היישוב."},
+      {"name": "JewishGen Hungary (פטירות, רשימות קהילות, מרכז השואה בבודפשט)", "url": "https://www.jewishgen.org/", "types": ["פטירה", "שואה", "מגורים"], "status": "V", "access": "online-free", "notes": ""},
+      {"name": "Arcanum ADT / Hungaricana - עיתונות הונגרית סרוקה", "url": "https://adt.arcanum.com/", "types": ["הספד", "אירוסין", "עיתונות"], "status": "V", "access": "online-paid", "notes": "Hungaricana חינם. חיפוש בסדר הונגרי: משפחה פרטי."},
+      {"name": "MNL - הארכיון הלאומי ההונגרי, ארכיוני המחוזות", "url": "", "types": ["לידה", "נישואין", "פטירה", "שואה", "גטו"], "status": "V", "access": "letter", "notes": "לא מחפשים בשבילך; מפנים לחומר סרוק. סניף מקומי לגטו וגירוש 1944. לכתוב בהונגרית."},
+      {"name": "הארכיון הצבאי ההונגרי (HM HIM Hadtörténelmi Levéltár)", "url": "", "types": ["שירות צבאי"], "status": "V", "access": "letter", "notes": "לבדוק כתובת תו אחר תו (מכתב חזר בעבר)."}
+     ]},
+    {"id": "at_cz", "name": "אוסטריה, בוהמיה, מורביה, צ'כיה", "keys": ["austria", "אוסטריה", "österreich", "vienna", "וינה", "wien", "bohemia", "בוהמיה", "moravia", "מורביה", "czech", "צ'כיה", "prague", "פראג", "praha", "brno", "ברנו"],
+     "note": "פנקסי קהילה (Matriken), IKG וינה.",
+     "sources": [
+      {"name": "ANNO - ספרייה לאומית אוסטרית, עיתונות סרוקה", "url": "https://anno.onb.ac.at/", "types": ["הספד", "עיתונות", "מודעות"], "status": "V", "access": "online-free", "notes": "REST חיפוש פתוח, ראו sources.md."},
+      {"name": "ארכיון IKG וינה (קהילה יהודית)", "url": "", "types": ["לידה", "נישואין", "פטירה", "שואה"], "status": "G", "access": "letter", "notes": "לאמת באתר הקהילה לפני פנייה."},
+      {"name": "ארכיוני מחוז בצ'כיה (eBadatelna / פנקסי קהילות)", "url": "", "types": ["לידה", "נישואין", "פטירה"], "status": "G", "access": "online-free", "notes": "לאמת מה מאונדקס ומה סרוק."}
+     ]},
+    {"id": "galicia_pl", "name": "גליציה ופולין", "keys": ["galicia", "גליציה", "poland", "פולין", "polen", "polska", "lwów", "lemberg", "לבוב", "lviv", "kraków", "krakow", "קרקוב", "tarnów", "przemyśl", "rzeszów", "warsaw", "ורשה", "łódź", "lodz", "לודז'"],
+     "note": "גליציה כפופה לאוסטריה עד 1918. נישואין דתיים בלבד לא נרשמו אזרחית, ילדים נרשמו לעיתים תחת שם האם. פולין הקונגרסאית: רישום אזרחי ברשות הרבנים (בפולנית, מ-1868 ברוסית).",
+     "sources": [
+      {"name": "JRI-Poland (אינדקס רשומות יהודיות פולין ומזרח גליציה)", "url": "https://www.jri-poland.org/", "types": ["לידה", "נישואין", "פטירה"], "status": "L", "access": "online-free", "notes": "נקודת כניסה ראשונה."},
+      {"name": "Gesher Galicia - All Galicia Database", "url": "https://www.geshergalicia.org/", "types": ["לידה", "נישואין", "פטירה", "מגורים", "קדסטר"], "status": "L", "access": "online-free", "notes": "מכיל נתונים שאינם ב-JRI-Poland."},
+      {"name": "Geneteka - אינדקס גנאלוגי פולני", "url": "https://geneteka.genealodzy.pl/", "types": ["לידה", "נישואין", "פטירה"], "status": "L", "access": "online-free", "notes": ""},
+      {"name": "ארכיונים לאומיים בפולין/אוקראינה", "url": "", "types": ["לידה", "נישואין", "פטירה", "שואה"], "status": "G", "access": "letter", "notes": "אנגלית כשמותר; ראו letters.md שפות נוספות."}
+     ]},
+    {"id": "east", "name": "ליטא, לטביה, בלארוס, אוקראינה, רוסיה", "keys": ["lithuania", "ליטא", "latvia", "לטביה", "belarus", "בלארוס", "ukraine", "אוקראינה", "russia", "רוסיה", "russian empire", "האימפריה הרוסית", "vilna", "vilnius", "וילנה", "kovno", "קובנה", "minsk", "מינסק", "odessa", "אודסה", "kiev", "kyiv", "קייב", "pale of settlement", "תחום המושב"],
+     "note": "האימפריה הרוסית: רשומות רבנים (metrical books), רשימות רוויזיה. לוח יוליאני עד 1918.",
+     "sources": [
+      {"name": "LitvakSIG - All Lithuania Database (דרך JewishGen)", "url": "https://www.litvaksig.org/", "types": ["לידה", "נישואין", "פטירה", "רוויזיה"], "status": "L", "access": "online-free", "notes": ""},
+      {"name": "JewishGen databases - Belarus / Ukraine / Russia", "url": "https://www.jewishgen.org/", "types": ["לידה", "נישואין", "פטירה", "מגורים"], "status": "L", "access": "online-free", "notes": ""},
+      {"name": "Routes to Roots Foundation - מצאי רשומות בארכיוני מזרח אירופה", "url": "https://www.rtrfoundation.org/", "types": ["מצאי ארכיונים"], "status": "L", "access": "online-free", "notes": "מראה איפה הרשומות, לא את הרשומות."}
+     ]},
+    {"id": "ro_md", "name": "רומניה, מולדובה, בסרביה, בוקובינה", "keys": ["romania", "רומניה", "românia", "moldova", "מולדובה", "bessarabia", "בסרביה", "bukovina", "בוקובינה", "bucharest", "בוקרשט", "iași", "iasi", "יאסי", "chernivtsi", "czernowitz", "צ'רנוביץ"],
+     "note": "רישום אזרחי מ-1865 (רומניה). כיסוי מקוון דל יחסית.",
+     "sources": [
+      {"name": "JewishGen Romania Database", "url": "https://www.jewishgen.org/", "types": ["לידה", "נישואין", "פטירה", "מגורים"], "status": "L", "access": "online-free", "notes": ""},
+      {"name": "ארכיונים לאומיים ומחוזיים ברומניה/מולדובה", "url": "", "types": ["לידה", "נישואין", "פטירה", "שואה"], "status": "G", "access": "letter", "notes": ""}
+     ]},
+    {"id": "de", "name": "גרמניה", "keys": ["germany", "גרמניה", "deutschland", "prussia", "פרוסיה", "hamburg", "המבורג", "berlin", "ברלין", "frankfurt", "פרנקפורט", "köln", "cologne", "קלן", "munich", "münchen", "מינכן", "leipzig", "breslau", "ברסלאו", "bavaria", "בוואריה"],
+     "note": "רישום אזרחי (Standesamt) מ-1876. פיצויים (BEG) הם הליד החזק ביותר לתולדות 1933-1945.",
+     "sources": [
+      {"name": "Compact Memory - עיתונות יהודית בגרמנית (פרנקפורט)", "url": "https://sammlungen.ub.uni-frankfurt.de/cm/", "types": ["הספד", "עיתונות", "מודעות"], "status": "V", "access": "online-free", "notes": "OCR פתוח דרך download/fulltext/plain/{ID}."},
+      {"name": "Deutsche Digitale Bibliothek - עיתונים (API)", "url": "https://api.deutsche-digitale-bibliothek.de/", "types": ["עיתונות"], "status": "V", "access": "online-free", "notes": ""},
+      {"name": "Staatsarchiv Hamburg (כרטיסי מס קהילה)", "url": "", "types": ["מגורים", "קהילה"], "status": "V", "access": "letter", "notes": "טופס מקוון; חינם; ענו תוך 4 ימים."},
+      {"name": "Mapping the Lives - מפקד המיעוטים מאי 1939", "url": "", "types": ["מגורים", "מפקד", "שואה"], "status": "V", "access": "online-free", "notes": ""},
+      {"name": "אבני נגף (Stolpersteine) - ביוגרפיות", "url": "https://www.stolpersteine-hamburg.de/", "types": ["שואה", "ביוגרפיה"], "status": "V", "access": "online-free", "notes": "[משני]. המבורג בלבד כאן."},
+      {"name": "Landesarchiv Berlin ← BZK Düsseldorf (bzk@brd.nrw.de) ← משרד מטפל (תיקי פיצויים BEG)", "url": "", "types": ["פיצויים", "מגורים", "הגירה", "קורות חיים"], "status": "V", "access": "letter", "notes": "הליד החזק ביותר ל-1933-1945."}
+     ]},
+    {"id": "fr_be_nl", "name": "צרפת, בלגיה, הולנד, לוקסמבורג", "keys": ["france", "צרפת", "belgium", "בלגיה", "belgique", "netherlands", "הולנד", "nederland", "luxembourg", "לוקסמבורג", "paris", "פריז", "brussels", "בריסל", "antwerp", "אנטוורפן", "amsterdam", "אמסטרדם", "drancy", "rivesaltes"],
+     "note": "רישום אזרחי מוקדם; רשומות זרים; גירוש 1942-44.",
+     "sources": [
+      {"name": "Mémorial de la Shoah (כרטיסים, Drancy)", "url": "", "types": ["שואה", "מגורים"], "status": "V", "access": "letter", "notes": "מיקרופילם בארכיון הלאומי."},
+      {"name": "AD66 - פירנאים המזרחיים (Rivesaltes, St-Cyprien)", "url": "", "types": ["שואה", "מחנות"], "status": "V", "access": "letter", "notes": "תדפיס ממאגר, לא סריקות."},
+      {"name": "ארכיון המדינה הבלגי (AGATHA)", "url": "", "types": ["משטרת זרים", "מגורים"], "status": "V", "access": "letter", "notes": "העתק בתשלום."},
+      {"name": "Joods Monument (הולנד)", "url": "https://www.joodsmonument.nl/", "types": ["שואה"], "status": "G", "access": "online-free", "notes": "לאמת."}
+     ]},
+    {"id": "balkans_med", "name": "יוון, תורכיה, בולגריה, יוגוסלביה, איטליה", "keys": ["greece", "יוון", "salonika", "thessaloniki", "סלוניקי", "turkey", "תורכיה", "izmir", "אזמיר", "istanbul", "איסטנבול", "bulgaria", "בולגריה", "yugoslavia", "יוגוסלביה", "serbia", "סרביה", "croatia", "קרואטיה", "bosnia", "בוסניה", "sarajevo", "italy", "איטליה", "rome", "רומא", "rhodes", "רודוס"],
+     "note": "קהילות ספרדיות; מוסכמות מתן שם אחרות (על שם סבים חיים).",
+     "sources": [
+      {"name": "JewishGen - Salonika, Izmir (נישואין 1820-1933)", "url": "https://www.jewishgen.org/", "types": ["נישואין", "שואה"], "status": "L", "access": "online-free", "notes": ""},
+      {"name": "ארכיוני קהילות ומדינה (יוון, תורכיה, איטליה, יוגוסלביה)", "url": "", "types": ["לידה", "נישואין", "פטירה"], "status": "G", "access": "letter", "notes": ""}
+     ]},
+    {"id": "n_africa", "name": "צפון אפריקה ומצרים", "keys": ["morocco", "מרוקו", "algeria", "אלג'יריה", "tunisia", "תוניסיה", "tunis", "תוניס", "libya", "לוב", "tripoli", "egypt", "מצרים", "cairo", "קהיר", "alexandria", "אלכסנדריה", "casablanca", "קזבלנקה", "meknes", "מכנס", "fez", "פאס"],
+     "note": "רשומות קהילה ושלטונות צרפתיים/איטלקיים. מרוקו - הרשומות הצפופות ביותר בצפון אפריקה.",
+     "sources": [
+      {"name": "JewishGen - Meknes (עצי משפחה), אוספי מרוקו", "url": "https://www.jewishgen.org/", "types": ["נישואין", "משפחה"], "status": "L", "access": "online-free", "notes": ""},
+      {"name": "ANOM - ארכיון צרפתי מעבר לים (אלג'יריה, תוניסיה, מרוקו)", "url": "", "types": ["רישום אזרחי", "מפקד"], "status": "G", "access": "online-free", "notes": "לאמת."},
+      {"name": "ספרי קהילה, כתובות, אוספי משפחה ועדות בעל פה", "url": "", "types": ["עדות"], "status": "G", "access": "onsite", "notes": "מסמנים [עדות]."}
+     ]},
+    {"id": "mena", "name": "עיראק, תימן, פרס, סוריה, לבנון", "keys": ["iraq", "עיראק", "baghdad", "בגדד", "yemen", "תימן", "sanaa", "צנעא", "iran", "persia", "פרס", "איראן", "syria", "סוריה", "aleppo", "חלב", "damascus", "דמשק", "lebanon", "לבנון", "beirut", "ביירות"],
+     "note": "מעט רשומות כתובות; עדות בעל פה ומסמכים משפחתיים הם המקור העיקרי.",
+     "sources": [
+      {"name": "ארכיון יהודי עיראק (NARA, דיגיטלי)", "url": "", "types": ["קהילה", "מסמכים"], "status": "L", "access": "online-free", "notes": "לאמת היקף וכיסוי."},
+      {"name": "ראיונות משפחה, כתובות, תיקי קהילה בארץ", "url": "", "types": ["עדות"], "status": "G", "access": "onsite", "notes": "[עדות]."}
+     ]},
+    {"id": "il", "name": "ארץ ישראל (מנדט, עות'מאני) וישראל", "keys": ["israel", "ישראל", "palestine", "פלשתינה", "מנדט", "mandate", "ארץ ישראל", "tel aviv", "תל אביב", "jerusalem", "ירושלים", "haifa", "חיפה"],
+     "note": "שינוי שם לעברי נפוץ בשנות ה-40-50.",
+     "sources": [
+      {"name": "ארכיון המדינה - תיקי התאזרחות ומסמכים (מקוון)", "url": "", "types": ["התאזרחות", "עלייה", "מגורים"], "status": "V", "access": "online-free", "notes": "חיפוש לפי שם. רשימות עולים 1939 ב-Google Pinpoint (סריקה בעין)."},
+      {"name": "הארכיון הציוני המרכזי", "url": "", "types": ["עלייה", "ארגונים"], "status": "V", "access": "letter", "notes": ""},
+      {"name": "עיתונות יהודית היסטורית - הספרייה הלאומית (JPress)", "url": "https://www.nli.org.il/he/newspapers", "types": ["הספד", "עיתונות", "מודעות"], "status": "V", "access": "online-free", "notes": "חסום ב-Cloudflare; Claude in Chrome אחרי אישור המשתמש."},
+      {"name": "פרסומי שינוי שמות ברשומות", "url": "", "types": ["שינוי שם"], "status": "G", "access": "online-free", "notes": "לאמת."},
+      {"name": "ארכיון צה\"ל ומערכת הביטחון", "url": "", "types": ["שירות צבאי"], "status": "G", "access": "letter", "notes": "לאמת."}
+     ]},
+    {"id": "americas_anglo", "name": "ארה\"ב, קנדה, בריטניה, דרום אמריקה, אוסטרליה", "keys": ["united states", "usa", "ארה\"ב", "ארצות הברית", "new york", "ניו יורק", "canada", "קנדה", "england", "אנגליה", "britain", "בריטניה", "london", "לונדון", "argentina", "ארגנטינה", "brazil", "ברזיל", "australia", "אוסטרליה", "ellis island"],
+     "note": "רשומות הגירה, התאזרחות, מפקדים, צוואות.",
+     "sources": [
+      {"name": "FamilySearch (מפקדים, התאזרחות, רשימות נוסעים)", "url": "https://www.familysearch.org/", "types": ["הגירה", "מפקד", "התאזרחות"], "status": "G", "access": "online-free", "notes": ""},
+      {"name": "ארכיונים לאומיים (NARA, TNA, LAC) ו-Ellis Island", "url": "", "types": ["הגירה", "התאזרחות"], "status": "G", "access": "online-free", "notes": "לאמת."}
+     ]}
+  ],
+  "universal": [
+    {"name": "יד ושם - מאגר השמות ודפי עד", "url": "https://yvng.yadvashem.org/", "types": ["שואה", "ביוגרפיה"], "status": "V", "access": "online-free", "notes": "לבדוק גם מי מילא את דף העד."},
+    {"name": "עצי משפחה וסריקות MyHeritage/Geni (Record Matches)", "url": "", "types": ["רמזים"], "status": "V", "access": "online-free", "notes": "[משני]. קאפצ'ה - המשתמש."},
+    {"name": "archive.org - ספרים וספרי זיכרון סרוקים", "url": "https://archive.org/", "types": ["ספרי זיכרון", "ספרות"], "status": "V", "access": "online-free", "notes": ""},
+    {"name": "JewishGen Yizkor Book Project (ספר זיכרון לקהילה)", "url": "https://www.jewishgen.org/yizkor/", "types": ["ספרי זיכרון", "קהילה"], "status": "L", "access": "online-free", "notes": "אם יש ספר לקהילת המוצא."}
+  ],
+  "triggers": [
+    {"id": "wwi_ah", "name": "שירות צבאי במלחמת העולם הראשונה - אוסטרו-הונגריה", "sex": "ז", "birth_between": [1865, 1900], "regions": ["hu", "at_cz", "galicia_pl", "ro_md"], "period": [1914, 1918], "since_before_end": true,
+     "sources": [
+      {"name": "Kriegsarchiv (Österreichisches Staatsarchiv): Grundbuchblatt, Belohnungsantrag, שבויים", "url": "", "types": ["שירות צבאי"], "status": "V", "access": "online-free", "notes": "oesta@oesta.gv.at. התיקים סרוקים והחיפוש עצמי. צריך יחידה משוערת ושנת לידה."},
+      {"name": "Verlustlisten Österreich-Ungarn (רשימות נפגעים)", "url": "", "types": ["שירות צבאי"], "status": "L", "access": "online-free", "notes": "עוד לא נוסה."},
+      {"name": "ICRC grandeguerre - שבויים", "url": "https://grandeguerre.icrc.org", "types": ["שבויים"], "status": "V", "access": "online-free", "notes": "אין קובץ לשבויים שהחזיקה איטליה: מדינות מגינות."}
+     ]},
+    {"id": "wwi_de", "name": "שירות צבאי במלחמת העולם הראשונה - גרמניה", "sex": "ז", "birth_between": [1865, 1900], "regions": ["de"], "period": [1914, 1918], "since_before_end": true,
+     "sources": [
+      {"name": "רשימות נפגעים גרמניות (Verlustlisten) וארכיוני צבא מדינות", "url": "", "types": ["שירות צבאי"], "status": "G", "access": "online-free", "notes": "לאמת."}
+     ]},
+    {"id": "holocaust", "name": "שואה ורדיפה", "regions": ["hu", "at_cz", "galicia_pl", "east", "ro_md", "de", "fr_be_nl", "balkans_med"], "period": [1933, 1945],
+     "sources": [
+      {"name": "Arolsen Archives (collections.arolsen-archives.org)", "url": "https://collections.arolsen-archives.org", "types": ["שואה"], "status": "V", "access": "online-free", "notes": "תיקי איתור - טופס; שלילי מהיר, תיק חודשים. המשתמש מאשר תנאים."},
+      {"name": "יד ושם - ארכיון העדויות והיכל השמות", "url": "", "types": ["שואה", "עדות"], "status": "V", "access": "letter", "notes": "דפי עד לחסרים; קישורי הורדה פגים אחרי 5 ימים."},
+      {"name": "ארכיוני גטו וגירוש מקומיים, USHMM", "url": "", "types": ["שואה", "גטו"], "status": "G", "access": "letter", "notes": "לאמת."}
+     ]},
+    {"id": "compensation_de", "name": "תיקי פיצויים מגרמניה (BEG)", "regions": ["de", "at_cz"], "period": [1933, 1945],
+     "sources": [
+      {"name": "Landesarchiv Berlin ← BZK Düsseldorf (bzk@brd.nrw.de) ← משרד מטפל (תיקי פיצויים BEG)", "url": "", "types": ["פיצויים"], "status": "V", "access": "letter", "notes": "הליד החזק ביותר לחיים 1933-1945."}
+     ]},
+    {"id": "immigration_il", "name": "עלייה והתאזרחות בארץ ישראל/ישראל", "regions": ["il"], "event_types": ["עלייה", "הגירה"],
+     "sources": [
+      {"name": "ארכיון המדינה והארכיון הציוני (עלייה, התאזרחות)", "url": "", "types": ["עלייה", "התאזרחות"], "status": "V", "access": "online-free", "notes": ""}
+     ]}
+  ]
+}

@@ -8,6 +8,7 @@ Checks
              in sources.csv; [מתועד] fact whose source is classified 'נגזר' (should be [משני]);
              FINDINGS block with status מוכח but no existing source ID in its evidence;
              question status not in the allowed set; open question without 'מה יכריע'.
+  PLACES   - rows need place, label, claim source; WARN if jurisdiction empty or SOURCE_PLAN missing/stale.
   WARNINGS - STATE missing/stale-format date; empty action queue; sources.csv [מתועד] rows not yet
              'נבדק בעצמי?'; search_log rows without a conclusion; open referrals in the follow-up file;
              people in the FAN circle never used; PLAN matrix rows still 'לא נבדק'.
@@ -194,6 +195,37 @@ def main():
                         unchecked += 1
         if total:
             info.append(f"record matrix: {total - unchecked}/{total} checked")
+
+    # ---- PLACES / SOURCE_PLAN (stage 0: raw material -> footprint -> sources)
+    pc = read(os.path.join(root, "PLACES.md"))
+    if pc is not None:
+        filled = 0
+        for h, header, rows in tables(pc):
+            if "מקום (כפי שנכתב במקור)" in header:
+                for r in rows:
+                    if blank(r, ("#",)):
+                        continue
+                    filled += 1
+                    q = r.get("#", "?")
+                    if not r.get("מקום (כפי שנכתב במקור)"):
+                        errors.append(f"PLACES row {q}: no place name")
+                    if not LABEL_RE.search(r.get("תווית", "")):
+                        errors.append(f"PLACES row {q}: missing/invalid label '{r.get('תווית', '')}'")
+                    if not r.get("מקור הטענה"):
+                        errors.append(f"PLACES row {q}: no claim source (raw file:line or source ID)")
+                    if not r.get("מדינה/שיפוט אז"):
+                        warns.append(f"PLACES row {q}: 'מדינה/שיפוט אז' empty - cannot match sources by jurisdiction")
+        info.append(f"footprint rows: {filled}")
+        if filled:
+            sp = os.path.join(root, "SOURCE_PLAN.md")
+            if not os.path.exists(sp):
+                warns.append("PLACES filled but SOURCE_PLAN.md missing - run plan_sources.py")
+            elif os.path.getmtime(sp) + 1 < os.path.getmtime(os.path.join(root, "PLACES.md")):
+                warns.append("SOURCE_PLAN.md is older than PLACES.md - re-run plan_sources.py")
+            if not re.search(r"^שנת לידה:\s*\d{4}", pc, re.M):
+                warns.append("PLACES: birth year missing - triggers like WWI service cannot be matched")
+        elif os.path.isdir(os.path.join(root, "raw")):
+            warns.append("raw/ exists but PLACES.md is empty - extract the footprint from the raw material (references/intake.md)")
 
     print(f"# lint {root}")
     for i in info:

@@ -43,7 +43,7 @@ def main():
     if os.path.exists(root) and not a.force:
         sys.exit(f"{root} already exists - open its STATE.md instead (or pass --force to add missing files)")
     os.makedirs(root, exist_ok=True)
-    for sub in ("agents", "answers", "FOUND"):
+    for sub in ("agents", "answers", "FOUND", "raw"):
         os.makedirs(os.path.join(root, sub), exist_ok=True)
     today = today_str()
     made = []
@@ -58,7 +58,7 @@ def main():
             open(dst, "w", encoding="utf-8").write(t.replace("{{NAME}}", a.name).replace("{{TODAY}}", today))
         made.append(f)
     print(f"created {root}/: " + ", ".join(made))
-    print("next: fill PEOPLE.md and PLAN.md, then run scripts/lint_research.py " + root)
+    print("next: python scripts/ingest.py <raw material> " + root + "  (then fill PLACES.md, run plan_sources.py)")
 
 
 if __name__ == "__main__":
