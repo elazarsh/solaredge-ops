@@ -16,3 +16,5 @@ Branch gpt/art verified. Existing 15 images reviewed as contact sheet. Added S01
 Batch 2: S03 and S04 corrected once and visually approved; first attempts retained in refs. Six generations this session, total 27. Four approved sprites.
 
 Batch 03: 9 generations this session. Individually reviewed: S05 approved, S11 weak, S06 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
+
+Batch 04: 12 generations this session. Individually reviewed: P17 approved, P19 approved, P21 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.

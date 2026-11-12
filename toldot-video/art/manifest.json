@@ -357,6 +357,106 @@
         992,
         1586
       ]
+    },
+    {
+      "id": "P21",
+      "file": "plates/P21_hand_door.jpg",
+      "type": "plate",
+      "beats": [
+        51,
+        52
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Vertical 9:16 exact portrait. Restrained dark room seen from inside: closed heavy ink-blue paper door in center, only one cream wrist and human hand gently holding a simple horizontal door handle. Four folded fingers plus thumb anatomically clear; no other body or person. A hairline of pale cream morning light below the closed door, no light through door. Nearly black layered paper walls with subtle blue halftone. Quiet and still, no danger shown, no blood, no weapons, no people, no lettering. Entire door and hand within middle 60% width and middle 65% height, wide calm dark borders.",
+      "engine": "image_gen.imagegen",
+      "aspect": "841:1495",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Five digits (four fingers below handle, thumb above), closed blue door, thin light beneath. No person, lettering or violence. Center crop cuts entering forearm intentionally, keeps hand intact."
+      },
+      "status": "approved",
+      "processing": {
+        "original": "refs/P21_hand_door_generated.png",
+        "crop": [
+          105,
+          0,
+          946,
+          1495
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        841,
+        1495
+      ]
+    },
+    {
+      "id": "P19",
+      "file": "plates/P19_laban_wages.jpg",
+      "type": "plate",
+      "beats": [
+        45,
+        46,
+        64
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Vertical 9:16 exact portrait. Close-up overhead: a single heavy cold GREEN-GREY hand with a plain gold ring on ring finger grasps a scattering of gold coins above an open blank cream ledger. Exactly five anatomically clear digits; no writing anywhere on ledger, coins completely blank with no numerals or symbols. Small sheep-shaped cream paper cutouts and simple house cutout lie to side, representing possessions. Only this hand, no body or people. Restrained cold grey-green palette, torn paper, black and green-grey halftone. Composition inside middle 60% width and 65% height, calm cream top 15% and bottom 20%. No weapons.",
+      "engine": "image_gen.imagegen",
+      "aspect": "841:1495",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Five grey-green digits, ring, blank ledger and coins. Center crop retains main hand/ledger; left house partly clipped, sheep remain. Coins imply controlled wages; wage transfer animation needs separate sprites."
+      },
+      "status": "approved",
+      "processing": {
+        "original": "refs/P19_laban_wages_generated.png",
+        "crop": [
+          105,
+          0,
+          946,
+          1495
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        841,
+        1495
+      ]
+    },
+    {
+      "id": "P17",
+      "file": "plates/P17_departure.jpg",
+      "type": "plate",
+      "beats": [
+        43,
+        53
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Vertical 9:16 exact portrait canvas. At left a single pink sleeved hand releases a thin pink paper thread, trailing toward a small slender BLUE cloaked traveler strictly seen from behind on paper steps rising toward a distant dawn horizon. Traveler carries a small cream bundle and plain wooden walking staff, not a weapon. No face profile or ears. Pink hand has five clear digits. Warm cream paper sky, gold horizon, blue hills, pink foreground. Main subjects small enough to fit within middle 60% width and 65% height, huge quiet top and bottom. No text or writing.",
+      "engine": "image_gen.imagegen",
+      "aspect": "892:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Rear blue traveler, five pink hand digits, released thread and steps. Cropped center to 9:16; main fingers and traveler retained. Covers departure, not packing action."
+      },
+      "status": "approved",
+      "processing": {
+        "original": "refs/P17_departure_generated.png",
+        "crop": [
+          50,
+          0,
+          942,
+          1586
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        892,
+        1586
+      ]
     }
   ]
 }
