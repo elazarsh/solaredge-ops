@@ -237,16 +237,24 @@
         26,
         63
       ],
-      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Single isolated open blue paper hand viewed palm-on, five anatomically clear separate digits, four fingers pointing upwards and one thumb to the left; a short clean wrist. Riso blue and dark blue halftone; no arm, sleeve, other object. One separate animation sprite centered with at least 20 percent empty margins on every side. Flat solid uniform vivid chroma green #00FF00 background, absolutely no texture or gradient on green, no cast shadow, no green within the object. Do not include lettering or markings.",
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Keep exactly the same five-finger open hand silhouette and bright green background. Replace ALL pink, orange, yellow, cream colored bands inside hand with RISO BLUE paper. Entire hand is blue with dark blue halftone only. No multicolored bands. No letters. Keep the background perfectly uniform bright green.",
       "engine": "image_gen.imagegen",
       "aspect": "sprite",
       "qa": {
         "faces": "pass",
         "text": "pass",
         "weapons": "pass",
-        "notes": "Five digits clear, but pink/orange/gold bands violate blue character color lock; one correction pending."
+        "notes": "Five clear digits; hand now entirely blue, no text, face or weapon. Clean green silhouette."
       },
-      "status": "weak"
+      "status": "approved",
+      "attempts": [
+        {
+          "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Single isolated open blue paper hand viewed palm-on, five anatomically clear separate digits, four fingers pointing upwards and one thumb to the left; a short clean wrist. Riso blue and dark blue halftone; no arm, sleeve, other object. One separate animation sprite centered with at least 20 percent empty margins on every side. Flat solid uniform vivid chroma green #00FF00 background, absolutely no texture or gradient on green, no cast shadow, no green within the object. Do not include lettering or markings.",
+          "file": "refs/S03_open_blue_hand_attempt1.png",
+          "status": "weak",
+          "notes": "Five digits clear, but pink/orange/gold bands violate blue character color lock; one correction pending."
+        }
+      ]
     },
     {
       "id": "S04",
@@ -255,16 +263,24 @@
       "beats": [
         8
       ],
-      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Single perfectly top-down circular cream paper tabletop encircled by a thin complete unbroken warm gold paper ring, a clear narrow gap of green between table edge and ring. No legs visible, no people, no chairs, no crown, no hands, no shadows. Delicate warm paper texture inside the tabletop only. One separate animation sprite centered with at least 20 percent empty margins on every side. Flat solid uniform vivid chroma green #00FF00 background, absolutely no texture or gradient on green, no cast shadow, no green within the object. Do not include lettering or markings.",
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Remove all six people completely, fill their areas with perfectly uniform green outside the cream circular tabletop. Keep ONLY an empty round cream paper tabletop and thin complete gold ring with visible green gap between. NO people, NO chairs or heads, NO other objects. Uniform green background.",
       "engine": "image_gen.imagegen",
       "aspect": "sprite",
       "qa": {
         "faces": "pass",
         "text": "pass",
         "weapons": "pass",
-        "notes": "Unrequested people baked into tabletop, inconsistent character colors. Requires one correction; cannot layer freely."
+        "notes": "Empty cream tabletop and intact gold ring; no baked people. Green gap allows compositing."
       },
-      "status": "weak"
+      "status": "approved",
+      "attempts": [
+        {
+          "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Single perfectly top-down circular cream paper tabletop encircled by a thin complete unbroken warm gold paper ring, a clear narrow gap of green between table edge and ring. No legs visible, no people, no chairs, no crown, no hands, no shadows. Delicate warm paper texture inside the tabletop only. One separate animation sprite centered with at least 20 percent empty margins on every side. Flat solid uniform vivid chroma green #00FF00 background, absolutely no texture or gradient on green, no cast shadow, no green within the object. Do not include lettering or markings.",
+          "file": "refs/S04_table_gold_ring_attempt1.png",
+          "status": "weak",
+          "notes": "Unrequested people baked into tabletop, inconsistent character colors. Requires one correction; cannot layer freely."
+        }
+      ]
     }
   ]
 }

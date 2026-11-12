@@ -12,3 +12,5 @@ Count: 9 plates in manifest; 6 reference drafts; 6 earlier tests outside reposit
 
 ## Codex resumed — batch 1
 Branch gpt/art verified. Existing 15 images reviewed as contact sheet. Added S01 crown and S02 fist (approved), S03 hand and S04 table (weak; one correction pending). Four generations this session, total 25. Bulk production continues; no approval wait. No DONE.md.
+
+Batch 2: S03 and S04 corrected once and visually approved; first attempts retained in refs. Six generations this session, total 27. Four approved sprites.
