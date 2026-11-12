@@ -657,6 +657,108 @@
         940,
         1672
       ]
+    },
+    {
+      "id": "P27",
+      "file": "plates/P27_dissent_open_shadow.jpg",
+      "type": "plate",
+      "beats": [
+        71,
+        72,
+        74,
+        75
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Perfectly overhead view of a small round cream table inside a COMPLETE THIN GOLD RING. In center a tiny gold crown casts a single distinct INK BLACK OPEN FIVE-FINGER HAND SILHOUETTE as its shadow, NOT a fist. Inside ring on left a slender BLUE figure from strictly overhead, on right an anonymous GREEN brother from overhead seated on a rounded arched GREEN chair. Outside ring below at right, a separate empty ORANGE chair with a square back faces away into darkness. Orange chair clearly OUTSIDE gold ring; GREEN chair entirely INSIDE ring. No other figures or chairs. A tiny distant paper house and storm cloud in background near horizon, no text. All key objects fit within middle 50% width and 60% height with broad calm cream margins on all sides, portrait 9:16. No faces, profiles, letters, weapons.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1672",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Blue and green figures overhead, green arched chair INSIDE intact ring, square orange chair OUTSIDE. Gold crown casts five-digit open-hand silhouette. Storm/house visible; sound ribbons still separate animation overlay."
+      },
+      "status": "approved",
+      "processing": {
+        "original": "refs/P27_dissent_open_shadow_generated.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1672
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1672
+      ]
+    },
+    {
+      "id": "P25",
+      "file": "plates/P25_compromise_hands.jpg",
+      "type": "plate",
+      "beats": [
+        63,
+        65
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Two open stylized paper hands reach toward each other at center, one entirely riso BLUE, one entirely CREAM with cream wool cuff, palms visible from above, exactly five distinct digits each. Hands meet gently at fingertips like two separate paper pieces, not a handshake. Flat paper shapes with sparse halftone, NO realistic skin wrinkles, nails or knitted fabric. Short simple cuffs. Thin warm gold glow between hands; otherwise calm cream paper. Entire subject inside middle 50% width and 55% height; generous horizontal and vertical margins. 9:16 vertical.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1672",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Two flat paper hands, five digits each, blue/cream colors correct. Touching fingertips and no faces/text/weapons. Cropped cuffs remain visible."
+      },
+      "status": "approved",
+      "processing": {
+        "original": "refs/P25_compromise_hands_generated.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1672
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1672
+      ]
+    },
+    {
+      "id": "P26",
+      "file": "plates/P26_parents_jacob.jpg",
+      "type": "plate",
+      "beats": [
+        68,
+        69,
+        70
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Small slender BLUE cloaked figure strictly from behind at center, round solid paper back-of-head without face profile. From left a PINK sleeved paper hand extends protectively toward his shoulder; from right a CREAM sleeved older paper hand offers a tiny gold five-point crown to the blue figure's open blue hand. Exactly five clear digits on visible open hands. No faces or ears. Small distant crowd of featureless colored backs below horizon. Entire subject compact inside middle 50% width and 55% height, broad quiet cream paper margins, vertical 9:16. Flat shapes, no realistic skin, no writing.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1672",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Needs close individual QA; not yet approved."
+      },
+      "status": "draft",
+      "processing": {
+        "original": "refs/P26_parents_jacob_generated.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1672
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1672
+      ]
     }
   ]
 }
