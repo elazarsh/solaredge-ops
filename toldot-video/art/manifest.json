@@ -281,6 +281,82 @@
           "notes": "Unrequested people baked into tabletop, inconsistent character colors. Requires one correction; cannot layer freely."
         }
       ]
+    },
+    {
+      "id": "S05",
+      "file": "sprites/S05_orange_chair.png",
+      "type": "sprite",
+      "beats": [
+        9,
+        31,
+        38,
+        39,
+        42,
+        75
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: One SINGLE isolated empty orange wooden chair, front three-quarter view, square upright backrest with one rectangular open space under top rail, four clear legs. Only orange and ochre paper with dark orange halftone. No crown, no table, no people. Center object in middle half of canvas. Uniform solid bright green #00FF00 background, no cast shadow, no gradient. No green within object.",
+      "engine": "image_gen.imagegen",
+      "aspect": "1051:1496",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Single square-back orange chair; four legs visible, empty, no face/text/weapons. Broad green margins."
+      },
+      "status": "approved",
+      "dimensions": [
+        1051,
+        1496
+      ]
+    },
+    {
+      "id": "S06",
+      "file": "sprites/S06_bread_tray.png",
+      "type": "sprite",
+      "beats": [
+        14,
+        16,
+        17,
+        19
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: One SINGLE isolated round golden-brown loaf of bread resting on a simple cream oval serving tray, top three-quarter view. Torn layered paper, subtle halftone texture on loaf and tray only, no hands, no people, no table, no lettering. Center object in middle half of canvas. Uniform solid bright chroma green #00FF00 background, no cast shadow or gradient, generous empty margins.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Single loaf on cream oval tray; clean silhouette, no characters or text. Large width, can isolate tray together with bread."
+      },
+      "status": "approved",
+      "dimensions": [
+        992,
+        1586
+      ]
+    },
+    {
+      "id": "S11",
+      "file": "sprites/S11_green_brother_chair.png",
+      "type": "sprite",
+      "beats": [
+        54,
+        71,
+        75
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: One SINGLE isolated empty TEAL BLUE wooden chair, front three-quarter view, rounded arched backrest with three vertical slats, four clear legs. This chair is structurally distinct from square orange chair. Deep teal blue and cyan halftone, NO GREEN in object so it can be keyed without holes; downstream color correction will make it green after keying. No crown, no table, no people. Center object in middle half of canvas. Uniform solid bright chroma green #00FF00 background, no cast shadow or gradient.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Rounded back structurally distinct from S05 but teal instead of required green. Requires green recolor after keying; not approved for finished film as-is."
+      },
+      "status": "weak",
+      "dimensions": [
+        992,
+        1586
+      ]
     }
   ]
 }
