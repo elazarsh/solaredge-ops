@@ -1,4 +1,64 @@
 {
-  "images": [],
-  "note": "Six previously generated conversation tests have not been imported or approved."
+  "images": [
+    {
+      "id": "P01",
+      "file": "plates/P01_tent_shadows.jpg",
+      "type": "plate",
+      "beats": [
+        1,
+        4,
+        5,
+        67
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: A wide cinematic view from behind of two people as completely faceless dark shadows on a warmly illuminated tent cloth at dusk, a seated figure holding a staff, another with a long veil. Both show only the backs of their round heads, no profile. Calm discussion. Small tent and distant landscape visible. Designed for later animation. No visible text. No writing, no weapons, no realistic faces. Main scene compact centered in width and height, preserve ample margin to allow 9:16 crop.",
+      "engine": "image_gen.imagegen",
+      "aspect": "2:3",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Isaac blue instead of cream; figures rather than shadows; 2:3 subject not safely cropped."
+      },
+      "status": "weak"
+    },
+    {
+      "id": "P02",
+      "file": "plates/P02_table_crown.jpg",
+      "type": "plate",
+      "beats": [
+        2,
+        3,
+        8,
+        9
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Perfectly top-down round table, surrounded by a thin complete gold ring; two people viewed from directly overhead, cream wool-robed Isaac holding a staff, pink veiled Rebecca across the table, no faces. At the top and bottom two visibly empty seats, one orange one blue. A single golden paper crown in the table center, pulled from one side by a slender pink thread and gently reached toward from the other side by Isaac. Everything fits central 70 percent width so cropping to portrait is safe. No hands with ambiguous fingers. No writing, no weapons, no realistic faces. Main scene compact centered in width and height, preserve ample margin to allow 9:16 crop.",
+      "engine": "image_gen.imagegen",
+      "aspect": "9:16",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Hands lack visible fingers; crown not held by Isaac; ring close to edges."
+      },
+      "status": "weak"
+    },
+    {
+      "id": "P03",
+      "file": "plates/P03_crown_fist.jpg",
+      "type": "plate",
+      "beats": [
+        10
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Close-up top-down flat graphic illustration: a gold paper crown on an otherwise empty round table casts a single clearly defined, very large clenched-fist-shaped black silhouette shadow with subtle red halftone. The shadow itself is the fist, not a drawing inside a rectangular shadow. No people. Ring of thin gold encloses table, visible complete and within central 70 percent width. No writing, no weapons, no realistic faces. Main scene compact centered in width and height, preserve ample margin to allow 9:16 crop.",
+      "engine": "image_gen.imagegen",
+      "aspect": "9:16",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "The shadow includes a rectangular stem instead of entirely fist-shaped; dimensions approximate 9:16."
+      },
+      "status": "weak"
+    }
+  ]
 }
