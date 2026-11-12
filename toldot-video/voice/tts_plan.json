@@ -1,7 +1,6 @@
 {
  "order": [
   "p1a",
-  "p1b",
   "p2a",
   "p3a",
   "p3b",
@@ -15,8 +14,6 @@
   "p6a",
   "p6b",
   "p6c",
-  "p6d",
-  "p6e",
   "p7a",
   "p8a",
   "p8b",
@@ -26,12 +23,7 @@
  ],
  "items": {
   "p1a": {
-   "text": "הַפָּרָשָׁה מַתְחִילָה בְּוִכּוּחַ לֹא פָּשׁוּט בֵּין בְּנֵי זוּג. יִצְחָק רוֹצֶה לְבָרֵךְ אֶת עֵשָׂו וְרִבְקָה עוֹשָׂה הַכֹּל כְּדֵי שֶׁהַבְּרָכָה תַּגִּיעַ לְיַעֲקֹב. הַמַּחֲלֹקֶת מַתְחִילָה בְּחֶדֶר אֶחָד, אֲבָל הַשְּׁאֵלָה גְּדוֹלָה מֵהַבַּיִת שֶׁלָּהֶם. לְאַבְרָהָם הֻבְטַח שֶׁיִּהְיֶה אַב הֲמוֹן גּוֹיִים וְשֶׁבְּזַרְעוֹ יִתְבָּרְכוּ גּוֹיֵי הָאָרֶץ. עַל הַשֻּׁלְחָן נִמְצֵאת הַשְּׁאֵלָה מִי יִשָּׂא אֶת הַהַבְטָחָה הַזֹּאת?",
-   "style": "Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: friendly and conversational yet dignified. Unhurried pace of about 110 words per minute, clear articulation of the vowel-marked words, natural pauses at commas and full stops. Emotion is subtle: gentle warmth on human moments, lower and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song. Do not read any bracketed words aloud. Direction for this passage: quiet, restrained, a little tense.",
-   "pause_after": 0.5
-  },
-  "p1b": {
-   "text": "מִי יָדַע לְהִשְׁתַּמֵּשׁ בְּצוּרָה רְאוּיָה בַּכּוֹחַ הֶעָצוּם הַזֶּה לְאֹרֶךְ הַדֶּרֶךְ?",
+   "text": "הַפָּרָשָׁה מַתְחִילָה בְּוִכּוּחַ לֹא פָּשׁוּט בֵּין בְּנֵי זוּג. יִצְחָק רוֹצֶה לְבָרֵךְ אֶת עֵשָׂו וְרִבְקָה עוֹשָׂה הַכֹּל כְּדֵי שֶׁהַבְּרָכָה תַּגִּיעַ לְיַעֲקֹב. הַמַּחֲלֹקֶת מַתְחִילָה בְּחֶדֶר אֶחָד, אֲבָל הַשְּׁאֵלָה גְּדוֹלָה מֵהַבַּיִת שֶׁלָּהֶם. לְאַבְרָהָם הֻבְטַח שֶׁיִּהְיֶה אַב הֲמוֹן גּוֹיִים וְשֶׁבְּזַרְעוֹ יִתְבָּרְכוּ גּוֹיֵי הָאָרֶץ. עַל הַשֻּׁלְחָן נִמְצֵאת הַשְּׁאֵלָה מִי יִשָּׂא אֶת הַהַבְטָחָה הַזֹּאת? <short pause> מִי יָדַע לְהִשְׁתַּמֵּשׁ בְּצוּרָה רְאוּיָה בַּכּוֹחַ הֶעָצוּם הַזֶּה לְאֹרֶךְ הַדֶּרֶךְ?",
    "style": "Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: friendly and conversational yet dignified. Unhurried pace of about 110 words per minute, clear articulation of the vowel-marked words, natural pauses at commas and full stops. Emotion is subtle: gentle warmth on human moments, lower and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song. Do not read any bracketed words aloud. Direction for this passage: quiet, restrained, a little tense.",
    "pause_after": 0.0
   },
@@ -86,27 +78,17 @@
    "pause_after": 0.0
   },
   "p6a": {
-   "text": "רִבְקָה שׁוֹמַעַת עַל הָאִיּוּם וּמְבַקֶּשֶׁת מִיַּעֲקֹב לִבְרֹחַ. לְאָן?",
-   "style": "Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: friendly and conversational yet dignified. Unhurried pace of about 110 words per minute, clear articulation of the vowel-marked words, natural pauses at commas and full stops. Emotion is subtle: gentle warmth on human moments, lower and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song. Do not read any bracketed words aloud. Direction for this passage: slow down a little more than usual.",
-   "pause_after": 0.5
-  },
-  "p6b": {
-   "text": "אֶל לָבָן, הָאִישׁ שֶׁיַּחְלִיף אֶת שְׂכָרוֹ שׁוּב וָשׁוּב וְיִטְעַן בַּסּוֹף שֶׁהַכֹּל שַׁיָּךְ לוֹ. גַּם אַרְבַּע־עֶשְׂרֵה שָׁנָה בְּבֵית הַמִּדְרָשׁ שֶׁל שֵׁם וְעָבַר לֹא יַחְסְכוּ מִיַּעֲקֹב אֶת הַמִּפְגָּשׁ הַזֶּה. לִפְעָמִים צָרִיךְ לְהוֹסִיף עוֹד קוֹמָה לְבֵית הַמִּדְרָשׁ, וְכָל הַחְלָטָה תִּהְיֶה קָשָׁה.",
+   "text": "רִבְקָה שׁוֹמַעַת עַל הָאִיּוּם וּמְבַקֶּשֶׁת מִיַּעֲקֹב לִבְרֹחַ. לְאָן? <short pause> אֶל לָבָן, הָאִישׁ שֶׁיַּחְלִיף אֶת שְׂכָרוֹ שׁוּב וָשׁוּב וְיִטְעַן בַּסּוֹף שֶׁהַכֹּל שַׁיָּךְ לוֹ. גַּם אַרְבַּע־עֶשְׂרֵה שָׁנָה בְּבֵית הַמִּדְרָשׁ שֶׁל שֵׁם וְעָבַר לֹא יַחְסְכוּ מִיַּעֲקֹב אֶת הַמִּפְגָּשׁ הַזֶּה. לִפְעָמִים צָרִיךְ לְהוֹסִיף עוֹד קוֹמָה לְבֵית הַמִּדְרָשׁ, וְכָל הַחְלָטָה תִּהְיֶה קָשָׁה.",
    "style": "Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: friendly and conversational yet dignified. Unhurried pace of about 110 words per minute, clear articulation of the vowel-marked words, natural pauses at commas and full stops. Emotion is subtle: gentle warmth on human moments, lower and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song. Do not read any bracketed words aloud. Direction for this passage: slow down a little more than usual.",
    "pause_after": 0.0
   },
-  "p6c": {
-   "text": "מִי שֶׁזּוֹכֵר אֶת בֹּקֶר הַחַג שֶׁבּוֹ הַיָּד נִשְׁאֲרָה עַל הַיָּדִית מִבִּפְנִים,",
+  "p6b": {
+   "text": "מִי שֶׁזּוֹכֵר אֶת בֹּקֶר הַחַג שֶׁבּוֹ הַיָּד נִשְׁאֲרָה עַל הַיָּדִית מִבִּפְנִים, <short pause> מֵבִין אֶת מִי שֶׁמַּעֲדִיף לְחַכּוֹת.",
    "style": "Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: friendly and conversational yet dignified. Unhurried pace of about 110 words per minute, clear articulation of the vowel-marked words, natural pauses at commas and full stops. Emotion is subtle: gentle warmth on human moments, lower and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song. Do not read any bracketed words aloud. Direction for this passage: slow down a little more than usual; quieter and careful, gentle, with great care.",
-   "pause_after": 0.5
+   "pause_after": 0.0
   },
-  "p6d": {
-   "text": "מֵבִין אֶת מִי שֶׁמַּעֲדִיף לְחַכּוֹת. וְרִבְקָה, שֶׁבּוֹחֶרֶת לִשְׁלֹחַ אֶת יַעֲקֹב, מְבִינָה שֶׁהַבְּחִירוֹת לֹא יִהְיוּ קַלּוֹת וּכְבָר מְדַבֶּרֶת עַל הָרֶגַע שֶׁבּוֹ תַּחֲזִיר אוֹתוֹ. ״יָמִים אֲחָדִים״, הִיא אוֹמֶרֶת.",
-   "style": "Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: friendly and conversational yet dignified. Unhurried pace of about 110 words per minute, clear articulation of the vowel-marked words, natural pauses at commas and full stops. Emotion is subtle: gentle warmth on human moments, lower and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song. Do not read any bracketed words aloud. Direction for this passage: slow down a little more than usual.",
-   "pause_after": 0.5
-  },
-  "p6e": {
-   "text": "הֵם יִהְיוּ לְעֶשְׂרִים שָׁנָה.",
+  "p6c": {
+   "text": "וְרִבְקָה, שֶׁבּוֹחֶרֶת לִשְׁלֹחַ אֶת יַעֲקֹב, מְבִינָה שֶׁהַבְּחִירוֹת לֹא יִהְיוּ קַלּוֹת וּכְבָר מְדַבֶּרֶת עַל הָרֶגַע שֶׁבּוֹ תַּחֲזִיר אוֹתוֹ. ״יָמִים אֲחָדִים״, הִיא אוֹמֶרֶת. <short pause> הֵם יִהְיוּ לְעֶשְׂרִים שָׁנָה.",
    "style": "Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: friendly and conversational yet dignified. Unhurried pace of about 110 words per minute, clear articulation of the vowel-marked words, natural pauses at commas and full stops. Emotion is subtle: gentle warmth on human moments, lower and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song. Do not read any bracketed words aloud. Direction for this passage: slow down a little more than usual.",
    "pause_after": 0.0
   },

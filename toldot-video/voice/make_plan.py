@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""מפרק את הטקסט המנוקד עם התגיות לקטעים: לכל קטע טקסט נקי (בלי תגיות) + סגנון נפרד + שתיקה אחריו.
+"""(תחביר Gemini 3.8) מפרק את הטקסט המנוקד עם התגיות לקטעים: לכל קטע טקסט נקי (בלי תגיות) + סגנון נפרד + שתיקה אחריו.
 תגיות לא נשלחות כטקסט (כך שלא יוקראו בטעות). שימוש: python3 make_plan.py tts_input.txt tts_plan.json"""
 import re, json, sys
 BASE=("Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: "
@@ -22,7 +22,8 @@ DIR={ # תגית -> (כיוון באנגלית, שתיקה בשניות לפני
  "Cautious hope":("cautiously hopeful",0,0,"para"),
  "Finish gently":("finish gently, a little softer and slower",0,0,"sent"),
 }
-PAUSE={"Brief pause":0.5,"Hold silence":1.4}
+INLINE={"Brief pause":"<short pause>"}   # Gemini 3.8: אירועים נקודתיים בסוגריים משולשים, באנגלית, בתוך הטקסט
+PAUSE={"Hold silence":1.4}               # שתיקה ארוכה: נמדדת בהרכבה (לא תגית)
 txt=open(sys.argv[1],encoding='utf-8').read().strip()
 paras=[p.strip() for p in re.split(r'\n\s*\n',txt) if p.strip()]
 plan={}; prev_para_dir=None; order=[]
@@ -41,6 +42,8 @@ for pi,p in enumerate(paras,1):
         m=re.fullmatch(r'\[([^\]]+)\]',tk.strip())
         if m:
             name=m.group(1)
+            if name in INLINE:
+                cur.append(INLINE[name]); continue
             if name in PAUSE:
                 if " ".join(cur).strip(): flush(PAUSE[name])
                 elif segs: segs[-1]["pause_after"]+=PAUSE[name]
@@ -75,6 +78,6 @@ for pi,p in enumerate(paras,1):
 json.dump({"order":order,"items":plan},open(sys.argv[2],'w',encoding='utf-8'),ensure_ascii=False,indent=1)
 words=0
 for k in order:
-    it=plan[k]; w=len(re.sub(r'[֑-ׇ]','',it['text']).split()); words+=w
+    it=plan[k]; w=len(re.sub(r'<[^>]+>','',re.sub(r'[\u0591-\u05C7]','',it['text'])).split()); words+=w
     print(k,w,'w','pause',it['pause_after'],'|',it['style'].split('Direction for this passage: ')[-1][:70] if 'Direction' in it['style'] else '(base)','|',re.sub(r'[֑-ׇ]','',it['text'])[:45])
 print(len(order),'segments',words,'words')
