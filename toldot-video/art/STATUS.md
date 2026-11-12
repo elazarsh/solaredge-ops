@@ -9,3 +9,6 @@ P01–P04, P06–P09 and P13 are in plates/. P05, P10–P12, P14–P15 are in re
 Validator: non-strict run OK, with warnings for P01 aspect and 46 uncovered beats. This does not mean coverage or artistic QA is complete. Strict coverage was not run.
 
 Count: 9 plates in manifest; 6 reference drafts; 6 earlier tests outside repository. Total generated: 21. Approved: 0. No DONE.md.
+
+## Codex resumed — batch 1
+Branch gpt/art verified. Existing 15 images reviewed as contact sheet. Added S01 crown and S02 fist (approved), S03 hand and S04 table (weak; one correction pending). Four generations this session, total 25. Bulk production continues; no approval wait. No DONE.md.
