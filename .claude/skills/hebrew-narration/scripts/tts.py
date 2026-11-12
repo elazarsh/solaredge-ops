@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """הפקת קריינות עברית עם Gemini TTS (gemini-3.8-flash-tts, קול Sulafat כברירת מחדל).
 
-קלט: קובץ md (פסקאות מופרדות בשורה ריקה -> p01, p02...) או JSON {"מפתח": "טקסט מנוקד"}.
+קלט: קובץ md (פסקאות מופרדות בשורה ריקה -> p01, p02...) או JSON {"מפתח": "טקסט מנוקד"} או {"items": {"מפתח": {"text": "...", "style": "סגנון לקטע"}}} (סגנון לכל קטע).
 פלט: <outdir>/<key>.wav ו-durs.json (אורך בשניות לכל קובץ). קבצים קיימים מדולגים (חידוש אחרי כשל).
 דורש GEMINI_API_KEY במשתנה סביבה. 429 -> המתנה וניסיון חוזר. ברירת מחדל: 3 במקביל.
 
@@ -21,7 +21,8 @@ END_SOFT = " Slightly softer and slower on the very last words of each paragraph
 def load_items(path):
     txt = open(path, encoding="utf-8").read()
     if path.endswith(".json"):
-        return json.loads(txt)
+        d = json.loads(txt)
+        return d["items"] if isinstance(d, dict) and "items" in d else d
     paras = [p.strip() for p in txt.split("\n\n") if p.strip()]
     return {f"p{i:02d}": p for i, p in enumerate(paras, 1)}
 
@@ -74,7 +75,8 @@ def main():
     items = load_items(a.input)
     keys = [k for k in items if not a.only or k in a.only]
     style = a.style or STYLE.format(wpm=a.wpm, extra=END_SOFT if a.soft_end else "")
-    words = {k: len(__import__("re").sub(r"[֑-ׇ]", "", items[k]).split()) for k in keys}
+    text_of = lambda v: v["text"] if isinstance(v, dict) else v          # פריט יכול להיות {"text","style"}
+    words = {k: len(__import__("re").sub(r"[֑-ׇ]", "", text_of(items[k])).split()) for k in keys}
     if a.dry_run:
         print("style:", style)
         for k in keys:
@@ -89,7 +91,8 @@ def main():
         out = os.path.join(a.outdir, f"{k}.wav")
         if os.path.exists(out) and not a.force:
             return k, wav_dur(out)
-        d = tts(items[k], style, a.voice, out, key, a.retries)
+        v = items[k]
+        d = tts(text_of(v), v.get("style", style) if isinstance(v, dict) else style, a.voice, out, key, a.retries)
         print(k, "ok" if d else "FAILED", d, flush=True)
         return k, d
 
