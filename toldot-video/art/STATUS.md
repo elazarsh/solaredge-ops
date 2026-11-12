@@ -1,7 +1,7 @@
 # STATUS — art production
 
-Stage 3: plan.md maps beats 0–75, estimate 37 assets. Stage 4: eight draft/weak plates saved, none approved. Stage 5: pending.
+Stage 3: plan.md maps beats 0–75, estimate 37 assets. Stage 4: 8 draft/weak plates saved, none approved; 4 unusable aspect reference drafts preserved in refs. Stage 5: pending.
 
-Last batch: P07–P09 generated and saved. P07 hands indistinct; P08 fist is paper shape rather than shadow; P09 pink hand shows four visible fingers. P05 generated but not imported due to invalid 992×1586 aspect. T1 and six earlier test images remain outside repository. Other earlier plates include known weaknesses.
+Latest batch P10–P12 all failed required 9:16 or 2:3 aspect, as did P05. These four drafts are saved under refs, not manifest plates, because the validator rejects their dimensions. No image aspect has been silently altered. Generation is paused due to repeated inability to reliably meet mandatory format. Earlier plates include recorded visual weaknesses. Full production remains incomplete.
 
-Count: 8 plates in repository; P05 outside repository; 6 earlier test generations outside repository. Total generation calls: 15. Approved: 0. No DONE.md.
+Count: 8 plates in manifest; 4 rejected aspect reference drafts; 6 earlier test generations outside repository. Total image generations: 18. Approved: 0. No DONE.md.
