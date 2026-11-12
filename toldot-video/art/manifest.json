@@ -1236,9 +1236,9 @@
         "faces": "pass",
         "text": "pass",
         "weapons": "pass",
-        "notes": "Compact correction; final ring/figure QA pending."
+        "notes": "Corrected compact ring fully visible, broken by black-red fist, cream/pink/blue anonymous figures inside. Green rounded chair inside and orange square chair outside. Fist four folded knuckles/thumb graphic; no faces/text/weapons."
       },
-      "status": "draft",
+      "status": "approved",
       "processing": {
         "original": "refs/P14_broken_ring_generated.png",
         "crop": [
@@ -1252,6 +1252,81 @@
       "dimensions": [
         940,
         1672
+      ]
+    },
+    {
+      "id": "S07",
+      "file": "sprites/S07_blank_ledger.png",
+      "type": "sprite",
+      "beats": [
+        45,
+        46,
+        64
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: ONE isolated open blank CREAM paper ledger, overhead three-quarter view, two empty pages and simple blue-grey spine. Absolutely no writing, lines, numerals or symbols anywhere. No coins, hands or other objects. Entire ledger inside middle50%width and50%height, generous empty margins on every side. Background perfectly uniform solid bright GREEN #00FF00, no texture, shadows, gradient or ground. No green inside object.",
+      "engine": "image_gen.imagegen",
+      "aspect": "1051:1496",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Open ledger, blank textured cream pages; no writing/numerals. Clean green around whole outline; layer coins and hand separately."
+      },
+      "status": "approved",
+      "dimensions": [
+        1051,
+        1496
+      ]
+    },
+    {
+      "id": "S19",
+      "file": "sprites/S19_gold_coins.png",
+      "type": "sprite",
+      "beats": [
+        45,
+        46,
+        64
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: ONE isolated small stack of THREE GOLD PAPER COINS, top three-quarter view, two stacked and one leaning against stack. Blank circular faces, no symbols, portraits or numerals. Flat warm gold with sparse ochre halftone, no hands or other objects. Entire stack inside central45%width and45%height, broad empty margins. Uniform solid bright GREEN #00FF00 background, no texture/gradient/cast shadow/ground, no green in objects.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Three blank gold coins grouped as one separate sprite, no symbols. Safe green margins, no cast shadow beyond paper edge."
+      },
+      "status": "approved",
+      "dimensions": [
+        992,
+        1586
+      ]
+    },
+    {
+      "id": "S09",
+      "file": "sprites/S09_sound_ribbons.png",
+      "type": "sprite",
+      "beats": [
+        26,
+        34,
+        35,
+        56,
+        69,
+        74
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: FIVE isolated abstract WAVY PAPER STRIPS, arranged in a single vertical column with LARGE GREEN GAPS, none touches another. Top blue strip, second pink, third warmgold, fourth orange, fifth inkblack. Each is a simple broad wave tapering gently at both ends, NOT an icon, letter, arrow, speechbubble or musical symbol. All strips within central50%width, broad green empty borders. Flat solid perfectly uniform bright GREEN #00FF00 background without texture, shadow, gradient, no green inside strips. Riso halftone only on paper strips. No hands, people or other objects.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Five distinct non-letter wave strips, blue/pink/gold/orange/black in separate rows. Broad green gaps allow downstream split; no green within strips."
+      },
+      "status": "approved",
+      "dimensions": [
+        992,
+        1586
       ]
     }
   ]
