@@ -467,39 +467,6 @@
       ]
     },
     {
-      "id": "P20",
-      "file": "plates/P20_house_study.jpg",
-      "type": "plate",
-      "beats": [
-        47,
-        49
-      ],
-      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: 9:16 portrait. A small warm cream and ochre stone house of study, front three-quarter view, amber light from open doorway. Three blank rolled cream scrolls and a small candle visible inside, absolutely NO writing. Several clearly separated ochre paper masonry blocks hover gently above a half-built second storey for later animation. No figures, hands, faces, symbols, weapons or text. House and blocks occupy only middle 55% width and central 60% height, with broad calm warm cream sky and foreground, thin blue hills in distance. Riso blue and warm gold halftone, layered torn paper.",
-      "engine": "image_gen.imagegen",
-      "aspect": "839:1492",
-      "qa": {
-        "faces": "pass",
-        "text": "pass",
-        "weapons": "pass",
-        "notes": "Blank scrolls and candle visible, second-storey blocks clear; center crop clips roof at left and leaves insufficient side margin. One scale/composition correction pending."
-      },
-      "status": "weak",
-      "processing": {
-        "original": "refs/P20_house_study_generated.png",
-        "crop": [
-          107,
-          0,
-          946,
-          1492
-        ],
-        "encoding": "JPEG quality95, chroma 4:4:4"
-      },
-      "dimensions": [
-        839,
-        1492
-      ]
-    },
-    {
       "id": "P24",
       "file": "plates/P24_unfamiliar_world.jpg",
       "type": "plate",
@@ -552,40 +519,6 @@
       "status": "approved",
       "processing": {
         "original": "refs/P22_empty_place_generated.png",
-        "crop": [
-          0,
-          0,
-          940,
-          1672
-        ],
-        "encoding": "JPEG quality95, chroma 4:4:4"
-      },
-      "dimensions": [
-        940,
-        1672
-      ]
-    },
-    {
-      "id": "P23",
-      "file": "plates/P23_known_blessing.jpg",
-      "type": "plate",
-      "beats": [
-        56,
-        57,
-        58
-      ],
-      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Close-up of an older CREAM wool sleeved hand gently holding a younger BLUE sleeved bare hand. Both hands entirely visible, exactly five anatomically clear digits on each, no gloves. Hands meet at center, warm gold paper rays behind, a few tiny gold stars and seeds rise above them. Only hands and short sleeves, no bodies, heads, faces or writing. Everything inside middle 50% of width and middle 55% height, generous calm cream paper margins on ALL sides. Vertical 9:16 portrait.",
-      "engine": "image_gen.imagegen",
-      "aspect": "940:1672",
-      "qa": {
-        "faces": "pass",
-        "text": "pass",
-        "weapons": "pass",
-        "notes": "Anatomy reads clearly and cream/blue sleeves identify characters, but skin shading and knitted cuffs look too realistic for flat paper-cut style. One style correction pending."
-      },
-      "status": "weak",
-      "processing": {
-        "original": "refs/P23_known_blessing_generated.png",
         "crop": [
           0,
           0,
@@ -654,40 +587,6 @@
       "status": "approved",
       "processing": {
         "original": "refs/P25_compromise_hands_generated.png",
-        "crop": [
-          0,
-          0,
-          940,
-          1672
-        ],
-        "encoding": "JPEG quality95, chroma 4:4:4"
-      },
-      "dimensions": [
-        940,
-        1672
-      ]
-    },
-    {
-      "id": "P26",
-      "file": "plates/P26_parents_jacob.jpg",
-      "type": "plate",
-      "beats": [
-        68,
-        69,
-        70
-      ],
-      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Small slender BLUE cloaked figure strictly from behind at center, round solid paper back-of-head without face profile. From left a PINK sleeved paper hand extends protectively toward his shoulder; from right a CREAM sleeved older paper hand offers a tiny gold five-point crown to the blue figure's open blue hand. Exactly five clear digits on visible open hands. No faces or ears. Small distant crowd of featureless colored backs below horizon. Entire subject compact inside middle 50% width and 55% height, broad quiet cream paper margins, vertical 9:16. Flat shapes, no realistic skin, no writing.",
-      "engine": "image_gen.imagegen",
-      "aspect": "940:1672",
-      "qa": {
-        "faces": "pass",
-        "text": "pass",
-        "weapons": "pass",
-        "notes": "Five pink hand digits; gold-toned older hand instead of cream, young blue thumb partly ambiguous. Correct cream hand/color and simplify anatomy once."
-      },
-      "status": "weak",
-      "processing": {
-        "original": "refs/P26_parents_jacob_generated.png",
         "crop": [
           0,
           0,
@@ -1000,9 +899,9 @@
         "faces": "pass",
         "text": "pass",
         "weapons": "pass",
-        "notes": "Corrected cream cuffs; individual hand anatomy review pending."
+        "notes": "Cream sleeves corrected, five sowing-hand digits; supporting hand curls under loaf so fingers overlap naturally. Cream paper, gold seeds, sprouts and cracked earth, clear safe crop."
       },
-      "status": "draft",
+      "status": "approved",
       "attempts": [
         {
           "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Cream hands sow seeds into cracked paper earth, green sprouts and an isolated round loaf of bread, small distant house. Five fingers on each visible hand, no faces. Make all scene elements fit in the central 70% of frame width, with generous quiet margin, for 9:16 cropping. No letters, numbers, facial features or weapons.",
@@ -1028,6 +927,143 @@
       "dimensions": [
         940,
         1672
+      ]
+    },
+    {
+      "id": "P20",
+      "file": "plates/P20_house_study.jpg",
+      "type": "plate",
+      "beats": [
+        47,
+        49
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Keep exactly the study house, blank scrolls, candle and floating second-storey paper blocks of reference. REDUCE SIZE of the entire house and blocks to 55% of current size, centered in a much larger plain cream paper field. All roof edges, blocks, house corners and ground must be fully visible and fit inside middle 45% WIDTH of canvas and middle 55% HEIGHT. Very broad 25% empty left and right borders. No additional objects. Flat paper collage, no text. Vertical 9:16.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1671",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "One scale correction: roof and all floating blocks entirely in frame with broad cream margins. Blank scrolls/candle clear; no text or people."
+      },
+      "status": "approved",
+      "attempts": [
+        {
+          "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: 9:16 portrait. A small warm cream and ochre stone house of study, front three-quarter view, amber light from open doorway. Three blank rolled cream scrolls and a small candle visible inside, absolutely NO writing. Several clearly separated ochre paper masonry blocks hover gently above a half-built second storey for later animation. No figures, hands, faces, symbols, weapons or text. House and blocks occupy only middle 55% width and central 60% height, with broad calm warm cream sky and foreground, thin blue hills in distance. Riso blue and warm gold halftone, layered torn paper.",
+          "status": "weak",
+          "qa": {
+            "faces": "pass",
+            "text": "pass",
+            "weapons": "pass",
+            "notes": "Blank scrolls and candle visible, second-storey blocks clear; center crop clips roof at left and leaves insufficient side margin. One scale/composition correction pending."
+          }
+        }
+      ],
+      "processing": {
+        "original": "refs/P20_house_study_generated_2.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1671
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1671
+      ]
+    },
+    {
+      "id": "P23",
+      "file": "plates/P23_known_blessing.jpg",
+      "type": "plate",
+      "beats": [
+        56,
+        57,
+        58
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Replace realistic hands with SIMPLE FLAT CUT PAPER SHAPES: an older hand made ONLY of CREAM paper with a plain CREAM paper cuff, gently holds a younger bare hand made ONLY of BLUE paper with a plain BLUE cuff. No peach skin, no nails, no wrinkles, no knitted fabric, no photographic shading. Exactly five digits per hand, natural gentle contact, elder fingers gently curl under younger hand. Sparse riso dots, torn edges, flat solid colors. Keep gold rays and few stars/seeds. Compact hands inside middle 45% width and 50% height; ample quiet cream paper all around. 9:16 portrait.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1671",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Corrected to flat cream/blue paper hands/cuffs. Four elder curled fingers and thumb clear; blue fingers visible with thumb naturally occluded by elder hand, not independently countable. No malformed extra digits; no realistic skin."
+      },
+      "status": "approved",
+      "attempts": [
+        {
+          "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Close-up of an older CREAM wool sleeved hand gently holding a younger BLUE sleeved bare hand. Both hands entirely visible, exactly five anatomically clear digits on each, no gloves. Hands meet at center, warm gold paper rays behind, a few tiny gold stars and seeds rise above them. Only hands and short sleeves, no bodies, heads, faces or writing. Everything inside middle 50% of width and middle 55% height, generous calm cream paper margins on ALL sides. Vertical 9:16 portrait.",
+          "status": "weak",
+          "qa": {
+            "faces": "pass",
+            "text": "pass",
+            "weapons": "pass",
+            "notes": "Anatomy reads clearly and cream/blue sleeves identify characters, but skin shading and knitted cuffs look too realistic for flat paper-cut style. One style correction pending."
+          }
+        }
+      ],
+      "processing": {
+        "original": "refs/P23_known_blessing_generated_2.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1671
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1671
+      ]
+    },
+    {
+      "id": "P26",
+      "file": "plates/P26_parents_jacob.jpg",
+      "type": "plate",
+      "beats": [
+        68,
+        69,
+        70
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Keep rear BLUE Jacob, PINK hand on shoulder, gold crown and distant anonymous rear crowd. Change the older hand from gold to CREAM paper matching its cream cuff. Gold is reserved for CROWN. Make all three hands read naturally with exactly five digits each: pink four fingers resting on shoulder plus a visible thumb at side; cream index and thumb pinching crown with three remaining fingers curled; blue palm open with four fingers and thumb. No realistic skin or nails. Compact scene inside central 50% width and 55% height, broad cream margins all sides, vertical9:16. No text or faces.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1671",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Correction awaiting individual inspection."
+      },
+      "status": "draft",
+      "attempts": [
+        {
+          "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Small slender BLUE cloaked figure strictly from behind at center, round solid paper back-of-head without face profile. From left a PINK sleeved paper hand extends protectively toward his shoulder; from right a CREAM sleeved older paper hand offers a tiny gold five-point crown to the blue figure's open blue hand. Exactly five clear digits on visible open hands. No faces or ears. Small distant crowd of featureless colored backs below horizon. Entire subject compact inside middle 50% width and 55% height, broad quiet cream paper margins, vertical 9:16. Flat shapes, no realistic skin, no writing.",
+          "status": "weak",
+          "qa": {
+            "faces": "pass",
+            "text": "pass",
+            "weapons": "pass",
+            "notes": "Five pink hand digits; gold-toned older hand instead of cream, young blue thumb partly ambiguous. Correct cream hand/color and simplify anatomy once."
+          }
+        }
+      ],
+      "processing": {
+        "original": "refs/P26_parents_jacob_generated_2.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1671
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1671
       ]
     }
   ]
