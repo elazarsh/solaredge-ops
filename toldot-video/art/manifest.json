@@ -227,30 +227,6 @@
       ]
     },
     {
-      "id": "S11",
-      "file": "sprites/S11_green_brother_chair.png",
-      "type": "sprite",
-      "beats": [
-        54,
-        71,
-        75
-      ],
-      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: One SINGLE isolated empty TEAL BLUE wooden chair, front three-quarter view, rounded arched backrest with three vertical slats, four clear legs. This chair is structurally distinct from square orange chair. Deep teal blue and cyan halftone, NO GREEN in object so it can be keyed without holes; downstream color correction will make it green after keying. No crown, no table, no people. Center object in middle half of canvas. Uniform solid bright chroma green #00FF00 background, no cast shadow or gradient.",
-      "engine": "image_gen.imagegen",
-      "aspect": "992:1586",
-      "qa": {
-        "faces": "pass",
-        "text": "pass",
-        "weapons": "pass",
-        "notes": "Rounded back structurally distinct from S05 but teal instead of required green. Requires green recolor after keying; not approved for finished film as-is."
-      },
-      "status": "weak",
-      "dimensions": [
-        992,
-        1586
-      ]
-    },
-    {
       "id": "P21",
       "file": "plates/P21_hand_door.jpg",
       "type": "plate",
@@ -1477,6 +1453,94 @@
       "dimensions": [
         1053,
         1493
+      ]
+    },
+    {
+      "id": "S15",
+      "file": "sprites/S15_open_hand_shadow.png",
+      "type": "sprite",
+      "beats": [
+        0,
+        35,
+        75
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: ONE SINGLE isolated INK BLACK silhouette of an OPEN HUMAN HAND, palm-on, exactly FIVE distinct spread digits: four fingers pointing up and thumb angled left, short clean tapered wrist. Flat black paper with extremely sparse dark grey halftone, no colored decorations or red. Designed as crown's final OPEN-HAND SHADOW. No crown or other objects. Entire hand inside middle45%width and50%height, broad empty margins. Perfect uniform solid bright GREEN #00FF00 background, no texture, shadows or gradient, no green inside hand.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Flat ink-black open-hand silhouette, exactly five spread digits, isolated without extra objects. Matching final crown shadow."
+      },
+      "status": "approved",
+      "dimensions": [
+        992,
+        1586
+      ]
+    },
+    {
+      "id": "S14",
+      "file": "sprites/S14_fist_shadow.png",
+      "type": "sprite",
+      "beats": [
+        0,
+        10,
+        23,
+        35,
+        37,
+        50,
+        66
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: ONE SINGLE isolated INK BLACK silhouette of a CLENCHED FIST seen palm-on, four folded knuckles plus thumb folded across fingers, short tapered wrist. Sparse deep RED halftone within black paper only, outer silhouette clear like a cast SHADOW for a gold crown. No crown, no table, no rectangular wedge, no other objects. Entire hand inside middle45%width and50%height with broad empty margins. Flat uniform bright GREEN #00FF00 background with no texture/gradient/cast shadow, no green inside object.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Black fist silhouette with sparse red halftone, four curled fingers and thumb clear, short wrist. Key and project as shadow, not a literal hand reaching into scene."
+      },
+      "status": "approved",
+      "dimensions": [
+        992,
+        1586
+      ]
+    },
+    {
+      "id": "S11",
+      "file": "sprites/S11_green_brother_chair.png",
+      "type": "sprite",
+      "beats": [
+        54,
+        71,
+        75
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Keep exactly the distinctive rounded arched backrest with three vertical slats and four legs of this empty chair, but change ALL teal-blue paper to DEEP FOREST GREEN #174C32 with dark olive-green halftone. This must be visibly a GREEN chair, never blue. Maintain perfectly uniform VIVID LIME GREEN #00FF00 background, no texture/gradient/cast shadow. Foreground forest green must be much darker and less saturated than background so exact background color key preserves the chair. Do not add objects, letters or people. Chair compact within middle50%width and60%height with broad empty margins.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "One color correction: arched three-slat chair is now forest GREEN, structurally distinct from square ORANGE S05. Key only near vivid background green, not all green-dominant pixels; preserve dark green chair."
+      },
+      "status": "approved",
+      "attempts": [
+        {
+          "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: One SINGLE isolated empty TEAL BLUE wooden chair, front three-quarter view, rounded arched backrest with three vertical slats, four clear legs. This chair is structurally distinct from square orange chair. Deep teal blue and cyan halftone, NO GREEN in object so it can be keyed without holes; downstream color correction will make it green after keying. No crown, no table, no people. Center object in middle half of canvas. Uniform solid bright chroma green #00FF00 background, no cast shadow or gradient.",
+          "status": "weak",
+          "qa": {
+            "faces": "pass",
+            "text": "pass",
+            "weapons": "pass",
+            "notes": "Rounded back structurally distinct from S05 but teal instead of required green. Requires green recolor after keying; not approved for finished film as-is."
+          }
+        }
+      ],
+      "dimensions": [
+        992,
+        1586
       ]
     }
   ]
