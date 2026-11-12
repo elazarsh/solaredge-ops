@@ -1,27 +1,6 @@
 {
   "images": [
     {
-      "id": "P02",
-      "file": "plates/P02_table_crown.jpg",
-      "type": "plate",
-      "beats": [
-        2,
-        3,
-        8,
-        9
-      ],
-      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Perfectly top-down round table, surrounded by a thin complete gold ring; two people viewed from directly overhead, cream wool-robed Isaac holding a staff, pink veiled Rebecca across the table, no faces. At the top and bottom two visibly empty seats, one orange one blue. A single golden paper crown in the table center, pulled from one side by a slender pink thread and gently reached toward from the other side by Isaac. Everything fits central 70 percent width so cropping to portrait is safe. No hands with ambiguous fingers. No writing, no weapons, no realistic faces. Main scene compact centered in width and height, preserve ample margin to allow 9:16 crop.",
-      "engine": "image_gen.imagegen",
-      "aspect": "9:16",
-      "qa": {
-        "faces": "pass",
-        "text": "pass",
-        "weapons": "pass",
-        "notes": "Hands lack visible fingers; crown not held by Isaac; ring close to edges."
-      },
-      "status": "weak"
-    },
-    {
       "id": "P04",
       "file": "plates/P04_crown_fist_scales.jpg",
       "type": "plate",
@@ -44,26 +23,6 @@
       "status": "draft"
     },
     {
-      "id": "P07",
-      "file": "plates/P07_esau_service.jpg",
-      "type": "plate",
-      "beats": [
-        15,
-        16,
-        17
-      ],
-      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: An orange broad-shouldered figure in a fur-trimmed cloak offers a tray to a seated cream-wool figure holding a staff. Both seen strictly from the back without any face. Simple riso paper scene, no weapons. Main subject occupies central 65% of width and central 65% of height, with quiet broad paper margins allowing 9:16 crop. No letters, no weapons.",
-      "engine": "image_gen.imagegen",
-      "aspect": "9:16",
-      "qa": {
-        "faces": "pass",
-        "text": "pass",
-        "weapons": "pass",
-        "notes": "Hands and fingers are partly indistinct."
-      },
-      "status": "weak"
-    },
-    {
       "id": "P08",
       "file": "plates/P08_rebecca_twins.jpg",
       "type": "plate",
@@ -83,26 +42,6 @@
         "notes": "Fist is a paper shape rather than a shadow."
       },
       "status": "draft"
-    },
-    {
-      "id": "P09",
-      "file": "plates/P09_jacob_tent.jpg",
-      "type": "plate",
-      "beats": [
-        24,
-        25,
-        26
-      ],
-      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: A small slender blue figure seen strictly from behind seated at entrance of a warm paper tent. A pink paper hand rests gently on blue figure's shoulder. No face or face profile. Main subject occupies central 65% of width and central 65% of height, with quiet broad paper margins allowing 9:16 crop. No letters, no weapons.",
-      "engine": "image_gen.imagegen",
-      "aspect": "9:16",
-      "qa": {
-        "faces": "pass",
-        "text": "pass",
-        "weapons": "pass",
-        "notes": "Pink hand shows four fingers; thumb not visible."
-      },
-      "status": "weak"
     },
     {
       "id": "P13",
@@ -1036,9 +975,9 @@
         "faces": "pass",
         "text": "pass",
         "weapons": "pass",
-        "notes": "Correction awaiting individual inspection."
+        "notes": "One correction used. Cream hand color corrected but blue palm shows only thumb plus three distinct fingers; cannot verify fifth. Do not use as approved; build parents/protection from approved separate character layers."
       },
-      "status": "draft",
+      "status": "weak",
       "attempts": [
         {
           "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Small slender BLUE cloaked figure strictly from behind at center, round solid paper back-of-head without face profile. From left a PINK sleeved paper hand extends protectively toward his shoulder; from right a CREAM sleeved older paper hand offers a tiny gold five-point crown to the blue figure's open blue hand. Exactly five clear digits on visible open hands. No faces or ears. Small distant crowd of featureless colored backs below horizon. Entire subject compact inside middle 50% width and 55% height, broad quiet cream paper margins, vertical 9:16. Flat shapes, no realistic skin, no writing.",
@@ -1064,6 +1003,146 @@
       "dimensions": [
         940,
         1671
+      ]
+    },
+    {
+      "id": "P09",
+      "file": "plates/P09_jacob_tent.jpg",
+      "type": "plate",
+      "beats": [
+        24,
+        25
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Keep slender BLUE Jacob seen strictly from behind seated at warm tent entrance. Correct the PINK hand on his shoulder to exactly FIVE digits: four long separated fingers rest across upper shoulder, a clearly visible fifth THUMB angles downward on outside of his upper arm. Flat pink paper hand and sleeve, no skin/nails. Add one delicate PINK THREAD caught on a small torn paper thorn below at side of doorway (a difficulty in Rebecca's plan), no writing or question mark. Entire tent/figure/pink hand inside middle50% width and55% height, broad calm cream border all around, vertical9:16. No faces or weapons.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1672",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Corrected pink hand has four separate fingers and distinct downward thumb. Rear blue figure, thread caught on thorn, no face/text/weapons. Tent edges cropped intentionally, all significant subject retained."
+      },
+      "status": "approved",
+      "attempts": [
+        {
+          "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: A small slender blue figure seen strictly from behind seated at entrance of a warm paper tent. A pink paper hand rests gently on blue figure's shoulder. No face or face profile. Main subject occupies central 65% of width and central 65% of height, with quiet broad paper margins allowing 9:16 crop. No letters, no weapons.",
+          "status": "weak",
+          "qa": {
+            "faces": "pass",
+            "text": "pass",
+            "weapons": "pass",
+            "notes": "Pink hand shows four fingers; thumb not visible."
+          }
+        }
+      ],
+      "processing": {
+        "original": "refs/P09_jacob_tent_generated.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1672
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1672
+      ]
+    },
+    {
+      "id": "P02",
+      "file": "plates/P02_table_crown.jpg",
+      "type": "plate",
+      "beats": [
+        2,
+        3,
+        8,
+        9,
+        36
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Correct overhead debate table, small compact centered scene occupying 50% width and55% height, with COMPLETE thin gold ring fully visible. CREAM wool-robed Isaac with staff seated on LEFT, PINK long-veiled Rebecca on RIGHT, strict top down backs of round heads, no faces/profiles. TWO EMPTY CHAIRS: square-backed ORANGE chair at TOP, BLUE chair at BOTTOM. Isaac's cream hand lifts the gold five-point crown toward orange chair while Rebecca pulls a THIN PINK THREAD tied to crown toward blue chair. Hand action legible, five digits if visible, simple flat cream/pink paper. No other people, chairs, colors on characters or objects. Cream tabletop and broad cream margins all around, 9:16 portrait.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1672",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "One correction used. Cream/pink and empty orange/blue chairs correct, but reaching hands remain stylized, crown action not fully lifted toward orange and thread heads toward Rebecca rather than blue chair. Use layered sprites for debate; do not claim this plate final."
+      },
+      "status": "weak",
+      "attempts": [
+        {
+          "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Perfectly top-down round table, surrounded by a thin complete gold ring; two people viewed from directly overhead, cream wool-robed Isaac holding a staff, pink veiled Rebecca across the table, no faces. At the top and bottom two visibly empty seats, one orange one blue. A single golden paper crown in the table center, pulled from one side by a slender pink thread and gently reached toward from the other side by Isaac. Everything fits central 70 percent width so cropping to portrait is safe. No hands with ambiguous fingers. No writing, no weapons, no realistic faces. Main scene compact centered in width and height, preserve ample margin to allow 9:16 crop.",
+          "status": "weak",
+          "qa": {
+            "faces": "pass",
+            "text": "pass",
+            "weapons": "pass",
+            "notes": "Hands lack visible fingers; crown not held by Isaac; ring close to edges."
+          }
+        }
+      ],
+      "processing": {
+        "original": "refs/P02_table_crown_generated.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1672
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1672
+      ]
+    },
+    {
+      "id": "P07",
+      "file": "plates/P07_esau_service.jpg",
+      "type": "plate",
+      "beats": [
+        12,
+        15,
+        16,
+        17
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Keep ORANGE broad-shouldered fur-trimmed Esau and seated CREAM wool-robed Isaac holding staff, both STRICTLY FROM BEHIND with solid round backs of heads, no faces or profiles. Esau offers simple cream tray bearing fruit to Isaac, now make hands naturally clear: one visible orange hand supports tray from below with thumb above rim, fingers grouped naturally below; cream hand on staff has four folded fingers and one thumb. Plain wool paper mantle, no knitted realistic fabric. Entire pair and complete tray within middle 50% width and55% height, broad calm cream borders all around, small field backdrop, vertical9:16. No text or weapons.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1672",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Corrected service scene; awaiting close hand review."
+      },
+      "status": "draft",
+      "attempts": [
+        {
+          "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: An orange broad-shouldered figure in a fur-trimmed cloak offers a tray to a seated cream-wool figure holding a staff. Both seen strictly from the back without any face. Simple riso paper scene, no weapons. Main subject occupies central 65% of width and central 65% of height, with quiet broad paper margins allowing 9:16 crop. No letters, no weapons.",
+          "status": "weak",
+          "qa": {
+            "faces": "pass",
+            "text": "pass",
+            "weapons": "pass",
+            "notes": "Hands and fingers are partly indistinct."
+          }
+        }
+      ],
+      "processing": {
+        "original": "refs/P07_esau_service_generated.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1672
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1672
       ]
     }
   ]
