@@ -28,7 +28,7 @@ _Durable summary of decisions. Claude sessions are ephemeral; this file lets any
 | Legacy (charcoal/lamp version, optional) | `toldot-video/gpt-tasks.md`, `gemini-tasks.md` |
 
 ## Open items
-1. Image producer: stages 0–5 (see `art/STATUS.md`).
+1. ~~Image producer~~ **done** (PR #21, 54 assets: 29 plates + 25 sprites; 52 approved; P02/P26 weak). My review: `handoff/ART_REVIEW_BY_CLAUDE.md`. Keying script: `build/key_sprites.py`.
 2. Music: the user's file, or synthesized in code (free). Lyria only with approval.
 3. Hand-on-handle shot (beat 59–60 area): keep restrained / harden / skip — user to decide.
 4. Timing alignment is approximate (no transcript). Verify the paragraph checkpoints in `script.md`.
