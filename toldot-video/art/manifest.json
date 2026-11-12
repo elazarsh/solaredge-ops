@@ -557,6 +557,106 @@
         839,
         1492
       ]
+    },
+    {
+      "id": "P24",
+      "file": "plates/P24_unfamiliar_world.jpg",
+      "type": "plate",
+      "beats": [
+        61,
+        62
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: A small slender BLUE paper traveler strictly from behind stands beside a round village well, facing an unfamiliar village with a few rooftops and cream sheep: one distant tiny house and one sheep deliberately upside-down, like rotated paper pieces, other buildings upright. No faces or face profiles on any figure or sheep; sheep are plain featureless silhouettes. Warm cream sky, cold grey-green village, blue and pink halftone hills. Main scene entirely within middle 50% width and 60% height for safe 9:16 crop, huge quiet borders, vertical 9:16 portrait. No text or symbols.",
+      "engine": "image_gen.imagegen",
+      "aspect": "892:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Rear blue traveler, well, grey-green village and one inverted featureless sheep. No upside-down house generated; world inversion animation still required. Safe center crop."
+      },
+      "status": "approved",
+      "processing": {
+        "original": "refs/P24_unfamiliar_world_generated.png",
+        "crop": [
+          50,
+          0,
+          942,
+          1586
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        892,
+        1586
+      ]
+    },
+    {
+      "id": "P22",
+      "file": "plates/P22_empty_place.jpg",
+      "type": "plate",
+      "beats": [
+        54,
+        55
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: One complete small round cream table in gentle dawn light, a single empty blue wooden chair with a cream plate set for an absent person, top three-quarter view. Thin gold ring around entire table-and-chair grouping. No people, no crown or fist. Warm cream background, thin pink and gold light strips. EVERYTHING including all furniture fully inside middle 50% width and 55% height with very generous calm paper border on ALL sides, especially horizontal. Exact vertical 9:16 portrait. No text, faces or weapons.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1672",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Round table, empty blue chair and place setting in dawn, complete gold ring. Calm top/bottom and intact after center crop; no people or lettering."
+      },
+      "status": "approved",
+      "processing": {
+        "original": "refs/P22_empty_place_generated.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1672
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1672
+      ]
+    },
+    {
+      "id": "P23",
+      "file": "plates/P23_known_blessing.jpg",
+      "type": "plate",
+      "beats": [
+        56,
+        57,
+        58
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Close-up of an older CREAM wool sleeved hand gently holding a younger BLUE sleeved bare hand. Both hands entirely visible, exactly five anatomically clear digits on each, no gloves. Hands meet at center, warm gold paper rays behind, a few tiny gold stars and seeds rise above them. Only hands and short sleeves, no bodies, heads, faces or writing. Everything inside middle 50% of width and middle 55% height, generous calm cream paper margins on ALL sides. Vertical 9:16 portrait.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1672",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Anatomy reads clearly and cream/blue sleeves identify characters, but skin shading and knitted cuffs look too realistic for flat paper-cut style. One style correction pending."
+      },
+      "status": "weak",
+      "processing": {
+        "original": "refs/P23_known_blessing_generated.png",
+        "crop": [
+          0,
+          0,
+          940,
+          1672
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        940,
+        1672
+      ]
     }
   ]
 }
