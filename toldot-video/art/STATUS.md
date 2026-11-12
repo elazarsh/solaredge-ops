@@ -32,3 +32,5 @@ Batch 09: 24 generations this session. Individually reviewed: P01 approved, P03 
 Batch 10: 27 generations this session. Individually reviewed: P20 approved, P23 approved, P06 approved, P26 draft. Contact sheet saved. Production continues; no approval wait; DONE absent.
 
 Batch 11: 30 generations this session. Individually reviewed: P02 weak, P07 draft, P09 approved, P26 weak. Contact sheet saved. Production continues; no approval wait; DONE absent.
+
+Batch 12: 33 generations this session. Individually reviewed: P14 draft, P28 approved, P29 approved, P07 approved, P04 approved, P08 approved, P13 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
