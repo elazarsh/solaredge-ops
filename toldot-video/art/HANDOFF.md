@@ -1,3 +1,19 @@
+# Current handoff — art delivery
+
+The inherited production below has been continued on `gpt/art`. **Read `STATUS.md`, `QA_REPORT.md`, `assembly_map.csv` and `DONE.md` first.**
+
+- 54 manifest assets, 52 approved, all 76 beats have reviewed approved asset routes.
+- P02 and P26 remain weak after one correction each; use the documented separate-layer alternatives.
+- 47 generations in this session; 5 additional ribbon files are crops, not new generations.
+- Exact prompts for new images are retained. Five recovered old references lack original prompts and are honestly marked as such.
+- Strict validator and approved-only audit pass; final contact sheets and validation hashes are saved.
+- Art is ready for Claude assembly. No film/animation was rendered or checked here.
+- Batch commits are pushed. PR creation is blocked by api.github.com CONNECT 403; network addition is saved in environment draft, not confirmed applied. PR_DESCRIPTION.md is ready; no PR has been opened.
+
+---
+
+## Historical handoff (before this continuation)
+
 # Handoff — art production
 
 The user is transferring the task to Codex. Work only under toldot-video/art/ on gpt/art; read toldot-video/AGENTS.md and its referenced project files first. The current user explicitly directed uninterrupted production, without asking for approval after every batch; T1 correction may be deferred if needed. Do not mark work finished until the definition of done in AGENTS.md is actually satisfied.

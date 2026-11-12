@@ -1,48 +1,21 @@
-# STATUS — art production
+# STATUS — art delivery ready for assembly
 
-**Handoff to Codex:** Read [HANDOFF.md](HANDOFF.md) for current state, QA risks and next steps. The user requested uninterrupted work without repeated approval prompts; correction of T1 may be deferred.
+Branch: `gpt/art`. Write scope: `toldot-video/art/**` only.
 
-Stage 3: plan.md maps beats 0–75, estimate 37 assets. Stage 4: 9 draft/weak plates in the manifest, none approved; 6 aspect-rejected reference drafts in refs. Stage 5: pending.
+**54 assets: 29 plates, 25 sprites. 52 approved, P02/P26 weak and excluded. All beats 0–75 have an approved assembly route.** See `assembly_map.csv`, `QA_REPORT.md` and `validation.json` before using the art.
 
-P01–P04, P06–P09 and P13 are in plates/. P05, P10–P12, P14–P15 are in refs/ because their dimensions do not pass the validator. Six prior test images remain outside the repository; HANDOFF.md links to them. Several saved plates have visual issues; see manifest QA.
+| Stage | State |
+| --- | --- |
+| 0 — read/review | Complete; repo, branch and project rules inspected. |
+| 1–2 — old T1–T6 | Historical tests remain outside repo, unverified and unapproved. Deferred per handoff; not regenerated or counted as approved. |
+| 3 — plan | Revised delivery plan + reviewed 76-row assembly map saved. |
+| 4 — production | Complete; generation batches saved, visually reviewed, committed and pushed. |
+| 5 — art QA/delivery | Complete: contact sheets, QA report, strict validator and approved-only audit pass; DONE.md signals art handoff. PR creation remains externally blocked. |
 
-Validator: non-strict run OK, with warnings for P01 aspect and 46 uncovered beats. This does not mean coverage or artistic QA is complete. Strict coverage was not run.
+Last action: individual visual QA, final contact-sheet review, file parity/encoding/aspect checks, approved coverage and assembly-reference checks. 54 manifest files exist, 76 unique beat rows reference approved assets. No image lettering, visible facial features/profiles or weapons observed in approved art. Natural finger occlusion and composition limitations are explicitly documented.
 
-Count: 9 plates in manifest; 6 reference drafts; 6 earlier tests outside repository. Total generated: 21. Approved: 0. No DONE.md.
+Production count this session: **47 image-tool generations**, including corrections; five ribbon crops are derivatives, not generations. Inherited count 21 gives 68 historically reported generations. Tool did not expose dollar costs or remaining quota.
 
-## Codex resumed — batch 1
-Branch gpt/art verified. Existing 15 images reviewed as contact sheet. Added S01 crown and S02 fist (approved), S03 hand and S04 table (weak; one correction pending). Four generations this session, total 25. Bulk production continues; no approval wait. No DONE.md.
+Do not use weak P02/P26 as finished art. Opening debate is assembled from separate table/parents/crown/chair layers; final parental blessing uses approved protective/cream/blue hands and crown. Do not mistake static art coverage for completed animation. Read the assembly notes for the changed shadow direction, night grade, dining-table build, wage transfers, typography and other remaining code staging.
 
-Batch 2: S03 and S04 corrected once and visually approved; first attempts retained in refs. Six generations this session, total 27. Four approved sprites.
-
-Batch 03: 9 generations this session. Individually reviewed: S05 approved, S11 weak, S06 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 04: 12 generations this session. Individually reviewed: P17 approved, P19 approved, P21 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 05: 15 generations this session. Individually reviewed: P16 approved, P18 approved, P20 weak. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 06: 18 generations this session. Individually reviewed: P22 approved, P23 weak, P24 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 07: 21 generations this session. Individually reviewed: P25 approved, P26 draft, P27 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 08: 21 generations this session. Individually reviewed: P05 approved, P10 approved, P11 approved, P12 approved, P15 approved, P26 weak. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 09: 24 generations this session. Individually reviewed: P01 approved, P03 approved, P06 draft. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 10: 27 generations this session. Individually reviewed: P20 approved, P23 approved, P06 approved, P26 draft. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 11: 30 generations this session. Individually reviewed: P02 weak, P07 draft, P09 approved, P26 weak. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 12: 33 generations this session. Individually reviewed: P14 draft, P28 approved, P29 approved, P07 approved, P04 approved, P08 approved, P13 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 13: 36 generations this session. Individually reviewed: S07 approved, S19 approved, S09 approved, P14 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 14: 39 generations this session. Individually reviewed: S10 approved, S16 approved, S17 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 15_reconciled: 42 generations this session. Individually reviewed: S08 approved, S12 approved, S13 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 16: 45 generations this session. Individually reviewed: S14 approved, S15 approved, S11 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 17: 46 generations this session. Individually reviewed: S18 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
-
-Batch 18: 47 generations this session. Individually reviewed: S25 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
+Waiting for: **GitHub API network access to create PR**, not user approval of another image batch. `gh pr list` and fresh HTTPS CONNECT to api.github.com returned 403. Domain api.github.com and startup instructions are saved in the environment draft; review/save/publish are user settings actions and have not been confirmed. Git fetch/push works. PR base remains `ccr-09182f34-4lw44m`, not merged into main. PR text is ready in `PR_DESCRIPTION.md`; no PR URL exists.

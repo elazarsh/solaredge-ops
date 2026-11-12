@@ -1,3 +1,13 @@
+# Current delivery plan — supersedes draft mappings below
+
+54 retained assets: 29 plates, 25 sprites; 52 approved, P02/P26 weak and excluded. See `assembly_map.csv` for the reviewed asset route and remaining code staging for **every beat 0–75**. The table below is the historical 37-image estimate, not a promise that one plate literally depicts every grouped action.
+
+Added P28 grounded practical work (18), P29 carrying the house (73); split orange/green/blue chairs S05/S11/S25; ledger/coins S07/S19; veil S12; broken/intact rings S13/S18; shadows S14/S15; parents S16/S17; individual ribbon crops S20–S24. Earlier S10 scarf/staff combination is now separate S10 hand/staff and S12 scarf. S08 is one gold seed; sprouts/dew/grapes remain in plates.
+
+Opening debate uses separate approved layers instead of weak P02. Parental handoff uses approved P09/S10/S03/S01/P05 instead of weak P26. Read `QA_REPORT.md` for limitations and `manifest.json` for exact files/prompts/status.
+
+---
+
 # Image plan — בין כוח לברכה
 
 Draft: imagery mapped to beats 0–75. STYLE below is prepended verbatim to each Scene. No text or weapons; any words, symbols and motion in beats are implemented in code. Existing P01–P03 are weak drafts. Sprites may require splitting into individual files for production. Total estimated: 37 images; possible additional sprites after QA.
