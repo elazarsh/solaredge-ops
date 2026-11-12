@@ -1542,6 +1542,34 @@
         992,
         1586
       ]
+    },
+    {
+      "id": "S18",
+      "file": "sprites/S18_intact_gold_ring.png",
+      "type": "sprite",
+      "beats": [
+        2,
+        3,
+        8,
+        9,
+        42,
+        71,
+        75
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Create the INTACT version of this same thin gold circular paper ring. Close the upper-right gap smoothly with matching gold paper, REMOVE both detached fragments completely, leaving ONE CONTINUOUS UNBROKEN THIN GOLD ANNULUS. Same thickness, same overhead view and paper grain as reference. No tabletop, no people, no other objects. Same uniform vivid bright GREEN #00FF00 inside and outside ring, absolutely no shadow or gradient. Generous margins, no lettering.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Intact variant of S13: gold annulus matches thickness/texture, no gap/fragments/table. Uniform green inside/outside; no letters/faces/weapons."
+      },
+      "status": "approved",
+      "dimensions": [
+        992,
+        1586
+      ]
     }
   ]
 }
