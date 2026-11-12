@@ -457,6 +457,106 @@
         892,
         1586
       ]
+    },
+    {
+      "id": "P16",
+      "file": "plates/P16_unsigned_line.jpg",
+      "type": "plate",
+      "beats": [
+        41
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: 9:16 portrait. Overhead close-up: one cream paper hand with exactly five distinct digits, thumb and index gently holding a slender reed writing pen diagonally above a SINGLE empty horizontal ink signature line on an otherwise blank cream paper sheet. One black ink drop hangs at reed tip, no marks beside or above the line. No writing, symbols, numbers or signatures anywhere. No other objects, no person or face. Main hand and empty line stay within central 60% width and 60% height; broad quiet cream margins all around. Restrained grey shadows and black halftone only on objects.",
+      "engine": "image_gen.imagegen",
+      "aspect": "892:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Five digits around reed, single blank line and suspended ink drop; no words. Blue cuff is an anonymous hand, not Isaac. Crop preserves reed tip, fingers and full line."
+      },
+      "status": "approved",
+      "processing": {
+        "original": "refs/P16_unsigned_line_generated.png",
+        "crop": [
+          50,
+          0,
+          942,
+          1586
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        892,
+        1586
+      ]
+    },
+    {
+      "id": "P18",
+      "file": "plates/P18_night_dawn_road.jpg",
+      "type": "plate",
+      "beats": [
+        44,
+        48,
+        59,
+        60
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: 9:16 portrait. Long winding branching cream paper road through layered hills, foreground dark ink-blue night and distant horizon warm golden dawn, smooth narrative journey in ONE scene. Tiny slender BLUE traveler strictly from behind at center walks toward a tall closed dark stone doorway, a small cream bundle with two completely blank rolled scrolls on shoulder, simple walking staff. Door's shadow resembles a fist, abstract and restrained. No face profile, no text, no letters, no arrows. Keep all significant imagery within middle 60% width and 65% height, top 15% calm cream sky, bottom 20% calm dark paper.",
+      "engine": "image_gen.imagegen",
+      "aspect": "892:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Rear blue traveler, closed stone doorway with fist shadow, branching road and scroll bundle. Dark lower foreground to dawn; dedicated all-night road may still need animation grade."
+      },
+      "status": "approved",
+      "processing": {
+        "original": "refs/P18_night_dawn_road_generated.png",
+        "crop": [
+          50,
+          0,
+          942,
+          1586
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        892,
+        1586
+      ]
+    },
+    {
+      "id": "P20",
+      "file": "plates/P20_house_study.jpg",
+      "type": "plate",
+      "beats": [
+        47,
+        49
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: 9:16 portrait. A small warm cream and ochre stone house of study, front three-quarter view, amber light from open doorway. Three blank rolled cream scrolls and a small candle visible inside, absolutely NO writing. Several clearly separated ochre paper masonry blocks hover gently above a half-built second storey for later animation. No figures, hands, faces, symbols, weapons or text. House and blocks occupy only middle 55% width and central 60% height, with broad calm warm cream sky and foreground, thin blue hills in distance. Riso blue and warm gold halftone, layered torn paper.",
+      "engine": "image_gen.imagegen",
+      "aspect": "839:1492",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Blank scrolls and candle visible, second-storey blocks clear; center crop clips roof at left and leaves insufficient side margin. One scale/composition correction pending."
+      },
+      "status": "weak",
+      "processing": {
+        "original": "refs/P20_house_study_generated.png",
+        "crop": [
+          107,
+          0,
+          946,
+          1492
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        839,
+        1492
+      ]
     }
   ]
 }
