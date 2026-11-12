@@ -16,7 +16,7 @@
 
 **הוראת סגנון:**
 ```
-Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: friendly and conversational yet dignified. Unhurried pace of about 110 words per minute, clear articulation of the vowel-marked words, natural pauses at commas and full stops. Emotion is subtle: gentle warmth on human moments, lower and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song. Do not read any bracketed words aloud.
+Hebrew narration of a Torah-portion reflection, spoken by a thoughtful, warm male teacher to friends who respect him: friendly and conversational yet dignified. Speak SLOWLY and deliberately, about 90 words per minute, clearly slower than normal conversation, giving every sentence room to land. Articulate every vowel-marked word clearly. Take a natural breath between sentences. On the key phrase of a paragraph (the punch), slow down further, lower the pitch slightly, and let the last two or three words land with weight; honor every marked pause as a real, audible pause. Emotion is subtle: gentle warmth on human moments, quieter and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song, never rushed. Do not read any bracketed words aloud.
 ```
 
 **טקסט לבדיקה (פסקה 1, כולל תג `<short pause>`):**

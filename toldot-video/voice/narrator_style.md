@@ -2,7 +2,7 @@
 
 ## איך הוא נשמע (בעברית פשוטה)
 **מורה מעמיק שמדבר אל חברים שמכבדים אותו.** חברי ושוטף, אבל עם כבוד: לא "קריין חדשות" נוקשה, לא דרמטי ולא שירה.
-- **קצב:** רגוע, כ־110 מילים בדקה (איטי קצת מהרגיל). נשימה ברורה בפסיקים ועצירה בסוף משפט.
+- **קצב:** **איטי בבירור**, בהוראה כ־90 מילים בדקה (בפועל כנראה 90–100). נשימה בין משפטים, ועוד האטה בביטוי המרכזי של כל פסקה.
 - **רגש:** מעט. חמימות עדינה ברגעים האנושיים (יצחק, רבקה), ירידה בעוצמה ובמהירות כשהטקסט נעשה קשה (איום עשו, הידית).
 - **שאלות:** סקרניות באמת, לא רטוריות וצועקות. עלייה קלה בסוף.
 - **פסוקים:** איטיים ומדויקים, כמו ציטוט.
@@ -13,7 +13,7 @@
 
 ## הוראת הסגנון הקבועה (לשדה "Style instructions" אצל גוגל)
 ```
-Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm teacher speaking to friends who respect him: friendly and conversational yet dignified. Unhurried pace of about 110 words per minute, clear articulation of the vowel-marked words, natural pauses at commas and full stops. Emotion is subtle: gentle warmth on human moments, lower and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song. Do not read any bracketed words aloud.
+Hebrew narration of a Torah-portion reflection, spoken by a thoughtful, warm male teacher to friends who respect him: friendly and conversational yet dignified. Speak SLOWLY and deliberately, about 90 words per minute, clearly slower than normal conversation, giving every sentence room to land. Articulate every vowel-marked word clearly. Take a natural breath between sentences. On the key phrase of a paragraph (the punch), slow down further, lower the pitch slightly, and let the last two or three words land with weight; honor every marked pause as a real, audible pause. Emotion is subtle: gentle warmth on human moments, quieter and more measured when the text turns serious. Never theatrical, never newsreader-stiff, no sing-song, never rushed. Do not read any bracketed words aloud.
 ```
 
 ## מפת הרגש לפי הכוונות שלך (התגיות שכתבת)
@@ -29,6 +29,19 @@ Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm 
 | 8 | Quiet conviction + Stress both words | הכרעה שקטה; «צֵא וּלְמַד» בהדגשת שתי המילים |
 | 9 | Cautious hope + Finish gently | תקווה זהירה; המשפט האחרון רך ואיטי |
 
+## עצירות: פאנץ' ושתיקה בין מקטעים (עדכון אחרי האזנה)
+הקצב הקודם היה מהיר מדי ובלי זמן לעכל. שלוש רמות:
+| רמה | מה זה | איך מבוצע |
+|---|---|---|
+| **פאנץ'** | הביטוי המרכזי במשפט | `<short pause>` אחד **לפני** הביטוי + האטה (בהוראת הסגנון) |
+| **פאנץ' גדול** | שאלה מרכזית או משפט מכריע | שתי תגיות `<short pause> <short pause>` |
+| **בין מקטעים** | סוף כל פסקה | **3 שניות**: בהדבקה אחת שלוש תגיות; בהרכבה שתיקה אמיתית של 3 ש' (מדויק יותר, ומתואם לתמונה) |
+
+**הפאנצ'ים (19 + 8 גדולים):** על השולחן נמצאת השאלה · כדי לשמש את אביו · לעם שלם · ששני גויים בבטנה · **איך רבקה מדמיינת…** · ובבגדיו של מישהו אחר · הֱוֵה גְבִיר · גביר הוא השליט · גם למי שלא בחר בו · **להשתיק אותם בקלות** · שומט את ההצדקה · מי שכופר בזכות · **לא יכול לשבת סביב השולחן** · שהכול שייך לו · וכל החלטה תהיה קשה · יָמִים אֲחָדִים · ברכת אברהם · כדי שיישאר בחיים · צֵא וּלְמַד · ומתי המחיר כבד מדי · עתיד של עם · ייתכן שתמשיך לחשוב אחרת · **גם את מי שרואה בו סכנה**. בנוסף שתיקות קיימות: אחרי «הַזֹּאת?», «לְאָן?», «מִבִּפְנִים,», «אֲחָדִים, היא אומרת», ואחרי «וְאַהַרְגָה אֶת יַעֲקֹב אָחִי» (שלוש תגיות).
+
+**אורך חדש משוער:** כ־5:30–5:45 דקות (קצב איטי + שתיקות), לעומת 4:26 קודם. התסריט יתעדכן לפי האודיו האמיתי.
+**כיוון:** אם עדיין מהיר, מורידים בהוראה ל־«about 80 words per minute»; אם נשמע מתפרק, מורידים את הפאנצ'ים הבינוניים ומשאירים רק את הגדולים.
+
 ## התחביר של גוגל (Gemini 3.8) ומה עשינו איתו
 לפי הנחיה שלך ולפי [מדריך המעבר של גוגל](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/text-to-speech/migration-guide) ו־[תיעוד Gemini TTS](https://ai.google.dev/gemini-api/docs/speech-generation):
 - **מדויקות נקודתית** (עצירה קצרה, נשימה, אנחה, צחוק, שיעול) נכתבת **בתוך הטקסט בסוגריים משולשים, באנגלית**: `<short pause>`, `<breath>`, `<sigh>`. אצלנו בשימוש: `<short pause>`.
@@ -40,7 +53,7 @@ Hebrew narration of a Torah-portion reflection, delivered by a thoughtful, warm 
 ## מה קורה לתגיות שכתבת
 | התגית שלך | סוג | איפה היא נכנסת |
 |---|---|---|
-| Brief pause | נקודתית | **`<short pause>` בתוך הטקסט** |
+| Brief pause | נקודתית | **`<short pause>` בתוך הטקסט** (שתיים בפאנץ' גדול) |
 | Hold silence | שתיקה ארוכה | **שתיקה של 1.4 ש' בהרכבה** |
 | Pause, then renewed resolve | שתיקה לפני + נימה | 0.8 ש' שתיקה בהרכבה + «calm renewed resolve» בסגנון |
 | Quiet tension, Warm reflective, Keep the same warmth, Slow down, Quiet conviction, Cautious hope | נימה לפסקה | שדה הסגנון |
