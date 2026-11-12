@@ -1328,6 +1328,83 @@
         992,
         1586
       ]
+    },
+    {
+      "id": "S16",
+      "file": "sprites/S16_isaac_overhead.png",
+      "type": "sprite",
+      "beats": [
+        2,
+        3,
+        8,
+        36,
+        69
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: ONE isolated tiny figure of Isaac, seen PERFECTLY STRAIGHT FROM OVERHEAD, only a featureless round CREAM back-of-head on layered CREAM WOOL PAPER mantle and shoulders. Seated shape, no chair. No face, ears, profile, eyes, nose, mouth. Hands are COMPLETELY HIDDEN UNDER MANTLE, no visible digits; plain curved OCHRE walking staff lies beside figure. No other objects. Signature entirely cream with sparse blue halftone only, not blue garment. Compact inside central40%width and45%height, generous empty margins. Flat uniform bright GREEN #00FF00 background, no texture/gradient/shadow and no green inside object.",
+      "engine": "image_gen.imagegen",
+      "aspect": "1054:1493",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Cream paper mantle, round featureless cream head and ochre staff; hands hidden. Graphic overhead/rear icon suitable as separate Isaac layer. No green within object."
+      },
+      "status": "approved",
+      "dimensions": [
+        1054,
+        1493
+      ]
+    },
+    {
+      "id": "S17",
+      "file": "sprites/S17_rebecca_overhead.png",
+      "type": "sprite",
+      "beats": [
+        2,
+        3,
+        8,
+        36,
+        68
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: ONE isolated tiny figure of Rebecca, viewed PERFECTLY STRAIGHT FROM OVERHEAD, a simple featureless round back-of-head FULLY COVERED BY LONG PINK VEIL flowing over shoulders. Seated shape, no chair. Entire garment and veil PINK paper with sparse darkpink halftone. NO face, profile, ears, eyes, nose, mouth. Hands entirely HIDDEN UNDER VEIL, no visible fingers. A very long thin PINK PAPER THREAD extends from under veil to side, loose end visible; thread not attached to any other object. Compact inside central40%width and45%height, broad margins on all sides. Flat uniform bright GREEN #00FF00 background, no texture, shadow, gradient, no green in object. No text.",
+      "engine": "image_gen.imagegen",
+      "aspect": "1052:1495",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Pink long veil, round covered head and loose pink thread. Hands hidden; no face, ears or profile. Graphic character icon for debate layer, thread separately movable after masking."
+      },
+      "status": "approved",
+      "dimensions": [
+        1052,
+        1495
+      ]
+    },
+    {
+      "id": "S10",
+      "file": "sprites/S10_cream_hand_staff.png",
+      "type": "sprite",
+      "beats": [
+        2,
+        56,
+        69,
+        70
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: ONE isolated CREAM PAPER HAND gently gripping a plain dark ochre shepherd walking STAFF. Four curled cream fingers visibly wrap around shaft and a fifth cream thumb crosses in front, natural anatomy. A short CREAM wool-shaped paper cuff at wrist. Staff has simple rounded hook at top, NO blade, no weapon. NO human body, head or other object. Flat paper shapes, sparse blue/gold halftone, no realistic skin or knitted texture. Entire hand AND full staff inside central45%width and55%height with broad margins on ALL sides. Perfect uniform solid bright GREEN #00FF00 background, no cast shadow, no gradient, no green inside objects.",
+      "engine": "image_gen.imagegen",
+      "aspect": "1054:1492",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Cream hand: four folded fingers plus long crossing thumb, plain full ochre hooked staff, cream paper cuff. No face/text/weapon. Uniform green background."
+      },
+      "status": "approved",
+      "dimensions": [
+        1054,
+        1492
+      ]
     }
   ]
 }
