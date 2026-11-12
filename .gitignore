@@ -18,3 +18,5 @@ generated-images/
 # Toldot: generated build outputs
 toldot-video/build/sprites_rgba/
 toldot-video/build/out/
+toldot-video/build/web/assets/
+toldot-video/build/web/_built.html
