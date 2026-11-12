@@ -1570,6 +1570,216 @@
         992,
         1586
       ]
+    },
+    {
+      "id": "S20",
+      "file": "sprites/S20_blue_ribbon.png",
+      "type": "sprite",
+      "beats": [
+        26,
+        34,
+        35,
+        56,
+        69,
+        74
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: FIVE isolated abstract WAVY PAPER STRIPS, arranged in a single vertical column with LARGE GREEN GAPS, none touches another. Top blue strip, second pink, third warmgold, fourth orange, fifth inkblack. Each is a simple broad wave tapering gently at both ends, NOT an icon, letter, arrow, speechbubble or musical symbol. All strips within central50%width, broad green empty borders. Flat solid perfectly uniform bright GREEN #00FF00 background without texture, shadow, gradient, no green inside strips. Riso halftone only on paper strips. No hands, people or other objects.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:245",
+      "dimensions": [
+        992,
+        245
+      ],
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Derived crop of individually reviewed S09 blue strip; complete silhouette plus green padding. No new generation."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "sprites/S09_sound_ribbons.png",
+        "crop": [
+          0,
+          206,
+          992,
+          451
+        ],
+        "operation": "separate existing sprite sheet into one strip per file"
+      }
+    },
+    {
+      "id": "S21",
+      "file": "sprites/S21_pink_ribbon.png",
+      "type": "sprite",
+      "beats": [
+        26,
+        34,
+        35,
+        56,
+        69,
+        74
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: FIVE isolated abstract WAVY PAPER STRIPS, arranged in a single vertical column with LARGE GREEN GAPS, none touches another. Top blue strip, second pink, third warmgold, fourth orange, fifth inkblack. Each is a simple broad wave tapering gently at both ends, NOT an icon, letter, arrow, speechbubble or musical symbol. All strips within central50%width, broad green empty borders. Flat solid perfectly uniform bright GREEN #00FF00 background without texture, shadow, gradient, no green inside strips. Riso halftone only on paper strips. No hands, people or other objects.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:245",
+      "dimensions": [
+        992,
+        245
+      ],
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Derived crop of individually reviewed S09 pink strip; complete silhouette plus green padding. No new generation."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "sprites/S09_sound_ribbons.png",
+        "crop": [
+          0,
+          454,
+          992,
+          699
+        ],
+        "operation": "separate existing sprite sheet into one strip per file"
+      }
+    },
+    {
+      "id": "S22",
+      "file": "sprites/S22_gold_ribbon.png",
+      "type": "sprite",
+      "beats": [
+        26,
+        34,
+        35,
+        56,
+        69,
+        74
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: FIVE isolated abstract WAVY PAPER STRIPS, arranged in a single vertical column with LARGE GREEN GAPS, none touches another. Top blue strip, second pink, third warmgold, fourth orange, fifth inkblack. Each is a simple broad wave tapering gently at both ends, NOT an icon, letter, arrow, speechbubble or musical symbol. All strips within central50%width, broad green empty borders. Flat solid perfectly uniform bright GREEN #00FF00 background without texture, shadow, gradient, no green inside strips. Riso halftone only on paper strips. No hands, people or other objects.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:245",
+      "dimensions": [
+        992,
+        245
+      ],
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Derived crop of individually reviewed S09 gold strip; complete silhouette plus green padding. No new generation."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "sprites/S09_sound_ribbons.png",
+        "crop": [
+          0,
+          698,
+          992,
+          943
+        ],
+        "operation": "separate existing sprite sheet into one strip per file"
+      }
+    },
+    {
+      "id": "S23",
+      "file": "sprites/S23_orange_ribbon.png",
+      "type": "sprite",
+      "beats": [
+        26,
+        34,
+        35,
+        56,
+        69,
+        74
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: FIVE isolated abstract WAVY PAPER STRIPS, arranged in a single vertical column with LARGE GREEN GAPS, none touches another. Top blue strip, second pink, third warmgold, fourth orange, fifth inkblack. Each is a simple broad wave tapering gently at both ends, NOT an icon, letter, arrow, speechbubble or musical symbol. All strips within central50%width, broad green empty borders. Flat solid perfectly uniform bright GREEN #00FF00 background without texture, shadow, gradient, no green inside strips. Riso halftone only on paper strips. No hands, people or other objects.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:241",
+      "dimensions": [
+        992,
+        241
+      ],
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Derived crop of individually reviewed S09 orange strip; complete silhouette plus green padding. No new generation."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "sprites/S09_sound_ribbons.png",
+        "crop": [
+          0,
+          941,
+          992,
+          1182
+        ],
+        "operation": "separate existing sprite sheet into one strip per file"
+      }
+    },
+    {
+      "id": "S24",
+      "file": "sprites/S24_black_ribbon.png",
+      "type": "sprite",
+      "beats": [
+        26,
+        34,
+        35,
+        56,
+        69,
+        74
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: FIVE isolated abstract WAVY PAPER STRIPS, arranged in a single vertical column with LARGE GREEN GAPS, none touches another. Top blue strip, second pink, third warmgold, fourth orange, fifth inkblack. Each is a simple broad wave tapering gently at both ends, NOT an icon, letter, arrow, speechbubble or musical symbol. All strips within central50%width, broad green empty borders. Flat solid perfectly uniform bright GREEN #00FF00 background without texture, shadow, gradient, no green inside strips. Riso halftone only on paper strips. No hands, people or other objects.",
+      "engine": "image_gen.imagegen",
+      "aspect": "992:245",
+      "dimensions": [
+        992,
+        245
+      ],
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Derived crop of individually reviewed S09 black strip; complete silhouette plus green padding. No new generation."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "sprites/S09_sound_ribbons.png",
+        "crop": [
+          0,
+          1187,
+          992,
+          1432
+        ],
+        "operation": "separate existing sprite sheet into one strip per file"
+      }
+    },
+    {
+      "id": "S25",
+      "file": "sprites/S25_blue_jacob_chair.png",
+      "type": "sprite",
+      "beats": [
+        2,
+        3,
+        9,
+        36
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Create a BLUE version of this same simple empty square-backed chair for Jacob's place in the debate. Replace all orange/ochre paper with RISO BLUE and dark blue halftone. Retain square straight backrest with one rectangular opening, four legs and same three-quarter view. No green within chair. Perfectly flat uniform bright GREEN #00FF00 background, no shadow or gradient, no text or other objects. Entire chair centered with broad green margins on every side.",
+      "engine": "image_gen.imagegen",
+      "aspect": "940:1672",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Blue square-back chair, four legs, clean green surround. Separate blue place for Jacob in debate; orange square chair remains Esau, green arched chair remains dissenting brother."
+      },
+      "status": "approved",
+      "dimensions": [
+        940,
+        1672
+      ]
     }
   ]
 }
