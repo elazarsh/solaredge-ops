@@ -21,3 +21,4 @@ toldot-video/build/out/
 toldot-video/build/web/assets/
 toldot-video/build/web/_built.html
 toldot-video/preview/
+toldot-video/build/web/_built_*.html
