@@ -24,8 +24,10 @@ def main():
             with Image.open(path) as source:
                 image = source.convert('RGB')
             original = ART / 'refs' / (path.stem + '_generated.png')
-            if original.exists():
-                raise SystemExit(f'Refusing to overwrite preserved raw image: {original}')
+            attempt = 2
+            while original.exists():
+                original = ART / 'refs' / (path.stem + f'_generated_{attempt}.png')
+                attempt += 1
             image.save(original)
             width, height = image.size
             crop_width = min(width, round(height * 9 / 16))
