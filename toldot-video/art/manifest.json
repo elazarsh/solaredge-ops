@@ -101,6 +101,67 @@
         "notes": "Sleeves are blue rather than Isaac cream; count of fingers is ambiguous."
       },
       "status": "weak"
+    },
+    {
+      "id": "P07",
+      "file": "plates/P07_esau_service.jpg",
+      "type": "plate",
+      "beats": [
+        15,
+        16,
+        17
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: An orange broad-shouldered figure in a fur-trimmed cloak offers a tray to a seated cream-wool figure holding a staff. Both seen strictly from the back without any face. Simple riso paper scene, no weapons. Main subject occupies central 65% of width and central 65% of height, with quiet broad paper margins allowing 9:16 crop. No letters, no weapons.",
+      "engine": "image_gen.imagegen",
+      "aspect": "9:16",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Hands and fingers are partly indistinct."
+      },
+      "status": "weak"
+    },
+    {
+      "id": "P08",
+      "file": "plates/P08_rebecca_twins.jpg",
+      "type": "plate",
+      "beats": [
+        20,
+        21,
+        22,
+        23
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: Pink veiled woman strictly seen from behind, with two abstract orange and blue swirling paper shapes before her. A black fist shadow with red halftone looms over a small blue silhouette, no facial outlines. Main subject occupies central 65% of width and central 65% of height, with quiet broad paper margins allowing 9:16 crop. No letters, no weapons.",
+      "engine": "image_gen.imagegen",
+      "aspect": "9:16",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Fist is a paper shape rather than a shadow."
+      },
+      "status": "draft"
+    },
+    {
+      "id": "P09",
+      "file": "plates/P09_jacob_tent.jpg",
+      "type": "plate",
+      "beats": [
+        24,
+        25,
+        26
+      ],
+      "prompt": "Contemporary paper-cut collage in a riso-print style: layered cut and torn paper shapes with slightly rough edges, flat spot colors (warm gold, riso blue, vivid orange, pink, cream, ink black), halftone dot shading, slight print misregistration, visible paper grain, soft shadows between paper layers. VERTICAL 9:16 portrait, flat graphic illustration (not photographic, not 3D). No text, no letters, no numbers anywhere. NO FACES: people appear only seen from above or from behind as simple colored shapes (round head and shoulders), never eyes, nose, mouth or face profile. Keep the main subject inside the central 70% of the frame height, leaving the top 10% and bottom 15% calm.\n\nScene: A small slender blue figure seen strictly from behind seated at entrance of a warm paper tent. A pink paper hand rests gently on blue figure's shoulder. No face or face profile. Main subject occupies central 65% of width and central 65% of height, with quiet broad paper margins allowing 9:16 crop. No letters, no weapons.",
+      "engine": "image_gen.imagegen",
+      "aspect": "9:16",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Pink hand shows four fingers; thumb not visible."
+      },
+      "status": "weak"
     }
   ]
 }

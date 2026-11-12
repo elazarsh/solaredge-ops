@@ -1,7 +1,7 @@
 # STATUS — art production
 
-Stage 3: plan.md maps beats 0–75, estimate 37 assets. Stage 4: five draft plates saved, none approved; continue producing in batches. Stage 5: pending.
+Stage 3: plan.md maps beats 0–75, estimate 37 assets. Stage 4: eight draft/weak plates saved, none approved. Stage 5: pending.
 
-Last batch generated P04, P05, P06. P04 saved as draft. P06 saved as weak due to blue sleeves and ambiguous fingers. P05 generated but not saved in repository because its 992×1586 output fails required aspect and validator. T1 and prior conversation tests remain outside repository. P01–P03 weak.
+Last batch: P07–P09 generated and saved. P07 hands indistinct; P08 fist is paper shape rather than shadow; P09 pink hand shows four visible fingers. P05 generated but not imported due to invalid 992×1586 aspect. T1 and six earlier test images remain outside repository. Other earlier plates include known weaknesses.
 
-Count: 5 plates in repository; 1 newly generated image outside repository; 6 earlier tests outside repository. Total generation calls: 12. Approved: 0. No DONE.md.
+Count: 8 plates in repository; P05 outside repository; 6 earlier test generations outside repository. Total generation calls: 15. Approved: 0. No DONE.md.
