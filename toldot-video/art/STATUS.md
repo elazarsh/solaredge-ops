@@ -38,3 +38,5 @@ Batch 12: 33 generations this session. Individually reviewed: P14 draft, P28 app
 Batch 13: 36 generations this session. Individually reviewed: S07 approved, S19 approved, S09 approved, P14 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
 
 Batch 14: 39 generations this session. Individually reviewed: S10 approved, S16 approved, S17 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
+
+Batch 15_reconciled: 42 generations this session. Individually reviewed: S08 approved, S12 approved, S13 approved. Contact sheet saved. Production continues; no approval wait; DONE absent.
