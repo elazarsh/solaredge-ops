@@ -742,9 +742,9 @@
         "faces": "pass",
         "text": "pass",
         "weapons": "pass",
-        "notes": "Needs close individual QA; not yet approved."
+        "notes": "Five pink hand digits; gold-toned older hand instead of cream, young blue thumb partly ambiguous. Correct cream hand/color and simplify anatomy once."
       },
-      "status": "draft",
+      "status": "weak",
       "processing": {
         "original": "refs/P26_parents_jacob_generated.png",
         "crop": [
@@ -758,6 +758,199 @@
       "dimensions": [
         940,
         1672
+      ]
+    },
+    {
+      "id": "P05",
+      "file": "plates/P05_community_shelter.jpg",
+      "type": "plate",
+      "beats": [
+        6,
+        7,
+        33
+      ],
+      "prompt": null,
+      "engine": "image_gen.imagegen (prior session, per HANDOFF.md; not independently verifiable)",
+      "aspect": "892:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Rear crowd under cream/gold canopy, gold seeds and sprouts. Crop trims outer canopy edge, retains heads and sprouts. Covers people/protection (not long dining table beat19). Original exact prompt unavailable."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "refs/P05_community_shelter.jpg",
+        "exact_original_prompt_available": false,
+        "processing_authority": "HANDOFF.md step 2: crop if important subject stays intact"
+      },
+      "processing": {
+        "original": "refs/P05_community_shelter_generated.png",
+        "crop": [
+          50,
+          0,
+          942,
+          1586
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        892,
+        1586
+      ]
+    },
+    {
+      "id": "P10",
+      "file": "plates/P10_tent_disguise.jpg",
+      "type": "plate",
+      "beats": [
+        27,
+        28
+      ],
+      "prompt": null,
+      "engine": "image_gen.imagegen (prior session, per HANDOFF.md; not independently verifiable)",
+      "aspect": "840:1493",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Blue rear figure wears orange fur-trimmed garment at lit tent entrance. Crop trims tent sides, leaves figure intact. Crown/sound ribbon must be overlaid for27. Original exact prompt unavailable."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "refs/P10_tent_disguise.jpg",
+        "exact_original_prompt_available": false,
+        "processing_authority": "HANDOFF.md step 2: crop if important subject stays intact"
+      },
+      "processing": {
+        "original": "refs/P10_tent_disguise_generated.png",
+        "crop": [
+          107,
+          0,
+          947,
+          1493
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        840,
+        1493
+      ]
+    },
+    {
+      "id": "P11",
+      "file": "plates/P11_blessing_abundance.jpg",
+      "type": "plate",
+      "beats": [
+        29,
+        30,
+        58
+      ],
+      "prompt": null,
+      "engine": "image_gen.imagegen (prior session, per HANDOFF.md; not independently verifiable)",
+      "aspect": "892:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Cream hands each five digits, wheat, grapes, dew, stars and gold crown. Cropped important subjects intact. Original exact prompt unavailable; crown has three visible points unlike S01 five."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "refs/P11_blessing_abundance.jpg",
+        "exact_original_prompt_available": false,
+        "processing_authority": "HANDOFF.md step 2: crop if important subject stays intact"
+      },
+      "processing": {
+        "original": "refs/P11_blessing_abundance_generated.png",
+        "crop": [
+          50,
+          0,
+          942,
+          1586
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        892,
+        1586
+      ]
+    },
+    {
+      "id": "P12",
+      "file": "plates/P12_chair_hill.jpg",
+      "type": "plate",
+      "beats": [
+        31,
+        32,
+        38,
+        39
+      ],
+      "prompt": null,
+      "engine": "image_gen.imagegen (prior session, per HANDOFF.md; not independently verifiable)",
+      "aspect": "892:1586",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "Square orange chair and gold crown on hill, generous margins. Matches orange chair structure; original exact prompt unavailable. Erasure/roll-off needs animation."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "refs/P12_chair_hill.jpg",
+        "exact_original_prompt_available": false,
+        "processing_authority": "HANDOFF.md step 2: crop if important subject stays intact"
+      },
+      "processing": {
+        "original": "refs/P12_chair_hill_generated.png",
+        "crop": [
+          50,
+          0,
+          942,
+          1586
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        892,
+        1586
+      ]
+    },
+    {
+      "id": "P15",
+      "file": "plates/P15_home_ink.jpg",
+      "type": "plate",
+      "beats": [
+        40
+      ],
+      "prompt": null,
+      "engine": "image_gen.imagegen (prior session, per HANDOFF.md; not independently verifiable)",
+      "aspect": "840:1494",
+      "qa": {
+        "faces": "pass",
+        "text": "pass",
+        "weapons": "pass",
+        "notes": "House silhouette partly covered by ink-black paper, no writing. Crop keeps house roof intact with narrow side margin. Filled house, not empty outline. Original exact prompt unavailable."
+      },
+      "status": "approved",
+      "provenance": {
+        "source": "refs/P15_home_ink.jpg",
+        "exact_original_prompt_available": false,
+        "processing_authority": "HANDOFF.md step 2: crop if important subject stays intact"
+      },
+      "processing": {
+        "original": "refs/P15_home_ink_generated.png",
+        "crop": [
+          106,
+          0,
+          946,
+          1494
+        ],
+        "encoding": "JPEG quality95, chroma 4:4:4"
+      },
+      "dimensions": [
+        840,
+        1494
       ]
     }
   ]
