@@ -1,7 +1,11 @@
 # STATUS — art production
 
-Stage 3: plan.md maps beats 0–75, estimate 37 assets. Stage 4: 9 draft/weak plates saved, none approved; 6 aspect-rejected reference drafts preserved in refs. Stage 5: pending.
+**Handoff to Codex:** Read [HANDOFF.md](HANDOFF.md) for current state, QA risks and next steps. The user requested uninterrupted work without repeated approval prompts; correction of T1 may be deferred.
 
-Latest batch P13–P15: P13 saved as draft, P14 and P15 preserved in refs because their aspect fails the required validator. No faces, text or weapons apparent in this batch. Prior weak images and aspect concerns remain. The source tool does not reliably return 9:16. Full production remains incomplete.
+Stage 3: plan.md maps beats 0–75, estimate 37 assets. Stage 4: 9 draft/weak plates in the manifest, none approved; 6 aspect-rejected reference drafts in refs. Stage 5: pending.
 
-Count: 9 plates in manifest; 6 reference drafts; 6 earlier tests outside repository. Total generations: 21. Approved: 0. No DONE.md.
+P01–P04, P06–P09 and P13 are in plates/. P05, P10–P12, P14–P15 are in refs/ because their dimensions do not pass the validator. Six prior test images remain outside the repository; HANDOFF.md links to them. Several saved plates have visual issues; see manifest QA.
+
+Validator: non-strict run OK, with warnings for P01 aspect and 46 uncovered beats. This does not mean coverage or artistic QA is complete. Strict coverage was not run.
+
+Count: 9 plates in manifest; 6 reference drafts; 6 earlier tests outside repository. Total generated: 21. Approved: 0. No DONE.md.
