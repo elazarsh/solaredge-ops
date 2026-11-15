@@ -1,0 +1,356 @@
+{
+ "K7_K8": {
+  "kind": "fill",
+  "params": {
+   "objA": "the foreground crowd of villagers seen from behind, dark silhouettes along the bottom",
+   "objB": "the laughing man pointing his finger"
+  }
+ },
+ "K9_K10": {
+  "kind": "match",
+  "params": {
+   "objA": "the ark",
+   "objB": "the watchtower"
+  }
+ },
+ "K10_K11": {
+  "kind": "smash",
+  "params": {}
+ },
+ "K11_K12": {
+  "kind": "washout",
+  "params": {
+   "col": [
+    1.0,
+    0.93,
+    0.78
+   ]
+  }
+ },
+ "K12_K13": {
+  "kind": "match",
+  "params": {
+   "objA": "the rising sun",
+   "objB": "the green tree"
+  }
+ },
+ "K13_K14": {
+  "kind": "burn",
+  "params": {
+   "fobj": "the table with cups of coffee and bread"
+  }
+ },
+ "K14_K15": {
+  "kind": "water",
+  "params": {
+   "dir": "up"
+  }
+ },
+ "K15_K16": {
+  "kind": "fill",
+  "params": {
+   "objA": "the row of grey concrete shelters in the foreground",
+   "objB": "the two old hands pressed flat on the wooden door"
+  }
+ },
+ "K16_K17": {
+  "kind": "zoomthrough",
+  "params": {
+   "fobj": "the two old hands pressed flat on the wooden door"
+  }
+ },
+ "K17_K18": {
+  "kind": "matte",
+  "params": {
+   "objA": "the old man Noah feeding the animals"
+  }
+ },
+ "K18_K19": {
+  "kind": "iris",
+  "params": {
+   "fobjB": "the open lit door"
+  }
+ },
+ "K19_K20": {
+  "kind": "portal",
+  "params": {
+   "objA": "the open lit doorway",
+   "shape": "rect"
+  }
+ },
+ "K20_K21": {
+  "kind": "zoomthrough",
+  "params": {
+   "fobj": "the small figure of Noah standing on the ark roof"
+  }
+ },
+ "K21_K22": {
+  "kind": "portal",
+  "params": {
+   "objA": "the round porthole window",
+   "shape": "ellipse"
+  }
+ },
+ "K22_K23": {
+  "kind": "water",
+  "params": {
+   "dir": "down"
+  }
+ },
+ "K23_K24": {
+  "kind": "fill",
+  "params": {
+   "objA": "the burned-out car at the left of the foreground",
+   "objB": "the ark with Noah raising his hands"
+  }
+ },
+ "K24_K25": {
+  "kind": "tear",
+  "params": {}
+ },
+ "K25_K26": {
+  "kind": "ripple",
+  "params": {
+   "fobj": "the old man Noah pulling back from the door"
+  }
+ },
+ "K26_K27": {
+  "kind": "smoke",
+  "params": {}
+ },
+ "K27_K28": {
+  "kind": "zoomthrough",
+  "params": {
+   "fobj": "Noah stepping down from the ark"
+  }
+ },
+ "K28_K29": {
+  "kind": "match",
+  "params": {
+   "objA": "the tear drop on the cheek",
+   "objB": "the single water drop"
+  }
+ },
+ "K29_K30": {
+  "kind": "matte",
+  "params": {
+   "objA": "the lit tent with the family at the table"
+  }
+ },
+ "K30_K31": {
+  "kind": "goldbloom",
+  "params": {
+   "fobj": "the oil lamp on the table in the tent"
+  }
+ },
+ "K31_K32": {
+  "kind": "colorseep",
+  "params": {}
+ },
+ "K32_K33": {
+  "kind": "match",
+  "params": {
+   "objA": "the rainbow",
+   "objB": "the bow"
+  }
+ },
+ "K33_K34": {
+  "kind": "matte",
+  "params": {
+   "objA": "the arrow lying on the table"
+  }
+ },
+ "K34_K35": {
+  "kind": "shatter",
+  "params": {
+   "objA": "the large hand-lettered word in the center"
+  }
+ },
+ "K35_K36": {
+  "kind": "ink",
+  "params": {
+   "fobj": "the long dark shadow of Noah on the floor"
+  }
+ },
+ "K36_K37": {
+  "kind": "dipblack",
+  "params": {}
+ },
+ "K37_K38": {
+  "kind": "ripple",
+  "params": {
+   "fobj": "the oil lamp on the table"
+  }
+ },
+ "K38_K39": {
+  "kind": "smash",
+  "params": {}
+ },
+ "K39_K40": {
+  "kind": "matte",
+  "params": {
+   "objA": "the man leaping off the bed"
+  }
+ },
+ "K40_K41": {
+  "kind": "match",
+  "params": {
+   "objA": "the lit window with the street",
+   "objB": "the raised cup of wine"
+  }
+ },
+ "K41_K42": {
+  "kind": "match",
+  "params": {
+   "objA": "the raised cup of wine",
+   "objB": "the dark cup on the desk"
+  }
+ },
+ "K42_K43": {
+  "kind": "defocus",
+  "params": {}
+ },
+ "K43_K44": {
+  "kind": "erase",
+  "params": {
+   "dir": "diag"
+  }
+ },
+ "K44_K45": {
+  "kind": "zoomthrough",
+  "params": {
+   "fobj": "the seated man"
+  }
+ },
+ "K45_K46": {
+  "kind": "match",
+  "params": {
+   "objA": "the round stone",
+   "objB": "the wine barrel"
+  }
+ },
+ "K46_K47": {
+  "kind": "dipblack",
+  "params": {}
+ },
+ "K47_K48": {
+  "kind": "portal",
+  "params": {
+   "objA": "the lit interior opening of the tent",
+   "shape": "ellipse"
+  }
+ },
+ "K48_K49": {
+  "kind": "matte",
+  "params": {
+   "objA": "the open tent flap"
+  }
+ },
+ "K49_K50": {
+  "kind": "smoke",
+  "params": {}
+ },
+ "K50_K50b": {
+  "kind": "matte",
+  "params": {
+   "objA": "the gossip ribbons flowing out of the gate"
+  }
+ },
+ "K50b_K51": {
+  "kind": "smash",
+  "params": {}
+ },
+ "K51_K52": {
+  "kind": "colorseep",
+  "params": {}
+ },
+ "K52_K53": {
+  "kind": "matte",
+  "params": {
+   "objA": "the golden robe carried by the two sons"
+  }
+ },
+ "K53_K54": {
+  "kind": "defocus",
+  "params": {}
+ },
+ "K54_K55": {
+  "kind": "washout",
+  "params": {
+   "col": [
+    1.0,
+    0.93,
+    0.78
+   ]
+  }
+ },
+ "K55_K56": {
+  "kind": "erase",
+  "params": {
+   "dir": "l2r"
+  }
+ },
+ "K56_K57": {
+  "kind": "shatter",
+  "params": {
+   "objA": "the crumbling tower of bricks and jars above Noah"
+  }
+ },
+ "K57_K58": {
+  "kind": "portal",
+  "params": {
+   "objA": "the open doorway",
+   "shape": "rect"
+  }
+ },
+ "K58_K59": {
+  "kind": "peel",
+  "params": {}
+ },
+ "K59_K60": {
+  "kind": "zoomthrough",
+  "params": {
+   "fobj": "Noah in the white robe"
+  }
+ },
+ "K60_K61": {
+  "kind": "colordrain",
+  "params": {}
+ },
+ "K61_K62": {
+  "kind": "goldbloom",
+  "params": {
+   "fobj": "the old man Noah"
+  }
+ },
+ "K62_K63": {
+  "kind": "match",
+  "params": {
+   "objA": "the cup",
+   "objB": "the tower of stones, bricks and jars"
+  }
+ },
+ "K63_K64": {
+  "kind": "defocus",
+  "params": {}
+ },
+ "K64_K65": {
+  "kind": "goldbloom",
+  "params": {
+   "fobj": "the oil lamp"
+  }
+ },
+ "K65_K66": {
+  "kind": "matte",
+  "params": {
+   "objA": "the long cloth held by the line of people"
+  }
+ },
+ "K66_K67": {
+  "kind": "portal",
+  "params": {
+   "objA": "the open door with the warm lamp",
+   "shape": "rect"
+  }
+ }
+}

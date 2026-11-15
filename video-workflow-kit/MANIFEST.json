@@ -1,0 +1,80 @@
+{
+  "name": "video-workflow-kit",
+  "description": "Hebrew-first AI video production workflow for Claude Code: skills, plugins, packages and rules.",
+  "note_for_claude": "Read START-HERE-FOR-CLAUDE.md first. Install group by group, ask the user before each group, never print or request secret values in chat.",
+  "own_skills": {
+    "copy_to": ".claude/skills/",
+    "copy_all_together": true,
+    "why_together": "Skills reference each other by relative path .claude/skills/<name>/scripts/...",
+    "items": {
+      "video-with-claude": "Orchestrator: intake questions, script table, 'go' gate, routing, iron rules",
+      "ai-api-setup": "API keys, env vars, network, quotas",
+      "hebrew-narration": "Niqqud, Gemini TTS, ASR check, single-word fix",
+      "keyframe-images": "Key images, style lock, character consistency, Hebrew text in images",
+      "video-motion-transitions": "Image to video (Veo + camera fallback), 25 transitions, assembly",
+      "html-to-video": "Deterministic HTML/GSAP explainer video, cues from transcript",
+      "video-audio-mix": "Music (Lyria), SFX, ducking, loudnorm -14 LUFS",
+      "video-qa-delivery": "QA, contact sheet, split under 30MB, audio export",
+      "hand-drawn-video": "Stroke draw-on / hand-drawn effect rules",
+      "threejs-postprocessing": "Three.js EffectComposer reference",
+      "install-skill-from-url": "Workflow for turning a docs link or repo into a project skill"
+    }
+  },
+  "plugins": {
+    "marketplaces": {
+      "claude-plugins-official": "anthropics/claude-plugins-official",
+      "superpowers-marketplace": "obra/superpowers-marketplace",
+      "caveman": "JuliusBrussee/caveman",
+      "hyperframes": "heygen-com/hyperframes"
+    },
+    "enable": {
+      "required_for_video": ["hyperframes@hyperframes"],
+      "optional": [
+        "superpowers@superpowers-marketplace",
+        "caveman@caveman",
+        "claude-code-setup@claude-plugins-official",
+        "claude-security@claude-plugins-official",
+        "playwright@claude-plugins-official",
+        "frontend-design@claude-plugins-official",
+        "playground@claude-plugins-official",
+        "chrome-devtools-mcp@claude-plugins-official"
+      ]
+    },
+    "settings_snippet": "settings.snippet.json"
+  },
+  "external_skills": {
+    "hyperframes_skills": {
+      "command": "npx --yes skills add heygen-com/hyperframes -y",
+      "then": ["npx hyperframes browser ensure", "npx hyperframes doctor"],
+      "provides": "hyperframes, hyperframes-cli, hyperframes-core, hyperframes-animation, hyperframes-audio, hyperframes-creative, hyperframes-keyframes, hyperframes-registry, hyperframes-studio, media-use, motion-graphics, general-video, faceless-explainer, music-to-video, talking-head-recut, embedded-captions, slideshow, product-launch-video, pr-to-video, figma, remotion-to-hyperframes",
+      "license_note": "Third-party (HeyGen). Not bundled; installed from source."
+    },
+    "google_skills_selected": {
+      "command": "npx --yes skills add google/skills --skill gemini-api --skill gemini-live-api --skill gemini-interactions-api --skill finding-google-skills -y",
+      "warning": "Do NOT install all of google/skills (178 skills): it bloats every session's context.",
+      "license_note": "Third-party (Google). Not bundled; installed from source."
+    }
+  },
+  "system_requirements": {
+    "binaries": ["ffmpeg", "python3 (3.10+)", "node (>=20)", "git"],
+    "pip": {
+      "required": ["numpy", "scipy", "opencv-python-headless", "pillow"],
+      "optional_local_asr": ["faster-whisper"],
+      "optional_media": ["rembg[cpu]", "yt-dlp", "imageio-ffmpeg"]
+    },
+    "html_video_setup": "bash .claude/skills/html-to-video/scripts/setup.sh .",
+    "optional_hebrew_local_asr_model": "ivrit-ai/whisper-large-v3-turbo-ct2 (about 1.6 GB; not required, Gemini ASR is the default)"
+  },
+  "secrets": {
+    "rule": "Never paste a key in chat. Put it in the environment's secrets / env vars, then start a new session.",
+    "GEMINI_API_KEY": {"required": true, "used_for": "TTS, ASR, images, Veo, Lyria"},
+    "OPENAI_API_KEY": {"required": false, "used_for": "gpt-image (optional)"},
+    "check": "python3 .claude/skills/ai-api-setup/scripts/check_env.py"
+  },
+  "network_hosts": ["generativelanguage.googleapis.com", "api.openai.com", "registry.npmjs.org", "pypi.org", "github.com", "raw.githubusercontent.com"],
+  "do_not_install": {
+    "OmniRoute": "Third-party AI gateway, not an Anthropic plugin; routes prompts and keys through a local proxy. Judged a security risk.",
+    "anidoodle": "Not installed: competes with keyframe-images, 95 MB, no independent reviews found.",
+    "arcads-cut": "Skill file never reviewed. Read any external zip before installing."
+  }
+}
