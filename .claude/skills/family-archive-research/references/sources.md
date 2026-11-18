@@ -123,3 +123,9 @@
 
 ## שווה לנסות (עוד לא נוסה)
 - Verlustlisten Österreich-Ungarn (מקוון), MACSE (מאגר גנאלוגי הונגרי), ארכיוני הולנד/ספרד על מחנות שבויים באיטליה.
+
+## נבדק 11.2026 (מסביבת ענן)
+- **Geneteka API** (`https://geneteka.genealodzy.pl/api/getAct.php?op=gt&lang=pol&bdm=B|S|D&w=<קוד>&rid=<כמו bdm>&search_lastname=<שם>&exac=1&start=0&length=50`). קודי וויבודות: 13sk שווינטוקשיסקה (קיילצה), 05ld לודז', 06mp מאלופולסקה, 12sl שלזיה (זגלמביה), 07mz מזוביה, 03lb לובלין. עובד בלי כניסה. מגבלות: לפעמים `recordsTotal`>0 בלי שורות; עימוד מחזיר כפילויות. כיסוי יהודי חלקי מאוד בעיירות קטנות.
+- **JRI-Poland**: החיפוש (חדש וישן) דורש חשבון חינמי או אישור תנאי שימוש = החלטת משתמש. **Town Explorer** (`admin-ajax.php` action `town_details_get` / `source_get_tree_list`) פתוח: רשימת פנקסים לכל עיר עם ארכיון, סימול ושנים. מצוין לבניית מטריצת רשומות ולפניות לארכיון.
+- **JewishGen**: חיפוש מאגרים (כולל JOWBR, Holocaust) מחזיר 401 בלי כניסה. **Yizkor translations** (`/Yizkor/<town>/<page>.html`) פתוחים ברובם.
+- **חסומים מסביבת ענן** (לא לעקוף, למסור למשתמש): nli.org.il JPress (Cloudflare), catalog.archives.gov.il, zionistarchives.org.il, חברה קדישא ת"א, gravez, BillionGraves, איתור קבר ב-gov.il, MyHeritage, szukajwarchiwach (Incapsula), web.archive.org.
