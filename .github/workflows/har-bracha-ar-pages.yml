@@ -1,0 +1,35 @@
+# Publishes har-bracha-ar/ as a static site (HTTPS is required for camera + motion sensors on phones).
+# One-time setup: repo Settings → Pages → Source: "GitHub Actions".
+name: har-bracha-ar pages
+
+on:
+  push:
+    branches: [main]
+    paths: ['har-bracha-ar/**', '.github/workflows/har-bracha-ar-pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Geo math tests
+        run: node --test har-bracha-ar/tests/geo.test.mjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: har-bracha-ar
+      - id: deploy
+        uses: actions/deploy-pages@v4
