@@ -1,0 +1,37 @@
+{
+ "version": "0.1",
+ "pages": [
+  {
+   "page": 1,
+   "title": "פתיחה",
+   "pace": "slow",
+   "recipe": "side-2",
+   "order": ["{{PREFIX}}-P01-01", "{{PREFIX}}-P01-02"],
+   "hero": "{{PREFIX}}-P01-01",
+   "morph": [],
+   "inset": null,
+   "texts": {
+    "{{PREFIX}}-P01-01": [
+     {"type": "caption", "speaker": "{{HERO}}", "he": "את המחברת הזאת אני כותב בשבילכם.", "en": "I am writing this notebook for you.", "kind": "editorial", "memoir": ""},
+     {"type": "thought", "speaker": "{{HERO}}", "speaker_id": "hero", "he": "", "en": "", "kind": "staging", "imgFile": "art/claude/children-memory.png", "at": [0.27, 0.13], "mouthXY": [0.58, 0.3]}
+    ],
+    "{{PREFIX}}-P01-02": [
+     {"type": "caption", "speaker": "{{HERO}}", "he": "אכתוב לכם כל מה שאני זוכר.", "en": "I will write down everything I remember.", "kind": "adapted", "memoir": ""}
+    ]
+   },
+   "cast": {
+    "{{PREFIX}}-P01-01": [{"id": "hero", "role": "speaker", "where": "center", "face": "visible"}],
+    "{{PREFIX}}-P01-02": []
+   },
+   "shots": {
+    "{{PREFIX}}-P01-01": {"shot": "medium", "angle": "eye", "subject": "hero", "light": "warm lamp"},
+    "{{PREFIX}}-P01-02": {"shot": "detail", "angle": "high", "subject": "hands", "light": "warm lamp"}
+   },
+   "purpose": {
+    "{{PREFIX}}-P01-01": {"purpose_he": "הכרות: הפנים החמות של המספר", "verdict": "keep"},
+    "{{PREFIX}}-P01-02": {"purpose_he": "הידיים והמחברת: המילים הן המתנה", "verdict": "keep"}
+   },
+   "note_he": "דוגמה: מחליפים בתסריט האמיתי. type: caption/speech/thought/whisper/shout. kind: quote/adapted/adapted_speech/adapted_thought/staging/editorial. mouthXY+offPanel לכיוון בועה ידני; at למיקום ידני; photos לתמונה אמיתית מודבקת; recipe_land ו־art_land לגרסה לרוחב."
+  }
+ ]
+}
