@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>טיול חורף גברים ה-3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800;900&family=Rubik+Dirt&family=Gveret+Levin&family=Playpen+Sans+Hebrew:wght@700;800&family=Heebo:wght@700;800;900&family=Secular+One&display=block" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d2847; --navy2:#16406e; --yellow:#ffd23f; --green:#2e7d32; --cream:#f6efdc;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#07101c}
+body{min-height:100vh;display:flex;justify-content:center;align-items:flex-start;overflow-x:hidden}
+#fit{position:relative}
+#poster{position:absolute;left:0;top:0;width:1024px;height:1536px;overflow:hidden;background:var(--navy);
+  transform-origin:0 0;font-family:'Rubik',sans-serif;direction:rtl;color:#fff;
+  box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.abs{position:absolute}
+.t{position:absolute;direction:rtl;white-space:nowrap}
+svg{display:block;overflow:visible}
+
+/* ---------- headline ---------- */
+.h1{font-family:'Rubik Dirt','Rubik',sans-serif;font-size:128px;line-height:1;color:#fff;letter-spacing:-1px;
+  text-shadow:0 5px 0 rgba(0,0,0,.25),0 10px 24px rgba(0,0,0,.35);transform:rotate(-3deg)}
+.h2{font-family:'Rubik',sans-serif;font-weight:900;font-size:98px;line-height:1;color:var(--navy);transform:rotate(-3deg);letter-spacing:-1px}
+.hand{font-family:'Gveret Levin','Playpen Sans Hebrew',cursive;color:var(--navy);-webkit-text-stroke:1.6px var(--navy);
+  text-shadow:0 0 12px rgba(255,255,255,.55);transform:rotate(-3deg)}
+
+/* ---------- signs ---------- */
+.signtxt{position:absolute;color:var(--navy);text-align:center;direction:rtl;line-height:1}
+.sg-a{font-family:'Heebo',sans-serif;font-weight:900}
+.sg-b{font-family:'Heebo',sans-serif;font-weight:800}
+
+/* ---------- labels ---------- */
+.lab{position:absolute;direction:rtl;font-family:'Rubik',sans-serif;font-weight:800;color:#fff;line-height:1.08;text-shadow:0 2px 4px rgba(0,0,0,.35)}
+
+/* ---------- bottom ---------- */
+.cell{position:absolute;top:1148px;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:16px;
+  text-align:center;font-family:'Rubik',sans-serif;font-weight:700;font-size:23px;line-height:1.2;color:#fff;direction:rtl}
+.cell svg{width:78px;height:78px;stroke:#fff;fill:none;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round}
+.vline{position:absolute;top:1148px;width:2px;height:150px;background:linear-gradient(#fff0,#ffffff55 20%,#ffffff55 80%,#fff0)}
+.note{font-family:'Gveret Levin','Playpen Sans Hebrew',cursive;color:var(--yellow);font-size:41px;line-height:1.28;text-align:center;
+  -webkit-text-stroke:.9px var(--yellow);transform:rotate(-4deg);text-shadow:0 2px 6px rgba(0,0,0,.35)}
+.cta{font-family:'Rubik',sans-serif;font-weight:900;color:var(--navy);text-align:center;direction:rtl}
+</style>
+</head>
+<body>
+<div id="fit"><div id="poster">
+
+<!-- ===================== global SVG defs ===================== -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="rough" x="-3%" y="-3%" width="106%" height="106%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="roughFine" x="-3%" y="-3%" width="106%" height="106%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="3" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="roughBig" x="-3%" y="-10%" width="106%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="4" seed="21" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="38" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- horizontal dry-brush: ragged ends + streaks -->
+    <filter id="brushF" x="-8%" y="-25%" width="116%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018 0.32" numOctaves="3" seed="12" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.55" numOctaves="2" seed="3" result="n2"/>
+      <feColorMatrix in="n2" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.55" result="m"/>
+      <feComposite in="d" in2="m" operator="in"/>
+    </filter>
+    <filter id="brushS" x="-6%" y="-20%" width="112%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03 0.3" numOctaves="3" seed="44" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="11" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="canopy" x="-2%" y="-10%" width="104%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.07 0.09" numOctaves="3" seed="6" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="16" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="brushSoft" x="-8%" y="-25%" width="116%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.28" numOctaves="3" seed="31" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- wood textures (grayscale, used with multiply) -->
+    <filter id="woodV" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.16 0.005" numOctaves="5" seed="7"/>
+      <feColorMatrix type="matrix" values="2.2 0 0 0 -0.32  2.2 0 0 0 -0.32  2.2 0 0 0 -0.32  0 0 0 0 1"/>
+    </filter>
+    <filter id="woodH" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.006 0.17" numOctaves="5" seed="15"/>
+      <feColorMatrix type="matrix" values="2.2 0 0 0 -0.3  2.2 0 0 0 -0.3  2.2 0 0 0 -0.3  0 0 0 0 1"/>
+    </filter>
+    <filter id="flecks" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="5"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 .93  0 0 0 0 .82  0 0 0 9 -5.7"/>
+    </filter>
+    <filter id="grainF" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <filter id="paperF" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="8"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 .85  0 0 0 0 .8  0 0 0 0 .7  0 0 0 .9 -.25"/>
+    </filter>
+    <!-- 3D lit clouds -->
+    <filter id="cloudA" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0055 0.013" numOctaves="6" seed="11" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 3.3 -1.2" result="a"/>
+      <feDiffuseLighting in="n" surfaceScale="2.4" diffuseConstant="1.5" lighting-color="#fffaf2" result="l">
+        <feDistantLight azimuth="215" elevation="58"/>
+      </feDiffuseLighting>
+      <feComposite in="l" in2="a" operator="in"/>
+    </filter>
+    <filter id="cloudB" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0022 0.02" numOctaves="5" seed="23" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 .97  0 0 0 0 .93  0 0 0 2.6 -1.25"/>
+    </filter>
+    <filter id="blur2"><feGaussianBlur stdDeviation="2"/></filter>
+    <filter id="blur4"><feGaussianBlur stdDeviation="4"/></filter>
+    <filter id="blur8" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="blur14" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="blur1"><feGaussianBlur stdDeviation="1"/></filter>
+
+    <!-- icons -->
+    <symbol id="i-pool" viewBox="0 0 64 64"><path d="M20 40V14Q20 6 28 6M38 40V14Q38 6 46 6M20 18h18M20 29h18"/><path d="M5 47q6.7-7 13.4 0t13.3 0t13.3 0t13.3 0"/><path d="M5 57q6.7-7 13.4 0t13.3 0t13.3 0t13.3 0"/></symbol>
+    <symbol id="i-bed" viewBox="0 0 64 64"><path d="M6 46V22a4 4 0 0 1 4-4h44a4 4 0 0 1 4 4v24M6 46h52M6 36h52M14 36v-6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6M34 36v-6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6M10 46v6M54 46v6"/></symbol>
+    <symbol id="i-grill" viewBox="0 0 64 64"><path d="M10 30h44c0 13-9 21-22 21S10 43 10 30zM24 51l-6 11M40 51l6 11M32 51v11"/><path d="M22 8q-4 5 0 10t0 8M32 5q-4 5 0 10t0 10M42 8q-4 5 0 10t0 8"/></symbol>
+    <symbol id="i-people" viewBox="0 0 64 64"><circle cx="32" cy="18" r="8.5"/><path d="M15 50a17 15 0 0 1 34 0z"/><circle cx="12" cy="28" r="6"/><path d="M1 51a11 11 0 0 1 10-12"/><circle cx="52" cy="28" r="6"/><path d="M63 51a11 11 0 0 0-10-12"/></symbol>
+    <symbol id="i-ballot" viewBox="0 0 64 64"><rect x="9" y="30" width="46" height="28" rx="4"/><path d="M22 38h20"/><rect x="21" y="6" width="22" height="26" rx="2" transform="rotate(8 32 19)"/><path d="M27 18l4 4 7-8" transform="rotate(8 32 19)"/><circle cx="32" cy="48" r="4"/></symbol>
+    <symbol id="i-mountain" viewBox="0 0 64 64"><path d="M3 54L24 18l10 15 7-9 20 30z"/><path d="M19 27l5 4 4-5M38 28l3 3 3-3"/></symbol>
+  </defs>
+</svg>
+
+<!-- ===================== SCENE BACK (sky, hills) ===================== -->
+<svg id="sceneBack" class="abs" style="left:0;top:0;filter:saturate(1.22) contrast(1.06)" width="1024" height="800" viewBox="0 0 1024 800"></svg>
+
+<!-- ===================== torn paper strip behind collage ===================== -->
+<div class="abs" style="left:-30px;top:725px;width:1084px;height:400px;filter:url(#rough) drop-shadow(0 -4px 10px rgba(0,0,0,.25));z-index:3">
+  <div style="position:absolute;inset:0;background:#f8f2e2"></div>
+</div>
+
+<!-- ===================== SIGN POST ===================== -->
+<svg id="post" class="abs" style="left:0;top:0;z-index:2" width="1024" height="800" viewBox="0 0 1024 800"></svg>
+
+<!-- ===================== SCENE FRONT (men) ===================== -->
+<svg id="sceneFront" class="abs" style="left:0;top:0;z-index:2" width="1024" height="800" viewBox="0 0 1024 800"></svg>
+
+<!-- ===================== HEADLINE ===================== -->
+<div class="abs" style="left:0;top:0;width:1024px;height:560px;z-index:4;pointer-events:none">
+  <svg id="brushes" class="abs" style="left:0;top:0" width="1024" height="560" viewBox="0 0 1024 560"></svg>
+  <div class="t h1" style="left:62px;top:70px;width:560px;text-align:center">טיול חורף</div>
+  <div class="t h2" style="left:108px;top:216px;width:476px;text-align:center">גברים ה-3!</div>
+  <div class="t hand" style="left:56px;top:322px;font-size:76px;text-align:center;width:560px">לצאת מהשיגרה,</div>
+  <div class="t hand" style="left:40px;top:402px;font-size:58px;text-align:center;width:600px">להתחבר, לטעון מצברים!</div>
+</div>
+
+<!-- ===================== COLLAGE ===================== -->
+<div id="collage" class="abs" style="left:0;top:0;width:1024px;height:1200px;z-index:5"></div>
+
+<!-- ===================== BOTTOM PANEL ===================== -->
+<div class="abs" style="left:-30px;top:1088px;width:1084px;height:470px;z-index:6;filter:url(#roughBig) drop-shadow(0 -8px 16px rgba(0,0,0,.4))">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,#14355d 0%,#0d2847 40%,#0a2038 100%)"></div>
+</div>
+<svg id="footer" class="abs" style="left:0;top:1290px;z-index:7" width="1024" height="246" viewBox="0 1290 1024 246"></svg>
+
+<div id="bottomText" class="abs" style="left:0;top:0;width:1024px;height:1536px;z-index:8">
+  <div class="vline" style="left:203px"></div>
+  <div class="vline" style="left:380px"></div>
+  <div class="vline" style="left:543px"></div>
+  <div class="vline" style="left:715px"></div>
+
+  <div class="cell" style="left:20px;width:183px"><svg><use href="#i-pool"/></svg><div>בריכה מפנקת</div></div>
+  <div class="cell" style="left:203px;width:177px"><svg><use href="#i-bed"/></svg><div>לינה בוילה<br>פרטית ומפנקת</div></div>
+  <div class="cell" style="left:380px;width:163px"><svg><use href="#i-grill"/></svg><div>על האש<br>כיד המלך</div></div>
+  <div class="cell" style="left:543px;width:172px"><svg><use href="#i-people"/></svg><div>פעילויות<br>גיבוש וכיף</div></div>
+  <div class="t note" style="left:722px;top:1152px;width:290px;white-space:normal;text-align:center">חברים,<br>טיול מחודש<br>וחוויה בלתי נשכחת!</div>
+
+  <div class="t" style="left:44px;top:1360px;width:500px;text-align:center;font-family:'Gveret Levin',cursive;font-size:36px;color:#ffe9a8;-webkit-text-stroke:.6px #ffe9a8;text-shadow:0 2px 8px #0008">המקומות מוגבלים – מהרו להירשם!</div>
+  <div class="cta abs" id="cta" style="left:96px;top:1414px;width:396px;height:74px;display:flex;align-items:center;justify-content:center;font-size:35px;color:var(--navy)">
+    <svg class="abs" style="left:0;top:0" width="396" height="74" viewBox="0 0 396 74"><path id="ctaShape" fill="#ffd23f" filter="url(#brushSoft)" d="M8 12 Q198 0 388 10 L392 62 Q198 76 6 64Z"/></svg>
+    <span style="position:relative;white-space:nowrap">להרשמה: <bdi dir="ltr">050-000-0000</bdi></span>
+  </div>
+</div>
+
+<!-- ===================== grain + vignette + grade ===================== -->
+<svg class="abs" style="left:0;top:0;z-index:20;pointer-events:none;mix-blend-mode:overlay;opacity:.38" width="1024" height="1536"><rect width="1024" height="1536" filter="url(#grainF)"/></svg>
+<div class="abs" style="inset:0;z-index:21;pointer-events:none;background:radial-gradient(120% 90% at 50% 38%,transparent 55%,rgba(0,0,0,.38) 100%)"></div>
+<div class="abs" style="inset:0;z-index:22;pointer-events:none;mix-blend-mode:soft-light;background:linear-gradient(180deg,rgba(255,170,80,.12),rgba(255,120,60,0) 45%,rgba(20,60,120,.12))"></div>
+
+</div></div>
+
+<script>
+/* ====================================================================
+   עזרים
+==================================================================== */
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const f1=n=>(+n).toFixed(1);
+
+/* שרטוט מברשת: מלבן עם קצוות לא אחידים */
+function brushShape(x,y,w,h,fill,seed,opts={}){
+  const R=rng(seed),j=opts.jitter||h*.07,n=14;let top=[],bot=[];
+  for(let i=0;i<=n;i++){const px=x+w*i/n;top.push([px,y+(R()-.5)*j*2]);bot.push([px,y+h+(R()-.5)*j*2])}
+  const cut=(opts.cut||0)*h;
+  top[0][0]+=cut;bot[0][0]-=cut;top[n][0]-=cut;bot[n][0]+=cut;
+  let d='M'+top.map(p=>f1(p[0])+','+f1(p[1])).join(' L')+' L'+bot.reverse().map(p=>f1(p[0])+','+f1(p[1])).join(' L')+'Z';
+  let g=`<path d="${d}" fill="${fill}" filter="url(#${opts.filter||'brushF'})"/>`;
+  // streaks
+  let s='';for(let i=0;i<9;i++){const yy=y+h*(.1+.8*R()),xs=x+w*R()*.5,xe=xs+w*(.2+.5*R());
+    s+=`<path d="M${f1(xs)},${f1(yy)} L${f1(xe)},${f1(yy+(R()-.5)*3)}" stroke="${opts.streak||'#fff'}" stroke-opacity="${(.05+.1*R()).toFixed(2)}" stroke-width="${f1(1+R()*3)}" fill="none"/>`}
+  return g+s;
+}
+
+/* ====================================================================
+   סצנת רקע: שמיים, שמש, עננים, גבעות
+==================================================================== */
+(function sceneBack(){
+  const svg=$('sceneBack');const R=rng(41);let h='';
+  h+=`<defs>
+   <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+     <stop offset="0" stop-color="#2f86e0"/><stop offset=".30" stop-color="#6fb3f0"/><stop offset=".55" stop-color="#bfdcf3"/>
+     <stop offset=".70" stop-color="#ffd9a2"/><stop offset=".82" stop-color="#ffb35e"/><stop offset="1" stop-color="#ff9a4a"/>
+   </linearGradient>
+   <radialGradient id="sunGlow" cx="118" cy="505" r="520" gradientUnits="userSpaceOnUse">
+     <stop offset="0" stop-color="#fffbe6" stop-opacity="1"/><stop offset=".07" stop-color="#ffe9a8" stop-opacity=".95"/>
+     <stop offset=".22" stop-color="#ffc766" stop-opacity=".62"/><stop offset=".5" stop-color="#ff9a4f" stop-opacity=".22"/><stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/>
+   </radialGradient>
+   <radialGradient id="sunDisc" cx="118" cy="505" r="46" gradientUnits="userSpaceOnUse">
+     <stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#fff6cf"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/>
+   </radialGradient>
+   <linearGradient id="cloudMask" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".62" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+   <mask id="cm"><rect width="1024" height="560" fill="url(#cloudMask)"/></mask>
+   <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf8d" stop-opacity=".0"/><stop offset="1" stop-color="#ffb066" stop-opacity=".75"/></linearGradient>
+  </defs>`;
+  h+=`<rect width="1024" height="800" fill="url(#sky)"/>`;
+  // clouds
+  h+=`<g mask="url(#cm)"><rect x="0" y="-40" width="1024" height="620" filter="url(#cloudB)" opacity=".28"/><rect x="0" y="-20" width="1024" height="580" filter="url(#cloudA)" opacity=".98"/></g>`;
+  // warm tint over clouds near horizon
+  h+=`<rect y="250" width="1024" height="310" fill="url(#haze)" style="mix-blend-mode:soft-light"/>`;
+  // sun glow
+  h+=`<rect width="1024" height="800" fill="url(#sunGlow)" style="mix-blend-mode:screen"/>`;
+  // rays
+  let rays='';for(let i=0;i<11;i++){const a=(-62+i*10.5+R()*5)*Math.PI/180,len=620+R()*260,wd=.05+R()*.05;
+    const x2=118+Math.cos(a+wd)*len,y2=505+Math.sin(a+wd)*len;
+    rays+=`<path d="M118,505 L${f1(118+Math.cos(a-wd)*len)},${f1(505+Math.sin(a-wd)*len)} L${f1(x2)},${f1(y2)}Z" fill="#fff3cf" opacity="${(.05+R()*.08).toFixed(3)}"/>`}
+  h+=`<g filter="url(#blur8)" style="mix-blend-mode:screen">${rays}</g>`;
+  h+=`<circle cx="118" cy="505" r="52" fill="url(#sunDisc)"/><circle cx="118" cy="505" r="18" fill="#fff"/>`;
+  // lens ghosts
+  h+=`<g style="mix-blend-mode:screen" opacity=".7">
+     <circle cx="210" cy="520" r="22" fill="#ffd18a" opacity=".16"/><circle cx="270" cy="545" r="12" fill="#ffe3b0" opacity=".2"/>
+     <circle cx="360" cy="580" r="34" fill="#ffb366" opacity=".1"/><circle cx="455" cy="610" r="16" fill="#fff0c8" opacity=".12"/>
+     <path d="M118,505 L560,640" stroke="#fff0c8" stroke-width="2" opacity=".14"/></g>`;
+
+  // hills
+  function ridge(base,amp,seed,fine){const r=rng(seed),p=[r()*6,r()*6,r()*6,r()*6];let pts=[];
+    for(let x=-8;x<=1032;x+=8){const y=base+amp*(Math.sin(x/190+p[0])*.5+Math.sin(x/95+p[1])*.28+Math.sin(x/41+p[2])*.12*fine+Math.sin(x/17+p[3])*.04*fine);pts.push([x,y])}
+    return pts}
+  const path=pts=>'M-8,820 L'+pts.map(p=>f1(p[0])+','+f1(p[1])).join(' L')+' L1032,820Z';
+  const layers=[
+    {b:500,a:26,s:3,c1:'#d9aa8c',c2:'#e3b48b',blur:1.6,op:.95},
+    {b:528,a:30,s:8,c1:'#c29a7e',c2:'#d2a982',blur:1.2,op:1},
+    {b:556,a:22,s:13,c1:'#a4896a',c2:'#bd9c70',blur:.8,op:1},
+    {b:596,a:26,s:19,c1:'#7d7550',c2:'#a68e58',blur:.4,op:1},
+    {b:640,a:22,s:24,c1:'#5c6538',c2:'#85783f',blur:0,op:1}
+  ];
+  layers.forEach((L,i)=>{
+    const id='hl'+i;
+    h+=`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${L.c2}"/><stop offset="1" stop-color="${L.c1}"/></linearGradient>`;
+    const pts=ridge(L.b,L.a,L.s,i>1?1:.4);
+    const flt=L.blur?`filter="url(#blur${L.blur>1?2:1})"`:(i>=3?'filter="url(#canopy)"':'');
+    h+=`<path d="${path(pts)}" fill="url(#${id})" ${flt} opacity="${L.op}"/>`;
+    h+=`<path d="${path(pts)}" fill="none" stroke="#ffd9a0" stroke-opacity="${(.18+.04*i).toFixed(2)}" stroke-width="2" ${L.blur?'filter="url(#blur1)"':''}/>`;
+    h+=`<rect x="0" y="${L.b-30}" width="1024" height="140" fill="url(#haze)" opacity="${(.5-i*.08).toFixed(2)}" style="mix-blend-mode:screen"/>`;
+    // forest texture: soft dark/olive clumps hugging the ridge
+    if(i>=2){const r=rng(100+i);const cnt=[0,0,70,120,170][i];let g='';
+      for(let k=0;k<cnt;k++){const x=r()*1040-8;const idx=Math.min(pts.length-1,Math.max(0,Math.round((x+8)/8)));
+        const y=pts[idx][1]+2+r()*(i===4?60:24);const rad=(i===2?4:i===3?7:11)*(.6+r()*.9);
+        const col=['#2c3a1d','#3a4a22','#4a5a2a','#263319','#5d6a30'][Math.floor(r()*5)];
+        g+=`<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rad)}" ry="${f1(rad*1.15)}" fill="${col}" opacity="${(.55+r()*.4).toFixed(2)}"/>`}
+      h+=`<g ${i===2?'filter="url(#blur1)"':i===3?'filter="url(#blur1)"':''}>${g}</g>`;
+      // sunlit tops of the clumps
+      let g2='';for(let k=0;k<cnt/2;k++){const x=r()*1040-8;const idx=Math.min(pts.length-1,Math.max(0,Math.round((x+8)/8)));
+        const y=pts[idx][1]+r()*(i===4?40:16);const rad=(i===2?2.5:i===3?4:6)*(.6+r()*.8);
+        g2+=`<ellipse cx="${f1(x-rad*.4)}" cy="${f1(y-rad*.3)}" rx="${f1(rad*.8)}" ry="${f1(rad*.7)}" fill="#e9b867" opacity="${(.12+r()*.18).toFixed(2)}"/>`}
+      h+=`<g>${g2}</g>`;
+    }
+  });
+  // a few tall cypresses on the mid ridge
+  {const r=rng(333);for(let k=0;k<14;k++){const x=40+r()*900,y=646+r()*16,th=34+r()*46;
+    h+=`<path d="M${f1(x)},${f1(y)} q${f1(-th*.16)},${f1(-th*.55)} ${f1(th*.16)},${f1(-th)} q${f1(th*.16)},${f1(th*.45)} ${f1(th*.16)},${f1(th)}z" fill="${['#233017','#2b3a1b','#1f2b14'][k%3]}" opacity=".95"/>
+         <path d="M${f1(x)},${f1(y)} q${f1(-th*.16)},${f1(-th*.55)} ${f1(th*.16)},${f1(-th)} l${f1(th*.04)},${f1(th*.9)}z" fill="#d9a75a" opacity=".16"/>`}}
+  // big pines on the right edge (behind signpost)
+  const rp=rng(77);
+  for(let k=0;k<8;k++){const x=905+rp()*140,y=660+rp()*30,th=150+rp()*130,col=['#18240f','#1f2d14','#263719'][k%3];
+    let tri='';
+    for(let j=0;j<9;j++){
+      const t=j/9,yb=y-th*t*.92,hgt=th*.2,ww=(th*.2)*(1-t*.82)+5;
+      // jagged tier
+      let d=`M${f1(x-ww)},${f1(yb)}`;
+      const n=6;for(let q=1;q<=n;q++){const xx=x-ww+ww*2*q/n;d+=` L${f1(xx-ww/n)},${f1(yb-hgt*.18)} L${f1(xx)},${f1(yb+(q%2?4:0))}`}
+      d+=` L${f1(x)},${f1(yb-hgt)}Z`;
+      tri+=`<path d="${d}" fill="${col}"/>`;
+      tri+=`<path d="M${f1(x-ww)},${f1(yb)} L${f1(x)},${f1(yb-hgt)} L${f1(x-ww*.2)},${f1(yb)}Z" fill="#c98a45" opacity=".16"/>`;
+    }
+    h+=`<g>${tri}<rect x="${f1(x-3)}" y="${f1(y-6)}" width="6" height="40" fill="#1a1209"/></g>`;}
+  // warm rim light wash over the whole land
+  h+=`<rect y="470" width="1024" height="330" fill="url(#sunGlow)" style="mix-blend-mode:soft-light" opacity=".9"/>`;
+  svg.innerHTML=h;
+})();
+
+/* ====================================================================
+   עמוד השלט
+==================================================================== */
+(function post(){
+  const svg=$('post');let h='';
+  const P='M806,34 L832,14 L880,30 L882,800 L808,800Z';
+  h+=`<defs><clipPath id="postClip"><path d="${P}"/></clipPath>
+    <linearGradient id="postBase" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a6240"/><stop offset=".45" stop-color="#6a4a30"/><stop offset="1" stop-color="#3f2b1b"/></linearGradient>
+    <linearGradient id="postRim" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd49a" stop-opacity=".85"/><stop offset=".22" stop-color="#ffb870" stop-opacity=".0"/></linearGradient>
+  </defs>`;
+  h+=`<g filter="drop-shadow(8px 6px 10px rgba(0,0,0,.45))"><g clip-path="url(#postClip)">
+     <rect x="790" y="0" width="110" height="800" fill="url(#postBase)"/>
+     <rect x="790" y="0" width="110" height="800" filter="url(#woodV)" style="mix-blend-mode:multiply" opacity=".95"/>
+     <rect x="790" y="0" width="110" height="800" fill="url(#postRim)" style="mix-blend-mode:screen"/>
+     <path d="M826,40 q-4,200 2,380 M850,60 q5,260 -3,520" stroke="#2a1b10" stroke-opacity=".45" stroke-width="2" fill="none"/>
+  </g></g>`;
+  // top cap
+  h+=`<path d="M806,34 L832,14 L880,30 L880,38 L806,40Z" fill="#a98557" opacity=".9"/>`;
+  svg.innerHTML=h;
+
+  /* signs are HTML-like groups drawn in SVG */
+  function sign(opts){
+    const {x,y,w,hh,rot,fill,id,tipX}=opts;
+    const poly=`${tipX},${hh/2} ${tipX+46},0 ${w},0 ${w},${hh} ${tipX+46},${hh}`;
+    return `<g transform="translate(${x},${y}) rotate(${rot})" filter="drop-shadow(0 12px 10px rgba(0,0,0,.5))">
+      <clipPath id="${id}c"><polygon points="${poly}"/></clipPath>
+      <g filter="url(#roughFine)"><g clip-path="url(#${id}c)">
+        <rect x="-10" y="-10" width="${w+20}" height="${hh+20}" fill="${fill}"/>
+        <rect x="-10" y="-10" width="${w+20}" height="${hh+20}" filter="url(#woodH)" style="mix-blend-mode:multiply" opacity=".75"/>
+        <rect x="-10" y="-10" width="${w+20}" height="${hh+20}" filter="url(#flecks)" opacity=".28"/>
+        <rect x="-10" y="-10" width="${w+20}" height="${hh*.5}" fill="#fff" opacity=".07"/>
+      </g></g>
+      <polygon points="${poly}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="3" filter="url(#roughFine)"/>
+      <g filter="url(#roughFine)" font-family="Heebo,sans-serif" font-weight="900" text-anchor="middle" direction="rtl">${opts.inner||''}</g>
+      <circle cx="${tipX+66}" cy="${hh/2}" r="5.5" fill="#6b6b6b"/><circle cx="${w-24}" cy="${hh/2}" r="5.5" fill="#6b6b6b"/>
+      <circle cx="${tipX+65}" cy="${hh/2-1}" r="2" fill="#d0d0d0"/><circle cx="${w-25}" cy="${hh/2-1}" r="2" fill="#d0d0d0"/>
+    </g>`;
+  }
+  const ic=(id,x,y,w,col,sw)=>`<svg x="${x}" y="${y}" width="${w}" height="${w}" viewBox="0 0 64 64" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><use href="#${id}"/></svg>`;
+  svg.insertAdjacentHTML('beforeend',
+    sign({x:655,y:152,w:345,hh:128,rot:-7,fill:'#e9dcc1',id:'s1',tipX:0,
+      inner:`<text x="168" y="70" font-size="52" fill="#0d2847">אתמול</text>
+             <text x="168" y="106" font-size="27" font-weight="800" fill="#0d2847">בחרתם לכנסת</text>
+             ${ic('i-ballot',268,32,66,'#0d2847',3)}`})+
+    sign({x:606,y:352,w:396,hh:152,rot:-8,fill:'#1d3f6c',id:'s2',tipX:0,
+      inner:`<text x="190" y="62" font-size="56" fill="#fff">היום</text>
+             <text x="190" y="98" font-size="31" font-weight="800" fill="#fff">אתם בוחרים</text>
+             <text x="190" y="138" font-size="44" fill="#fff">בעצמכם</text>
+             ${ic('i-mountain',298,50,74,'#fff',3)}`}));
+})();
+
+/* ====================================================================
+   הגברים (גבם אל המצלמה)
+==================================================================== */
+(function men(){
+  const svg=$('sceneFront');let h='';
+  const M=[
+    {cx:66, sy:694,shirt:'#1b1e24',hat:'cap', hc:'#2a2220',skin:'#835a3d',hair:'#1a130f',hs:1.02},
+    {cx:208,sy:676,shirt:'#6a7a52',hat:'none',hc:'',        skin:'#7d5237',hair:'#17100c',hs:1.06},
+    {cx:344,sy:682,shirt:'#7f93ab',hat:'cap', hc:'#b99d6c',skin:'#8b5f40',hair:'#22180f',hs:.98},
+    {cx:492,sy:670,shirt:'#34383c',hat:'cap', hc:'#241f1d',skin:'#7a5237',hair:'#16100c',hs:1.04},
+    {cx:642,sy:684,shirt:'#7c8c9a',hat:'bucket',hc:'#4d4b2d',skin:'#876043',hair:'#1c140e',hs:1.0},
+    {cx:790,sy:674,shirt:'#17191d',hat:'none',hc:'',        skin:'#92664a',hair:'#1a120d',hs:1.0},
+    {cx:942,sy:680,shirt:'#1b1b1e',hat:'cap', hc:'#201d1c',skin:'#845a3e',hair:'#17100c',hs:1.03}
+  ];
+  h+=`<defs>
+    <linearGradient id="bodyShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>
+    <radialGradient id="headShade" cx=".3" cy=".4" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient>
+  </defs>`;
+  const RIM='#ffc57e';
+  function body(m){
+    const {cx,sy}=m;
+    const d=`M${cx-76},${sy+160} L${cx-78},${sy+38} Q${cx-80},${sy-6} ${cx-44},${sy-14} Q${cx-24},${sy-18} ${cx-15},${sy-30} L${cx+15},${sy-30} Q${cx+24},${sy-18} ${cx+44},${sy-14} Q${cx+80},${sy-6} ${cx+78},${sy+38} L${cx+76},${sy+160}Z`;
+    let g=`<g transform="translate(-3,-1.5)"><path d="${d}" fill="${RIM}" opacity=".85" filter="url(#blur1)"/></g>`;
+    g+=`<path d="${d}" fill="${m.shirt}"/><path d="${d}" fill="url(#bodyShade)"/>`;
+    // folds
+    g+=`<path d="M${cx-30},${sy+10} q6,40 -4,90 M${cx+26},${sy+14} q-8,40 4,86 M${cx-4},${sy+4} q4,50 -2,110" stroke="#000" stroke-opacity=".22" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    g+=`<path d="M${cx-48},${sy+2} q8,26 4,56" stroke="#fff" stroke-opacity=".08" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+    if(m.cx>900){ // backpack strap
+      g+=`<path d="M${cx-50},${sy-8} q14,60 8,160 M${cx+34},${sy-6} q-8,60 -6,160" stroke="#252528" stroke-width="13" fill="none" stroke-linecap="round" opacity=".95"/>`;}
+    // neck
+    g+=`<path d="M${cx-17},${sy-62} L${cx+17},${sy-62} L${cx+19},${sy-24} Q${cx},${sy-14} ${cx-19},${sy-24}Z" fill="${m.skin}"/><path d="M${cx-17},${sy-62} L${cx+17},${sy-62} L${cx+19},${sy-24} Q${cx},${sy-14} ${cx-19},${sy-24}Z" fill="#000" opacity=".3"/>`;
+    // collar
+    g+=`<path d="M${cx-22},${sy-24} Q${cx},${sy-6} ${cx+22},${sy-24}" stroke="${m.shirt}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M${cx-22},${sy-24} Q${cx},${sy-6} ${cx+22},${sy-24}" stroke="#000" stroke-opacity=".25" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+    // head
+    const hy=sy-96,rx=31*m.hs,ry=38*m.hs;
+    g+=`<ellipse cx="${cx-rx+1}" cy="${hy+10}" rx="6" ry="10" fill="${m.skin}"/><ellipse cx="${cx+rx-1}" cy="${hy+10}" rx="6" ry="10" fill="${m.skin}"/>`;
+    g+=`<g transform="translate(-2.5,-1.5)"><ellipse cx="${cx}" cy="${hy}" rx="${rx}" ry="${ry}" fill="${RIM}" opacity=".9" filter="url(#blur1)"/></g>`;
+    g+=`<ellipse cx="${cx}" cy="${hy}" rx="${rx}" ry="${ry}" fill="${m.hair}"/>`;
+    g+=`<ellipse cx="${cx}" cy="${hy}" rx="${rx}" ry="${ry}" fill="url(#headShade)"/>`;
+    // hairline at nape
+    g+=`<path d="M${cx-rx+4},${hy+ry*.55} Q${cx},${hy+ry*1.05} ${cx+rx-4},${hy+ry*.55} L${cx+rx*.6},${hy+ry*.9} Q${cx},${hy+ry*1.12} ${cx-rx*.6},${hy+ry*.9}Z" fill="${m.skin}" opacity=".55"/>`;
+    if(m.hat==='cap'){
+      g+=`<path d="M${cx-rx-2},${hy+2} Q${cx-rx-2},${hy-ry-8} ${cx},${hy-ry-8} Q${cx+rx+2},${hy-ry-8} ${cx+rx+2},${hy+2} Q${cx},${hy+12} ${cx-rx-2},${hy+2}Z" fill="${m.hc}"/>`;
+      g+=`<path d="M${cx-rx-2},${hy+2} Q${cx-rx-2},${hy-ry-8} ${cx},${hy-ry-8} Q${cx+rx+2},${hy-ry-8} ${cx+rx+2},${hy+2} Q${cx},${hy+12} ${cx-rx-2},${hy+2}Z" fill="url(#headShade)"/>`;
+      g+=`<path d="M${cx-rx+4},${hy+1} Q${cx},${hy+11} ${cx+rx-4},${hy+1}" stroke="#000" stroke-opacity=".35" stroke-width="3" fill="none"/>`;
+      g+=`<rect x="${cx-9}" y="${hy+3}" width="18" height="9" rx="2" fill="#111" opacity=".6"/>`;
+      g+=`<path d="M${cx},${hy-ry-8} L${cx},${hy-2}" stroke="#000" stroke-opacity=".25" stroke-width="2"/>`;
+    }else if(m.hat==='bucket'){
+      g+=`<ellipse cx="${cx}" cy="${hy-6}" rx="${rx+30}" ry="14" fill="${m.hc}"/>`;
+      g+=`<path d="M${cx-rx-2},${hy-6} Q${cx-rx},${hy-ry-18} ${cx},${hy-ry-20} Q${cx+rx},${hy-ry-18} ${cx+rx+2},${hy-6}Z" fill="${m.hc}"/>`;
+      g+=`<ellipse cx="${cx}" cy="${hy-6}" rx="${rx+30}" ry="14" fill="url(#headShade)"/>`;
+      g+=`<path d="M${cx-rx-2},${hy-10} Q${cx},${hy-2} ${cx+rx+2},${hy-10}" stroke="#2d2a18" stroke-width="5" fill="none"/>`;
+      g+=`<ellipse cx="${cx-rx-24}" cy="${hy-9}" rx="4" ry="9" fill="#ffc57e" opacity=".35"/>`;
+    }
+    return g;
+  }
+  // grass under feet
+  h+=`<path d="M-10,820 L-10,716 Q200,704 420,712 T860,708 L1034,700 L1034,820Z" fill="#4a3d22"/>`;
+  M.forEach(m=>h+=body(m));
+  // arms
+  function arm(a,b,dir){
+    // a hugs b ; dir=+1 b is to the right of a, -1 left
+    const sx=a.cx+dir*60,sy=a.sy+8;const ex=b.cx-dir*8,ey=b.sy+30;const hx=b.cx+dir*64,hy=b.sy+10;
+    let g='';
+    g+=`<path d="M${sx},${sy} Q${f1((sx+ex)/2+dir*8)},${f1(Math.max(sy,ey)+42)} ${ex},${ey}" stroke="${RIM}" stroke-opacity=".6" stroke-width="32" fill="none" stroke-linecap="round" transform="translate(-2,-2)" filter="url(#blur1)"/>`;
+    g+=`<path d="M${sx},${sy} Q${f1((sx+ex)/2+dir*8)},${f1(Math.max(sy,ey)+42)} ${ex},${ey}" stroke="${a.shirt}" stroke-width="30" fill="none" stroke-linecap="round"/>`;
+    g+=`<path d="M${sx},${sy} Q${f1((sx+ex)/2+dir*8)},${f1(Math.max(sy,ey)+42)} ${ex},${ey}" stroke="url(#bodyShade)" stroke-width="30" fill="none" stroke-linecap="round" opacity=".7"/>`;
+    // forearm
+    g+=`<path d="M${ex},${ey} Q${f1((ex+hx)/2)},${f1(ey+8)} ${hx},${hy}" stroke="${a.skin}" stroke-width="18" fill="none" stroke-linecap="round"/>`;
+    g+=`<path d="M${ex},${ey} Q${f1((ex+hx)/2)},${f1(ey+8)} ${hx},${hy}" stroke="#000" stroke-opacity=".25" stroke-width="18" fill="none" stroke-linecap="round"/>`;
+    g+=`<ellipse cx="${hx+dir*4}" cy="${hy+6}" rx="9" ry="11" fill="${a.skin}" transform="rotate(${dir*20} ${hx} ${hy})"/>`;
+    return g;
+  }
+  for(let i=0;i<M.length-1;i++){
+    if(i%2===0) h+=arm(M[i],M[i+1],+1); else h+=arm(M[i+1],M[i],-1);
+  }
+  // dry grass tufts in front
+  const R=rng(5);for(let i=0;i<120;i++){const x=R()*1030,y=722+R()*70,l=10+R()*22;
+    h+=`<path d="M${f1(x)},${f1(y)} q${f1((R()-.5)*8)},${f1(-l/2)} ${f1((R()-.5)*14)},${f1(-l)}" stroke="${['#b79a5a','#8d7a42','#c9ad6a'][i%3]}" stroke-opacity=".7" stroke-width="2" fill="none"/>`}
+  // overall backlight wash
+  h+=`<rect y="520" width="1024" height="280" fill="url(#sunGlow)" style="mix-blend-mode:soft-light" opacity=".55"/>`;
+  svg.innerHTML=h;
+})();
+
+/* ====================================================================
+   צילום 1: וילה עם בריכה (שעת דמדומים)
+==================================================================== */
+function villaSVG(){
+  const R=rng(88);let h='';
+  h+=`<defs>
+   <linearGradient id="vSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f3466"/><stop offset=".38" stop-color="#6a67a6"/><stop offset=".68" stop-color="#f0a06e"/><stop offset="1" stop-color="#ffd491"/></linearGradient>
+   <linearGradient id="vPool" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fe0ee"/><stop offset=".45" stop-color="#16abd2"/><stop offset="1" stop-color="#0a6a9c"/></linearGradient>
+   <linearGradient id="vGlow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe3a4"/><stop offset="1" stop-color="#ffa64a"/></linearGradient>
+   <linearGradient id="vTerr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d5ad84"/><stop offset="1" stop-color="#9a7554"/></linearGradient>
+   <linearGradient id="vRefl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd27d" stop-opacity=".75"/><stop offset="1" stop-color="#ffd27d" stop-opacity="0"/></linearGradient>
+  </defs>`;
+  h+=`<rect width="600" height="420" fill="url(#vSky)"/>`;
+  h+=`<g filter="url(#blur2)"><path d="M0,176 L38,142 L88,164 L150,112 L215,160 L270,128 L340,168 L420,120 L500,162 L560,132 L600,150 L600,240 L0,240Z" fill="#4b4d8a" opacity=".85"/>
+      <path d="M0,196 L70,160 L140,190 L230,150 L320,192 L400,160 L480,196 L560,168 L600,184 L600,250 L0,250Z" fill="#363a72"/></g>`;
+  // distant trees
+  for(let i=0;i<40;i++){const x=R()*600;h+=`<ellipse cx="${f1(x)}" cy="${f1(214+R()*20)}" rx="${f1(6+R()*10)}" ry="${f1(8+R()*10)}" fill="#1d2748" opacity=".9"/>`}
+  // house group (scaled to leave room for the pool)
+  const wins=[[186,140],[298,140],[410,140],[522,140]];
+  h+=`<g transform="translate(150,6) scale(.74)">`;
+  h+=`<g filter="url(#blur14)" opacity=".85">${wins.map(w=>`<rect x="${w[0]}" y="${w[1]}" width="64" height="104" fill="#ffb347"/>`).join('')}</g>`;
+  h+=`<rect x="150" y="100" width="450" height="170" fill="#b99a74"/>`;
+  let st='';for(let y=102;y<268;y+=11){let x=150-R()*20;while(x<600){const w=18+R()*22;st+=`<rect x="${f1(x)}" y="${y}" width="${f1(w-1.5)}" height="9.5" rx="2.5" fill="${['#c8aa84','#b48f69','#d2b48e','#a98763','#be9f79'][Math.floor(R()*5)]}"/>`;x+=w}}
+  h+=st;
+  h+=`<rect x="150" y="100" width="450" height="170" fill="#000" opacity=".12"/>`;
+  h+=`<path d="M112,106 L210,38 L566,38 L612,106Z" fill="#8f3f24"/>`;
+  let rt='';for(let y=44;y<106;y+=7){rt+=`<path d="M${f1(112+(y-106)*-.7)},${y} L${f1(612-(106-y)*.7)},${y}" stroke="#5c2412" stroke-width="1.6" opacity=".7"/>`}
+  h+=rt+`<path d="M210,38 L566,38" stroke="#d98b5a" stroke-width="3" opacity=".7"/><path d="M112,106 L612,106" stroke="#2a150c" stroke-width="5"/>`;
+  h+=`<rect x="470" y="10" width="36" height="40" fill="#a98763"/><rect x="466" y="6" width="44" height="8" fill="#6d5640"/>`;
+  wins.forEach((w,i)=>{
+    h+=`<rect x="${w[0]}" y="${w[1]}" width="64" height="104" fill="url(#vGlow)"/>
+        <rect x="${w[0]}" y="${w[1]}" width="64" height="104" fill="none" stroke="#3a2a1c" stroke-width="3.5"/>
+        <path d="M${w[0]+32},${w[1]} v104 M${w[0]},${w[1]+60} h64" stroke="#3a2a1c" stroke-width="2.5"/>
+        <path d="M${w[0]+6},${w[1]+98} q10,-26 22,-26 q12,0 24,26z" fill="#5a3a22" opacity=".55"/>
+        <rect x="${w[0]+8}" y="${w[1]+8}" width="14" height="30" fill="#fff" opacity=".2"/>`});
+  h+=`<rect x="100" y="98" width="520" height="11" fill="#3b2a1d"/><rect x="100" y="109" width="520" height="3" fill="#000" opacity=".35"/>`;
+  for(let x=108;x<620;x+=24)h+=`<rect x="${x}" y="88" width="8" height="12" fill="#4a3624"/>`;
+  [150,282,414,566].forEach(x=>{h+=`<rect x="${x}" y="110" width="18" height="160" fill="#b19067"/><rect x="${x}" y="110" width="6" height="160" fill="#e6c79c" opacity=".55"/><rect x="${x+12}" y="110" width="6" height="160" fill="#000" opacity=".25"/>`});
+  for(let i=0;i<30;i++){const x=110+i*17;const y=113+Math.sin(i*.7)*3;h+=`<circle cx="${x}" cy="${f1(y+4)}" r="2.4" fill="#fff0b8"/><circle cx="${x}" cy="${f1(y+4)}" r="7" fill="#ffd27d" opacity=".35" filter="url(#blur2)"/>`}
+  h+=`</g>`;
+  // terrace (full width)
+  h+=`<rect x="0" y="203" width="600" height="30" fill="url(#vTerr)"/>`;
+  for(let x=0;x<600;x+=40)h+=`<path d="M${x},205 L${x-12},233" stroke="#7a5c40" stroke-width="1.2" opacity=".45"/>`;
+  // loungers (left)
+  [[18,176],[96,181]].forEach(p=>{h+=`<g transform="translate(${p[0]},${p[1]}) scale(.9)"><path d="M0,34 L62,34 L76,18 L72,14 L56,28 L2,28Z" fill="#2c2119"/><path d="M4,26 L58,26 L72,10 L66,6 L52,20 L6,20Z" fill="#f3eee2"/><path d="M4,26 L58,26" stroke="#bfb6a0" stroke-width="2"/><rect x="2" y="34" width="3" height="9" fill="#2c2119"/><rect x="58" y="34" width="3" height="9" fill="#2c2119"/></g>`});
+  // potted plant (right)
+  h+=`<g transform="translate(578,176) scale(.8)"><path d="M0,0 l-10,30 h30 l-10,-30z" fill="#6a4b34"/>${[-60,-30,0,30,60].map(a=>`<path d="M5,2 q${a*.8},-34 ${a*1.1},-${(26+Math.abs(a)*.1).toFixed(0)}" stroke="#2f5f2c" stroke-width="5" stroke-linecap="round" fill="none"/>`).join('')}</g>`;
+  // pool
+  h+=`<rect x="0" y="231" width="600" height="190" fill="url(#vPool)"/>`;
+  h+=`<rect x="0" y="227" width="600" height="7" fill="#e6d4b6"/><rect x="0" y="234" width="600" height="3" fill="#000" opacity=".25"/>`;
+  wins.forEach(w=>{const x=150+.74*w[0];h+=`<rect x="${f1(x-6)}" y="238" width="60" height="150" fill="url(#vRefl)" filter="url(#blur8)"/>`});
+  h+=`<rect x="0" y="234" width="600" height="46" fill="#ff9d63" opacity=".3" style="mix-blend-mode:screen"/>`;
+  for(let i=0;i<60;i++){const y=242+i*2.9;const x=R()*560;const w=30+R()*130;h+=`<path d="M${f1(x)},${f1(y)} q${f1(w/4)},-3 ${f1(w/2)},0 t${f1(w/2)},0" stroke="#fff" stroke-opacity="${(.08+R()*.22).toFixed(2)}" stroke-width="${f1(.8+R()*1.6)}" fill="none"/>`}
+  for(let i=0;i<24;i++){const x=110+R()*470;h+=`<ellipse cx="${f1(x)}" cy="${f1(246+R()*110)}" rx="${f1(2+R()*5)}" ry="1.3" fill="#fff6c8" opacity="${(.2+R()*.4).toFixed(2)}"/>`}
+  // foreground coping
+  h+=`<path d="M0,402 L600,398 L600,420 L0,420Z" fill="#d8c3a1"/><path d="M0,402 L600,398" stroke="#fff3da" stroke-width="2" opacity=".8"/>`;
+  h+=`<rect width="600" height="420" fill="#150a2e" opacity=".12"/>`;
+  return `<svg viewBox="0 0 600 420" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${h}</svg>`;
+}
+
+/* ====================================================================
+   צילום 2: על האש
+==================================================================== */
+function bbqSVG(){
+  const R=rng(14);let h='';
+  h+=`<defs>
+   <radialGradient id="bBg" cx=".5" cy=".7" r=".9"><stop offset="0" stop-color="#5a3216"/><stop offset=".5" stop-color="#241810"/><stop offset="1" stop-color="#0c0b0a"/></radialGradient>
+   <radialGradient id="bCoal" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ffd35c"/><stop offset=".45" stop-color="#ff7a1c"/><stop offset="1" stop-color="#8a1c06"/></radialGradient>
+   <linearGradient id="bFlame" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff5a12"/><stop offset=".55" stop-color="#ffa92c"/><stop offset="1" stop-color="#fff0a0" stop-opacity=".0"/></linearGradient>
+   <linearGradient id="bSaus" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0724a"/><stop offset=".5" stop-color="#a83c20"/><stop offset="1" stop-color="#5a1a0e"/></linearGradient>
+   <linearGradient id="bKeb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9814a"/><stop offset=".5" stop-color="#8a4724"/><stop offset="1" stop-color="#4a210f"/></linearGradient>
+   <linearGradient id="bSteak" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9a4a26"/><stop offset="1" stop-color="#4a1d0e"/></linearGradient>
+  </defs>`;
+  h+=`<rect width="300" height="350" fill="url(#bBg)"/>`;
+  // bokeh
+  for(let i=0;i<26;i++){h+=`<circle cx="${f1(R()*300)}" cy="${f1(R()*110)}" r="${f1(6+R()*16)}" fill="${['#ffb347','#e9873a','#7aa04a','#ffd37a'][i%4]}" opacity="${(.10+R()*.25).toFixed(2)}" filter="url(#blur4)"/>`}
+  h+=`<g transform="translate(0,-85)">`;
+  // smoke
+  h+=`<g filter="url(#blur8)" fill="none" stroke="#fff" stroke-linecap="round">
+      <path d="M90,170 q-30,-50 10,-90 q35,-36 -4,-80" stroke-width="22" opacity=".28"/>
+      <path d="M150,160 q30,-54 -8,-96 q-30,-36 6,-84" stroke-width="26" opacity=".22"/>
+      <path d="M205,170 q-22,-40 14,-76" stroke-width="16" opacity=".2"/></g>`;
+  // grill body (perspective)
+  h+=`<path d="M0,176 L300,176 L300,470 L0,470Z" fill="#141210"/>`;
+  h+=`<path d="M0,176 L300,176" stroke="#3a3430" stroke-width="3"/>`;
+  // glowing coals
+  h+=`<rect x="0" y="262" width="300" height="200" fill="url(#bCoal)" filter="url(#blur2)"/>`;
+  for(let i=0;i<70;i++){h+=`<ellipse cx="${f1(R()*300)}" cy="${f1(262+R()*88)}" rx="${f1(5+R()*9)}" ry="${f1(3+R()*5)}" fill="${['#ffd35c','#ff9a2b','#ff6a12','#ffe99a'][i%4]}" opacity="${(.4+R()*.5).toFixed(2)}"/>`}
+  // grate bars
+  for(let i=0;i<14;i++){const x=i*22-4;h+=`<path d="M${x},258 L${x+10},350" stroke="#0a0908" stroke-width="3.5" opacity=".9"/>`}
+  h+=`<path d="M0,258 H300 M0,296 H300 M0,332 H300" stroke="#0a0908" stroke-width="4"/>`;
+  // food: kebabs
+  [[26,226,118,-8],[120,214,130,6]].forEach((k,idx)=>{
+    h+=`<g transform="translate(${k[0]},${k[1]}) rotate(${k[3]})"><rect x="-6" y="14" width="${k[2]+22}" height="3" fill="#bbb"/>`;
+    for(let j=0;j<5;j++)h+=`<ellipse cx="${10+j*(k[2]/4.4)}" cy="15.5" rx="15" ry="17" fill="url(#bKeb)"/><path d="M${j*(k[2]/4.4)},8 q10,-3 18,2" stroke="#ffd9a0" stroke-opacity=".35" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M${j*(k[2]/4.4)+3},22 l10,8 M${j*(k[2]/4.4)+4},14 l10,6" stroke="#1c0b04" stroke-width="2" opacity=".6"/>`;
+    h+=`</g>`});
+  // sausages
+  [[16,268,-8],[78,272,5],[148,264,-4],[210,270,8]].forEach(s=>{
+    h+=`<g transform="translate(${s[0]},${s[1]}) rotate(${s[2]})"><rect x="0" y="0" width="86" height="25" rx="12.5" fill="url(#bSaus)"/><path d="M8,6 H78" stroke="#ffc9a0" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/><path d="M16,3 l6,20 M36,2 l6,22 M56,2 l6,22 M72,4 l5,18" stroke="#1d0a05" stroke-width="3.2" opacity=".65"/></g>`});
+  // steaks
+  [[168,230,-6],[40,310,4]].forEach(s=>{h+=`<g transform="translate(${s[0]},${s[1]}) rotate(${s[2]})"><path d="M0,16 Q4,-6 40,-2 Q78,0 82,22 Q76,44 38,42 Q4,40 0,16Z" fill="url(#bSteak)"/><path d="M12,6 L66,38 M28,0 L74,30 M4,20 L50,44" stroke="#1a0904" stroke-width="3.2" opacity=".6"/><path d="M14,8 Q40,-2 66,8" stroke="#ffb27a" stroke-opacity=".35" stroke-width="3" fill="none"/></g>`});
+  // flames
+  for(let i=0;i<9;i++){const x=R()*300,hh=40+R()*60;h+=`<path d="M${f1(x)},300 q${f1(-14-R()*8)},${f1(-hh*.5)} ${f1(2+R()*6)},${f1(-hh)} q${f1(8+R()*10)},${f1(hh*.5)} ${f1(14)},${f1(hh)}z" fill="url(#bFlame)" opacity=".85" filter="url(#blur1)"/>`}
+  // embers
+  for(let i=0;i<30;i++){h+=`<circle cx="${f1(R()*300)}" cy="${f1(120+R()*180)}" r="${f1(.8+R()*1.6)}" fill="#ffb347" opacity="${(.4+R()*.5).toFixed(2)}"/>`}
+  h+=`</g><rect y="150" width="300" height="200" fill="#ff7a1c" opacity=".14" style="mix-blend-mode:screen"/>`;
+  return `<svg viewBox="0 0 300 350" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${h}</svg>`;
+}
+
+/* ====================================================================
+   צילום 3: פעילות חברה
+==================================================================== */
+function teamSVG(){
+  const R=rng(61);let h='';
+  h+=`<defs>
+   <linearGradient id="tSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aa8ee"/><stop offset="1" stop-color="#e4f1fb"/></linearGradient>
+   <linearGradient id="tGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fb446"/><stop offset=".5" stop-color="#5a9a33"/><stop offset="1" stop-color="#3b7424"/></linearGradient>
+   <linearGradient id="tTee" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3d44"/><stop offset="1" stop-color="#0f1013"/></linearGradient>
+  </defs>`;
+  h+=`<rect width="300" height="360" fill="url(#tSky)"/>`;
+  h+=`<g filter="url(#blur2)"><path d="M0,98 L40,66 L90,90 L150,54 L210,88 L260,62 L300,82 L300,140 L0,140Z" fill="#8fa9c0"/><path d="M0,118 L60,88 L130,114 L200,90 L300,116 L300,146 L0,146Z" fill="#6f8f78"/></g>`;
+  // tree line
+  h+=`<g filter="url(#blur1)">`;for(let i=0;i<36;i++){h+=`<ellipse cx="${f1(R()*300)}" cy="${f1(128+R()*14)}" rx="${f1(10+R()*16)}" ry="${f1(12+R()*16)}" fill="${['#3e6a2c','#2f5a22','#4b7a35'][i%3]}"/>`}h+=`</g>`;
+  h+=`<rect y="138" width="300" height="222" fill="url(#tGrass)"/>`;
+  for(let i=0;i<90;i++){const x=R()*300,y=142+R()*215;h+=`<path d="M${f1(x)},${f1(y)} l${f1((R()-.5)*3)},-5" stroke="#a9d36a" stroke-opacity=".5" stroke-width="1.2"/>`}
+  // hex rope frame
+  const cx=150,cy=190,rx=104,ry=40,pts=[];for(let i=0;i<6;i++){const a=i*Math.PI/3+Math.PI/6;pts.push([cx+Math.cos(a)*rx,cy+Math.sin(a)*ry])}
+  h+=`<ellipse cx="${cx}" cy="${cy+6}" rx="${rx+14}" ry="${ry+8}" fill="#000" opacity=".18" filter="url(#blur4)"/>`;
+  pts.forEach((p,i)=>{h+=`<path d="M${f1(p[0])},${f1(p[1])} L${f1(cx)},${f1(cy-4)}" stroke="#f1eee4" stroke-width="1.8" opacity=".8"/><path d="M${f1(p[0])},${f1(p[1])} L${f1(pts[(i+1)%6][0])},${f1(pts[(i+1)%6][1])}" stroke="#f1eee4" stroke-width="2.4" opacity=".95"/>`;});
+  pts.forEach(p=>{h+=`<rect x="${f1(p[0]-2.5)}" y="${f1(p[1]-30)}" width="5" height="32" fill="#e3dccb"/><rect x="${f1(p[0]-2.5)}" y="${f1(p[1]-30)}" width="2" height="32" fill="#fff" opacity=".6"/>`});
+  // ball
+  h+=`<circle cx="${cx}" cy="${cy-6}" r="13" fill="#2a74d6"/><circle cx="${cx-4}" cy="${cy-10}" r="5" fill="#9fd0ff" opacity=".7"/>`;
+  // people
+  function person(x,y,s,skin,cap,lean,pose){
+    let g=`<g transform="translate(${x},${y}) scale(${s})">`;
+    g+=`<ellipse cx="0" cy="2" rx="26" ry="6" fill="#000" opacity=".25" filter="url(#blur2)"/>`;
+    // legs
+    g+=`<path d="M-9,-52 L-14,-4 L-6,-4 L-1,-40 L5,-4 L13,-4 L10,-52Z" fill="#b8a27c"/>`;
+    g+=`<path d="M-14,-4 h9 v6 h-12z M5,-4 h9 v6 h-12z" fill="#e8e8e8"/>`;
+    g+=`<rect x="-14" y="-24" width="9" height="20" fill="${skin}"/><rect x="5" y="-24" width="9" height="20" fill="${skin}"/>`;
+    // torso
+    g+=`<path d="M-17,-52 Q-20,-86 -12,-96 L12,-96 Q20,-86 17,-52Z" fill="url(#tTee)" transform="rotate(${lean} 0 -52)"/>`;
+    // arms toward ropes
+    g+=`<path d="M-14,-90 L${-30-pose},-74 L${-40-pose},-62" stroke="#1a1b1f" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M14,-90 L${30+pose},-74 L${40+pose},-66" stroke="#1a1b1f" stroke-width="9" stroke-linecap="round" fill="none"/>`;
+    g+=`<circle cx="${-41-pose}" cy="-61" r="5" fill="${skin}"/><circle cx="${41+pose}" cy="-65" r="5" fill="${skin}"/>`;
+    // head
+    g+=`<circle cx="0" cy="-108" r="11" fill="${skin}" transform="rotate(${lean} 0 -52)"/>`;
+    g+=`<path d="M-12,-110 Q0,-126 12,-110 Z" fill="${cap}" transform="rotate(${lean} 0 -52)"/><path d="M6,-109 h14" stroke="${cap}" stroke-width="3" transform="rotate(${lean} 0 -52)"/>`;
+    return g+`</g>`;
+  }
+  h+=person(214,176,.72,'#c18f6a','#1b1b1b',-4,2);
+  h+=person(88,172,.74,'#d6a67f','#1b1b1b',4,0);
+  h+=person(152,156,.62,'#b98258','#1b1b1b',0,6);
+  h+=person(250,262,1.2,'#c69470','#1b1b1b',-8,6);
+  h+=person(50,268,1.25,'#d9ab85','#1b1b1b',8,4);
+  // sun flare & grade
+  h+=`<rect width="300" height="360" fill="#ffe9b0" opacity=".1"/>`;
+  return `<svg viewBox="0 0 300 360" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${h}</svg>`;
+}
+
+/* ====================================================================
+   קולאז' + תוויות
+==================================================================== */
+(function collage(){
+  const C=$('collage');
+  function frame(x,y,w,hh,rot,inner,seed){
+    return `<div class="abs" style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;transform:rotate(${rot}deg);filter:drop-shadow(0 8px 10px rgba(0,0,0,.4))">
+      <div class="abs" style="inset:0;background:#fffdf6;filter:url(#rough)"></div>
+      <div class="abs" style="inset:10px;overflow:hidden;filter:url(#roughFine)">${inner}</div>
+      <div class="abs" style="inset:10px;background:radial-gradient(130% 100% at 50% 40%,transparent 60%,rgba(0,0,0,.28) 100%);filter:url(#roughFine);pointer-events:none"></div>
+    </div>`;
+  }
+  function label(x,y,w,hh,fill,rot,seed){
+    return `<svg class="abs" style="left:${x}px;top:${y}px;transform:rotate(${rot}deg);filter:drop-shadow(0 6px 8px rgba(0,0,0,.45))" width="${w}" height="${hh}" viewBox="0 0 ${w} ${hh}">${brushShape(8,8,w-16,hh-16,fill,seed,{cut:.12,jitter:4,filter:'brushS'})}</svg>`;
+  }
+  let h='';
+  h+=frame(-6,744,534,372,-.8,villaSVG());
+  h+=frame(522,792,254,286,1.1,bbqSVG());
+  h+=frame(766,762,268,318,-1.2,teamSVG());
+  // labels
+  h+=label(96,984,420,104,'#0d2847',-2.2,5);
+  h+=`<div class="lab" style="left:208px;top:1000px;width:290px;text-align:right;font-size:33px;transform:rotate(-2.2deg)">לינה בוילה מפנקת<br>עם בריכה</div>`;
+  h+=`<svg class="abs" style="left:128px;top:1004px;transform:rotate(-2.2deg)" width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pool"/></svg>`;
+
+  h+=label(534,978,246,92,'#0d2847',1.2,11);
+  h+=`<div class="lab" style="left:612px;top:1002px;width:150px;text-align:right;font-size:38px;transform:rotate(1.2deg)">על האש</div>`;
+  h+=`<svg class="abs" style="left:556px;top:994px;transform:rotate(1.2deg)" width="60" height="60" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><use href="#i-grill"/></svg>`;
+
+  h+=label(776,984,262,100,'#2f7d32',-1.6,23);
+  h+=`<div class="lab" style="left:858px;top:1018px;width:160px;text-align:right;font-size:28px;white-space:nowrap;transform:rotate(-1.6deg)">פעילות חברה</div>`;
+  h+=`<svg class="abs" style="left:792px;top:1010px;transform:rotate(-1.6deg)" width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><use href="#i-people"/></svg>`;
+  C.innerHTML=h;
+})();
+
+/* ====================================================================
+   פוטר: נוף מטושטש, הרים, קורה, ספל
+==================================================================== */
+(function footer(){
+  const svg=$('footer');const R=rng(202);let h='';
+  h+=`<defs>
+   <linearGradient id="fBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b2240" stop-opacity="0"/><stop offset=".3" stop-color="#16314e" stop-opacity=".7"/><stop offset=".6" stop-color="#b78a4e" stop-opacity=".55"/><stop offset="1" stop-color="#6e7a32" stop-opacity=".9"/></linearGradient>
+   <linearGradient id="fMtn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c3d3e0"/><stop offset=".6" stop-color="#8aa2b8"/><stop offset="1" stop-color="#5b7794" stop-opacity=".9"/></linearGradient>
+   <linearGradient id="fMtn2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fa6bb"/><stop offset="1" stop-color="#4d6a88" stop-opacity=".9"/></linearGradient>
+   <linearGradient id="fWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b6240"/><stop offset=".15" stop-color="#6a4a2f"/><stop offset="1" stop-color="#2f2015"/></linearGradient>
+   <linearGradient id="mugBody" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#07152a"/><stop offset=".22" stop-color="#244f86"/><stop offset=".45" stop-color="#173a69"/><stop offset=".8" stop-color="#0b2142"/><stop offset="1" stop-color="#050e1d"/></linearGradient>
+   <linearGradient id="coffee" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a3a24"/><stop offset="1" stop-color="#241408"/></linearGradient>
+   <linearGradient id="fadeRg" gradientUnits="userSpaceOnUse" x1="360" y1="0" x2="620" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+   <linearGradient id="fadeLg" gradientUnits="userSpaceOnUse" x1="520" y1="0" x2="720" y2="0"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>
+   <mask id="fadeR" maskUnits="userSpaceOnUse" x="-20" y="1290" width="700" height="260"><rect x="-20" y="1290" width="700" height="260" fill="url(#fadeRg)"/></mask>
+   <mask id="fadeL" maskUnits="userSpaceOnUse" x="500" y="1470" width="560" height="80"><rect x="500" y="1470" width="560" height="80" fill="url(#fadeLg)"/></mask>
+   <clipPath id="mugClip"><path d="M-88,0 L88,0 L76,166 Q0,190 -76,166Z"/></clipPath>
+  </defs>`;
+  // blurred sunset meadow behind
+  h+=`<rect x="0" y="1290" width="1024" height="246" fill="url(#fBg)"/>`;
+  h+=`<g filter="url(#blur14)"><ellipse cx="760" cy="1420" rx="260" ry="46" fill="#ffc46b" opacity=".7"/><path d="M380,1500 Q560,1400 760,1450 T1100,1430 L1100,1560 L380,1560Z" fill="#7f9a3c" opacity=".9"/><path d="M500,1520 Q700,1470 900,1500 T1100,1490 L1100,1560 L500,1560Z" fill="#5d7d2a"/></g>`;
+  for(let i=0;i<22;i++){h+=`<circle cx="${f1(430+R()*600)}" cy="${f1(1380+R()*120)}" r="${f1(8+R()*20)}" fill="${['#ffd37a','#d9e58a','#ffb865','#9fc25a'][i%4]}" opacity="${(.12+R()*.22).toFixed(2)}" filter="url(#blur4)"/>`}
+  // mountains + pines silhouette (left)
+  h+=`<g mask="url(#fadeR)">`;
+  h+=`<path d="M-10,1540 L-10,1470 L90,1400 L150,1440 L240,1328 L330,1420 L380,1392 L470,1460 L560,1500 L560,1540Z" fill="url(#fMtn)" opacity=".92"/>`;
+  h+=`<path d="M240,1328 L262,1354 L250,1352 L240,1364 L228,1352 L216,1356Z" fill="#fff" opacity=".7"/>`;
+  h+=`<path d="M-10,1540 L-10,1500 L60,1470 L140,1492 L210,1456 L300,1490 L380,1500 L470,1520 L470,1540Z" fill="url(#fMtn2)"/>`;
+  {const r=rng(7);for(let i=0;i<46;i++){const x=-10+i*12+r()*8,y=1540,th=44+r()*70,w=th*.28;let t='';
+    for(let j=0;j<5;j++){const yb=y-th*j/5.2,ww=w*(1-j/5.6);t+=`<path d="M${f1(x-ww)},${f1(yb)} L${f1(x)},${f1(yb-th*.3)} L${f1(x+ww)},${f1(yb)}Z"/>`}
+    h+=`<g fill="${['#7d98b2','#6d89a6','#88a2bb'][i%3]}" opacity="${(.55+r()*.4).toFixed(2)}">${t}</g>`}}
+  h+=`</g>`;
+  // wooden log at bottom
+  h+=`<g mask="url(#fadeL)"><path d="M500,1498 Q700,1486 860,1492 T1034,1488 L1034,1540 L500,1540Z" fill="url(#fWood)"/>
+      <path d="M500,1498 Q700,1486 860,1492 T1034,1488 L1034,1540 L500,1540Z" filter="url(#woodH)" style="mix-blend-mode:multiply" opacity=".85" transform="translate(0,0)"/>
+      <path d="M500,1498 Q700,1486 860,1492 T1034,1488" stroke="#ffcf8a" stroke-width="3" fill="none" opacity=".55" filter="url(#blur1)"/></g>`;
+  // mug
+  h+=`<g transform="translate(846,1350) scale(.8)">
+    <ellipse cx="6" cy="204" rx="108" ry="13" fill="#000" opacity=".55" filter="url(#blur4)"/>
+    <path d="M60,40 C128,34 132,150 66,150" stroke="#06142a" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <path d="M60,40 C122,36 124,146 66,146" stroke="#2b5a96" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/>
+    <g transform="translate(0,6)"><g transform="translate(0,16)">
+      <path d="M-88,0 L88,0 L76,166 Q0,190 -76,166Z" fill="url(#mugBody)"/>
+      <g clip-path="url(#mugClip)">${(()=>{const r=rng(9);let d='';for(let i=0;i<260;i++){d+=`<circle cx="${f1(-90+r()*180)}" cy="${f1(r()*190)}" r="${f1(.5+r()*1)}" fill="#fff" opacity="${(.2+r()*.5).toFixed(2)}"/>`}return d})()}
+        <rect x="-70" y="0" width="16" height="190" fill="#fff" opacity=".16" filter="url(#blur4)"/><rect x="40" y="0" width="30" height="190" fill="#000" opacity=".28" filter="url(#blur4)"/></g>
+      <path d="M-76,166 Q0,190 76,166" stroke="#e9eef3" stroke-width="5" fill="none"/>
+      <ellipse cx="0" cy="0" rx="88" ry="17" fill="#e9eef3"/>
+      <ellipse cx="0" cy="1" rx="82" ry="13" fill="url(#coffee)"/>
+      <ellipse cx="-20" cy="-2" rx="40" ry="4" fill="#fff" opacity=".18"/>
+      <g text-anchor="middle" direction="rtl" font-family="'Gveret Levin',cursive" fill="#fff">
+        <text x="0" y="76" font-size="30" stroke="#fff" stroke-width=".6">בואו</text>
+        <text x="0" y="110" font-size="30" stroke="#fff" stroke-width=".6">נתחבר מחדש</text>
+      </g>
+      <svg x="-17" y="120" width="34" height="34" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-mountain"/></svg>
+    </g></g>
+    <g filter="url(#blur4)" fill="none" stroke="#fff" stroke-linecap="round"><path d="M-30,6 q-12,-18 3,-32 q12,-12 -2,-26" stroke-width="7" opacity=".22"/><path d="M12,4 q14,-16 -2,-30 q-10,-12 3,-26" stroke-width="6" opacity=".18"/></g>
+  </g>`;
+  svg.innerHTML=h;
+})();
+
+/* ====================================================================
+   התאמת גודל למסך
+==================================================================== */
+function fit(){
+  const vw=innerWidth,vh=innerHeight,s=Math.min(vw/1024,Math.max(vh/1536,.5));
+  const f=$('fit');f.style.width=1024*s+'px';f.style.height=1536*s+'px';
+  $('poster').style.transform='scale('+s+')';
+}
+addEventListener('resize',fit);fit();
+
+/* ====================================================================
+   מברשות הכותרת
+==================================================================== */
+(function headBrushes(){
+  const svg=$('brushes');let h='';
+  h+=`<g transform="rotate(-3 340 130)" filter="drop-shadow(0 10px 12px rgba(0,0,0,.35))">${brushShape(52,52,600,150,'#0d2847',51,{cut:.18,jitter:9})}</g>`;
+  h+=`<g transform="rotate(-3 340 270)" filter="drop-shadow(0 8px 10px rgba(0,0,0,.28))">${brushShape(106,214,478,108,'#ffd23f',77,{cut:.14,jitter:7,streak:'#fff'})}</g>`;
+  // yellow underline strokes
+  h+=`<g transform="rotate(-3 340 420)">${brushShape(160,396,420,16,'#ffd23f',9,{jitter:2,filter:'brushSoft'})}</g>`;
+  h+=`<g transform="rotate(-3 340 480)">${brushShape(120,468,500,14,'#ffd23f',15,{jitter:2,filter:'brushSoft'})}</g>`;
+  // spark rays
+  const spark=(x1,y1,x2,y2)=>`<path d="M${x1},${y1} L${x2},${y2}" stroke="#0d2847" stroke-width="5" stroke-linecap="round"/>`;
+  h+=`<g>${spark(62,296,100,282)}${spark(56,322,98,314)}${spark(72,348,104,338)}${spark(606,246,640,226)}${spark(612,274,650,262)}${spark(604,300,636,298)}</g>`;
+  svg.innerHTML=h;
+})();
+</script>
+</body>
+</html>
