@@ -30,6 +30,10 @@
   #al_bar .tag { position: absolute; right: 0; top: 0; bottom: 0; width: 190px; background: #fff; color: var(--red); font-weight: 800; font-size: 30px; display: flex; align-items: center; justify-content: center; z-index: 2; }
   #al_tick { position: absolute; top: 18px; white-space: nowrap; font-size: 34px; font-weight: 700; }
   .camtag { position: absolute; right: 26px; top: 28px; font-size: 22px; font-weight: 700; background: rgba(0,0,0,.55); padding: 3px 12px; border-radius: 4px; z-index: 6; }
+  .push { position: absolute; right: 24px; width: 600px; background: rgba(18,18,22,.84); border: 1px solid rgba(255,255,255,.2); border-radius: 18px; padding: 12px 16px; display: flex; gap: 14px; align-items: center; opacity: 0; z-index: 8; }
+  .push .ic { flex: 0 0 46px; height: 46px; border-radius: 12px; background: var(--red); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; }
+  .push .t { font-size: 18px; font-weight: 800; color: #ff9a9a; }
+  .push .m { font-size: 24px; font-weight: 700; line-height: 1.25; }
   #fx { position: absolute; inset: 0; width: 1280px; height: 720px; pointer-events: none; z-index: 45; }
   /* news */
   #s_news { background: #04122b; }
@@ -102,34 +106,23 @@
     <div class="txt" id="b_txt2" style="right:70px;bottom:52px;font-size:32px;font-weight:500;text-shadow:0 2px 10px rgba(0,0,0,.8)">הכול רגוע. רוב התושבים עדיין ישנים.</div>
   </div>
 
-  <!-- 2: alert, over street-camera footage -->
+  <!-- 2: alert, pushes and the strike, over street-camera footage -->
   <div class="scene" id="s_alert">
-    <div class="camwrap" id="al_camwrap"><img class="bg cam" id="al_cam" src="src/before05_clean.png"></div>
+    <div class="camwrap" id="al_camwrap">
+      <img class="bg cam" id="al_cam" src="src/before05_clean.png">
+      <img class="bg cam" id="al_cam_after" src="src/after05.png" style="opacity:0">
+    </div>
     <div id="alert_glow"></div>
     <div id="al_plate"></div>
-    <div class="camtag">● מצלמת רחוב · בית אל</div>
+    <div class="camtag" id="al_camtag">● מצלמת רחוב · בית אל</div>
     <div class="txt center" id="al_title" style="top:62px;font-size:140px;font-weight:800;text-shadow:0 0 40px rgba(0,0,0,.7)">צבע אדום</div>
     <div class="txt center" id="al_sub" style="top:236px;font-size:46px;font-weight:800;text-shadow:0 2px 14px rgba(0,0,0,.8)">אזעקות ברחבי הארץ</div>
     <div class="txt center" id="al_inst" style="top:300px;font-size:34px;font-weight:600;text-shadow:0 2px 12px rgba(0,0,0,.8)">היכנסו למרחב המוגן · שהו בו עשר דקות</div>
     <div class="txt" id="al_clock" style="left:130px;top:30px;font-size:44px;font-weight:700;direction:ltr;font-variant-numeric:tabular-nums;text-shadow:0 2px 8px #000">05:47</div>
-    <div id="al_bar"><div class="tag">התרעות</div><div id="al_tick"></div></div>
-  </div>
-
-  <!-- 3: news -->
-  <div class="scene" id="s_news">
-    <div class="camwrap" id="nw_camwrap"><img class="bg cam" id="nw_cam" src="src/before05_clean.png"></div>
-    <div class="camwrap" id="nw_camwrap2" style="opacity:0"><img class="bg" id="nw_cam2" src="src/after02.png"></div>
-    <div id="nw_shade"></div>
-    <div class="camtag" id="nw_tag" style="top:92px">● מצלמת רחוב · בית אל</div>
-    <div id="topbar">
-      <div id="logo">חדשות <span>החירום</span></div>
-      <div id="livepill">● שידור חי</div>
-      <div id="clock">05:49</div>
-    </div>
-    <div id="headline"><div class="kicker" id="hl_k">מהדורה מיוחדת</div><div class="h" id="hl_h"></div></div>
+    <div id="al_push"></div>
     <div id="breaking" style="display:none">
       <div class="k">מבזק</div>
-      <div class="b" id="br_b">דיווח על פגיעה ישירה בבית מגורים בבית אל</div>
+      <div class="b" id="br_b">פגיעה ישירה בבית מגורים בבית אל</div>
       <div class="s" id="br_s">רחוב הרימון פינת רחוב החיטה · כוחות הצלה בדרך לזירה</div>
     </div>
     <div id="loccard" style="display:none">
@@ -137,19 +130,12 @@
       <div class="dot" id="loc_dot"></div>
       <div class="cap">בית אל · רחוב הרימון פינת החיטה</div>
     </div>
-    <div id="lower"><div class="tag">עדכונים</div><div id="ticker"></div></div>
+    <div id="al_bar"><div class="tag" id="al_tag">התרעות</div><div id="al_tick"></div></div>
   </div>
 
   <!-- 4: live from the scene -->
   <div class="scene" id="s_live">
     <div id="livewrap">
-      <div id="slider">
-        <img class="bg" src="src/before05_clean.png">
-        <div class="abs" id="sl_clip" style="inset:0;overflow:hidden"><img class="bg" src="src/after05.png"></div>
-        <div id="divider"></div>
-        <div class="lab" id="sl_l1" style="left:60px">לפני</div>
-        <div class="lab" id="sl_l2" style="right:60px">עכשיו</div>
-      </div>
       <div class="liveimg" id="li0"><img class="bg" src="src/after02.png"></div>
       <div class="liveimg" id="li1"><img class="bg" src="src/after03.png"></div>
       <div class="liveimg" id="li2"><img class="bg" src="src/after04.png"></div>
@@ -181,29 +167,33 @@
 </div>
 
 <script>
-// ---------------------------------------------------------------- timeline
-const D = 90;
+// ---------------------------------------------------------------- timeline (59s)
+const D = 59;
+const TI = 26.0;                       // moment of impact
 const SC = {
-  title: [0, 2.8], a: [2.3, 9.3], b: [8.8, 14.8], alert: [14.3, 34.3],
-  news: [33.8, 58.3], live: [57.8, 84.3], end: [83.8, 90]
+  title: [0, 2.6], a: [2.1, 7.1], b: [6.6, 11.0], alert: [10.5, 31.5],
+  live: [31.0, 52.5], end: [52, 59]
 };
 const XF = 0.5;
+const IMPACT = { x: 1090, y: 185 };    // screen point of the hit, camera locked
 const LIVE_SHOTS = [
-  { id: 'li0', t0: 64,   t1: 67.5, kb: [1.06, 1.16, -10, -26, 0, 0],  cap: 'צוותי הצלה ראשונים בזירה' },
-  { id: 'li1', t0: 67.5, t1: 71,   kb: [1.10, 1.02,  20,  -6, 0, 0],  cap: 'תושבים מדווחים על רעש עז ועשן מעל השכונה' },
-  { id: 'li2', t0: 71,   t1: 74.5, kb: [1.02, 1.12, -20, 10, 0, 0],   cap: 'הרחוב סגור לתנועה' },
-  { id: 'li3', t0: 74.5, t1: 78,   kb: [1.14, 1.04, 0, 0, 0, 0],      cap: 'נזק כבד לבית ולמבנים הסמוכים' },
-  { id: 'li4', t0: 78,   t1: 81,   kb: [1.04, 1.14, 18, -18, 0, 0],   cap: 'כלי רכב ניזוקו; חילוץ ראשוני מתבצע' },
-  { id: 'li5', t0: 81,   t1: 84.3, kb: [1.14, 1.04, -16, 16, 0, 0],   cap: 'צוות החירום הישובי נקרא לפעול' }
+  { id: 'li0', t0: 31.3, t1: 34.8, kb: [1.06, 1.16, -10, -26, 0, 0],  cap: 'צוותי הצלה ראשונים בזירה' },
+  { id: 'li1', t0: 34.8, t1: 38.3, kb: [1.10, 1.02,  20,  -6, 0, 0],  cap: 'תושבים מדווחים על רעש עז ועשן מעל השכונה' },
+  { id: 'li2', t0: 38.3, t1: 41.8, kb: [1.02, 1.12, -20, 10, 0, 0],   cap: 'הרחוב סגור לתנועה' },
+  { id: 'li3', t0: 41.8, t1: 45.3, kb: [1.14, 1.04, 0, 0, 0, 0],      cap: 'נזק כבד לבית ולמבנים הסמוכים' },
+  { id: 'li4', t0: 45.3, t1: 48.8, kb: [1.04, 1.14, 18, -18, 0, 0],   cap: 'כלי רכב ניזוקו; חילוץ ראשוני מתבצע' },
+  { id: 'li5', t0: 48.8, t1: 52.3, kb: [1.14, 1.04, -16, 16, 0, 0],   cap: 'צוות החירום הישובי נקרא לפעול' }
 ];
-const HEADLINES = [
-  { t0: 36.3, t1: 41.3, k: 'מהדורה מיוחדת', h: 'מטח טילים לעבר מרכז הארץ · אזעקות נשמעו ברחבי המדינה' },
-  { t0: 41.3, t1: 46.3, k: 'דיווחים ראשונים', h: 'נפילות בכמה אזורים בו־זמנית · כוחות הצלה בדרך לזירות' },
-  { t0: 46.3, t1: 50.5, k: 'הנחיה לציבור', h: 'להישאר במרחב המוגן ולא לצאת עד להודעה חדשה' }
+const PUSHES = [
+  { t: 13.5, ic: '!', t1: 'התרעה · צבע אדום', m: 'ברחבי הארץ · היכנסו למרחב המוגן' },
+  { t: 16.2, ic: '●', t1: 'מבזק', m: 'מטח טילים לעבר מרכז הארץ' },
+  { t: 18.9, ic: '●', t1: 'מבזק', m: 'דיווחים ראשונים על נפילות בכמה אזורים' },
+  { t: 21.6, ic: '!', t1: 'הנחיה לציבור', m: 'להישאר במרחב המוגן עד להודעה חדשה' }
 ];
-const TICKER = ['מטח טילים לעבר מרכז הארץ', 'אזעקות ברחבי המדינה', 'דיווחים על נפילות בכמה אזורים', 'כוחות הצלה מוזנקים לזירות',
-  'התושבים מתבקשים להישאר במרחב המוגן', 'דיווח ראשוני על פגיעה בבית מגורים בבית אל', 'הדיווחים מתעדכנים כל העת'].join('   ●   ');
+const TICKER = ['פגיעה ישירה בבית מגורים בבית אל', 'כוחות הצלה מוזנקים לזירה', 'התושבים מתבקשים להישאר במרחב המוגן',
+  'דיווחים על נפילות בכמה אזורים', 'הדיווחים מתעדכנים כל העת'].join('   ●   ');
 const REGIONS = ['גוש דן', 'ירושלים', 'השרון', 'השפלה', 'הצפון', 'הנגב', 'יהודה ושומרון'];
+const BOOMS = [[16.8, 1.6, 7], [19.5, 1.6, 7], [22.2, 1.6, 10]];   // distant booms (shake)
 
 // ---------------------------------------------------------------- helpers
 const $ = id => document.getElementById(id);
@@ -222,18 +212,24 @@ function sceneAlpha(name, t) {
   const out = name === 'end' ? clamp((D - t) / 1.5) : clamp((b - t) / XF);
   return Math.min(inn, out);
 }
-function kb(img, t, t0, t1, p) { // p = [s0,s1,x0,x1,y0,y1]
+function kb(img, t, t0, t1, p) {
   const k = clamp((t - t0) / (t1 - t0));
-  const s = lerp(p[0], p[1], k), x = lerp(p[2], p[3], k), y = lerp(p[4], p[5], k);
-  img.style.transform = `translate(${x}px,${y}px) scale(${s})`;
+  img.style.transform = `translate(${lerp(p[2], p[3], k)}px,${lerp(p[4], p[5], k)}px) scale(${lerp(p[0], p[1], k)})`;
 }
-function shake(el, t, amp, speed = 9) {
+function shake(el, t, amp, speed = 9, extra = '') {
   const x = noise1(t * speed) * amp, y = noise1(t * speed + 50) * amp, r = noise1(t * speed + 99) * amp * .05;
-  el.style.transform = `translate(${x}px,${y}px) rotate(${r}deg)`;
+  el.style.transform = `translate(${x}px,${y}px) rotate(${r}deg)` + extra;
 }
 
-// static builds
-$('al_tick').textContent = REGIONS.join('   ●   ') + '   ●   ' + REGIONS.join('   ●   ') + '   ●   ' + REGIONS.join('   ●   ');
+// ---------------------------------------------------------------- static builds
+PUSHES.forEach((p, i) => {
+  const d = document.createElement('div'); d.className = 'push'; d.id = 'push' + i;
+  d.innerHTML = `<div class="ic">${p.ic}</div><div><div class="t">${p.t1}</div><div class="m">${p.m}</div></div>`;
+  d.style.top = (96 + i * 92) + 'px';
+  $('al_push').appendChild(d);
+});
+const REG_TXT = REGIONS.join('   ●   ') + '   ●   ' + REGIONS.join('   ●   ') + '   ●   ' + REGIONS.join('   ●   ');
+const NEWS_TXT = TICKER + '   ●   ' + TICKER;
 const svgNS = 'http://www.w3.org/2000/svg';
 const svgEl = document.createElementNS(svgNS, 'svg');
 svgEl.setAttribute('width', 0); svgEl.setAttribute('height', 0); svgEl.style.position = 'absolute';
@@ -246,9 +242,7 @@ for (let i = 0; i <= 6; i++) {
 }
 document.body.appendChild(svgEl);
 function setBlur(i, px) { document.querySelector('#hb' + i + ' feGaussianBlur').setAttribute('stdDeviation', px.toFixed(1) + ' 0'); }
-$('ticker').textContent = TICKER + '   ●   ' + TICKER;
 
-// grain
 const gctx = $('grain').getContext('2d');
 function drawGrain(frame) {
   const img = gctx.createImageData(320, 180);
@@ -259,155 +253,183 @@ function drawGrain(frame) {
   gctx.putImageData(img, 0, 0);
 }
 
-// dust + smoke overlay (procedural, deterministic)
+// ---------------------------------------------------------------- fx canvas: missile, blast, debris, dust, smoke
 const fx = $('fx').getContext('2d');
+function glow(x, y, r, c0, c1) {
+  const g = fx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, c0); g.addColorStop(1, c1);
+  fx.fillStyle = g; fx.fillRect(x - r, y - r, 2 * r, 2 * r);
+}
 function drawFx(t) {
   fx.clearRect(0, 0, 1280, 720);
+  const dt = t - TI;
+  // ambient intensity (dust motes / smoke plumes)
   let I = 0;
-  if (t >= 14.3 && t < 33.8) I = .25;
-  else if (t >= 33.8 && t < 50.5) I = .3 + (t - 33.8) / 16.7 * .25;
-  else if (t >= 50.5 && t < 83.8) I = .8;
-  else if (t >= 83.8) I = .3;
-  if (!I) return;
-  let burst = 0;
-  for (const b of [21, 25, 28.5, 31.2, 50.5]) { const d = t - b; if (d >= 0 && d < 3) burst = Math.max(burst, 1 - d / 3); }
-  if (t >= 50.5 && t < 86) {
+  if (t >= 10.5 && t < TI) I = .22;
+  else if (t >= TI && t < 52) I = .8;
+  else if (t >= 52) I = .3;
+  // incoming missile (1.7 s before impact)
+  if (dt > -1.7 && dt < 0) {
+    const u = (dt + 1.7) / 1.7, P = n => { const w = Math.pow(clamp(n), 1.5); return [lerp(60, IMPACT.x, w), lerp(-70, IMPACT.y, w)]; };
+    for (let k = 26; k >= 1; k--) {
+      const [x, y] = P(u - k * .0105), a = (1 - k / 27) * .7;
+      glow(x, y, 7 + (27 - k) * .5, `rgba(255,200,120,${a})`, 'rgba(255,120,40,0)');
+      glow(x + 4, y - 10, 10 + k * .8, `rgba(210,205,200,${a * .22})`, 'rgba(210,205,200,0)');   // smoke trail
+    }
+    const [hx, hy] = P(u);
+    glow(hx, hy, 34, 'rgba(255,250,235,.95)', 'rgba(255,170,70,0)');
+    glow(hx, hy, 12, 'rgba(255,255,255,1)', 'rgba(255,255,255,0)');
+  }
+  // smoke plumes rising from the hit
+  if (t >= TI + 2.2 && t < 53) {
     for (let i = 0; i < 7; i++) {
       const ph = (t * .04 + i * .37) % 1;
-      const x = 380 + i * 120 + Math.sin(t * .4 + i) * 40 + ph * 90, y = 340 - ph * 340, r = 90 + ph * 170;
-      const a = .24 * Math.sin(Math.PI * ph) * I;
-      const g = fx.createRadialGradient(x, y, 0, x, y, r);
-      g.addColorStop(0, `rgba(34,31,28,${a})`); g.addColorStop(1, 'rgba(34,31,28,0)');
-      fx.fillStyle = g; fx.fillRect(x - r, y - r, 2 * r, 2 * r);
+      const x = IMPACT.x - 560 + i * 85 + Math.sin(t * .4 + i) * 40 + ph * 70, y = 360 - ph * 360, r = 90 + ph * 170;
+      glow(x, y, r, `rgba(34,31,28,${.26 * Math.sin(Math.PI * ph) * I})`, 'rgba(34,31,28,0)');
     }
   }
-  const n = 110 + Math.floor(burst * 190);
-  for (let i = 0; i < n; i++) {
-    const x = (rnd(i * 1.31) * 1280 + t * (18 + rnd(i * 5.1) * 40)) % 1280;
-    const y = (rnd(i * 2.17) * 720 + t * (10 + (burst > 0 ? 160 : 14) * rnd(i * 3.7))) % 720;
-    const sz = .8 + rnd(i * 7.7) * 2.2 * (1 + burst);
-    const al = (.16 + rnd(i * 9.3) * .25) * I * (i < 110 ? 1 : burst);
-    fx.fillStyle = `rgba(235,225,205,${al})`; fx.fillRect(x, y, sz, sz);
+  // dust motes, thickened by every boom
+  let burst = 0;
+  for (const b of [16.8, 19.5, 22.2, TI]) { const d = t - b; if (d >= 0 && d < 3) burst = Math.max(burst, 1 - d / 3); }
+  if (I) {
+    const n = 110 + Math.floor(burst * 190);
+    for (let i = 0; i < n; i++) {
+      const x = (rnd(i * 1.31) * 1280 + t * (18 + rnd(i * 5.1) * 40)) % 1280;
+      const y = (rnd(i * 2.17) * 720 + t * (10 + (burst > 0 ? 160 : 14) * rnd(i * 3.7))) % 720;
+      const al = (.16 + rnd(i * 9.3) * .25) * I * (i < 110 ? 1 : burst);
+      fx.fillStyle = `rgba(235,225,205,${al})`; fx.fillRect(x, y, .8 + rnd(i * 7.7) * 2.2 * (1 + burst), .8 + rnd(i * 7.7) * 2.2 * (1 + burst));
+    }
+    if (burst > 0) {
+      const g = fx.createLinearGradient(0, 0, 0, 380);
+      g.addColorStop(0, `rgba(200,190,170,${.3 * burst})`); g.addColorStop(1, 'rgba(200,190,170,0)');
+      fx.fillStyle = g; fx.fillRect(0, 0, 1280, 380);
+    }
   }
-  if (burst > 0) {
-    const g = fx.createLinearGradient(0, 0, 0, 380);
-    g.addColorStop(0, `rgba(200,190,170,${.32 * burst})`); g.addColorStop(1, 'rgba(200,190,170,0)');
-    fx.fillStyle = g; fx.fillRect(0, 0, 1280, 380);
+  if (dt < 0 || dt > 4.6) return;
+  // fireball
+  if (dt < 1.7) {
+    const r = 40 + 430 * easeOut(clamp(dt / .85)), a = dt < .15 ? 1 : Math.pow(1 - dt / 1.7, 1.4);
+    glow(IMPACT.x, IMPACT.y, r, `rgba(255,236,190,${a})`, 'rgba(255,120,20,0)');
+    glow(IMPACT.x, IMPACT.y, r * .65, `rgba(255,170,60,${a * .85})`, 'rgba(120,40,10,0)');
+    glow(IMPACT.x - 40, IMPACT.y + 30, r * .45, `rgba(255,255,255,${a * .8})`, 'rgba(255,200,120,0)');
+  }
+  // shockwave ring
+  if (dt < .65) {
+    const k = dt / .65; fx.strokeStyle = `rgba(255,255,255,${.55 * (1 - k)})`; fx.lineWidth = 46 * (1 - k) + 2;
+    fx.beginPath(); fx.arc(IMPACT.x, IMPACT.y, 1300 * easeOut(k), 0, 7); fx.stroke();
+  }
+  // debris
+  if (dt < 2.8) {
+    for (let i = 0; i < 110; i++) {
+      const vx = (rnd(i * 2.3) - .5) * 1100 - 150, vy = -(180 + rnd(i * 3.1) * 900), gr = 1500;
+      const x = IMPACT.x + vx * dt, y = IMPACT.y + vy * dt + .5 * gr * dt * dt;
+      if (y > 740 || x < -20 || x > 1300) continue;
+      const sz = 3 + rnd(i * 4.7) * 13, c = rnd(i * 6.1), col = c < .35 ? '176,86,52' : c < .7 ? '205,190,165' : '62,57,52';
+      fx.save(); fx.translate(x, y); fx.rotate(dt * (rnd(i * 1.9) - .5) * 14);
+      fx.fillStyle = `rgba(${col},${clamp(1 - (dt - 2.0) / .8)})`; fx.fillRect(-sz / 2, -sz / 3, sz, sz * .66); fx.restore();
+    }
+  }
+  // white-out flash
+  if (dt < .75) {
+    const a = dt < .08 ? 1 : Math.pow(1 - (dt - .08) / .67, 2);
+    fx.fillStyle = `rgba(255,248,235,${a})`; fx.fillRect(0, 0, 1280, 720);
+  }
+  // dust cloud engulfs the frame, then clears
+  let da = 0;
+  if (dt < 1.1) da = .95 * Math.pow(clamp(dt / 1.1), .7);
+  else if (dt < 2.0) da = .95;
+  else da = .95 * (1 - (dt - 2.0) / 2.6);
+  if (da > 0) {
+    fx.fillStyle = `rgba(168,148,122,${da * .78})`; fx.fillRect(0, 0, 1280, 720);
+    for (let i = 0; i < 14; i++) {
+      const bx = IMPACT.x + (rnd(i * 3.3) - .5) * 1400 * clamp(dt / 1.2 + .3), by = 200 + rnd(i * 5.9) * 520, br = 230 + rnd(i * 7.1) * 260;
+      glow(bx + Math.sin(t * .6 + i) * 30, by, br, `rgba(150,128,102,${da * .5})`, 'rgba(150,128,102,0)');
+    }
   }
 }
 
 // ---------------------------------------------------------------- main seek
 window.seek = function (t, frame) {
-  // scene visibility
   for (const n of Object.keys(SC)) {
     const el = $('s_' + n); const a = sceneAlpha(n, t);
     el.style.opacity = a; el.style.display = a > 0 ? 'block' : 'none';
   }
-  // badge: from the alert onward, plus the end
-  $('badge').style.opacity = t >= 14.3 && t < 88.5 ? clamp((t - 14.3) / 1) * (t > 83.8 ? .6 : 1) : 0;
+  $('badge').style.opacity = t >= 10.5 && t < 57.5 ? clamp((t - 10.5) / 1) * (t > 52 ? .6 : 1) : 0;
 
-  // ---- S1a
-  if (t >= 2.3 && t <= 9.8) {
-    kb($('a_img'), t, 2.3, 9.3, [1.0, 1.12, 0, -24, 0, 6]);
-    const m = 42 + Math.floor((t - 2.3) / 7 * 3);
-    $('a_clock').textContent = '05:' + pad2(Math.min(m, 44));
-    $('a_txt1').style.opacity = easeOut(clamp((t - 3.4) / 1));
-    $('a_txt2').style.opacity = easeOut(clamp((t - 4.6) / 1));
-    $('a_txt1').style.transform = `translateY(${(1 - easeOut(clamp((t - 3.4) / 1))) * 18}px)`;
-    $('a_txt2').style.transform = `translateY(${(1 - easeOut(clamp((t - 4.6) / 1))) * 18}px)`;
-    // dawn: tint fades from deep blue/orange toward neutral
-    $('a_tint').style.opacity = lerp(1, .6, clamp((t - 2.3) / 7));
+  // ---- S1a: routine
+  if (t >= 2.1 && t <= 7.6) {
+    kb($('a_img'), t, 2.1, 7.1, [1.0, 1.1, 0, -20, 0, 5]);
+    $('a_clock').textContent = '05:' + pad2(Math.min(42 + Math.floor((t - 2.1) / 5 * 3), 44));
+    const f1 = easeOut(clamp((t - 3.0) / .9)), f2 = easeOut(clamp((t - 4.0) / .9));
+    $('a_txt1').style.opacity = f1; $('a_txt1').style.transform = `translateY(${(1 - f1) * 18}px)`;
+    $('a_txt2').style.opacity = f2; $('a_txt2').style.transform = `translateY(${(1 - f2) * 18}px)`;
+    $('a_tint').style.opacity = lerp(1, .6, clamp((t - 2.1) / 5));
   }
-  // ---- S1b
-  if (t >= 8.8 && t <= 15.3) {
-    kb($('b_img'), t, 8.8, 14.8, [1.0, 1.07, 0, -26, 0, 0]);
-    $('b_txt1').style.opacity = easeOut(clamp((t - 9.6) / .9));
-    $('b_txt2').style.opacity = easeOut(clamp((t - 11) / 1));
+  // ---- S1b: the actual corner
+  if (t >= 6.6 && t <= 11.5) {
+    kb($('b_img'), t, 6.6, 11.0, [1.0, 1.06, 0, -22, 0, 0]);
+    $('b_txt1').style.opacity = easeOut(clamp((t - 7.2) / .8));
+    $('b_txt2').style.opacity = easeOut(clamp((t - 8.2) / .9));
   }
-  // ---- S2 alert over street-camera footage (14.3 - 34.3)
-  if (t >= 14.3 && t <= 34.8) {
-    const k = t - 14.5;
+
+  // ---- S2: alert + pushes + strike + aftermath, all on the street-camera feed
+  if (t >= 10.5 && t <= 32) {
+    const k = t - 10.9;
+    $('al_clock').textContent = '05:' + pad2(t < TI ? 47 : 48);
+    // locked camera: slow push-in until 24, then frozen so the impact point stays put
+    const sc = lerp(1.10, 1.18, clamp((t - 10.5) / 13.5));
+    let amp = 1.8;
+    for (const [b0, bd, ba] of BOOMS) if (t > b0 && t < b0 + bd) amp = 1.8 + (1 - (t - b0) / bd) * ba;
+    const dt = t - TI;
+    if (dt > 0 && dt < 3.4) amp = 1.8 + Math.pow(1 - dt / 3.4, 1.5) * 48;
+    const blur = dt > 0 && dt < .5 ? 9 * (1 - dt / .5) : 0;
+    shake($('al_camwrap'), t, amp, dt > 0 && dt < 1 ? 26 : 15, '');
+    $('al_camwrap').style.filter = blur > 0.3 ? `blur(${blur.toFixed(1)}px)` : 'none';
+    const swap = dt >= 1.3;                      // swap hidden behind the dust cloud
+    $('al_cam').style.opacity = swap ? 0 : 1; $('al_cam_after').style.opacity = swap ? 1 : 0;
+    $('al_cam').style.transform = $('al_cam_after').style.transform = `scale(${sc})`;
+    // siren glow: pulses, goes dark at impact
     const pulse = .55 + .45 * Math.sin(k * 2 * Math.PI * 1.1);
-    $('alert_glow').style.opacity = t < 15.0 ? 0 : .3 + pulse * .6;
-    const BOOMS = [[21, 2, 22], [25, 2, 17], [28.5, 2.5, 26], [31.2, 1.5, 12]];
-    let sh = 1.8;
-    for (const [b0, bd, ba] of BOOMS) if (t > b0 && t < b0 + bd) sh = 1.8 + (1 - (t - b0) / bd) * ba;
-    kb($('al_cam'), t, 14.3, 34.3, [1.12, 1.26, 0, -40, 0, 10]);
-    shake($('al_camwrap'), t, sh, 15);
-    $('al_title').style.opacity = clamp((t - 15.1) / .3);
+    $('alert_glow').style.opacity = t < 11.2 ? 0 : (t < TI ? .3 + pulse * .6 : Math.max(.12, .5 * (1 - dt / 1.5)));
+    // big title block, then it makes way for the pushes
+    const tb = clamp((t - 11.1) / .3) * clamp((13.0 - t) / .5);
+    $('al_title').style.opacity = tb; $('al_sub').style.opacity = clamp((t - 12.1) / .5) * clamp((13.0 - t) / .5);
+    $('al_inst').style.opacity = clamp((t - 12.6) / .5) * clamp((13.0 - t) / .5);
+    $('al_plate').style.opacity = tb;
     $('al_title').style.transform = `scale(${1 + .03 * Math.sin(k * 2 * Math.PI * 1.1)})`;
-    $('al_sub').style.opacity = clamp((t - 16.6) / .7);
-    $('al_inst').style.opacity = clamp((t - 18.4) / .7);
-    $('al_plate').style.opacity = clamp((t - 15.1) / .5);
-    $('al_clock').textContent = '05:' + pad2(47 + Math.floor((t - 14.3) / 10));
-    $('al_bar').style.opacity = clamp((t - 19.5) / .5);
-    $('al_tick').style.transform = `translateX(${((t - 19.5) * 150) % 3600 - 3600 + 1090 + 3600}px)`;
-  }
-  // ---- S3 news, lower-thirds over live footage (33.8 - 58.3)
-  if (t >= 33.8 && t <= 58.8) {
-    const k = t - 33.8;
-    $('clock').textContent = '05:' + pad2(49 + Math.floor(k / 12));
-    $('ticker').style.transform = `translateX(${(k * 140) % 4200 - 4200 + 1280 + 4200}px)`;
-    const pre = t < 50.5;
-    // street camera until the strike, then the first shots from the scene
-    $('nw_camwrap').style.opacity = pre ? 1 : clamp((51.4 - t) / .9);
-    kb($('nw_cam'), t, 33.8, 51.4, [1.12, 1.28, 0, -40, 0, 8]);
-    shake($('nw_camwrap'), t, 2 + (t > 44 ? (t - 44) * .5 : 0), 11);
-    $('nw_camwrap2').style.opacity = pre ? 0 : clamp((t - 50.5) / .5);
-    kb($('nw_cam2'), t, 50.5, 58.3, [1.14, 1.26, -10, -34, 0, 0]);
-    const imp = t >= 50.5 && t < 53 ? (1 - (t - 50.5) / 2.5) * 24 : 0;
-    shake($('nw_camwrap2'), t, 3 + imp, 13);
-    $('nw_tag').textContent = pre ? '● מצלמת רחוב · בית אל' : '● שידור חי · בית אל';
-    $('flash').style.opacity = t >= 50.5 && t < 51.0 ? (1 - (t - 50.5) / .5) * .35 : 0;
-    if (t < 36.3) {
-      $('hl_k').textContent = 'מהדורה מיוחדת';
-      $('hl_h').textContent = 'שידור חי · מצב חירום';
-      $('headline').style.opacity = easeOut(clamp((t - 34.6) / .6));
-      $('headline').style.transform = '';
-    } else {
-      const cur = HEADLINES.find(h => t >= h.t0 && t < h.t1);
-      if (cur) {
-        $('hl_k').textContent = cur.k; $('hl_h').textContent = cur.h;
-        $('headline').style.opacity = Math.min(clamp((t - cur.t0) / .4), clamp((cur.t1 - t) / .3));
-        $('headline').style.transform = `translateX(${(1 - easeOut(clamp((t - cur.t0) / .4))) * 80}px)`;
-      } else $('headline').style.opacity = 0;
-    }
+    // push notifications: every report that used to be a separate news section
+    PUSHES.forEach((p, i) => {
+      const el = $('push' + i), d = t - p.t;
+      const inn = easeOut(clamp(d / .35)), gone = t < TI - .05 ? 1 : clamp((TI + .1 - t) / .15);
+      el.style.opacity = d < 0 ? 0 : inn * gone;
+      const buzz = d > 0 && d < .5 ? Math.sin(d * 60) * 5 * (1 - d / .5) : 0;
+      el.style.transform = `translateX(${(1 - inn) * 90 + buzz}px)`;
+    });
+    // bottom bar: regions during the alert, news ticker once the strike is reported
+    $('al_bar').style.opacity = clamp((t - 12.0) / .5);
+    $('al_tag').textContent = dt >= 3.4 ? 'עדכונים' : 'התרעות';
+    $('al_tick').textContent = dt >= 3.4 ? NEWS_TXT : REG_TXT;
+    $('al_tick').style.transform = `translateX(${((t - 12.0) * 150) % 3600 - 3600 + 1090 + 3600}px)`;
+    $('al_camtag').textContent = swap ? '● שידור חי · בית אל' : '● מצלמת רחוב · בית אל';
+    // breaking banner after the hit
     const br = $('breaking'), lc = $('loccard');
-    if (t >= 50.5) {
+    if (dt >= 3.5) {
       br.style.display = 'block'; lc.style.display = 'block';
-      const kk = easeOut(clamp((t - 50.5) / .4));
+      const kk = easeOut(clamp((dt - 3.5) / .4));
       br.style.transform = `translateY(${(1 - kk) * 400}px)`;
-      br.style.opacity = t > 57.6 ? clamp((58.3 - t) / .7) : 1;
-      br.style.filter = `brightness(${1 + .12 * (.5 + .5 * Math.sin((t - 50.5) * 9))})`;
-      const lk = easeOut(clamp((t - 53.5) / .6));
+      br.style.opacity = t > 31.0 ? clamp((31.5 - t) / .5) : 1;
+      br.style.filter = `brightness(${1 + .12 * (.5 + .5 * Math.sin((dt - 3.5) * 9))})`;
+      const lk = easeOut(clamp((dt - 4.2) / .5));
       lc.style.opacity = lk; lc.style.transform = `translateY(${(1 - lk) * 30}px)`;
       lc.style.top = '100px'; lc.style.left = '40px'; lc.style.width = '300px'; lc.style.height = '170px';
-      $('loc_dot').style.transform = `scale(${1 + .35 * Math.sin((t - 53.5) * 6)})`;
+      $('loc_dot').style.transform = `scale(${1 + .35 * Math.sin((dt - 4.2) * 6)})`;
       $('loc_dot').style.left = '137px'; $('loc_dot').style.top = '62px';
-      $('headline').style.opacity = 0;
     } else { br.style.display = 'none'; lc.style.display = 'none'; }
   }
-  // ---- S4 live from the scene, whip-pan between feeds (57.8 - 84.3)
-  if (t >= 57.8 && t <= 84.8) {
+
+  // ---- S4: live feeds, whip-pan between cameras
+  if (t >= 31.0 && t <= 53) {
     const rec = $('lv_rec'); rec.style.opacity = (Math.floor(t * 1.6) % 2 === 0) ? 1 : .55;
-    $('lv_tc').textContent = '05:52:' + pad2((Math.floor(t - 57.8) + 7) % 60);
-    const sl = $('slider');
-    if (t < 64.6) {
-      sl.style.opacity = 1;
-      const k = clamp((t - 59.2) / 3.4);
-      const x = 1280 * (1 - ease(k));
-      $('sl_clip').style.clipPath = `inset(0 0 0 ${x}px)`;
-      $('divider').style.left = (x - 3) + 'px';
-      $('divider').style.opacity = t < 59.2 ? 0 : (t < 62.8 ? 1 : clamp((63.2 - t) / .4));
-      $('sl_l1').style.opacity = t < 62.6 ? 1 : clamp(1 - (t - 62.6) / .5);
-      $('sl_l2').style.opacity = t < 60.4 ? 0 : (t < 62.6 ? 1 : clamp(1 - (t - 62.6) / .5));
-      sl.querySelectorAll('img.bg').forEach(im => im.style.transform = `scale(${lerp(1.04, 1.12, clamp((t - 57.8) / 6.7))})`);
-      const po = easeIn(clamp((t - 63.78) / .44));
-      sl.style.transform = `translate(${-po * 700 + noise1(t * 8) * 4}px, ${noise1(t * 8 + 30) * 4}px)`;
-      setBlur(6, 26 * po); sl.style.filter = po > .02 ? 'url(#hb6)' : 'none';
-      $('lv_cap').textContent = 'רחוב הרימון פינת החיטה, לפני דקות ספורות ועכשיו';
-      $('lv_cap').style.opacity = clamp((t - 58.6) / .5);
-    } else sl.style.opacity = 0;
+    $('lv_tc').textContent = '05:50:' + pad2((Math.floor(t - 31) + 12) % 60);
     let cut = 0;
     LIVE_SHOTS.forEach((s, i) => {
       const el = $(s.id), a = s.t0 - .22, b = s.t1 + .22;
@@ -416,31 +438,26 @@ window.seek = function (t, frame) {
       if (inT) {
         const pin = easeOut(clamp((t - a) / .44));
         const pout = i < LIVE_SHOTS.length - 1 ? easeIn(clamp((t - (s.t1 - .22)) / .44)) : 0;
-        const x = (1 - pin) * 700 - pout * 700;
-        const bl = 26 * (1 - pin) + 26 * pout;
+        const x = (1 - pin) * 700 - pout * 700, bl = 26 * (1 - pin) + 26 * pout;
         const sx = noise1(t * 8 + i * 13) * 5, sy = noise1(t * 8 + 40 + i * 13) * 5, rot = noise1(t * 5 + i * 7) * .3;
         el.style.transform = `translate(${sx + x}px,${sy}px) rotate(${rot}deg)`;
         setBlur(i, bl); el.style.filter = bl > .3 ? `url(#hb${i})` : 'none';
         kb(el.querySelector('img'), t, s.t0, s.t1, s.kb);
-        if (t >= s.t0 && t < s.t1) {
-          $('lv_cap').textContent = s.cap;
-          $('lv_cap').style.opacity = clamp((t - s.t0) / .3);
-        }
-        const d = Math.abs(t - s.t0); if (i > 0 && d < .22) cut = Math.max(cut, 1 - d / .22);
+        if (t >= s.t0 && t < s.t1) { $('lv_cap').textContent = s.cap; $('lv_cap').style.opacity = clamp((t - s.t0) / .3); }
+        const d = Math.abs(t - s.t0); if (d < .22) cut = Math.max(cut, 1 - d / .22);
       }
     });
-    $('livewrap').style.filter = 'none'; $('livewrap').style.transform = '';
     $('flash').style.opacity = cut * .12;
-    $('lv_loc').style.opacity = clamp((t - 58.6) / .5);
-  } else if (t < 57 && !(t >= 50.5 && t < 51)) { $('flash').style.opacity = 0; }
+    $('lv_loc').style.opacity = clamp((t - 31.8) / .5);
+  } else { $('flash').style.opacity = 0; }
 
-  // ---- S5 end (83.8 - 90)
-  if (t >= 83.8) {
-    kb($('end_img'), t, 83.8, 90, [1.05, 1.14, 0, -30, 0, 0]);
+  // ---- S5: end card
+  if (t >= 52) {
+    kb($('end_img'), t, 52, 59, [1.05, 1.14, 0, -30, 0, 0]);
     const f = (a, d) => easeOut(clamp((t - a) / d));
-    $('e1').style.opacity = f(84.4, .6); $('e1').style.transform = `translateY(${(1 - f(84.4, .6)) * 24}px)`;
-    $('e2').style.opacity = f(85.9, .6); $('e2').style.transform = `translateY(${(1 - f(85.9, .6)) * 24}px)`;
-    $('e3').style.opacity = f(87.3, .6); $('e3').style.transform = `translateY(${(1 - f(87.3, .6)) * 24}px)`;
+    [['e1', 52.6], ['e2', 54.1], ['e3', 55.5]].forEach(([id, a]) => {
+      $(id).style.opacity = f(a, .6); $(id).style.transform = `translateY(${(1 - f(a, .6)) * 24}px)`;
+    });
   }
   drawFx(t);
   drawGrain(frame);
