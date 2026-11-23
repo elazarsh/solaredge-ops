@@ -178,7 +178,8 @@ crack = hp(crack, 800)
 place(env_fade(crack / np.max(np.abs(crack)), 1.2, 2.0), 57.8, 0.10)
 place(lp(env_fade(siren(24.0, 600, 220, 12.0), 3.0, 4.0), 1200), 59.0, 0.05, -0.6)
 for ts in (64.0, 67.5, 71.0, 74.5, 78.0, 81.0):
-    place(static_burst(0.3), ts - 0.05, 0.12)
+    place(whoosh(0.6), ts - 0.32, 0.30, rng.uniform(-0.5, 0.5))
+    place(static_burst(0.18), ts - 0.05, 0.08)
 for ts in (66.0, 72.5, 77.0, 82.0):
     place(static_burst(0.12), ts, 0.10)
     place(beep(1700, 0.09), ts + 0.1, 0.08)

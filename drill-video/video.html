@@ -22,28 +22,33 @@
   .center { left: 0; right: 0; text-align: center; }
   /* alert scene */
   #s_alert { background: #1a0003; }
-  #alert_glow { position: absolute; inset: 0; background: radial-gradient(ellipse at center, #ff1e2e 0%, #7a0010 55%, #1a0003 100%); }
-  .chip { position: absolute; background: rgba(0,0,0,.55); border: 2px solid #ff4d5a; border-radius: 10px; padding: 8px 18px; font-size: 28px; font-weight: 700; opacity: 0; }
+  .camwrap { position: absolute; inset: 0; }
+  img.cam { filter: saturate(.62) contrast(1.12) brightness(.82); }
+  #alert_glow { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(255,30,46,.45) 0%, rgba(120,0,16,.55) 62%, rgba(26,0,3,.78) 100%); }
+  #al_plate { position: absolute; left: 0; right: 0; top: 70px; height: 300px; background: linear-gradient(180deg, rgba(120,0,12,.0), rgba(120,0,12,.55) 20%, rgba(120,0,12,.55) 80%, rgba(120,0,12,0)); }
+  #al_bar { position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: rgba(160,0,14,.94); border-top: 4px solid #fff; overflow: hidden; opacity: 0; }
+  #al_bar .tag { position: absolute; right: 0; top: 0; bottom: 0; width: 190px; background: #fff; color: var(--red); font-weight: 800; font-size: 30px; display: flex; align-items: center; justify-content: center; z-index: 2; }
+  #al_tick { position: absolute; top: 18px; white-space: nowrap; font-size: 34px; font-weight: 700; }
+  .camtag { position: absolute; right: 26px; top: 28px; font-size: 22px; font-weight: 700; background: rgba(0,0,0,.55); padding: 3px 12px; border-radius: 4px; z-index: 6; }
+  #fx { position: absolute; inset: 0; width: 1280px; height: 720px; pointer-events: none; z-index: 45; }
   /* news */
-  #s_news { background: linear-gradient(135deg, #04122b 0%, #0b2a5b 55%, #06183a 100%); }
-  #news_grid { position: absolute; inset: -100px; opacity: .18;
-    background-image: linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px);
-    background-size: 64px 64px; }
-  #topbar { position: absolute; top: 0; left: 0; right: 0; height: 74px; background: linear-gradient(90deg, #08204a, #0e3a7d); border-bottom: 4px solid var(--gold); }
+  #s_news { background: #04122b; }
+  #nw_shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(4,18,43,.85) 0%, rgba(4,18,43,0) 52%), linear-gradient(180deg, rgba(4,18,43,.6) 0%, rgba(4,18,43,0) 22%); }
+  #topbar { position: absolute; top: 0; left: 0; right: 0; height: 74px; background: linear-gradient(90deg, rgba(8,32,74,.92), rgba(14,58,125,.92)); border-bottom: 4px solid var(--gold); }
   #logo { position: absolute; top: 12px; right: 26px; font-size: 34px; font-weight: 800; letter-spacing: .5px; }
   #logo span { color: var(--gold); }
   #livepill { position: absolute; top: 20px; left: 120px; background: var(--red); font-weight: 800; font-size: 22px; padding: 4px 16px; border-radius: 5px; }
   #clock { position: absolute; top: 18px; left: 330px; font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; direction: ltr; }
-  #headline { position: absolute; right: 60px; left: 60px; top: 170px; }
-  #headline .kicker { display: inline-block; background: var(--gold); color: #08204a; font-weight: 800; font-size: 26px; padding: 4px 16px; border-radius: 4px; margin-bottom: 18px; }
-  #headline .h { font-size: 58px; font-weight: 800; line-height: 1.25; text-shadow: 0 3px 16px rgba(0,0,0,.6); }
-  #lower { position: absolute; left: 0; right: 0; bottom: 0; height: 96px; background: #08204a; border-top: 4px solid var(--gold); overflow: hidden; }
+  #headline { position: absolute; right: 40px; left: 40px; bottom: 116px; }
+  #headline .kicker { display: inline-block; background: var(--gold); color: #08204a; font-weight: 800; font-size: 24px; padding: 3px 14px; border-radius: 4px; margin-bottom: 8px; }
+  #headline .h { display: block; font-size: 44px; font-weight: 800; line-height: 1.25; background: rgba(8,32,74,.92); padding: 10px 24px; border-bottom: 3px solid var(--gold); }
+  #lower { position: absolute; left: 0; right: 0; bottom: 0; height: 96px; background: rgba(8,32,74,.94); border-top: 4px solid var(--gold); overflow: hidden; }
   #lower .tag { position: absolute; right: 0; top: 0; bottom: 0; width: 210px; background: var(--red); font-weight: 800; font-size: 28px; display: flex; align-items: center; justify-content: center; z-index: 2; }
   #ticker { position: absolute; top: 24px; white-space: nowrap; font-size: 32px; font-weight: 600; }
-  #breaking { position: absolute; left: 0; right: 0; top: 100px; height: 340px; background: linear-gradient(90deg, rgba(150,0,14,.96), rgba(225,29,46,.96)); border-top: 5px solid #fff; border-bottom: 5px solid #fff; }
-  #breaking .k { position: absolute; right: 60px; top: 24px; font-size: 40px; font-weight: 800; background: #fff; color: var(--red); padding: 4px 22px; border-radius: 4px; }
-  #breaking .b { position: absolute; right: 60px; left: 60px; top: 96px; font-size: 54px; font-weight: 800; line-height: 1.2; }
-  #breaking .s { position: absolute; right: 60px; left: 60px; top: 220px; font-size: 36px; font-weight: 600; opacity: .95; }
+  #breaking { position: absolute; left: 0; right: 0; top: 318px; height: 200px; background: linear-gradient(90deg, rgba(150,0,14,.96), rgba(225,29,46,.96)); border-top: 5px solid #fff; border-bottom: 5px solid #fff; }
+  #breaking .k { position: absolute; right: 40px; top: 12px; font-size: 28px; font-weight: 800; background: #fff; color: var(--red); padding: 4px 22px; border-radius: 4px; }
+  #breaking .b { position: absolute; right: 40px; left: 40px; top: 66px; font-size: 44px; font-weight: 800; line-height: 1.2; }
+  #breaking .s { position: absolute; right: 40px; left: 40px; top: 136px; font-size: 28px; font-weight: 600; opacity: .95; }
   #loccard { position: absolute; left: 60px; top: 100px; width: 420px; height: 300px; border: 5px solid #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,.6); }
   #loccard img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
   #loccard .cap { position: absolute; right: 0; left: 0; bottom: 0; background: rgba(0,0,0,.75); font-size: 17px; font-weight: 700; text-align: center; padding: 8px 0; }
@@ -97,19 +102,25 @@
     <div class="txt" id="b_txt2" style="right:70px;bottom:52px;font-size:32px;font-weight:500;text-shadow:0 2px 10px rgba(0,0,0,.8)">הכול רגוע. רוב התושבים עדיין ישנים.</div>
   </div>
 
-  <!-- 2: alert -->
+  <!-- 2: alert, over street-camera footage -->
   <div class="scene" id="s_alert">
+    <div class="camwrap" id="al_camwrap"><img class="bg cam" id="al_cam" src="src/before05_clean.png"></div>
     <div id="alert_glow"></div>
-    <div class="txt center" id="al_title" style="top:120px;font-size:190px;font-weight:800;text-shadow:0 0 40px rgba(0,0,0,.6)">צבע אדום</div>
-    <div class="txt center" id="al_sub" style="top:360px;font-size:56px;font-weight:800">אזעקות ברחבי הארץ</div>
-    <div class="txt center" id="al_inst" style="top:450px;font-size:40px;font-weight:600">היכנסו למרחב המוגן · שהו בו עשר דקות</div>
-    <div class="txt" id="al_clock" style="left:130px;top:30px;font-size:54px;font-weight:700;direction:ltr;font-variant-numeric:tabular-nums">05:47</div>
-    <div id="al_chips"></div>
+    <div id="al_plate"></div>
+    <div class="camtag">● מצלמת רחוב · בית אל</div>
+    <div class="txt center" id="al_title" style="top:62px;font-size:140px;font-weight:800;text-shadow:0 0 40px rgba(0,0,0,.7)">צבע אדום</div>
+    <div class="txt center" id="al_sub" style="top:236px;font-size:46px;font-weight:800;text-shadow:0 2px 14px rgba(0,0,0,.8)">אזעקות ברחבי הארץ</div>
+    <div class="txt center" id="al_inst" style="top:300px;font-size:34px;font-weight:600;text-shadow:0 2px 12px rgba(0,0,0,.8)">היכנסו למרחב המוגן · שהו בו עשר דקות</div>
+    <div class="txt" id="al_clock" style="left:130px;top:30px;font-size:44px;font-weight:700;direction:ltr;font-variant-numeric:tabular-nums;text-shadow:0 2px 8px #000">05:47</div>
+    <div id="al_bar"><div class="tag">התרעות</div><div id="al_tick"></div></div>
   </div>
 
   <!-- 3: news -->
   <div class="scene" id="s_news">
-    <div id="news_grid"></div>
+    <div class="camwrap" id="nw_camwrap"><img class="bg cam" id="nw_cam" src="src/before05_clean.png"></div>
+    <div class="camwrap" id="nw_camwrap2" style="opacity:0"><img class="bg" id="nw_cam2" src="src/after02.png"></div>
+    <div id="nw_shade"></div>
+    <div class="camtag" id="nw_tag" style="top:92px">● מצלמת רחוב · בית אל</div>
     <div id="topbar">
       <div id="logo">חדשות <span>החירום</span></div>
       <div id="livepill">● שידור חי</div>
@@ -162,6 +173,7 @@
     <div class="txt center big" id="e3" style="top:420px;font-size:76px;color:var(--gold);opacity:0">צוות החירום נכנס לפעולה.</div>
   </div>
 
+  <canvas id="fx" width="1280" height="720"></canvas>
   <div id="vignette"></div>
   <canvas id="grain" width="320" height="180"></canvas>
   <div id="flash"></div>
@@ -199,6 +211,7 @@ const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const lerp = (a, b, k) => a + (b - a) * k;
 const ease = k => k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
 const easeOut = k => 1 - Math.pow(1 - k, 3);
+const easeIn = k => k * k * k;
 function rnd(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
 function noise1(t) { const i = Math.floor(t), f = t - i; const a = rnd(i) * 2 - 1, b = rnd(i + 1) * 2 - 1; return lerp(a, b, f * f * (3 - 2 * f)); }
 function pad2(n) { return String(n).padStart(2, '0'); }
@@ -220,13 +233,19 @@ function shake(el, t, amp, speed = 9) {
 }
 
 // static builds
-const chipsHost = $('al_chips');
-const chipPos = [[110,560],[420,560],[730,560],[1000,560],[110,625],[420,625],[730,625],[1000,625]];
-REGIONS.forEach((r, i) => {
-  const c = document.createElement('div'); c.className = 'chip'; c.textContent = r; c.id = 'chip' + i;
-  c.style.left = chipPos[i][0] + 'px'; c.style.top = chipPos[i][1] + 'px'; c.style.width = '230px'; c.style.textAlign = 'center';
-  chipsHost.appendChild(c);
-});
+$('al_tick').textContent = REGIONS.join('   ●   ') + '   ●   ' + REGIONS.join('   ●   ') + '   ●   ' + REGIONS.join('   ●   ');
+const svgNS = 'http://www.w3.org/2000/svg';
+const svgEl = document.createElementNS(svgNS, 'svg');
+svgEl.setAttribute('width', 0); svgEl.setAttribute('height', 0); svgEl.style.position = 'absolute';
+for (let i = 0; i <= 6; i++) {
+  const f = document.createElementNS(svgNS, 'filter');
+  f.id = 'hb' + i; f.setAttribute('x', '-10%'); f.setAttribute('width', '120%'); f.setAttribute('y', '0'); f.setAttribute('height', '100%');
+  f.setAttribute('color-interpolation-filters', 'sRGB');
+  const g = document.createElementNS(svgNS, 'feGaussianBlur'); g.setAttribute('stdDeviation', '0 0');
+  f.appendChild(g); svgEl.appendChild(f);
+}
+document.body.appendChild(svgEl);
+function setBlur(i, px) { document.querySelector('#hb' + i + ' feGaussianBlur').setAttribute('stdDeviation', px.toFixed(1) + ' 0'); }
 $('ticker').textContent = TICKER + '   ●   ' + TICKER;
 
 // grain
@@ -238,6 +257,43 @@ function drawGrain(frame) {
     img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255;
   }
   gctx.putImageData(img, 0, 0);
+}
+
+// dust + smoke overlay (procedural, deterministic)
+const fx = $('fx').getContext('2d');
+function drawFx(t) {
+  fx.clearRect(0, 0, 1280, 720);
+  let I = 0;
+  if (t >= 14.3 && t < 33.8) I = .25;
+  else if (t >= 33.8 && t < 50.5) I = .3 + (t - 33.8) / 16.7 * .25;
+  else if (t >= 50.5 && t < 83.8) I = .8;
+  else if (t >= 83.8) I = .3;
+  if (!I) return;
+  let burst = 0;
+  for (const b of [21, 25, 28.5, 31.2, 50.5]) { const d = t - b; if (d >= 0 && d < 3) burst = Math.max(burst, 1 - d / 3); }
+  if (t >= 50.5 && t < 86) {
+    for (let i = 0; i < 7; i++) {
+      const ph = (t * .04 + i * .37) % 1;
+      const x = 380 + i * 120 + Math.sin(t * .4 + i) * 40 + ph * 90, y = 340 - ph * 340, r = 90 + ph * 170;
+      const a = .24 * Math.sin(Math.PI * ph) * I;
+      const g = fx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, `rgba(34,31,28,${a})`); g.addColorStop(1, 'rgba(34,31,28,0)');
+      fx.fillStyle = g; fx.fillRect(x - r, y - r, 2 * r, 2 * r);
+    }
+  }
+  const n = 110 + Math.floor(burst * 190);
+  for (let i = 0; i < n; i++) {
+    const x = (rnd(i * 1.31) * 1280 + t * (18 + rnd(i * 5.1) * 40)) % 1280;
+    const y = (rnd(i * 2.17) * 720 + t * (10 + (burst > 0 ? 160 : 14) * rnd(i * 3.7))) % 720;
+    const sz = .8 + rnd(i * 7.7) * 2.2 * (1 + burst);
+    const al = (.16 + rnd(i * 9.3) * .25) * I * (i < 110 ? 1 : burst);
+    fx.fillStyle = `rgba(235,225,205,${al})`; fx.fillRect(x, y, sz, sz);
+  }
+  if (burst > 0) {
+    const g = fx.createLinearGradient(0, 0, 0, 380);
+    g.addColorStop(0, `rgba(200,190,170,${.32 * burst})`); g.addColorStop(1, 'rgba(200,190,170,0)');
+    fx.fillStyle = g; fx.fillRect(0, 0, 1280, 380);
+  }
 }
 
 // ---------------------------------------------------------------- main seek
@@ -268,32 +324,41 @@ window.seek = function (t, frame) {
     $('b_txt1').style.opacity = easeOut(clamp((t - 9.6) / .9));
     $('b_txt2').style.opacity = easeOut(clamp((t - 11) / 1));
   }
-  // ---- S2 alert (14.3 - 34.3)
+  // ---- S2 alert over street-camera footage (14.3 - 34.3)
   if (t >= 14.3 && t <= 34.8) {
     const k = t - 14.5;
     const pulse = .55 + .45 * Math.sin(k * 2 * Math.PI * 1.1);
-    $('alert_glow').style.opacity = t < 15.0 ? 0.0 : .55 + pulse * .45;
-    const BOOMS = [[21, 2, 14], [25, 2, 11], [28.5, 2.5, 16], [31.2, 1.5, 8]];
-    let sh = 1.2;
-    for (const [b0, bd, ba] of BOOMS) if (t > b0 && t < b0 + bd) sh = (1 - (t - b0) / bd) * ba;
-    shake($('s_alert'), t, sh, 14);
+    $('alert_glow').style.opacity = t < 15.0 ? 0 : .3 + pulse * .6;
+    const BOOMS = [[21, 2, 22], [25, 2, 17], [28.5, 2.5, 26], [31.2, 1.5, 12]];
+    let sh = 1.8;
+    for (const [b0, bd, ba] of BOOMS) if (t > b0 && t < b0 + bd) sh = 1.8 + (1 - (t - b0) / bd) * ba;
+    kb($('al_cam'), t, 14.3, 34.3, [1.12, 1.26, 0, -40, 0, 10]);
+    shake($('al_camwrap'), t, sh, 15);
     $('al_title').style.opacity = clamp((t - 15.1) / .3);
     $('al_title').style.transform = `scale(${1 + .03 * Math.sin(k * 2 * Math.PI * 1.1)})`;
     $('al_sub').style.opacity = clamp((t - 16.6) / .7);
     $('al_inst').style.opacity = clamp((t - 18.4) / .7);
+    $('al_plate').style.opacity = clamp((t - 15.1) / .5);
     $('al_clock').textContent = '05:' + pad2(47 + Math.floor((t - 14.3) / 10));
-    REGIONS.forEach((r, i) => {
-      const ti = 20 + i * 1.3;
-      $('chip' + i).style.opacity = clamp((t - ti) / .25);
-      $('chip' + i).style.transform = `scale(${1 + .06 * Math.max(0, 1 - (t - ti) * 3)})`;
-    });
+    $('al_bar').style.opacity = clamp((t - 19.5) / .5);
+    $('al_tick').style.transform = `translateX(${((t - 19.5) * 150) % 3600 - 3600 + 1090 + 3600}px)`;
   }
-  // ---- S3 news (33.8 - 58.3)
+  // ---- S3 news, lower-thirds over live footage (33.8 - 58.3)
   if (t >= 33.8 && t <= 58.8) {
     const k = t - 33.8;
-    $('news_grid').style.transform = `translate(${(k * 10) % 64}px, ${(k * 6) % 64}px)`;
     $('clock').textContent = '05:' + pad2(49 + Math.floor(k / 12));
     $('ticker').style.transform = `translateX(${(k * 140) % 4200 - 4200 + 1280 + 4200}px)`;
+    const pre = t < 50.5;
+    // street camera until the strike, then the first shots from the scene
+    $('nw_camwrap').style.opacity = pre ? 1 : clamp((51.4 - t) / .9);
+    kb($('nw_cam'), t, 33.8, 51.4, [1.12, 1.28, 0, -40, 0, 8]);
+    shake($('nw_camwrap'), t, 2 + (t > 44 ? (t - 44) * .5 : 0), 11);
+    $('nw_camwrap2').style.opacity = pre ? 0 : clamp((t - 50.5) / .5);
+    kb($('nw_cam2'), t, 50.5, 58.3, [1.14, 1.26, -10, -34, 0, 0]);
+    const imp = t >= 50.5 && t < 53 ? (1 - (t - 50.5) / 2.5) * 24 : 0;
+    shake($('nw_camwrap2'), t, 3 + imp, 13);
+    $('nw_tag').textContent = pre ? '● מצלמת רחוב · בית אל' : '● שידור חי · בית אל';
+    $('flash').style.opacity = t >= 50.5 && t < 51.0 ? (1 - (t - 50.5) / .5) * .35 : 0;
     if (t < 36.3) {
       $('hl_k').textContent = 'מהדורה מיוחדת';
       $('hl_h').textContent = 'שידור חי · מצב חירום';
@@ -311,25 +376,23 @@ window.seek = function (t, frame) {
     if (t >= 50.5) {
       br.style.display = 'block'; lc.style.display = 'block';
       const kk = easeOut(clamp((t - 50.5) / .4));
-      br.style.transform = `translateY(${(1 - kk) * 500}px)`;
+      br.style.transform = `translateY(${(1 - kk) * 400}px)`;
       br.style.opacity = t > 57.6 ? clamp((58.3 - t) / .7) : 1;
-      const f = .5 + .5 * Math.sin((t - 50.5) * 9);
-      br.style.filter = `brightness(${1 + .12 * f})`;
+      br.style.filter = `brightness(${1 + .12 * (.5 + .5 * Math.sin((t - 50.5) * 9))})`;
       const lk = easeOut(clamp((t - 53.5) / .6));
-      lc.style.opacity = lk; lc.style.transform = `translateY(${(1 - lk) * 40}px)`;
-      lc.style.top = '458px'; lc.style.left = '60px'; lc.style.width = '300px'; lc.style.height = '150px';
+      lc.style.opacity = lk; lc.style.transform = `translateY(${(1 - lk) * 30}px)`;
+      lc.style.top = '100px'; lc.style.left = '40px'; lc.style.width = '300px'; lc.style.height = '170px';
       $('loc_dot').style.transform = `scale(${1 + .35 * Math.sin((t - 53.5) * 6)})`;
-      $('loc_dot').style.left = '137px'; $('loc_dot').style.top = '52px';
+      $('loc_dot').style.left = '137px'; $('loc_dot').style.top = '62px';
       $('headline').style.opacity = 0;
-      shake($('s_news'), t, t < 52.5 ? 10 * (1 - (t - 50.5) / 2) : 0.0, 14);
-    } else { br.style.display = 'none'; lc.style.display = 'none'; $('s_news').style.transform = ''; }
+    } else { br.style.display = 'none'; lc.style.display = 'none'; }
   }
-  // ---- S4 live (57.8 - 84.3)
+  // ---- S4 live from the scene, whip-pan between feeds (57.8 - 84.3)
   if (t >= 57.8 && t <= 84.8) {
     const rec = $('lv_rec'); rec.style.opacity = (Math.floor(t * 1.6) % 2 === 0) ? 1 : .55;
     $('lv_tc').textContent = '05:52:' + pad2((Math.floor(t - 57.8) + 7) % 60);
     const sl = $('slider');
-    if (t < 64.5) {
+    if (t < 64.6) {
       sl.style.opacity = 1;
       const k = clamp((t - 59.2) / 3.4);
       const x = 1280 * (1 - ease(k));
@@ -338,28 +401,38 @@ window.seek = function (t, frame) {
       $('divider').style.opacity = t < 59.2 ? 0 : (t < 62.8 ? 1 : clamp((63.2 - t) / .4));
       $('sl_l1').style.opacity = t < 62.6 ? 1 : clamp(1 - (t - 62.6) / .5);
       $('sl_l2').style.opacity = t < 60.4 ? 0 : (t < 62.6 ? 1 : clamp(1 - (t - 62.6) / .5));
-      sl.querySelectorAll('img.bg').forEach(im => im.style.transform = `scale(${lerp(1.0, 1.04, clamp((t - 57.8) / 6.7))})`);
+      sl.querySelectorAll('img.bg').forEach(im => im.style.transform = `scale(${lerp(1.04, 1.12, clamp((t - 57.8) / 6.7))})`);
+      const po = easeIn(clamp((t - 63.78) / .44));
+      sl.style.transform = `translate(${-po * 700 + noise1(t * 8) * 4}px, ${noise1(t * 8 + 30) * 4}px)`;
+      setBlur(6, 26 * po); sl.style.filter = po > .02 ? 'url(#hb6)' : 'none';
       $('lv_cap').textContent = 'רחוב הרימון פינת החיטה, לפני דקות ספורות ועכשיו';
       $('lv_cap').style.opacity = clamp((t - 58.6) / .5);
     } else sl.style.opacity = 0;
-    let g = 0;
-    for (const s of [64, 67.5, 71, 74.5, 78, 81]) { const d = t - s; if (d >= -0.05 && d < .3) g = Math.max(g, 1 - d / .3); }
-    LIVE_SHOTS.forEach((s) => {
-      const el = $(s.id); const inT = t >= s.t0 - .02 && t <= s.t1 + .02;
-      el.style.opacity = inT ? 1 : 0;
+    let cut = 0;
+    LIVE_SHOTS.forEach((s, i) => {
+      const el = $(s.id), a = s.t0 - .22, b = s.t1 + .22;
+      const inT = t >= a && t <= b;
+      el.style.opacity = inT ? 1 : 0; el.style.zIndex = 5 + i;
       if (inT) {
+        const pin = easeOut(clamp((t - a) / .44));
+        const pout = i < LIVE_SHOTS.length - 1 ? easeIn(clamp((t - (s.t1 - .22)) / .44)) : 0;
+        const x = (1 - pin) * 700 - pout * 700;
+        const bl = 26 * (1 - pin) + 26 * pout;
+        const sx = noise1(t * 8 + i * 13) * 5, sy = noise1(t * 8 + 40 + i * 13) * 5, rot = noise1(t * 5 + i * 7) * .3;
+        el.style.transform = `translate(${sx + x}px,${sy}px) rotate(${rot}deg)`;
+        setBlur(i, bl); el.style.filter = bl > .3 ? `url(#hb${i})` : 'none';
         kb(el.querySelector('img'), t, s.t0, s.t1, s.kb);
-        el.style.transform = `translate(${noise1(t * 7) * 3.2}px,${noise1(t * 7 + 40) * 3.2}px)`;
-        $('lv_cap').textContent = s.cap;
-        $('lv_cap').style.opacity = clamp((t - s.t0) / .3);
+        if (t >= s.t0 && t < s.t1) {
+          $('lv_cap').textContent = s.cap;
+          $('lv_cap').style.opacity = clamp((t - s.t0) / .3);
+        }
+        const d = Math.abs(t - s.t0); if (i > 0 && d < .22) cut = Math.max(cut, 1 - d / .22);
       }
     });
-    const lw = $('livewrap');
-    lw.style.filter = g > 0 ? `contrast(${1 + .5 * g}) saturate(${1 + 1.2 * g}) hue-rotate(${g * 40 * (rnd(frame) - .5)}deg)` : 'none';
-    lw.style.transform = g > 0 ? `translateX(${(rnd(frame * 3) - .5) * 40 * g}px)` : '';
-    $('flash').style.opacity = g * .25;
+    $('livewrap').style.filter = 'none'; $('livewrap').style.transform = '';
+    $('flash').style.opacity = cut * .12;
     $('lv_loc').style.opacity = clamp((t - 58.6) / .5);
-  } else if (t < 57) { $('flash').style.opacity = 0; }
+  } else if (t < 57 && !(t >= 50.5 && t < 51)) { $('flash').style.opacity = 0; }
 
   // ---- S5 end (83.8 - 90)
   if (t >= 83.8) {
@@ -369,6 +442,7 @@ window.seek = function (t, frame) {
     $('e2').style.opacity = f(85.9, .6); $('e2').style.transform = `translateY(${(1 - f(85.9, .6)) * 24}px)`;
     $('e3').style.opacity = f(87.3, .6); $('e3').style.transform = `translateY(${(1 - f(87.3, .6)) * 24}px)`;
   }
+  drawFx(t);
   drawGrain(frame);
 };
 window.__ready = true;
