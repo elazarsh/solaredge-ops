@@ -170,28 +170,28 @@
 
 <script>
 // ---------------------------------------------------------------- timeline
-const D = 156;
+const D = 90;
 const SC = {
-  title: [0, 3.2], a: [3, 15.5], b: [15, 25.5], alert: [25, 53.5],
-  news: [53, 95.5], live: [95, 141.5], end: [141, 156]
+  title: [0, 2.8], a: [2.3, 9.3], b: [8.8, 14.8], alert: [14.3, 34.3],
+  news: [33.8, 58.3], live: [57.8, 84.3], end: [83.8, 90]
 };
 const XF = 0.5;
 const LIVE_SHOTS = [
-  { id: 'li0', t0: 103, t1: 110, kb: [1.06, 1.18, -10, -30, 0, 0],  cap: 'צוותי הצלה ראשונים בזירה' },
-  { id: 'li1', t0: 110, t1: 116, kb: [1.10, 1.02,  20,  -6, 0, 0],  cap: 'תושבים מדווחים על רעש עז ועשן מעל השכונה' },
-  { id: 'li2', t0: 116, t1: 122, kb: [1.02, 1.14, -20, 10, 0, 0],   cap: 'הרחוב סגור לתנועה' },
-  { id: 'li3', t0: 122, t1: 129, kb: [1.14, 1.04, 0, 0, 0, 0],      cap: 'נזק כבד לבית ולמבנים הסמוכים' },
-  { id: 'li4', t0: 129, t1: 135, kb: [1.04, 1.16, 18, -18, 0, 0],   cap: 'כלי רכב ניזוקו; חילוץ ראשוני מתבצע' },
-  { id: 'li5', t0: 135, t1: 141.5, kb: [1.16, 1.04, -16, 16, 0, 0],cap: 'ממתינים לתגבור: צוות החירום הישובי נקרא לפעול' }
+  { id: 'li0', t0: 64,   t1: 67.5, kb: [1.06, 1.16, -10, -26, 0, 0],  cap: 'צוותי הצלה ראשונים בזירה' },
+  { id: 'li1', t0: 67.5, t1: 71,   kb: [1.10, 1.02,  20,  -6, 0, 0],  cap: 'תושבים מדווחים על רעש עז ועשן מעל השכונה' },
+  { id: 'li2', t0: 71,   t1: 74.5, kb: [1.02, 1.12, -20, 10, 0, 0],   cap: 'הרחוב סגור לתנועה' },
+  { id: 'li3', t0: 74.5, t1: 78,   kb: [1.14, 1.04, 0, 0, 0, 0],      cap: 'נזק כבד לבית ולמבנים הסמוכים' },
+  { id: 'li4', t0: 78,   t1: 81,   kb: [1.04, 1.14, 18, -18, 0, 0],   cap: 'כלי רכב ניזוקו; חילוץ ראשוני מתבצע' },
+  { id: 'li5', t0: 81,   t1: 84.3, kb: [1.14, 1.04, -16, 16, 0, 0],   cap: 'צוות החירום הישובי נקרא לפעול' }
 ];
 const HEADLINES = [
-  { t0: 56, t1: 63, k: 'מהדורה מיוחדת', h: 'מטח טילים לעבר מרכז הארץ · אזעקות נשמעו ברחבי המדינה' },
-  { t0: 63, t1: 70, k: 'דיווחים ראשונים', h: 'נפילות בכמה אזורים בו־זמנית · כוחות הצלה בדרך לזירות' },
-  { t0: 70, t1: 78, k: 'הנחיה לציבור', h: 'להישאר במרחב המוגן ולא לצאת עד להודעה חדשה' }
+  { t0: 36.3, t1: 41.3, k: 'מהדורה מיוחדת', h: 'מטח טילים לעבר מרכז הארץ · אזעקות נשמעו ברחבי המדינה' },
+  { t0: 41.3, t1: 46.3, k: 'דיווחים ראשונים', h: 'נפילות בכמה אזורים בו־זמנית · כוחות הצלה בדרך לזירות' },
+  { t0: 46.3, t1: 50.5, k: 'הנחיה לציבור', h: 'להישאר במרחב המוגן ולא לצאת עד להודעה חדשה' }
 ];
 const TICKER = ['מטח טילים לעבר מרכז הארץ', 'אזעקות ברחבי המדינה', 'דיווחים על נפילות בכמה אזורים', 'כוחות הצלה מוזנקים לזירות',
   'התושבים מתבקשים להישאר במרחב המוגן', 'דיווח ראשוני על פגיעה בבית מגורים בבית אל', 'הדיווחים מתעדכנים כל העת'].join('   ●   ');
-const REGIONS = ['גוש דן', 'ירושלים', 'השרון', 'השפלה', 'הצפון', 'הנגב', 'יהודה ושומרון', 'שומרון והבקעה'];
+const REGIONS = ['גוש דן', 'ירושלים', 'השרון', 'השפלה', 'הצפון', 'הנגב', 'יהודה ושומרון'];
 
 // ---------------------------------------------------------------- helpers
 const $ = id => document.getElementById(id);
@@ -248,139 +248,126 @@ window.seek = function (t, frame) {
     el.style.opacity = a; el.style.display = a > 0 ? 'block' : 'none';
   }
   // badge: from the alert onward, plus the end
-  $('badge').style.opacity = t >= 25 && t < 154 ? clamp((t - 25) / 1) * (t > 141 ? .6 : 1) : 0;
+  $('badge').style.opacity = t >= 14.3 && t < 88.5 ? clamp((t - 14.3) / 1) * (t > 83.8 ? .6 : 1) : 0;
 
   // ---- S1a
-  if (t >= 3 && t <= 16) {
-    kb($('a_img'), t, 3, 15.5, [1.0, 1.13, 0, -24, 0, 6]);
-    const m = 42 + Math.floor((t - 3) / 12.5 * 4); // 05:42 -> 05:46
-    $('a_clock').textContent = '05:' + pad2(Math.min(m, 46));
-    $('a_txt1').style.opacity = easeOut(clamp((t - 4.5) / 1.2));
-    $('a_txt2').style.opacity = easeOut(clamp((t - 6) / 1.2));
-    $('a_txt1').style.transform = `translateY(${(1 - easeOut(clamp((t - 4.5) / 1.2))) * 18}px)`;
-    $('a_txt2').style.transform = `translateY(${(1 - easeOut(clamp((t - 6) / 1.2))) * 18}px)`;
+  if (t >= 2.3 && t <= 9.8) {
+    kb($('a_img'), t, 2.3, 9.3, [1.0, 1.12, 0, -24, 0, 6]);
+    const m = 42 + Math.floor((t - 2.3) / 7 * 3);
+    $('a_clock').textContent = '05:' + pad2(Math.min(m, 44));
+    $('a_txt1').style.opacity = easeOut(clamp((t - 3.4) / 1));
+    $('a_txt2').style.opacity = easeOut(clamp((t - 4.6) / 1));
+    $('a_txt1').style.transform = `translateY(${(1 - easeOut(clamp((t - 3.4) / 1))) * 18}px)`;
+    $('a_txt2').style.transform = `translateY(${(1 - easeOut(clamp((t - 4.6) / 1))) * 18}px)`;
     // dawn: tint fades from deep blue/orange toward neutral
-    $('a_tint').style.opacity = lerp(1, .6, clamp((t - 3) / 12));
+    $('a_tint').style.opacity = lerp(1, .6, clamp((t - 2.3) / 7));
   }
   // ---- S1b
-  if (t >= 15 && t <= 26) {
-    kb($('b_img'), t, 15, 25.5, [1.0, 1.08, 0, -28, 0, 0]);
-    $('b_txt1').style.opacity = easeOut(clamp((t - 16) / 1));
-    $('b_txt2').style.opacity = easeOut(clamp((t - 18) / 1.2));
+  if (t >= 8.8 && t <= 15.3) {
+    kb($('b_img'), t, 8.8, 14.8, [1.0, 1.07, 0, -26, 0, 0]);
+    $('b_txt1').style.opacity = easeOut(clamp((t - 9.6) / .9));
+    $('b_txt2').style.opacity = easeOut(clamp((t - 11) / 1));
   }
-  // ---- S2 alert
-  if (t >= 25 && t <= 54) {
-    const k = t - 25;
+  // ---- S2 alert (14.3 - 34.3)
+  if (t >= 14.3 && t <= 34.8) {
+    const k = t - 14.5;
     const pulse = .55 + .45 * Math.sin(k * 2 * Math.PI * 1.1);
-    $('alert_glow').style.opacity = t < 25.8 ? 0.0 : .55 + pulse * .45;
-    // first beat: sudden cut from silence
-    const sh = (t > 34 && t < 36) ? (1 - (t - 34) / 2) * 14 : (t > 38.5 && t < 40.5) ? (1 - (t - 38.5) / 2) * 11 :
-               (t > 44 && t < 46.5) ? (1 - (t - 44) / 2.5) * 16 : (t > 47.5 && t < 49) ? (1 - (t - 47.5) / 1.5) * 8 : 1.2;
+    $('alert_glow').style.opacity = t < 15.0 ? 0.0 : .55 + pulse * .45;
+    const BOOMS = [[21, 2, 14], [25, 2, 11], [28.5, 2.5, 16], [31.2, 1.5, 8]];
+    let sh = 1.2;
+    for (const [b0, bd, ba] of BOOMS) if (t > b0 && t < b0 + bd) sh = (1 - (t - b0) / bd) * ba;
     shake($('s_alert'), t, sh, 14);
-    $('al_title').style.opacity = clamp((t - 25.9) / .3);
+    $('al_title').style.opacity = clamp((t - 15.1) / .3);
     $('al_title').style.transform = `scale(${1 + .03 * Math.sin(k * 2 * Math.PI * 1.1)})`;
-    $('al_sub').style.opacity = clamp((t - 28) / .8);
-    $('al_inst').style.opacity = clamp((t - 31) / .8);
-    $('al_clock').textContent = '05:' + pad2(47 + Math.floor((t - 25) / 14));
+    $('al_sub').style.opacity = clamp((t - 16.6) / .7);
+    $('al_inst').style.opacity = clamp((t - 18.4) / .7);
+    $('al_clock').textContent = '05:' + pad2(47 + Math.floor((t - 14.3) / 10));
     REGIONS.forEach((r, i) => {
-      const ti = 30 + i * 1.8;
+      const ti = 20 + i * 1.3;
       $('chip' + i).style.opacity = clamp((t - ti) / .25);
       $('chip' + i).style.transform = `scale(${1 + .06 * Math.max(0, 1 - (t - ti) * 3)})`;
     });
-    $('s_alert').style.opacity = Math.min(sceneAlpha('alert', t), 1);
   }
-  // ---- S3 news
-  if (t >= 53 && t <= 96) {
-    const k = t - 53;
+  // ---- S3 news (33.8 - 58.3)
+  if (t >= 33.8 && t <= 58.8) {
+    const k = t - 33.8;
     $('news_grid').style.transform = `translate(${(k * 10) % 64}px, ${(k * 6) % 64}px)`;
-    $('clock').textContent = '05:' + pad2(49 + Math.floor(k / 20));
+    $('clock').textContent = '05:' + pad2(49 + Math.floor(k / 12));
     $('ticker').style.transform = `translateX(${(k * 140) % 4200 - 4200 + 1280 + 4200}px)`;
-    // bumper 53-56
-    const showBump = t < 56;
-    if (showBump) {
+    if (t < 36.3) {
       $('hl_k').textContent = 'מהדורה מיוחדת';
       $('hl_h').textContent = 'שידור חי · מצב חירום';
-      $('headline').style.opacity = easeOut(clamp((t - 53.3) / .6));
+      $('headline').style.opacity = easeOut(clamp((t - 34.6) / .6));
+      $('headline').style.transform = '';
     } else {
-      let cur = HEADLINES.find(h => t >= h.t0 && t < h.t1);
+      const cur = HEADLINES.find(h => t >= h.t0 && t < h.t1);
       if (cur) {
         $('hl_k').textContent = cur.k; $('hl_h').textContent = cur.h;
-        const a = Math.min(clamp((t - cur.t0) / .5), clamp((cur.t1 - t) / .4));
-        $('headline').style.opacity = a;
-        $('headline').style.transform = `translateX(${(1 - easeOut(clamp((t - cur.t0) / .5))) * 80}px)`;
+        $('headline').style.opacity = Math.min(clamp((t - cur.t0) / .4), clamp((cur.t1 - t) / .3));
+        $('headline').style.transform = `translateX(${(1 - easeOut(clamp((t - cur.t0) / .4))) * 80}px)`;
       } else $('headline').style.opacity = 0;
     }
-    // breaking
     const br = $('breaking'), lc = $('loccard');
-    if (t >= 78) {
+    if (t >= 50.5) {
       br.style.display = 'block'; lc.style.display = 'block';
-      const kk = easeOut(clamp((t - 78) / .45));
+      const kk = easeOut(clamp((t - 50.5) / .4));
       br.style.transform = `translateY(${(1 - kk) * 500}px)`;
-      br.style.opacity = t > 94.4 ? clamp((95.2 - t) / .8) : 1;
-      // flashing banner colour
-      const f = .5 + .5 * Math.sin((t - 78) * 9);
+      br.style.opacity = t > 57.6 ? clamp((58.3 - t) / .7) : 1;
+      const f = .5 + .5 * Math.sin((t - 50.5) * 9);
       br.style.filter = `brightness(${1 + .12 * f})`;
-      const lk = easeOut(clamp((t - 83) / .7));
+      const lk = easeOut(clamp((t - 53.5) / .6));
       lc.style.opacity = lk; lc.style.transform = `translateY(${(1 - lk) * 40}px)`;
       lc.style.top = '458px'; lc.style.left = '60px'; lc.style.width = '300px'; lc.style.height = '150px';
-      $('loc_dot').style.transform = `scale(${1 + .35 * Math.sin((t - 83) * 6)})`;
+      $('loc_dot').style.transform = `scale(${1 + .35 * Math.sin((t - 53.5) * 6)})`;
       $('loc_dot').style.left = '137px'; $('loc_dot').style.top = '52px';
       $('headline').style.opacity = 0;
-      shake($('s_news'), t, t < 80 ? 10 * (1 - (t - 78) / 2) : 0.0, 14);
+      shake($('s_news'), t, t < 52.5 ? 10 * (1 - (t - 50.5) / 2) : 0.0, 14);
     } else { br.style.display = 'none'; lc.style.display = 'none'; $('s_news').style.transform = ''; }
   }
-  // ---- S4 live
-  if (t >= 95 && t <= 142) {
+  // ---- S4 live (57.8 - 84.3)
+  if (t >= 57.8 && t <= 84.8) {
     const rec = $('lv_rec'); rec.style.opacity = (Math.floor(t * 1.6) % 2 === 0) ? 1 : .55;
-    const sec = t - 95 + 5 * 60 + 52 * 60 - 52 * 60; // simple counter
-    const total = Math.floor(t - 95) + 7;
-    $('lv_tc').textContent = '05:52:' + pad2(total % 60);
-    // slider 95-103
+    $('lv_tc').textContent = '05:52:' + pad2((Math.floor(t - 57.8) + 7) % 60);
     const sl = $('slider');
-    if (t < 103.5) {
+    if (t < 64.5) {
       sl.style.opacity = 1;
-      const k = clamp((t - 96.6) / 5.6);
-      const x = 1280 * (1 - ease(k)); // after layer = right of divider // divider travels from right to left: before (right) -> after
-      // show BEFORE on the right of divider? keep simple: before clipped to the part right of divider
+      const k = clamp((t - 59.2) / 3.4);
+      const x = 1280 * (1 - ease(k));
       $('sl_clip').style.clipPath = `inset(0 0 0 ${x}px)`;
       $('divider').style.left = (x - 3) + 'px';
-      $('divider').style.opacity = t < 96.6 ? 0 : (t < 102.6 ? 1 : clamp((103 - t) / .4));
-      $('sl_l1').style.opacity = t < 102 ? 1 : clamp(1 - (t - 102) / .5);
-      $('sl_l2').style.opacity = t < 99 ? .0 : (t < 102 ? 1 : clamp(1 - (t - 102) / .5));
-      kb(sl.querySelector('img'), t, 95, 103.5, [1.0, 1.04, 0, 0, 0, 0]);
-      sl.querySelectorAll('img.bg').forEach(im => im.style.transform = `scale(${lerp(1.0, 1.04, clamp((t - 95) / 8.5))})`);
+      $('divider').style.opacity = t < 59.2 ? 0 : (t < 62.8 ? 1 : clamp((63.2 - t) / .4));
+      $('sl_l1').style.opacity = t < 62.6 ? 1 : clamp(1 - (t - 62.6) / .5);
+      $('sl_l2').style.opacity = t < 60.4 ? 0 : (t < 62.6 ? 1 : clamp(1 - (t - 62.6) / .5));
+      sl.querySelectorAll('img.bg').forEach(im => im.style.transform = `scale(${lerp(1.0, 1.04, clamp((t - 57.8) / 6.7))})`);
       $('lv_cap').textContent = 'רחוב הרימון פינת החיטה, לפני דקות ספורות ועכשיו';
+      $('lv_cap').style.opacity = clamp((t - 58.6) / .5);
     } else sl.style.opacity = 0;
-    // glitch flashes on every shot cut
     let g = 0;
-    for (const s of [103, 110, 116, 122, 129, 135]) { const d = t - s; if (d >= -0.05 && d < .3) g = Math.max(g, 1 - d / .3); }
+    for (const s of [64, 67.5, 71, 74.5, 78, 81]) { const d = t - s; if (d >= -0.05 && d < .3) g = Math.max(g, 1 - d / .3); }
     LIVE_SHOTS.forEach((s) => {
       const el = $(s.id); const inT = t >= s.t0 - .02 && t <= s.t1 + .02;
       el.style.opacity = inT ? 1 : 0;
       if (inT) {
-        const im = el.querySelector('img');
-        kb(im, t, s.t0, s.t1, s.kb);
-        const sh = 3.2;
-        el.style.transform = `translate(${noise1(t * 7) * sh}px,${noise1(t * 7 + 40) * sh}px)`;
+        kb(el.querySelector('img'), t, s.t0, s.t1, s.kb);
+        el.style.transform = `translate(${noise1(t * 7) * 3.2}px,${noise1(t * 7 + 40) * 3.2}px)`;
         $('lv_cap').textContent = s.cap;
-        $('lv_cap').style.opacity = clamp((t - s.t0) / .4);
+        $('lv_cap').style.opacity = clamp((t - s.t0) / .3);
       }
     });
     const lw = $('livewrap');
     lw.style.filter = g > 0 ? `contrast(${1 + .5 * g}) saturate(${1 + 1.2 * g}) hue-rotate(${g * 40 * (rnd(frame) - .5)}deg)` : 'none';
-    if (g > 0) lw.style.transform = `translateX(${(rnd(frame * 3) - .5) * 40 * g}px)`; else lw.style.transform = '';
+    lw.style.transform = g > 0 ? `translateX(${(rnd(frame * 3) - .5) * 40 * g}px)` : '';
     $('flash').style.opacity = g * .25;
-    $('lv_loc').style.opacity = clamp((t - 96) / .6);
-    if (t < 103) $('lv_cap').style.opacity = clamp((t - 97) / .6);
-  } else if (t < 95) { $('flash').style.opacity = 0; }
+    $('lv_loc').style.opacity = clamp((t - 58.6) / .5);
+  } else if (t < 57) { $('flash').style.opacity = 0; }
 
-  // ---- S5 end
-  if (t >= 141) {
-    kb($('end_img'), t, 141, 156, [1.05, 1.18, 0, -40, 0, 0]);
+  // ---- S5 end (83.8 - 90)
+  if (t >= 83.8) {
+    kb($('end_img'), t, 83.8, 90, [1.05, 1.14, 0, -30, 0, 0]);
     const f = (a, d) => easeOut(clamp((t - a) / d));
-    $('e1').style.opacity = f(142, .8); $('e1').style.transform = `translateY(${(1 - f(142, .8)) * 24}px)`;
-    $('e2').style.opacity = f(146, .8); $('e2').style.transform = `translateY(${(1 - f(146, .8)) * 24}px)`;
-    $('e3').style.opacity = f(150, .8); $('e3').style.transform = `translateY(${(1 - f(150, .8)) * 24}px)`;
+    $('e1').style.opacity = f(84.4, .6); $('e1').style.transform = `translateY(${(1 - f(84.4, .6)) * 24}px)`;
+    $('e2').style.opacity = f(85.9, .6); $('e2').style.transform = `translateY(${(1 - f(85.9, .6)) * 24}px)`;
+    $('e3').style.opacity = f(87.3, .6); $('e3').style.transform = `translateY(${(1 - f(87.3, .6)) * 24}px)`;
   }
   drawGrain(frame);
 };
