@@ -1,0 +1,221 @@
+<title>לוח הפקה – תנור וענפים</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: production board, one card per clip; prompts as copyable blocks. Palette: sand paper, olive ink, bin green, truck blue, signal orange. */
+:root{
+  --bg:#f6f1e4; --card:#fffaf0; --ink:#2b2a22; --muted:#6c6a5c; --line:#ded6bf;
+  --green:#2f6b34; --green-soft:#dfecd7; --blue:#285d86; --blue-soft:#d9e8f2; --orange:#c8561b; --code:#efe8d3;
+  --font:"Heebo",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1c1d17; --card:#25261e; --ink:#efead9; --muted:#a8a590; --line:#3a3b2e;
+  --green:#8fc98a; --green-soft:#2c3a28; --blue:#8bbbe0; --blue-soft:#25343f; --orange:#f09a62; --code:#2e2f24; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1c1d17; --card:#25261e; --ink:#efead9; --muted:#a8a590; --line:#3a3b2e;
+  --green:#8fc98a; --green-soft:#2c3a28; --blue:#8bbbe0; --blue-soft:#25343f; --orange:#f09a62; --code:#2e2f24; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);direction:rtl;line-height:1.6;font-size:16px;
+  padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.15;margin:0;font-weight:800;text-wrap:balance}
+h2{font-size:1.5rem;margin:0;font-weight:800}
+h3{font-size:1.05rem;margin:0;font-weight:700}
+p{margin:0}
+.lead{color:var(--muted);max-width:62ch}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.step b{color:var(--orange)}
+.folders{display:flex;flex-wrap:wrap;gap:8px}
+.folders a{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--ink);text-decoration:none;font-weight:500;font-size:.92rem}
+.folders a:hover{border-color:var(--green)}
+.box{background:var(--code);border-radius:10px;padding:14px 16px;font-size:.95rem}
+.box ul{margin:6px 0 0;padding-inline-start:1.2rem}
+.sec{display:flex;flex-direction:column;gap:14px}
+.sec>header{display:flex;flex-direction:column;gap:4px;border-block-end:2px solid var(--ink);padding-block-end:8px}
+.sec>header span{color:var(--muted);font-size:.95rem}
+.clip{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.clip>.top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:12px 16px;border-block-end:1px solid var(--line)}
+.clip .id{font-family:var(--mono);font-size:.85rem;background:var(--ink);color:var(--bg);padding:2px 9px;border-radius:6px}
+.clip .meta{color:var(--muted);font-size:.88rem;margin-inline-start:auto}
+.clip .body{padding:14px 16px;display:flex;flex-direction:column;gap:14px}
+.what{color:var(--muted)}
+.pr{display:flex;flex-direction:column;gap:6px}
+.pr .lab{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-weight:700;font-size:.92rem}
+.pr .lab em{font-style:normal;font-weight:500;color:var(--muted);font-size:.85rem}
+.tag{font-size:.75rem;font-weight:700;border-radius:5px;padding:1px 8px}
+.tag.img{background:var(--green-soft);color:var(--green)} .tag.vid{background:var(--blue-soft);color:var(--blue)}
+pre{margin:0;background:var(--code);border-radius:8px;padding:12px 14px;direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:.82rem;line-height:1.55;max-width:100%;overflow-wrap:anywhere;-webkit-user-select:text;user-select:text}
+button{font:inherit;cursor:pointer}
+.copy{align-self:flex-start;background:var(--ink);color:var(--bg);border:0;border-radius:8px;padding:7px 16px;font-weight:700;font-size:.9rem}
+.copy:focus-visible,.chk input:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.copy.done{background:var(--green);color:var(--card)}
+.refs{font-size:.85rem;color:var(--muted)}
+.refs code{font-family:var(--mono);background:var(--code);border-radius:4px;padding:0 5px;direction:ltr;display:inline-block}
+.chk{display:flex;gap:18px;flex-wrap:wrap;font-size:.9rem;border-block-start:1px dashed var(--line);padding-block-start:10px}
+.chk label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.themebtn{align-self:flex-start;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:4px 12px;font-size:.85rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <h1>לוח הפקה: "התנור שחיכה" ו"ענפים ברוח"</h1>
+    <p class="lead">14 קליפים בסך הכול, 7 לכל סרטון. לכל קליפ יש פרומפט לתמונת הפתיחה (ג'מיני, יצירת תמונה) ופרומפט להנפשה (ג'מיני, יצירת וידאו). מעתיקים בלחיצה אחת.</p>
+    <button class="themebtn" id="theme" type="button">מצב כהה / בהיר</button>
+  </header>
+
+  <section class="steps" aria-label="סדר עבודה">
+    <div class="step"><b>1. תמונת פתיחה</b><p>בג'מיני בוחרים "יצירת תמונה", מצרפים את תמונות הייחוס שמסומנות בכרטיס, ומדביקים את פרומפט התמונה. בוחרים תוצאה טובה ושומרים כ־<code>V1-A_start.png</code>.</p></div>
+    <div class="step"><b>2. הנפשה</b><p>בג'מיני בוחרים "יצירת וידאו", מעלים את תמונת הפתיחה ומדביקים את פרומפט ההנפשה. קליפ אחד בכל פעם, עד 8 שניות. שומרים כ־<code>V1-A.mp4</code>.</p></div>
+    <div class="step"><b>3. העלאה לדרייב</b><p>תמונות לתיקיות "תמונות", קליפים לתיקיות "קליפים". אם יצא כמה ניסיונות, מוסיפים <code>_t2</code>, <code>_t3</code> לשם. אני אחבר ואערוך.</p></div>
+  </section>
+
+  <section class="sec" aria-label="תיקיות בדרייב">
+    <h3>תיקיות ההעלאה בדרייב</h3>
+    <div class="folders">
+      <a href="https://drive.google.com/drive/folders/1y3En6iwhcVz_urbHQquQcHJxA5Nnvbr7" target="_blank" rel="noopener">00 חומרי ייחוס (R1–R6)</a>
+      <a href="https://drive.google.com/drive/folders/1MDCLzweoLmLrS4ZdxPne7NUYPMgZCbth" target="_blank" rel="noopener">01 תנור: תמונות</a>
+      <a href="https://drive.google.com/drive/folders/13uIcSWpaoY2wfCpLKOj3qpBNohlxR5ri" target="_blank" rel="noopener">02 תנור: קליפים</a>
+      <a href="https://drive.google.com/drive/folders/12602_4Yt0JubsmuLtUR2Sm2k--rb9od-" target="_blank" rel="noopener">03 ענפים: תמונות</a>
+      <a href="https://drive.google.com/drive/folders/1LvGENt3zHeLn-mkWN-hnAk0MBy-KB1U9" target="_blank" rel="noopener">04 ענפים: קליפים</a>
+    </div>
+  </section>
+
+  <section class="box" aria-label="כללים">
+    <b>כללים שחוסכים ניסיונות</b>
+    <ul>
+      <li>בכל קליפ יש פעולה אחת עיקרית. אם הדמויות "זזות" מהעיצוב, מקצרים את הפרומפט ומורידים פרטים.</li>
+      <li>הווידאו של ג'מיני כולל סאונד אוטומטי. אני מסיר אותו ומוסיף מוזיקה, קול ואפקטים. אין צורך להתעכב עליו.</li>
+      <li>הטקסט בעברית (כתוביות, שלט "פינת גזם", סלוגן) מוסיף אני בעריכה. השלט בתמונות נשאר ריק.</li>
+      <li>הדמות הראשית היא היונה עורכת הדין מהסרטונים הקודמים. בתסריט היא נקראת "תוכי".</li>
+      <li>הנהג מנומס: מושך בכתפיים ומחייך, לא מזלזל.</li>
+    </ul>
+  </section>
+
+  <div id="app" style="display:flex;flex-direction:column;gap:36px"></div>
+</div>
+
+<script>
+const STYLE = "Flat 2D TV-comedy cartoon illustration in exactly the same style, line weight, flat colors and warm cream/tan palette as the attached reference images. Thin dark outlines, flat colors, minimal shading. 16:9 widescreen frame. No text, no letters, no logos, no watermark, no captions.";
+const CH = {
+  pigeon:"PIGEON: the blue-grey lawyer pigeon from the character sheet (long orange beak, slicked-back black hair tuft, smug half-lidded eyes, dark pinstripe suit, white shirt, orange-yellow tie, brown leather briefcase, orange feet).",
+  cat:"CAT: the big chubby orange cat from the reference, half-closed smug eyes, a wooden toothpick in the mouth, lounging on the lid of the dark-green wheelie bin.",
+  mouse:"MOUSE: the brown mouse in a checked khaki shirt with heavy grumpy eyebrows and arms crossed.",
+  girl:"GIRL MOUSE: the small light-tan mouse with huge sparkly eyes, big front teeth and a peach-pink dress.",
+  driver:"DRIVER: the grey-brown mouse in an orange cap and a bright orange high-visibility vest, in the cab of the dark-green garbage truck with the blue-grey cab (same truck as the attached driver reference)."
+};
+const SET = "SETTING: quiet neighborhood street, tan stone wall with a rounded green hedge above it, sand-colored sidewalk, wooden bench, big dark-green wheelie bin, soft sky.";
+const VIDEO_TAIL = "Flat 2D cartoon motion, snappy and exaggerated, keep every character exactly as in the image, no morphing, no new characters, no text or letters. Silent: no music, no speech, no sound effects.";
+
+const R = {R1:"R1_characters_sheet.png",R2:"R2_style_street_pigeon.png",R3:"R3_driver_mouse_truck.png",R4:"R4_cat_on_bin.png",R5:"R5_pigeon_front_closeup.png",R6:"R6_pigeon_shocked_bench.png"};
+const DATA = [
+ {id:"v1", title:"סרטון 1: התנור שחיכה", sub:"המסר: תנור ליד הפח לא נאסף. פסולת גדולה מתאמים. 7 קליפים.", clips:[
+  {id:"V1-A", name:"הגעה והצגת התנור", dur:"8 שניות", refs:["R1","R2"],
+   what:"שוט רחב, בוקר. התנור הלבן ליד הפח, היונה והעכברים נכנסים משמאל ומציגים אותו. (פותח את הסרטון, 0:00–0:10)",
+   img:`${STYLE}\n${SET}\nSCENE: wide morning shot. An old, clean white kitchen oven with a glass door stands on the sidewalk right next to the green wheelie bin. The CAT lounges on the bin lid. At the far left edge of the frame the PIGEON (carrying his briefcase) and the MOUSE and the GIRL MOUSE are just stepping into the picture, small in the frame. Warm sun rays rising from behind the dark trees on the horizon.\n${CH.pigeon}\n${CH.cat}\n${CH.mouse}\n${CH.girl}\nOnly these four characters.`,
+   vid:`Static camera with a very slow push-in. The pigeon, followed by the two mice, walks in from the left with bouncy steps, swinging his briefcase. He stops next to the old oven, makes a wide salesman arm sweep to present it, then proudly opens the glass door of the oven. The girl mouse claps and small sparkles twinkle around the oven; the grumpy mouse keeps his arms crossed. The cat stays lounging on the bin. ${VIDEO_TAIL}`},
+  {id:"V1-B", name:"החתול מגיב", dur:"6 שניות", refs:["R4"],
+   what:"תקריב על החתול. 'זה לא מטבח. זה תנור שמחכה למשאית... שלא תבוא.' את הקול אני מוסיף.",
+   img:`${STYLE}\nSCENE: close-up of the CAT on the bin lid, one eye closed and one eye open, smug and bored, a wooden toothpick in his mouth. The green bin lid under him. Behind him, softly blurred, the street, the hedge, and the white oven next to the bin.\n${CH.cat}\nOnly the cat in the frame.`,
+   vid:`Close-up, static camera. The cat slowly opens his second eye, slides the toothpick to the other corner of his mouth with a tiny pop, then talks lazily with slow mouth movements as if saying two dry sentences, with a long pause in the middle, and ends with a smug half-smile. Very small head movement only. ${VIDEO_TAIL}`},
+  {id:"V1-C", name:"המשאית עוברת", dur:"8 שניות", refs:["R1","R3"],
+   what:"המשאית מגיעה, הנהג מושך בכתפיים ונוסע, היונה רצה אחריה. אני מוסיף לוח שנה, שעון ואיקס.",
+   img:`${STYLE}\n${SET}\nSCENE: wide shot. The white oven stands next to the green bin. At the left, the PIGEON stands proudly with his briefcase next to the MOUSE and the GIRL MOUSE. At the right edge of the frame the front of the dark-green garbage truck with the blue-grey cab is just entering the picture, the DRIVER visible in the cab window. The CAT lounges on the bin.\n${CH.pigeon}\n${CH.mouse}\n${CH.girl}\n${CH.cat}\n${CH.driver}`,
+   vid:`Static camera. The dark-green garbage truck drives in from the right and slows down beside the bin. The driver looks at the oven, gives a polite shrug, waves a hand, and drives on, leaving the frame to the left. The pigeon's smile freezes, then he runs after the truck waving his briefcase. The oven stays exactly where it is, untouched. ${VIDEO_TAIL}`},
+  {id:"V1-D", name:"התנור קורס", dur:"8 שניות", refs:["R2"],
+   what:"אחרי גשם ושמש: תנור חלוד. הדלת נופלת, והתנור קורס לערימת גרוטאות.",
+   img:`${STYLE}\n${SET}\nSCENE: wet sidewalk after rain with puddles. The same old oven next to the green bin, now heavily rusted with brown-orange rust stains, its glass door hanging loose on one hinge. Nobody in the frame, no animals. Soft grey-green sky.`,
+   vid:`Static camera. The rusty oven door creaks, drops off with a cartoon clang, rust flakes crumble, and then the whole oven collapses into a pile of rusty panels, bolts, knobs and grates that tumble and roll along the sidewalk across the frame. A puff of dust. No characters. ${VIDEO_TAIL}`},
+  {id:"V1-E", name:"קפיצה בין הגרוטאות", dur:"5 שניות", refs:["R1","R2"],
+   what:"העכברים מדלגים בין חלקי המתכת כמו בקפיצה בחבל.",
+   img:`${STYLE}\n${SET}\nSCENE: the sidewalk is strewn with rusty oven parts: panels, bolts, grates, a broken glass door. The MOUSE and the GIRL MOUSE stand among them, looking at the mess. The green bin in the background. No other characters.\n${CH.mouse}\n${CH.girl}`,
+   vid:`Static camera. The two mice start to hop and skip over the rusty scrap pieces as if jumping rope, one after the other, playful and rhythmic, tails swinging, the pieces clanking slightly. ${VIDEO_TAIL}`},
+  {id:"V1-F", name:"העוגה שוקעת", dur:"5 שניות", refs:["R1"],
+   what:"העכברה עם עוגה על מגש, מול ערימת הגרוטאות. 'ואני כבר הכנתי עוגה...'",
+   img:`${STYLE}\nSCENE: medium shot of the GIRL MOUSE holding a tray with a pretty frosted cake, looking sadly at a pile of rusty oven scrap behind her. Sidewalk and green hedge softly in the background.\n${CH.girl}\nOnly the girl mouse.`,
+   vid:`Static camera, medium shot. The girl mouse's big sparkly eyes fill with a glimmer, she sighs, and the cake on the tray slowly sinks and slumps down like a sad deflating soufflé. Small, gentle movements. ${VIDEO_TAIL}`},
+  {id:"V1-G", name:"היונה מסכמת", dur:"8 שניות", refs:["R5","R1"],
+   what:"היונה מול המצלמה ומסבירה: גזם, פסולת גדולה, שקיות. אני מוסיף את האייקונים והווי.",
+   img:`${STYLE}\nSCENE: medium shot of the PIGEON facing the camera, adjusting his tie with one wing, confident salesman smile. Plain softly blurred background of the street (hedge, wall). Nothing else in the frame.\n${CH.pigeon}`,
+   vid:`Static camera, medium shot. The pigeon straightens his tie and talks fast to the camera with confident salesman hand gestures: he points to his left, then to his right, then points down in front of him, finishing with a charming smile. The mouth moves as if speaking continuously. ${VIDEO_TAIL}`}
+ ]},
+ {id:"v2", title:"סרטון 2: ענפים ברוח", sub:"המסר: ענפים ליד הפח מתפזרים ולא נאספים. גזם מניחים בפינת הגזם. 7 קליפים.", clips:[
+  {id:"V2-A", name:"הגיזום", dur:"8 שניות", refs:["R1","R2"],
+   what:"היונה בחליפה גוזמת עץ עם מזמרה ענקית. הענפים נערמים ליד הפח.",
+   img:`${STYLE}\n${SET}\nSCENE: the PIGEON in his suit stands at a small leafy tree at the left holding an oversized pair of garden shears, a small pile of cut branches already lying next to the green bin on the sidewalk. The CAT lounges on the bin lid. Sunny morning.\n${CH.pigeon}\n${CH.cat}\nOnly these two characters.`,
+   vid:`Static camera. The pigeon snips the tree with the giant shears, branches fall one after another onto the pile next to the bin, the pile grows tall. He claps the dust from his wings with a satisfied smile and proudly looks at his work. The cat watches from the bin. ${VIDEO_TAIL}`},
+  {id:"V2-B", name:"החתול מרים גבה", dur:"4 שניות", refs:["R4"],
+   what:"'שוב ליד הפח?'",
+   img:`${STYLE}\nSCENE: medium close-up of the CAT on the bin lid, looking down toward the tall pile of branches beside the bin (the pile is partly visible at the bottom of the frame). Smug half-closed eyes, toothpick.\n${CH.cat}\nOnly the cat.`,
+   vid:`Static camera. The cat slowly raises one eyebrow, looks at the pile of branches, then back at the camera with a dry look, and says a short line with slow mouth movements. Minimal movement. ${VIDEO_TAIL}`},
+  {id:"V2-C", name:"הרוח", dur:"8 שניות", refs:["R1","R4"],
+   what:"רוח חזקה מעיפה עלים וענפים. ענף נכרך סביב החתול והעכבר מחליק.",
+   img:`${STYLE}\n${SET}\nSCENE: a windy day. A tall pile of branches and leaves next to the green bin, leaves and twigs already flying through the air. The CAT sits on the bin lid with fur ruffled. The MOUSE stands on a patch of fallen leaves at the right. Everything leaning slightly in the wind.\n${CH.cat}\n${CH.mouse}\nOnly these two characters.`,
+   vid:`Static camera. A strong gust of wind: leaves and branches blow across the street from right to left. A branch wraps around the cat, who struggles with it, the toothpick wobbling. The mouse steps on the pile of leaves, slips, and lands flat on his back. Playful, exaggerated, but gentle. ${VIDEO_TAIL}`},
+  {id:"V2-D", name:"המשאית ממשיכה", dur:"8 שניות", refs:["R1","R3"],
+   what:"המשאית עוברת ליד הענפים והנהג מושך בכתפיים. היונה קופאת. אני מוסיף מד כעס ואיקס.",
+   img:`${STYLE}\n${SET}\nSCENE: the dark-green garbage truck with the blue-grey cab is entering from the right edge of the frame next to the tall pile of branches beside the green bin. The DRIVER is visible in the cab. The PIGEON stands near the pile with his briefcase, hopeful smile.\n${CH.pigeon}\n${CH.driver}\nOnly these two characters.`,
+   vid:`Static camera. The truck drives past the pile of branches without stopping. The driver gives a polite shrug and keeps driving, leaving the frame to the left. The pigeon freezes with his beak wide open, then little puffs of steam shoot out from both sides of his head. ${VIDEO_TAIL}`},
+  {id:"V2-E", name:"החתול גורר ענף", dur:"7 שניות", refs:["R4","R1"],
+   what:"החתול גורר ענף אחד לפינת הגזם. אני מוסיף את הכיתוב על השלט.",
+   img:`${STYLE}\n${SET}\nSCENE: the CAT stands beside the pile of branches next to the bin; three steps to the right there is a neat, tidy rectangular yard-waste corner marked on the sidewalk with a low edge, containing a few arranged branches, with a small wooden sign on a post that is completely BLANK (no writing) and a small green leaf icon on it.\n${CH.cat}\nOnly the cat.`,
+   vid:`Static camera. The cat hops down from the bin, picks up one branch in his teeth, drags it a few relaxed steps to the neat yard-waste corner, drops it on the pile there, and flicks his tail. Calm and efficient. ${VIDEO_TAIL}`},
+  {id:"V2-F", name:"היונה גוררת הכול", dur:"8 שניות", refs:["R1","R5"],
+   what:"היונה מפשילה שרוולים וגוררת את כל הענפים בענן אבק. אני מוסיף נורה ווי.",
+   img:`${STYLE}\n${SET}\nSCENE: the PIGEON rolls up his sleeves with a determined face, standing next to the tall pile of branches beside the bin; the tidy yard-waste corner with a blank wooden sign is visible a few steps to the right. The MOUSE and the GIRL MOUSE stand by, holding bunches of leaves.\n${CH.pigeon}\n${CH.mouse}\n${CH.girl}`,
+   vid:`Static camera. The pigeon grabs a huge bundle of branches and runs with it very fast to the yard-waste corner inside a cartoon dust cloud, then comes back for the rest in a blur. The mice help by carrying leaves. At the end the street next to the bin is completely clean. ${VIDEO_TAIL}`},
+  {id:"V2-G", name:"היונה מסכמת", dur:"6 שניות", refs:["R5","R1"],
+   what:"היונה מצביעה על פינת הגזם. אני מוסיף את האייקונים (וי על הפינה, איקס על הפח והמדרכה).",
+   img:`${STYLE}\n${SET}\nSCENE: medium shot of the PIGEON facing the camera, one wing pointing toward the tidy yard-waste corner at the left of the frame (neat edge, arranged branches, a blank wooden sign with a green leaf icon). The green bin is visible at the right, clean and empty around it.\n${CH.pigeon}\nOnly the pigeon.`,
+   vid:`Static camera, medium shot. The pigeon straightens his tie, points firmly toward the yard-waste corner, nods, then gives a charming smile to the camera. The mouth moves as if speaking. ${VIDEO_TAIL}`}
+ ]}
+];
+
+const app=document.getElementById('app');
+function mkCopy(text){
+  const b=document.createElement('button');b.type='button';b.className='copy';b.textContent='העתק';
+  b.addEventListener('click',async()=>{
+    let ok=false;
+    try{await navigator.clipboard.writeText(text);ok=true}catch(e){
+      const pre=b.parentElement.querySelector('pre');const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);
+      try{ok=document.execCommand('copy')}catch(_){}
+    }
+    b.textContent=ok?'הועתק ✓':'סימנתי, העתק ידנית';b.classList.toggle('done',ok);setTimeout(()=>{b.textContent='העתק';b.classList.remove('done')},2000);
+  });
+  return b;
+}
+function prBlock(kind,label,note,text){
+  const d=document.createElement('div');d.className='pr';
+  const l=document.createElement('div');l.className='lab';
+  l.innerHTML=`<span class="tag ${kind}">${kind==='img'?'תמונה':'וידאו'}</span><span>${label}</span><em>${note}</em>`;
+  const pre=document.createElement('pre');pre.textContent=text;
+  d.append(l,pre,mkCopy(text));return d;
+}
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+DATA.forEach(v=>{
+  const sec=document.createElement('section');sec.className='sec';
+  sec.innerHTML=`<header><h2>${v.title}</h2><span>${v.sub}</span></header>`;
+  v.clips.forEach(c=>{
+    const card=document.createElement('article');card.className='clip';
+    const refs=c.refs.map(r=>`<code>${R[r]}</code>`).join(' ');
+    card.innerHTML=`<div class="top"><span class="id">${c.id}</span><h3>${c.name}</h3><span class="meta">${c.dur} · תמונה: <b>${c.id}_start.png</b> · קליפ: <b>${c.id}.mp4</b></span></div>`;
+    const body=document.createElement('div');body.className='body';
+    body.innerHTML=`<p class="what">${c.what}</p><p class="refs">צרף כתמונות ייחוס בתיקיית 00: ${refs}</p>`;
+    body.append(prBlock('img','פרומפט לתמונת הפתיחה','יצירת תמונה, יחס 16:9',c.img));
+    body.append(prBlock('vid','פרומפט להנפשה','יצירת וידאו מתמונה, עד 8 שניות',c.vid));
+    const chk=document.createElement('div');chk.className='chk';
+    [['img','התמונה נוצרה והועלתה'],['vid','הקליפ נוצר והועלה']].forEach(([k,t])=>{
+      const id=`c-${c.id}-${k}`;const lab=document.createElement('label');lab.htmlFor=id;
+      const i=document.createElement('input');i.type='checkbox';i.id=id;i.checked=store(id)==='1';i.addEventListener('change',()=>store(id,i.checked?'1':'0'));
+      lab.append(i,document.createTextNode(t));chk.append(lab);
+    });
+    body.append(chk);card.append(body);sec.append(card);
+  });
+  app.append(sec);
+});
+document.getElementById('theme').addEventListener('click',()=>{
+  const r=document.documentElement;const cur=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  r.setAttribute('data-theme',cur==='dark'?'light':'dark');
+});
+</script>
